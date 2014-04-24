@@ -1,0 +1,5 @@
+home-mrconfig
+\.stow-global-ignore
+
+\.git
+\.gitignore
