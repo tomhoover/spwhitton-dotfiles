@@ -54,6 +54,11 @@ lib =
 stowable = true
 checkout = git clone /s3ql/gitcrypt/priv.git priv
 
+# this repository can't be checked out until we put the authorisation
+# tokens in place manually, so that's a good enough indication as to
+# whether we want it on a host
+skip = ! [ -e ~/.s3ql/authinfo2 ]
+
 # convenience automatic permission setting and checking in of
 # frequently changed files
 fixups = chmod 600 .passwddb.pet .s3ql/authinfo2
