@@ -51,7 +51,7 @@ checkout = git clone /s3ql/gitcrypt/priv.git priv
 
 # convenience automatic permission setting and checking in of
 # frequently changed files
-fixups = chmod 600 .passwddb.pet
+fixups = chmod 600 .passwddb.pet .s3ql/authinfo2
 pre_update =
            git add .passwddb.pet .labbook.gpg
            git commit -a -m "auto passwddb and labbook commit on $(hostname -s)" || true
