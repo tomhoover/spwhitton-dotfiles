@@ -8,7 +8,12 @@ jobs = 5
 
 # --- Adam Spiers' plugin for managing dotfile symlinks with mr
 
-include = cat ~/local/lib/stow
+include =
+    if [ -e ~/lib/mr/stow ]; then
+        cat ~/lib/mr/stow
+    else
+        cat ~/local/lib/stow
+    fi
 lib =
     # reimplement kitenet-mr stow library function which relies on mr
     # "-r" parameter which is only present in aspiers' outdated fork
