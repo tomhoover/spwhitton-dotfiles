@@ -75,13 +75,11 @@ pre_update =
 # --- and create my standard home directory subdirectories
 
 [src]
-update = mkdir -p $HOME/tmp $HOME/src \\
-         $HOME/local/src $HOME/local/bin $HOME/local/lib $HOME/local/pub
-checkout = mkdir -p $HOME/tmp $HOME/src \\
-           $HOME/local/src $HOME/local/bin $HOME/local/lib $HOME/local/pub
+update = mkdir -p $HOME/tmp $HOME/src $HOME/local/src $HOME/local/bin $HOME/local/lib $HOME/local/pub
+checkout = mkdir -p $HOME/tmp $HOME/src $HOME/local/src $HOME/local/bin $HOME/local/lib $HOME/local/pub
 status = :
-push = :
-commit = :
+#push = :
+#commit = :
 chain = true
 
 # --- temporary inclusion of old mr repository configurations
