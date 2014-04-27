@@ -6,6 +6,9 @@
 git_gc = git gc "$@"
 jobs = 5
 
+# In general, I don't want merge commits to be made en masse by mr
+git_update = git pull --ff-only "$@"
+
 # --- Adam Spiers' plugin for managing dotfile symlinks with mr
 
 include =
@@ -20,7 +23,31 @@ lib =
     is_stowable () {
             [ -z "$MR_DISABLE_STOW" ] &&
             ( mr stowable >/dev/null 2>&1 )
-        }
+    }
+
+# --- joeyh's code for specifying what machine we're on for repo skip
+# --- tests
+
+lib =
+    hostname="$(hostname)"
+    whoami="$(whoami)"
+    on() {
+        for host in $@; do
+            if [ "${host%@*}" != "${host#*@}" ]; then
+                if [ "$whoami" != "${host%@*}" ]; then
+                    continue
+                fi
+                host="${host#*@}"
+            fi
+            if [ "$hostname" = "$host" ]; then
+                return 0
+            fi
+        done
+        return 1
+    }
+    mine() {
+        on swhitton@artemis || on swhitton@zephyr
+    }
 
 # --- primary dotfiles repository
 
@@ -81,6 +108,37 @@ status = :
 #push = :
 #commit = :
 chain = true
+
+# --- my personal documents, website and blog.  Override my global
+# --- update command back to the myrepos default so that git
+# --- automatically pulls and merges.  Skipped on non-local hosts
+
+[doc]
+order = 4
+checkout = git clone 'ssh://ma/~/local/git/doc.git' 'doc'
+update = git pull "$@"
+skip = ! ( mine || on spw@ma )
+
+# set file modification times to last commit
+fixups = git-utime
+
+# automatically commit in the same way that my cron job does before pulling
+pre_update = doccheckin
+
+# after pulling, update the online copy of my Org-mode agenda
+post_update = echo -n "Updating web calendar... ";emacs -batch -l ~/.emacs.d/init.el -eval "(org-batch-store-agenda-views)" >/dev/null 2>/dev/null;echo "hopefully done."
+
+[doc/www]
+order = 5
+checkout = git clone 'ssh://ma/~/local/git/doc.www.git' 'www'
+update = git pull "$@"
+skip = ! mine
+
+[doc/www/blog]
+order = 6
+checkout = git clone 'ssh://ma/~/local/git/doc.www.blog.git' 'blog'
+update = git pull "$@"
+skip = ! mine
 
 # --- temporary inclusion of old mr repository configurations
 
