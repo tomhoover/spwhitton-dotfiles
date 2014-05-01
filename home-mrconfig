@@ -76,6 +76,11 @@ fixups =
     ln -sf ~/src/dotfiles/home-mrconfig ~/.mrconfig
     ln -sf ~/src/dotfiles/.stow-global-ignore ~
 
+# create ~/.emacs.d/ before stowing so that the files inside are
+# symlinks, rather than the whole dir.  That way Emacs junk that gets
+# dumped in ~/.emacs.d doesn't have to be put into .gitignore
+pre_stow = mkdir -p ~/.emacs.d
+
 # --- private dotfiles repository
 
 [src/priv]
