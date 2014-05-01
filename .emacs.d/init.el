@@ -208,6 +208,8 @@
 
 ;;;; ---- packages ----
 
+(use-package diminish :ensure)
+
 ;;; Org
 
 (use-package org
