@@ -261,6 +261,8 @@
 ;;; files, and these two things together are enough session management
 ;;; for me
 
+(setq recentf-save-file "~/.emacs.d/recentf")
+
 ;; the three hooks added by the idle progn below don't stay set when
 ;; set by (require 'saveplace), nor do they remain in place if simply
 ;; added in this config file or even in 'after-init-hook.  So have
@@ -368,7 +370,8 @@
                 ido-use-virtual-buffers-automatically t
                 ido-enable-regexp nil
                 ido-use-url-at-point nil
-                ido-max-file-prompt-width 0.1)
+                ido-max-file-prompt-width 0.1
+                ido-save-directory-list-file "~/.emacs.d/ido.last")
           (add-hook 'ido-setup-hook (lambda ()
                                       (define-key ido-completion-map "\C-w" 'ido-delete-backward-word-updir)
                                       (define-key ido-completion-map " \C-h" 'ido-delete-backward-updir)))
@@ -566,16 +569,18 @@
   :bind (("C-x C-m" . smex)
          ("C-x C-," . smex-major-mode-commands))
   :idle (smex-initialize)
-  :config
-  ;; restore space bar for hyphens (should be faster)
-  (defadvice smex (around space-inserts-hyphen activate compile)
-    (let ((ido-cannot-complete-command
-           `(lambda ()
-              (interactive)
-              (if (string= " " (this-command-keys))
-                  (insert ?-)
-                (funcall ,ido-cannot-complete-command)))))
-      ad-do-it)))
+  :config (progn
+            (setq smex-save-file "~/.emacs.d/smex-items")
+
+            ;; restore space bar for hyphens (should be faster)
+            (defadvice smex (around space-inserts-hyphen activate compile)
+              (let ((ido-cannot-complete-command
+                     `(lambda ()
+                        (interactive)
+                        (if (string= " " (this-command-keys))
+                            (insert ?-)
+                          (funcall ,ido-cannot-complete-command)))))
+                ad-do-it))))
 
 ;;; anchored transpose
 
