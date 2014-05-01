@@ -1,0 +1,46 @@
+# --- connections and throttling
+
+max_peers = 20
+max_peers_seed = 20
+max_uploads = 4
+download_rate = 25
+upload_rate = 50
+
+schedule = throttle_1a,22:00:00,24:00:00,download_rate=1024
+schedule = throttle_1b,22:00:00,24:00:00,upload_rate=0
+schedule = throttle_2a,16:00:00,24:00:00,download_rate=25
+schedule = throttle_2b,16:00:00,24:00:00,upload_rate=10
+
+# --- directories
+
+directory = ~/local/rt/incomplete
+
+schedule = watch_directory,10,10,load=~/local/rt/watch/*.torrent
+schedule = untied_directory,10,10,close_untied=
+
+#system.method.set_key = event.download.finished,move_complete,"execute=mv,-u,$d.get_base_path=,~/local/rt/complete/;d.set_directory=~/local/rt/complete/"
+system.method.set_key = event.download.finished,move_complete,"d.set_directory=~/local/rt/complete/;execute=mv,-u,$d.get_base_path=,~/local/rt/complete/"
+
+# close torrents when diskspace is low
+schedule = low_diskspace,5,60,close_low_diskspace=100M
+
+# --- sessions & hashing
+
+session = ~/local/rt/session
+#session_lock = yes
+session_save = yes
+#session_on_completion = yes
+# don't hash finished torrents
+# (in general, minimise hashing)
+check_hash = no
+
+# --- network and trackers
+
+port_range = 49167-49167
+use_udp_trackers = yes
+encryption = allow_incoming,try_outgoing,enable_retry
+dht = disable
+# dht_port = 6881
+peer_exchange = no
+# fix any cert problems
+network.http.ssl_verify_peer.set = 0

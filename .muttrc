@@ -1,0 +1,162 @@
+# -*- mode: conf; -*-
+
+# --- preferences
+
+set from=spw@sdf.org
+set realname="Sean Whitton"
+#set reverse_name = yes
+#set reverse_realname = no
+set sendmail = $HOME/bin/msmtpq
+set envelope_from = yes
+set use_from = yes
+set folder=~/.offlinemail/
+set spoolfile = +INBOX
+set record = +sent
+set postponed = +drafts
+set certificate_file = ~/.mutt/certificates
+set move = no
+set delete = ask-yes
+#unset edit_hdrs
+set edit_hdrs
+set include
+set reply_to
+set abort_nosubject = no
+#alternates '(sean@silentflame.com)|(sean.whitton@balliol.ox.ac.uk)'
+set hdr_format="%4C %Z %{%m/%d} %-15.15F (%4c) %s"
+unset help
+set mail_check=20
+set timeout=15
+set pager_index_lines=8
+unset arrow_cursor
+set fast_reply
+set pager_context = 1
+set reply_to = ask-yes
+set recall = ask-yes
+#set pager_stop
+set tmpdir="~/.mutt-tmp"
+set resolve = yes
+set noconfirmappend
+set abort_unmodified = yes
+unset signature
+unset mark_old                  # to make F9 binding more useful
+set editor = "emacsclient -t -a \"zile -f auto-fill-mode +8\""
+#set editor="switch-to-emacsclient"
+set tilde
+set smart_wrap
+set wrapmargin=10
+unset markers
+set wait_key=no
+set sendmail_wait = -1
+
+# --- sorting
+
+set sort = threads
+set sort_browser = date
+set sort_aux = last-date-received
+
+# --- GPG settings
+
+set pgp_autosign = yes
+set pgp_sign_as = 0x3B6D411B
+set pgp_replysign = yes
+set pgp_replysignencrypted = yes
+set pgp_replyencrypt = yes
+set pgp_timeout = 120
+#set fcc_clear = yes
+set fcc_clear = no
+set pgp_use_gpg_agent = yes
+#set pgp_strict_enc # maybe needed?
+
+set pgp_decode_command="gpg --use-agent --no-verbose --quiet --batch --output - %f"
+set pgp_verify_command="gpg --use-agent --no-verbose --quiet --batch --output - --verify %s %f"
+set pgp_decrypt_command="gpg --use-agent --no-verbose --quiet --batch --output - %f"
+set pgp_sign_command="gpg --use-agent --no-verbose --batch --quiet --output - --armor --detach-sign --textmode %?a?-u %a? %f"
+set pgp_clearsign_command="gpg --use-agent --no-verbose --batch --quiet --output - --armor --textmode --clearsign %?a?-u %a? %f"
+set pgp_encrypt_only_command="/usr/lib/mutt/pgpewrap gpg --use-agent --batch --quiet --no-verbose --output - --encrypt --textmode --armor --always-trust --encrypt-to 0x3B6D411B -- -r %r -- %f"
+set pgp_encrypt_sign_command="/usr/lib/mutt/pgpewrap gpg --use-agent --batch --quiet --no-verbose --textmode --output - --encrypt --sign %?a?-u %a? --armor --always-trust --encrypt-to 0x3B6D411B -- -r %r -- %f"
+set pgp_import_command="gpg --use-agent --no-verbose --import %f"
+set pgp_export_command="gpg --use-agent --no-verbose --export --armor %r"
+set pgp_verify_key_command="gpg --use-agent --verbose --batch --fingerprint --check-sigs %r"
+set pgp_list_pubring_command="gpg --use-agent --no-verbose --batch --quiet --with-colons --list-keys %r"
+set pgp_list_secring_command="gpg --use-agent --no-verbose --batch --quiet --with-colons --list-secret-keys %r"
+set pgp_good_sign="^\\[GNUPG:\\] GOODSIG"
+
+# --- message headers
+
+hdr_order From: Date: User-Agent: X-Mailer: x-oxford-username: Message-Id: To: Cc: Reply-To: Subject:
+ignore *
+unignore From: Date: User-Agent: X-Mailer: x-oxford-username: Message-Id: To: Cc: Reply-To: Subject:
+
+# --- mailboxes
+
+source ~/.mutt/mailboxes
+
+# --- message part viewing
+
+auto_view text/html
+alternative_order text/html text/plain text/enriched text
+set mailcap_path = ~/.mutt/mailcap
+
+# --- addresses
+
+set alias_file=~/.mutt/aliases  # this is the main alias file
+source ~/.mutt/aliases
+source ~/.mutt/groups           # keep shortcut groups in a separate
+                                # file for simplicity
+
+# --- key bindings
+
+# filtering function keys, some from Jonathan
+macro index <F5> "<limit>((~N|~O)!~D)<enter><home>"
+macro pager <F5> "<limit>~(((~N|~O)!~D))<enter><home>"
+
+macro index <F6> "lall\n<end>"
+macro pager <F6> "lall\n<end>"
+
+macro index <F7> "c=INBOX<return>" "switch to inbox"
+macro pager <F7> "c=INBOX<return>" "switch to inbox"
+
+macro index <F8> "c=sent<return>" "switch to sent"
+macro pager <F8> "c=sent<return>" "switch to sent"
+
+macro index <F9> "c=archive<return>" "switch to archive"
+macro pager <F9> "c=archive<return>" "switch to archive"
+
+# limit to the messages I haven't dealt with yet when opening inbox
+folder-hook INBOX$ push <F5>
+
+# extract URLS--config from http://www.memoryhole.net/~kyle/extract_url/
+macro index,pager ,b "<enter-command> set my_pdsave=\$pipe_decode<enter>\
+<enter-command> unset pipe_decode<enter>\
+<pipe-message>extract_url.pl<enter>\
+<enter-command> set pipe_decode=\$my_pdsave<enter>" "get URLs"
+
+macro index,pager ,B "<enter-command> set my_pdsave=\$pipe_decode<enter>\
+<enter-command> set pipe_decode<enter>\
+<pipe-message>extract_url.pl<enter>\
+<enter-command> set pipe_decode=\$my_pdsave<enter>" "decrypt message, then get URLs"
+
+message-hook .  'macro index,pager \cb ,b "URL viewer"'
+message-hook ~G 'macro index,pager \cb ,B "URL viewer"'
+
+# open RSS links in browser
+macro index,pager <F3> "<pipe-message>grep '\^http' | sed 's/\^/-new-tab /' | xargs iceweasel<enter>" "open all URLs at beginning of lines in message in browser tabs"
+
+# easier scrolling
+bind pager ] previous-page
+bind pager [ next-page
+
+# Emacs-style bindings
+bind index n next-undeleted
+bind pager n next-undeleted
+bind index p previous-undeleted
+bind pager p previous-undeleted
+bind index ! flag-message
+bind pager ! flag-message
+bind pager t display-toggle-weed
+
+# --- colours
+
+# make flagged & new messages more obvious
+color index brightred black "~F"
+color index brightwhite black "~N|~O"

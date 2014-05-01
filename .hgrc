@@ -1,0 +1,8 @@
+[ui]
+username = Sean Whitton <sean@silentflame.com>
+verbose = True
+
+[extensions]
+hgext.win32text =
+hgext.fetch =
+hgext.mq =

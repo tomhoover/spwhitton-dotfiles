@@ -1,0 +1,7 @@
+base=$HOME
+maildir=.offlinemail/*
+mbox=lib/annex/doc/mail/*
+mfolder=lib/annex/doc/mail/mairixresults
+database=~/.mairixdb
+omit=lib/annex/doc/mail/mairixresults
+omit=spam*

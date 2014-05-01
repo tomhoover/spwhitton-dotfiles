@@ -1,0 +1,25 @@
+MAILDIR=/meta/s/spw/mail
+DEFAULT=/meta/mail/spw
+#LOGFILE=/meta/s/spw/tmp/.procmail.log
+LOGFILE=/dev/null
+SHELL=/bin/sh
+PATH=/usr/pkg/bin:/usr/local/bin:/usr/bin:/bin
+
+# spam
+:0:
+* ^X-Spam-Flag: YES
+$MAILDIR/spam
+
+# more spam
+:0:
+* ^From.*<newletters@slacker.com>
+$MAILDIR/spam
+
+:0:
+* ^Subject.*BitFolk VPS 'seaotter' data transfer report
+$MAILDIR/archive
+
+# mailing lists I archive but don't read
+:0:
+* ^List-Id.*<wikimedia-l.lists.wikimedia.org>|^List-Id.*<wikimania-l.lists.wikimedia.org>|^List-Id.*<wikitech-l.lists.wikimedia.org>|^List-Id.*<mediawiki-announce.lists.wikimedia.org>|^List-Id.*<toolserver-l.lists.wikimedia.org>|^List-Id.*<daily-article-l.lists.wikimedia.org>|^List-Id.*<unblock-en-l.lists.wikimedia.org>|^List-Id.*<meta-l_lists.wikipedia.be.lists.wikipedia.be>|^List-Id.*amidaniel.com>|^List-Id.*<wikimediameta-l.lists.wikimedia.org>|^List-Id.*<wikiquality-l.lists.wikimedia.org>|^List-Id.*<wmfcc-l.lists.wikimedia.org>|^List-Id.*<internal-l.lists.wikimedia.org>|^List-Id.*<mediation-en-l.lists.wikimedia.org>|^List-Id.*<otrs-en-l.lists.wikimedia.org>|^List-Id.*<toolserver-announce.lists.wikimedia.org>|^List-Id.*<comproj.lists.wikimedia.org>|^List-Id.*<wikimediauk-l.lists.wikimedia.org>|^List-Id.*<irc-contacts.lists.wikimedia.org>|^List-Id.*<wikipedia-l.lists.wikimedia.org>|^List-Id.*<wikien-l.lists.wikimedia.org>|^List-Id.*<editors_wikizine.org.wikizine.org>|^List-Id.*<announce-l.lists.wikimedia.org>
+$MAILDIR/oldlists

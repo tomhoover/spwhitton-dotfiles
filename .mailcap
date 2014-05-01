@@ -1,0 +1,11 @@
+application/pdf; evince '%s'; test=test "$DISPLAY" != ""; description=Portable Document Format; nametemplate=%s.pdf
+
+application/msword; soffice %s
+application/vnd.openxmlformats-officedocument.wordprocessingml.document; soffice %s
+application/vnd.oasis.opendocument.text; soffice %s
+application/msword; soffice %s
+
+image/*; feh %s
+image/png; feh %s
+image/jpg; feh %s
+image/gif; feh %s

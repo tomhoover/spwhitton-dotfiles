@@ -1,0 +1,48 @@
+# start in homedir
+chdir
+
+# --- preferences
+
+vbell off
+autodetach on
+startup_message off
+defscrollback 5000
+escape ^z^z
+defnonblock 5
+nonblock 5
+altscreen on
+
+# --- status bar
+
+# from the gentoo wiki, hacked for urxvt with zenburn colours
+hardstatus alwayslastline
+hardstatus string '%{= dg}[ %{G}%H %{g}][%= %{= dw}%?%-Lw%?%{r}(%{W}%n*%f%t%?(%u)%?%{r})%{w}%?%+Lw%?%?%= %{g}][%{B} %d/%m %{W}%c %{g}]'
+
+# --- terminal settings
+
+# http://frexx.de/xterm-256-notes/
+# Get 256 colours
+# terminfo and termcap for nice 256 color terminal
+
+# allow bold colors - necessary for some reason
+attrcolor b ".I"
+# tell screen how to set colors. AB = background, AF=foreground
+termcapinfo xterm 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
+# erase background with current bg color
+defbce "on"
+
+term screen-256color
+
+# --- bindings
+
+# bounce back and forth between windows
+bind ^z other
+
+# toggle the status bar
+bind f eval "hardstatus alwaysignore"
+bind F eval "hardstatus alwayslastline"
+
+# bind an rtorrent helper macro
+# bindkey rather than bind makes C-z not required but then can't type capital R
+register s ^I^Xd.set_directory=~/local/rt/complete^M^S^N
+bind R process s
