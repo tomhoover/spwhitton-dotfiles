@@ -1,0 +1,1038 @@
+;; when --debug-init isn't enough
+;;(setq debug-on-error t
+;;      debug-on-quit t)
+
+;;;; ---- package management ----
+
+(add-to-list 'load-path "~/.emacs.d/site-lisp/")
+(require 'use-package)
+(require 'package)
+(require 'package-filter)
+(setq
+ package-user-dir "~/local/src/elpa"
+ package-archives
+ '(("melpa" . "http://melpa.milkbox.net/packages/")
+   ("marmalade" . "http://marmalade-repo.org/packages/")
+   ("org" . "http://orgmode.org/elpa/")
+   ("gnu" . "http://elpa.gnu.org/packages/"))
+ package-archive-exclude-alist
+ '(("melpa" org)
+   ("marmalade" org)
+   ("gnu" org)
+   ("org" org)))
+(package-initialize)
+(unless package-archive-contents
+  (package-refresh-contents))
+(setq package-enable-at-startup nil)
+
+;;;; ---- basic settings ----
+
+;;; customisation -- must be loaded early so that zenburn theme is
+;;; considered safe
+
+(setq custom-file "~/.emacs.d/init-custom.el")
+(load custom-file 'noerror)
+
+;;; From the tmux FAQ: should allow some modified keys to pass through
+;;; to Emacs
+
+(defadvice terminal-init-screen
+  ;; The advice is named `tmux', and is run before `terminal-init-screen' runs.
+  (before tmux activate)
+  ;; Docstring.  This describes the advice and is made available inside emacs;
+  ;; for example when doing C-h f terminal-init-screen RET
+  "Apply xterm keymap, allowing use of keys passed through tmux."
+  ;; This is the elisp code that is run before `terminal-init-screen'.
+  (if (getenv "TMUX")
+      (let ((map (copy-keymap xterm-function-map)))
+        (set-keymap-parent map (keymap-parent input-decode-map))
+            (set-keymap-parent input-decode-map map))))
+
+;;; From the Emacswiki: should allow some more modified keys to work
+;;; in Emacs over ssh via PuTTY
+
+(if (eq system-uses-terminfo t)
+    (progn                              ;; PuTTY hack - needs to be in SCO mode
+      (define-key key-translation-map [\e] [\M])
+      (define-key input-decode-map "\e[H" [home])
+      (define-key input-decode-map "\e[F" [end])
+      (define-key input-decode-map "\e[D" [S-left])
+      (define-key input-decode-map "\e[C" [S-right])
+      (define-key input-decode-map "\e[A" [S-up])
+      (define-key input-decode-map "\e[B" [S-down])
+      (define-key input-decode-map "\e[C" [S-right])
+      (define-key input-decode-map "\e[I" [prior])
+      (define-key input-decode-map "\e[G" [next])
+      (define-key input-decode-map "\e[M" [f1])
+      (define-key input-decode-map "\e[Y" [S-f1])
+      (define-key input-decode-map "\e[k" [C-f1])
+      (define-key input-decode-map "\e\e[M" [M-f1])
+      (define-key input-decode-map "\e[N" [f2])
+      (define-key input-decode-map "\e[Z" [S-f2])
+      (define-key input-decode-map "\e[l" [C-f2])
+      (define-key input-decode-map "\e\e[N" [M-f2])
+      (define-key input-decode-map "\e[O" [f3])
+      (define-key input-decode-map "\e[a" [S-f3])
+      (define-key input-decode-map "\e[m" [C-f3])
+      (define-key input-decode-map "\e\e[O" [M-f3])
+      (define-key input-decode-map "\e[P" [f4])
+      (define-key input-decode-map "\e[b" [S-f4])
+      (define-key input-decode-map "\e[n" [C-f4])
+      (define-key input-decode-map "\e\e[P" [M-f4])
+      (define-key input-decode-map "\e[Q" [f5])
+      (define-key input-decode-map "\e[c" [S-f5])
+      (define-key input-decode-map "\e[o" [C-f5])
+      (define-key input-decode-map "\e\e[Q" [M-f5])
+      (define-key input-decode-map "\e[R" [f6])
+      (define-key input-decode-map "\e[d" [S-f6])
+      (define-key input-decode-map "\e[p" [C-f6])
+      (define-key input-decode-map "\e\e[R" [M-f6])
+      (define-key input-decode-map "\e[S" [f7])
+      (define-key input-decode-map "\e[e" [S-f7])
+      (define-key input-decode-map "\e[q" [C-f7])
+      (define-key input-decode-map "\e\e[S" [M-f7])
+      (define-key input-decode-map "\e[T" [f8])
+      (define-key input-decode-map "\e[f" [S-f8])
+      (define-key input-decode-map "\e[r" [C-f8])
+      (define-key input-decode-map "\e\e[T" [M-f8])
+      (define-key input-decode-map "\e[U" [f9])
+      (define-key input-decode-map "\e[g" [S-f9])
+      (define-key input-decode-map "\e[s" [C-f9])
+      (define-key input-decode-map "\e\e[U" [M-f9])
+      (define-key input-decode-map "\e[V" [f10])
+      (define-key input-decode-map "\e[h" [S-f10])
+      (define-key input-decode-map "\e[_" [C-f10])
+      (define-key input-decode-map "\e\e[V" [M-f10])
+      (define-key input-decode-map "\e[W" [f11])
+      (define-key input-decode-map "\e[i" [S-f11])
+      (define-key input-decode-map "\e[u" [C-f11])
+      (define-key input-decode-map "\e\e[W" [M-f11])
+      (define-key input-decode-map "\e[X" [f12])
+      (define-key input-decode-map "\e[j" [S-f12])
+      (define-key input-decode-map "\e[v" [C-f12])
+      (define-key input-decode-map "\e\e[X" [M-f12])))
+
+;;; put backups and autosaves in /tmp
+
+(defconst emacs-tmp-dir (format "%s/%s%s/" temporary-file-directory "emacs" (user-uid)))
+(make-directory emacs-tmp-dir t)
+(setq backup-by-copying t                    ; don't clobber symlinks
+      backup-directory-alist `((".*" . ,emacs-tmp-dir))
+      tramp-backup-directory-alist backup-directory-alist
+      auto-save-file-name-transforms `((".*" ,emacs-tmp-dir t))
+      auto-save-list-file-prefix emacs-tmp-dir
+      tramp-auto-save-directory emacs-tmp-dir
+
+      ;; disable backups for files accessed through tramp's sudo and su
+      ;; protocols, to prevent copies of root-owned files being in a user's
+      ;; homedir
+      backup-enable-predicate (lambda (name)
+                                (and (normal-backup-enable-predicate name)
+                                     (not
+                                      (let ((method (file-remote-p name 'method)))
+                                        (when (stringp method)
+                                          (member method '("su" "sudo"))))))))
+
+;;; misc display settings
+
+;; y/n rather than yes/no
+(fset 'yes-or-no-p 'y-or-n-p)
+
+;; don't handle keyboard events before redrawing
+(setq redisplay-dont-pause t)
+
+;; show trailing whitespace ...
+(setq-default show-trailing-whitespace t)
+;; ... but not in terminals
+(add-hook 'term-mode-hook (lambda ()
+                            (setq show-trailing-whitespace nil)
+                            (goto-address-mode)))
+
+;; don't prompt to create scratch buffers
+(setq confirm-nonexistent-file-or-buffer nil)
+
+;; initial frame size
+(if window-system (progn (set-frame-width (selected-frame) 80)
+                         (set-frame-height (selected-frame) ; fails atm
+                                           (round
+                                            (/ (- (x-display-pixel-height) 28)
+                                                       (frame-char-height))))))
+
+;; soft word wrapping for easier editing of long lines
+(setq-default visual-line-mode t
+      word-wrap t
+      wrap-prefix "    ")
+
+;; kill the fringes
+(if window-system (fringe-mode 0))
+
+;; Terminus
+(if (member "Terminus-11" (font-family-list))
+    (set-default-font "Terminus-11"))
+(add-to-list 'default-frame-alist '(font . "Terminus-11"))
+
+;; disable GUI elements
+(if (fboundp 'set-scroll-bar-mode) (set-scroll-bar-mode nil))
+(if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
+(if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
+
+;;; cursor settings
+
+(setq x-stretch-cursor t)
+(setq-default cursor-type 'box)
+(if (fboundp 'blink-cursor-mode) (blink-cursor-mode 0)) ; turns off blink-cursor-mode if it ended up on
+
+;; get the mouse out of the way
+(mouse-avoidance-mode 'cat-and-mouse)
+
+;;; zenburn
+
+(use-package zenburn-theme :ensure)
+(load-theme 'zenburn)
+
+;;; I'm in Korea
+
+(set-time-zone-rule "/usr/share/zoneinfo/Asia/Seoul")
+
+;;; be sure to start the server
+
+(server-start)
+
+;; bind C-x k to end edit (C-x C-c seems to be already bound to this)
+;; (add-hook 'server-switch-hook
+;;           (lambda ()
+;;             (when (current-local-map)
+;;               (use-local-map (copy-keymap (current-local-map))))
+;;             (when server-buffer-clients
+;;               (local-set-key (kbd "C-x k") 'server-edit))))
+
+;;;; ---- packages ----
+
+;;; Org
+
+(use-package org
+  :ensure org-plus-contrib
+  :mode (("\\.org" . org-mode)
+         ("\\.org_archive" . org-mode))
+  :bind (("C-M-c" . org-capture)
+         ("C-c l" . org-store-link)
+         ("C-c a" . org-agenda))
+  :diminish org-indent-mode
+  :config (load "~/.emacs.d/init-org.el"))
+
+;;; keep pop up windows under control
+
+(use-package popwin
+  :ensure
+  :commands popwin-mode
+  :idle (popwin-mode 1))
+
+;;; modern replacement for the mighty paredit
+
+(use-package smartparens
+  :ensure
+  :commands (smartparens-global-strict-mode show-smartparens-global-mode)
+  :bind (("C-w" . sp-backward-kill-word)
+         ("M-d" . sp-kill-word)         ; ideally these would delete, not kill
+         ("C-M-e" . sp-up-sexp)
+         ("C-M-a" . sp-backward-down-sexp)
+
+         ("C-<right>" . sp-forward-slurp-sexp)
+         ("C-<left>" . sp-forward-barf-sexp)
+         ("C-M-<left>" . sp-backward-slurp-sexp)
+         ("C-M-<right>" . sp-backward-barf-sexp)
+
+         ("M-j" . sp-join-sexp)
+
+         ;; ("C-]" . sp-select-next-thing-exchange)
+         ("C-M-]" . sp-select-next-thing))
+  :idle (progn
+          (smartparens-global-strict-mode)
+          (show-smartparens-global-mode))
+  :diminish smartparens-mode
+  :config (progn
+            (require 'smartparens-config)
+            (setq sp-navigate-consider-symbols t)
+            (sp-use-paredit-bindings)))
+
+;;; save my places in buffers.  ido and recentf save recently opened
+;;; files, and these two things together are enough session management
+;;; for me
+
+;; the three hooks added by the idle progn below don't stay set when
+;; set by (require 'saveplace), nor do they remain in place if simply
+;; added in this config file or even in 'after-init-hook.  So have
+;; use-package add them a few seconds after Emacs starts
+
+(use-package saveplace
+  :init (progn
+          (setq-default save-place t)
+          (setq save-place-file "~/.emacs.d/saveplace"))
+  :idle (progn
+          (add-hook 'find-file-hook 'save-place-find-file-hook t)
+          (add-hook 'kill-emacs-hook 'save-place-kill-emacs-hook)
+          (add-hook 'kill-buffer-hook 'save-place-to-alist)))
+
+;;; fix up whitespace around kill and yanking
+
+(use-package smart-whitespace-comment-fixup :ensure)
+
+;;; more useful unique buffer names
+
+(use-package uniquify
+  :init (setq uniquify-buffer-name-style 'post-forward))
+
+;;; OpenWith
+
+(use-package openwith
+  :ensure
+  :commands openwith-mode
+  :idle (openwith-mode t))
+
+;;; doc-view
+
+(use-package doc-view
+  :init (setq doc-view-resolution 150
+              doc-view-continuous t)
+  :config (add-hook 'doc-view-mode-hook 'auto-revert-mode))
+
+;;; bbdb
+
+(use-package bbdb
+  :ensure
+  :commands bbdb
+  :config (progn
+            (setq bbdb-complete-name-full-completion t
+                  bbdb-completion-type 'primary-or-name
+                  bbdb-complete-name-allow-cycling t
+                  bbdb-dwim-net-address-allow-redundancy t
+                  bbdb-offer-save 1
+                  bbdb-use-pop-up t
+                  bbdb-electric-p t
+                  bbdb-popup-target-lines  1
+                  bbdb-file "~/.bbdb")
+            (put 'narrow-to-region 'disabled nil)
+            (bbdb-initialize 'message)))
+
+;;; magit
+
+(use-package magit
+  :ensure
+  :bind ("C-c g" . magit-status)
+  :diminish magit-auto-revert-mode
+  :config (progn
+            ;; C-c C-a to amend without any prompt
+            (defun magit-just-amend ()
+              (interactive)
+              (save-window-excursion
+                (magit-with-refresh
+                  (shell-command "git --no-pager commit --amend --reuse-message=HEAD"))))
+            (define-key magit-status-mode-map (kbd "C-c C-a") 'magit-just-amend)))
+
+;;; winner mode
+
+(use-package winner-mode
+  :disabled t
+  :commands winner-mode
+  :idle (winner-mode 1))
+
+;;; better window switching
+
+(use-package switch-window
+  :ensure
+  :bind ("C-x o" . switch-window))
+
+;;; pointback mode
+
+(use-package pointback
+  :ensure
+  :commands pointback-mode
+  :idle (pointback-mode))
+
+;;; Ido
+
+(use-package ido
+  :ensure
+  :init (progn
+          (setq ido-enable-flex-matching t
+                ido-everywhere t
+                ido-use-filename-at-point 'guess
+                ido-create-new-buffer 'always
+                ido-file-extensions-order '(".org" ".tex" ".py" )
+                ido-default-file-method 'selected-window
+                ido-max-directory-size 100000
+                ido-auto-merge-delay-time 99999 ; only search when I tell you to M-s
+                ido-use-virtual-buffers t
+                ido-use-virtual-buffers-automatically t
+                ido-enable-regexp nil
+                ido-use-url-at-point nil
+                ido-max-file-prompt-width 0.1)
+          (add-hook 'ido-setup-hook (lambda ()
+                                      (define-key ido-completion-map "\C-w" 'ido-delete-backward-word-updir)
+                                      (define-key ido-completion-map " \C-h" 'ido-delete-backward-updir)))
+
+          (use-package flx-ido
+            :ensure
+            :init (flx-ido-mode 1)
+            :config (progn
+                      (setq ido-use-faces nil
+                            flx-ido-threshhold 7500
+                            gc-cons-threshold 20000000)))
+          (use-package ido-ubiquitous
+            :ensure
+            :init (ido-ubiquitous))
+          (use-package ido-vertical-mode
+            :ensure
+            :init (ido-vertical-mode 1))
+
+          (ido-mode 1)))
+
+;;; ibuffer
+
+(use-package ibuffer
+  :bind ("C-x C-b" . ibuffer))
+
+;;; colour those parentheses
+
+(setq-default frame-background-mode 'dark)
+(use-package rainbow-delimiters
+  :ensure
+  :commands rainbow-delimiters-mode)
+
+;;; and colour those colours
+
+(use-package rainbow-mode
+  :ensure
+  :commands rainbow-mode
+  :init (progn
+          (add-hook 'html-mode-hook 'rainbow-mode)
+          (add-hook 'css-mode-hook 'rainbow-mode)))
+
+;;; ElDoc and rainbow delimiters activation
+
+(dolist (hook '(emacs-lisp-mode-hook
+                lisp-mode-hook
+                lisp-interaction-mode-hook
+                ielm-mode-hook
+                scheme-mode-hook
+                inferior-scheme-mode-hoo
+                ))
+  (add-hook hook
+            (lambda ()
+              (turn-on-eldoc-mode)
+              (rainbow-delimiters-mode t))))
+
+;;; boxquotes
+
+(use-package boxquote
+  :ensure
+  :commands (boxquote-title
+             boxquote-region
+             boxquote-buffer
+             boxquote-insert-file
+             boxquote-insert-buffer
+             boxquote-kill-ring-save
+             boxquote-yank
+             boxquote-defun
+             boxquote-paragraph
+             boxquote-boxquote
+             boxquote-describe-function
+             boxquote-describe-variable
+             boxquote-describe-key
+             boxquote-shell-command
+             boxquote-where-is
+             boxquote-text
+             boxquote-narrow-to-boxquote
+             boxquote-narrow-to-boxquote-content
+             boxquote-kill
+             boxquote-fill-paragraph
+             boxquote-unbox-region
+             boxquote-unbox))
+
+;;; word count in modeline, when I want it
+
+(use-package wc-mode
+  :ensure
+  :bind ("C-c w" . wc-mode))
+
+;;; company-mode for smart and easy completion
+
+(use-package company
+  :ensure
+  :commands global-company-mode
+  :idle (global-company-mode)
+  :diminish company-mode
+  :config (progn
+            ;; I like my C-w binding so move one of company's bindings
+            (define-key company-active-map "\C-w" nil)
+            (define-key company-active-map "\C-j" 'company-show-location)
+
+            (setq company-idle-delay 0.2)
+            (add-to-list 'company-backends 'company-capf)
+            (add-to-list 'company-transformers 'company-sort-by-occurrence)))
+;; C-o during company isearch narrows to stuff matching that search;
+;; mnemonic 'occur'.  C-M-s while outside of search to do the same
+;; thing
+
+;;; auto indent mode inc. smart yanking
+
+(use-package auto-indent-mode :ensure
+  :disabled t)
+
+;;; smart tabs - tabs AND spaces (but just spaces by default)
+
+(setq-default indent-tabs-mode nil)
+(use-package smart-tabs-mode
+  :ensure
+  :disabled t
+  :commands smart-tabs-insinuate
+  :idle (smart-tabs-insinuate 'c 'javascript))
+
+;;; guess a file's indentation style
+
+(use-package dtrt-indent
+  :ensure
+  :disabled t
+  :commands dtrt-indent-mode
+  :idle (dtrt-indent-mode 1))
+
+;;; Randomize the order of lines in a region
+
+(use-package randomize-region :commands randomize-region)
+
+;;; Markdown mode
+
+(use-package markdown-mode
+  :ensure
+  :init (progn
+          (add-hook 'markdown-mode-hook 'turn-on-orgstruct)
+          (add-hook 'markdown-mode-hook 'turn-on-orgstruct++))
+  :mode "\\.md")
+
+;;; PHP mode
+
+(use-package php-mode :ensure)
+
+;;; Deft
+
+(use-package deft
+  :ensure
+  :bind ("<f9>" . deft)
+  :init (progn
+          (setq deft-extension "org"
+                deft-textmode 'org-mode
+                deft-directory "~/doc/org/"
+                deft-use-filename-as-title nil
+                deft-auto-save-interval 20.0)))
+
+;;; fast region expanding
+
+(use-package expand-region
+  :ensure
+  :bind ("M-m" . er/expand-region)
+  :init (progn
+          (defun er/add-text-mode-expansions ()
+            (make-variable-buffer-local 'er/try-expand-list)
+            (setq er/try-expand-list (append
+                                      er/try-expand-list
+                                      '(mark-paragraph
+                                        mark-page))))
+
+          (add-hook 'text-mode-hook 'er/add-text-mode-expansions)))
+
+;;; fix binding in python-mode
+
+(use-package python
+  :config (define-key python-mode-map (kbd "C-h") 'python-indent-dedent-line-backspace))
+
+;;; edit minibuffer in a proper buffer
+
+(use-package miniedit
+  :ensure
+  :commands miniedit
+  :init (progn
+          (define-key minibuffer-local-map "\M-\C-e" 'miniedit)
+          (define-key minibuffer-local-ns-map "\M-\C-e" 'miniedit)
+          (define-key minibuffer-local-completion-map "\M-\C-e" 'miniedit)
+          (define-key minibuffer-local-must-match-map "\M-\C-e" 'miniedit)))
+
+;;; smex
+
+(use-package smex
+  :ensure
+  :commands smex-initialize
+  :bind (("C-x C-m" . smex)
+         ("C-x C-," . smex-major-mode-commands))
+  :idle (smex-initialize)
+  :config
+  ;; restore space bar for hyphens (should be faster)
+  (defadvice smex (around space-inserts-hyphen activate compile)
+    (let ((ido-cannot-complete-command
+           `(lambda ()
+              (interactive)
+              (if (string= " " (this-command-keys))
+                  (insert ?-)
+                (funcall ,ido-cannot-complete-command)))))
+      ad-do-it)))
+
+;;; anchored transpose
+
+(use-package anchored-transpose
+  :bind ("C-x t" . anchored-transpose))
+
+;;; let's make it possible to toggle editing as root
+;;; http://atomized.org/2011/01/toggle-between-root-non-root-in-emacs-with-tramp/
+
+(use-package toggle-root
+  :bind ("C-c C-M-x C-M-q" . toggle-alternate-file-as-root))
+
+;;; TRAMP
+
+(use-package tramp
+  :config (progn
+            (setq tramp-default-method "scpc")
+
+            (add-to-list 'tramp-default-user-alist '("ssh" "athena" "swhitton"))
+            (add-to-list 'tramp-default-user-alist '(nil "sdf" "spw"))
+            (add-to-list 'tramp-default-user-alist '(nil "raven" "ball3162"))
+            (add-to-list 'tramp-default-user-alist '("sudo" "localhost" "root"))
+            (add-to-list 'tramp-default-user-alist '(nil nil "swhitton") t)
+            (add-to-list 'tramp-default-user-alist '(nil "ma" "spw"))
+
+            ;; from the TRAMP manual: For all hosts except my local one connect via
+            ;; ssh first, and apply sudo -u root afterwards
+            (add-to-list 'tramp-default-proxies-alist
+                         '(nil "\\`root\\'" "/scpc:%h:"))
+            (add-to-list 'tramp-default-proxies-alist
+                         '((regexp-quote (system-name)) nil nil))
+
+            (setq tramp-verbose 0)))
+
+;;; ebib for editing BiBTeX databases
+
+(use-package ebib
+  :ensure
+  :init (setq ebib-preload-bib-files '("~/doc/spw.bib"))
+  :commands ebib)
+
+;;; dired enhancements
+
+(use-package dired-details
+  :ensure
+  :init (setq dired-recursive-deletes 'always
+              dired-recursive-copies 'always
+              dired-dwim-target t)
+  :idle (dired-details-install))
+
+(use-package dired-sort-map
+  :init (setq dired-listing-switches "--group-directories-first -alh"))
+
+;;;; ---- functions ----
+
+;; backwards and forward deletions of words
+
+(defun delete-word (arg)
+  "Delete characters forward until encountering the end of a word.
+With argument, do this that many times."
+  (interactive "p")
+  (delete-region (point) (progn (forward-word arg) (point))))
+
+(defun backward-delete-word (arg)
+  "Delete characters backward until encountering the end of a word.
+With argument, do this that many times."
+  (interactive "p")
+  (delete-word (- arg)))
+
+;; disabled in favour of smartparens versions, though these are delete
+;; and the ones I'm currently using are kill
+;;(global-set-key "\C-w" 'backward-delete-word)
+;;(global-set-key "\M-d" 'delete-word)
+
+;;; my buffer save cleanup functions
+
+;; http://stackoverflow.com/questions/3533703/emacs-delete-trailing-whitespace-except-current-line
+(defun delete-trailing-whitespace-except-current-line ()
+  (interactive)
+  (let ((begin (line-beginning-position))
+        (end (line-end-position)))
+    (save-excursion
+      (when (< (point-min) begin)
+        (save-restriction
+          (narrow-to-region (point-min) (1- begin))
+          (delete-trailing-whitespace)))
+      (when (> (point-max) end)
+        (save-restriction
+          (narrow-to-region (1+ end) (point-max))
+          (delete-trailing-whitespace))))))
+
+(defun compact-blank-lines ()
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    (while (search-forward-regexp "\n\n\n+" nil "noerror")
+      (replace-match "\n\n"))))
+
+(defun swhitton/cleanup ()
+  (interactive)
+  (if (eq major-mode 'haskell-mode)
+      (progn
+        (delete-trailing-whitespace-except-current-line)
+        (compact-blank-lines)
+        ))
+  (if (eq major-mode 'python-mode)
+      (progn
+        (delete-trailing-whitespace-except-current-line)
+        (compact-blank-lines)
+        ))
+  (if (eq major-mode 'message-mode)
+      (whitespace-cleanup)))
+
+(add-hook 'before-save-hook 'swhitton/cleanup)
+
+;;; Typing Hangul
+
+(defun my-korean-setup ()
+  "Set up my Korean environment."
+  (if (equal current-language-environment "Korean")
+    (set-input-method "korean-hangul")))
+
+(defun my-english-setup ()
+  "Set up my English environment."
+  (if (equal current-language-environment "English")
+    (set-input-method nil)))
+
+(add-hook 'set-language-environment-hook 'my-korean-setup)
+(add-hook 'set-language-environment-hook 'my-english-setup)
+
+(defun my-toggle-lang-env ()
+  (interactive)
+  (set-language-environment
+   (if (equal current-language-environment "English")
+       "Korean" "English")))
+
+;;; centralise window for easier viewing
+
+(defun swhitton/centralise-current-window (arg)
+  "Make editing window 95 cols wide and centre it in the frame
+for easier reading and writing"
+  (interactive "P")
+  (delete-other-windows)
+  (split-window-horizontally)
+  (if arg
+      (split-window-horizontally))
+  (shrink-window-horizontally (- (window-width) (/ (- (frame-width) 97) 2)))
+  (switch-to-buffer "*blank*")
+  (toggle-read-only 1)
+  (setq mode-line-format nil)
+  (other-window 1)
+  (if arg (progn
+              (shrink-window-horizontally (- (window-width) 95))
+              (other-window 1)
+              (switch-to-buffer "*blank*")
+              (other-window -1)))
+  )
+
+;;; run my DnD helper script in an appropriately sized window
+
+(defun spwd20 ()
+  (interactive)
+  (find-file "~/doc/org/pathfinder2013.org")
+  (delete-other-windows)
+  (split-window-below)
+  (other-window 1)
+  (shrink-window (- (window-height) 6))
+  (switch-to-buffer
+   (make-comint "spwd20" "/home/swhitton/bin/spwd20")))
+
+;;; toggle orientation of a two window split
+
+(defun toggle-window-split ()
+  (interactive)
+  (if (= (count-windows) 2)
+      (let* ((this-win-buffer (window-buffer))
+             (next-win-buffer (window-buffer (next-window)))
+             (this-win-edges (window-edges (selected-window)))
+             (next-win-edges (window-edges (next-window)))
+             (this-win-2nd (not (and (<= (car this-win-edges)
+                                         (car next-win-edges))
+                                     (<= (cadr this-win-edges)
+                                         (cadr next-win-edges)))))
+             (splitter
+              (if (= (car this-win-edges)
+                     (car (window-edges (next-window))))
+                  'split-window-horizontally
+                'split-window-vertically)))
+        (delete-other-windows)
+        (let ((first-win (selected-window)))
+          (funcall splitter)
+          (if this-win-2nd (other-window 1))
+          (set-window-buffer (selected-window) this-win-buffer)
+          (set-window-buffer (next-window) next-win-buffer)
+          (select-window first-win)
+          (if this-win-2nd (other-window 1))))))
+
+;;; swap/rotate windows
+
+(defun rotate-windows ()
+  "Rotate your windows"
+  (interactive)
+  (cond ((not (> (count-windows)1))
+         (message "You can't rotate a single window!"))
+        (t
+         (setq i 1)
+         (setq numWindows (count-windows))
+         (while  (< i numWindows)
+           (let* (
+                  (w1 (elt (window-list) i))
+                  (w2 (elt (window-list) (+ (% i numWindows) 1)))
+
+                  (b1 (window-buffer w1))
+                  (b2 (window-buffer w2))
+
+                  (s1 (window-start w1))
+                  (s2 (window-start w2))
+                  )
+             (set-window-buffer w1  b2)
+             (set-window-buffer w2 b1)
+             (set-window-start w1 s2)
+             (set-window-start w2 s1)
+             (setq i (1+ i)))))))
+
+(defun ergoemacs-open-in-external-app ()
+  "Open the current file or dired marked files in external app."
+  (interactive)
+  (let ( doIt
+         (myFileList
+          (cond
+           ((string-equal major-mode "dired-mode") (dired-get-marked-files))
+           (t (list (buffer-file-name))))))
+
+    (setq doIt (if (<= (length myFileList) 5)
+                   t
+                 (y-or-n-p "Open more than 5 files?")))
+
+    (when doIt
+      (cond
+       ((string-equal system-type "windows-nt")
+        (mapc (lambda (fPath) (w32-shell-execute "open" (replace-regexp-in-string "/" "\\" fPath t t))) myFileList))
+       ((string-equal system-type "darwin")
+        (mapc (lambda (fPath) (shell-command (format "open \"%s\"" fPath)))  myFileList))
+       ((string-equal system-type "gnu/linux")
+        (mapc (lambda (fPath) (let ((process-connection-type nil)) (start-process "" nil "xdg-open" fPath))) myFileList))))))
+
+(defun ergoemacs-open-in-desktop ()
+  "Show current file in desktop (OS's file manager)."
+  (interactive)
+  (cond
+   ((string-equal system-type "windows-nt")
+    (w32-shell-execute "explore" (replace-regexp-in-string "/" "\\" default-directory t t)))
+   ((string-equal system-type "darwin") (shell-command "open ."))
+   ((string-equal system-type "gnu/linux")
+    (let ((process-connection-type nil)) (start-process "" nil "xdg-open" "."))
+    ;; (shell-command "xdg-open .") ;; 2013-02-10 this sometimes froze emacs till the folder is closed. ⁖ with nautilus
+    )))
+
+(defun join-setqs ()
+  "Interactively join a series of setq forms into a single definition"
+  (interactive)
+  (open-line 1)
+  (insert "(setq)")
+  (next-line)
+  (beginning-of-line)
+  (while (looking-at "(setq")
+    (call-interactively 'sp-kill-word)
+    (sp-backward-sexp)
+    (sp-join-sexp)
+    (next-line)
+    (beginning-of-line))
+  (sp-backward-sexp)
+  (next-line)
+  (delete-indentation)
+  (beginning-of-line)
+  (mark-sexp)
+  (indent-region (region-beginning) (region-end)))
+
+;;;; ---- personal settings ----
+
+;;; key bindings
+
+;; I almost never want to quit and if I do there is Alt-F4
+(global-set-key (kbd "C-x C-c") 'delete-frame)
+
+;; my function to fix my published blog
+(bind-key "C-c x p" (lambda () (interactive) (swhitton/pyblosxom-fixups)))
+
+;; get a tmux terminal in current dir
+(define-key global-map (kbd "C-c t") '(lambda ()
+                                        (interactive)
+                                       (shell-command (concat "tmux " "split-window -c " default-directory))))
+
+(bind-key "S-<menu>" 'my-toggle-lang-env)
+(bind-key "S-<Multi_key>" 'my-toggle-lang-env) ; need this on Apple keyboard
+
+(bind-key "C-c c" 'swhitton/centralise-current-window)
+(bind-key "C-c d" 'spwd20)
+(bind-key "C-c S" 'toggle-window-split)
+(bind-key "C-c R" 'rotate-windows)
+(bind-key "C-x C-k" 'kill-region)
+(bind-key "C-h" 'delete-backward-char) ; overriden by smartparens
+(bind-key "C-x M-k" 'backward-kill-sentence)
+(bind-key "RET" 'reindent-then-newline-and-indent)
+(bind-key "C-m" 'reindent-then-newline-and-indent)
+(bind-key "C-x M-t" 'transpose-paragraphs)
+(bind-key "C-M-SPC" 'fixup-whitespace)
+(unbind-key "C-c m")
+(bind-key "C-c s" 'join-setqs emacs-lisp-mode-map)
+
+(define-key isearch-mode-map "\C-h" 'isearch-delete-char)
+
+;;; miscellaneous personal settings
+
+;; isearch should leave you at the beginning of the match
+(add-hook 'isearch-mode-end-hook 'my-goto-match-beginning)
+(defun my-goto-match-beginning ()
+  (when isearch-forward (goto-char isearch-other-end)))
+
+;; save script files as executable automatically
+(add-hook 'after-save-hook
+          'executable-make-buffer-file-executable-if-script-p)
+
+;; always update file contents
+(setq global-auto-revert-mode t)
+
+;; mark settings
+(setq transient-mark-mode t
+      set-mark-command-repeat-pop t)
+
+;; recursive minibuffers
+(setq enable-recursive-minibuffers t)
+
+;; explicitly end sentences with double spaces
+(setq sentence-end-double-space t)
+
+;; C-n can't move us past the end of the buffer
+(setq next-line-add-newlines nil)
+
+;; re-indent and add newlines automatically, sometimes
+(electric-layout-mode 1)
+(electric-indent-mode 1)
+
+;; disable for python mode where it makes a mess
+(defun electric-indent-ignore-python (char)
+  "Ignore electric indentation for python-mode"
+  (if (equal major-mode 'python-mode)
+      `no-indent'
+    nil))
+(add-hook 'electric-indent-functions 'electric-indent-ignore-python)
+
+;; browser
+(setq browse-url-generic-program "iceweasel"
+      browse-url-browser-function 'browse-url-generic)
+
+;; return to Emacs 23 selection/clipboard behaviour
+(setq select-active-regions nil
+      mouse-drag-copy-region t
+      x-select-enable-primary t
+      x-select-enable-clipboard nil)
+(global-set-key [mouse-2] 'mouse-yank-at-click)
+
+;; always add a new line
+(setq require-final-newline t)
+
+;; require a buffer to have a final newline
+(setq require-final-newline 'visit-save)
+
+;; scrolling
+(setq scroll-preserve-screen-position t)
+;;;(setq scroll-margin 5)
+;;;(setq scroll-conservatively 4)
+;;;(setq scroll-up-aggressively 0.3) ; don't try and just slap all these three on at once!
+;; see http://www.gnu.org/software/emacs/manual/html_node/emacs/Auto-Scrolling.html
+
+(setq switch-to-visible-buffer nil)
+(setq ido-default-buffer-method 'selected-window)
+
+;; dabbrev should be case-insensitive
+(setq dabbrev-case-fold-search t)
+
+;; view mode should be read-only
+(setq view-read-only t)
+
+;;; command aliases
+
+(defalias 'rb 'revert-buffer)
+(defalias 'er 'eval-region)
+
+;;;; ---- modes configuration ----
+
+;;; mail mode for mutt
+
+(add-to-list 'auto-mode-alist '("/mutt" . message-mode))
+(add-hook 'message-mode-hook 'message-goto-body)
+
+(defun djcb-snip (b e summ)
+  "remove selected lines, and replace it with [snip:summary (n lines)]"
+  (interactive "r\nsSummary:")
+  (let ((n (count-lines b e)))
+    (delete-region b e)
+    (insert (format "[snip%s (%d line%s)]"
+                    (if (= 0 (length summ)) "" (concat ": " summ))
+                    n
+                    (if (= 1 n) "" "s")))))
+
+(setq mail-header-separator "")
+(add-hook 'message-mode-hook (lambda ()
+                               (auto-fill-mode)
+                               (footnote-mode)
+                               (define-key message-mode-map (kbd "C-c C-s") 'djcb-snip)
+                               (message-goto-body)
+                               (orgstruct++-mode) ; must go last for some reason
+                               ))
+
+;;; IELM
+
+(setq ielm-dynamic-return nil)
+
+;;; text mode
+
+(toggle-text-mode-auto-fill)
+
+;;; dired
+
+;; should load dired-x, and use dired-omit to hide dotfiles
+(setq dired-omit-files "^\\...+$")
+(add-hook 'dired-load-hook
+          (lambda ()
+            (load "dired-x")
+            (dired-omit-mode 1)))
+
+;; bind two useful functions from ergoemacs
+(define-key dired-mode-map (kbd "C-c C-o") 'ergoemacs-open-in-external-app)
+(define-key dired-mode-map (kbd "C-c C-d") 'ergoemacs-open-in-desktop)
+
+;;; LaTeX
+
+(setq TeX-auto-save t
+      TeX-parse-self t
+      ;; reftex-plug-into-AUCTeX t
+      LaTeX-indent-level 4
+      LaTeX-item-indent -2
+      TeX-newline-function 'reindent-then-newline-and-indent)
+
+(add-hook 'LaTeX-mode-hook 'turn-on-auto-fill)
+(add-hook 'LaTeX-mode-hook (lambda () (define-key LaTeX-mode-map [backtab] 'LaTeX-indent-line)))
+(add-hook 'LaTeX-mode-hook 'TeX-PDF-mode)
+(add-hook 'LaTeX-mode-hook 'flyspell-mode)
+;; (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+
+(setq TeX-output-view-style
+      (quote
+       (("^pdf$" "." "evince %o")
+        ("^html?$" "." "iceweasel %o"))))
+
+;;; fixes for exporting from Org-mode
+
+;; (setq TeX-auto-save t)
+;; (setq TeX-parse-self t)
+(setq-default TeX-master t)
+(make-variable-buffer-local 'TeX-master)
