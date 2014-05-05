@@ -1,0 +1,36 @@
+[general]
+accounts = SDF
+maxsyncaccounts = 1
+pythonfile = ~/bin/offlineimap.py
+# metadata = ~/lib/offlineimap
+
+[mbnames]
+enabled = yes
+filename = ~/.mutt/mailboxes
+header = "mailboxes "
+#peritem = "+%(accountname)s/%(foldername)s"
+peritem = "+%(foldername)s"
+sep = " "
+footer = "\n"
+
+[Account SDF]
+localrepository = Local
+remoterepository = ma
+status_backend = sqlite
+# autorefresh = 15
+# quick = 5
+
+[Repository Local]
+type = Maildir
+localfolders =~/.offlinemail
+
+[Repository ma]
+type = IMAP
+keepalive = 60
+remotehost = ma.sdf.org
+remoteusereval = get_username("ma.sdf.org")
+remotepasseval = get_password("ma.sdf.org")
+subscribedonly = yes
+ssl = yes
+cert_fingerprint = 69:8C:4A:3F:E5:EA:EE:2D:2D:4A:41:50:BB:4A:1D:8D
+folderfilter = lambda foldername: not re.search('(^procmail.log$)', foldername)

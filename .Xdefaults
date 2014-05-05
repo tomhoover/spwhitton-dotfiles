@@ -1,0 +1,87 @@
+! ---- fonts
+
+! shatter in #suckless
+
+Xft.antialias:          true
+Xft.autohint:           true
+Xft.dpi:                96
+Xft.hinting:            true
+Xft.hintstyle:          hintslight
+Xft.lcdfilter:          lcddefault
+Xft.rgba:               rgb
+
+! ---- urxvt
+
+! http://git.sysphere.org/dotfiles/tree/Xdefaults
+! Zenburn color-scheme
+!urxvt*background:  #3f3f3f
+! this is the same as the vim zenburn theme
+urxvt*background:  #3a3a3a
+urxvt*foreground:  #dcdccc
+! black + red
+!urxvt*color0:     #3f3f3f
+urxvt*color0:      #1E2320
+urxvt*color1:      #705050
+! green + yellow
+urxvt*color2:      #60b48a
+urxvt*color3:      #dfaf8f
+! blue + purple
+urxvt*color4:      #506070
+urxvt*color5:      #dc8cc3
+! cyan + white
+urxvt*color6:      #8cd0d3
+urxvt*color7:      #dcdccc
+! bright-black + bright-red
+urxvt*color8:      #709080
+urxvt*color9:      #dca3a3
+! bright-green + bright-yellow
+urxvt*color10:     #c3bf9f
+urxvt*color11:     #f0dfaf
+! bright-blue + bright-purple
+urxvt*color12:     #94bff3
+urxvt*color13:     #ec93d3
+! bright-cyan + bright-white
+urxvt*color14:     #93e0e3
+urxvt*color15:     #ffffff
+
+URxvt.urlLauncher      : iceweasel
+URxvt.matcher.button  : 1
+
+! Terminus for English and Baekmuk Gulim for Korean
+URxvt.font: xft:Terminus:pixelsize=14,\
+            xft:Baekmuk Gulim
+
+URxvt*metaSendsEscape: true
+URxvt*scrollBar: false
+URxvt*transparent: false
+URxvt*shading: 30
+URxvt*cursorBlink: false
+URxvt*cursorColor: #dcdccc
+
+! disable everything except the URL matcher
+URxvt.perl-ext-common: matcher
+
+! disable unicode entry methods which clash with my keybindings
+URxvt*iso14755_52: false
+URxvt*iso14755: false
+URxvt.termName: xterm-256color
+
+! ---- xterm
+
+XTerm*faceName: Monospace
+XTerm*faceSize: 10
+XTerm*background: black
+XTerm*foreground: white
+XTerm*metaSendsEscape: true
+
+! ---- xpdf
+
+! http://wiki.archlinux.org/index.php/Xdefaults_(English)#xpdf_preferences
+
+xpdf*enableFreetype:    yes
+xpdf*antialias:         yes
+xpdf*foreground:        #dcdccc
+xpdf*background:        #3a3a3a
+xpdf*urlCommand:        /home/swhitton/bin/ilinks %s
+xpdf*matteColor:        #3a3a3a
+

@@ -1,0 +1,5 @@
+load=~/.passwddb.pet
+pwgen_pwlen=20
+checkfsecurity=0
+pwgen_punct=0
+pwgen_special=0
