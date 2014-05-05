@@ -1,0 +1,50 @@
+\ProvidesPackage{spworg}
+
+\usepackage[protrusion=true,expansion=true]{microtype}
+\usepackage{multicol}
+\usepackage[a4paper]{geometry}
+\geometry{a4paper,verbose,includehead,tmargin=30pt,headsep=15pt,bmargin=50pt,lmargin=60pt,rmargin=80pt}
+\usepackage{fancyhdr} % this has to go after the geometry or the header appears too short
+%\pagestyle{fancy}
+%\usepackage{spwmaths}
+\usepackage[charter]{mathdesign}
+\usepackage[scaled]{berasans}
+\usepackage[sf,bf,compact,medium]{titlesec}
+%\setlength{\parindent}{0pt} % not sure why this was here and it was
+% meaning no indent on top level - be willing to uncomment
+
+\setlength{\headheight}{15pt}
+
+\pagestyle{fancy}
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+\renewcommand{\sectionmark}[1]{\markright{#1}{}}
+
+\usepackage[onehalf]{spwtitle}
+ 
+\fancyhead{}
+\fancyhead[LE,RO]{\textsf{\thepage}}
+\makeatletter\fancyhead[CE]{\textsc{\nouppercase{\@title}}}\makeatother
+\fancyhead[CO]{\textsc{\nouppercase{\rightmark}}}
+\fancyfoot{}
+ 
+\fancypagestyle{plain}{ %
+\fancyhf{} % remove everything
+\renewcommand{\headrulewidth}{0pt} % remove lines as well
+\renewcommand{\footrulewidth}{0pt}}
+
+\setlength{\columnsep}{25pt}
+\setlength{\columnseprule}{.5pt}
+
+\newenvironment{lowitemize}{\begin{list}{$\quad\boldsymbol{\star}\;$}{%
+\setlength{\itemsep}{0pt}%
+\setlength{\parsep}{3pt}%
+\setlength{\leftmargin}{20pt}%
+}}{\end{list}}
+\renewenvironment{itemize}{\begin{list}{--}{%
+\setlength{\itemsep}{0pt}%
+\setlength{\parsep}{3pt}%
+\setlength{\leftmargin}{40pt}%
+}}{\end{list}}
+
+\renewcommand{\subsubsection}[1]{\par\bigskip\textbf{#1}\bigskip\par}
+%\renewcommand{\paragraph}[1]{\par\bigskip\textsc{#1}\bigskip\par}

@@ -1,0 +1,26 @@
+\ProvidesPackage{spwtitle}
+
+% onehalf option is for documents that want onehalfspacing in general.
+% This has to be set here because we force onehalf for the title and
+% need to know whether to switch it off or not after
+\RequirePackage{setspace}
+\RequirePackage{ifthen}
+\newcommand{\spaceafter}{\singlespacing}
+\DeclareOption{onehalf}{\renewcommand{\spaceafter}{}}
+\ProcessOptions
+
+\usepackage{setspace}
+
+\makeatletter\renewcommand{\maketitle}{\onehalfspacing\thispagestyle{plain}
+%\noindent\rule{\columnwidth}{2pt}
+%\begin{center}\textnormal{\LARGE\@title}
+\noindent\textnormal{\LARGE\textsf{\@title}}
+    
+% \hfill\large\@author$\qquad\quad$\@date$\qquad$\normalsize
+\vspace{5pt}
+\hfill\large\textsf{\@author}\par\hfill\large\textsf{\@date}\normalsize
+\vspace{8.5pt}
+%\rule{\columnwidth}{1.5pt}
+%\end{center}
+\spaceafter
+}\makeatother
