@@ -169,7 +169,17 @@ checkout = git clone 'ssh://ma/~/local/git/doc.www.blog.git' 'blog'
 update = git pull "$@"
 skip = ! mine
 
-# --- temporary inclusion of old mr repository configurations
+# --- backup to portable HDD if plugged in
 
-include = cat ~/local/lib/vcsh
-include = cat ~/.config/mr/config.d/*
+[local]
+checkout = :
+update = :
+commit = :
+status = :
+push = for dir in /media/m3/git/*; do cd $dir; echo \> $(basename $dir):; git pull; done; sudo /root/local/bin/duply $(hostname -s)-seven backup
+skip = ! mount | grep -q "on /media/m3 type ext4"
+
+# do this one last since it is pulling from the same source pushed to
+# (due to weird errors when pulling across filesystem)
+# (this reasoning irrelevant now we have wheezy's version of git)
+order = 27
