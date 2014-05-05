@@ -91,6 +91,11 @@ lib =
 stowable = true
 checkout = git clone /s3ql/gitcrypt/priv.git priv
 
+# rewrite some actions so that they only fire if the s3ql drive is mounted
+update = ! [ -e /s3ql/gitcrypt/priv.git ] || git pull "$@"
+fetch = ! [ -e /s3ql/gitcrypt/priv.git ] || git fetch --all --prune --tags
+push = ! [ -e /s3ql/gitcrypt/priv.git ] || git push "$@"
+
 # this repository can't be checked out until we put the authorisation
 # tokens in place manually, so that's a good enough indication as to
 # whether we want it on a host
@@ -106,10 +111,16 @@ pre_update =
 # --- primary git annex
 
 [lib/annex]
-# it's slow so get it started first
-order = 1
 checkout = git clone '/s3ql/gitcrypt/lib.annex.git' 'annex'
 post_update = git annex merge
+
+# it's slow so get it started first
+order = 1
+
+# rewrite some actions so that they only fire if the s3ql drive is mounted
+update = ! [ -e /s3ql/gitcrypt/lib.annex.git ] || git pull "$@"
+fetch = ! [ -e /s3ql/gitcrypt/lib.annex.git ] || git fetch --all --prune --tags
+push = ! [ -e /s3ql/gitcrypt/lib.annex.git ] || git push "$@"
 
 # this repository can't be checked out until we put the authorisation
 # tokens in place manually, so that's a good enough indication as to
