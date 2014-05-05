@@ -1,0 +1,218 @@
+#!/usr/bin/python
+
+import time
+import tempfile
+import shutil
+import subprocess
+import re
+import datetime
+import hurry.filesize
+
+import os
+import sys
+import termios
+import fcntl
+
+global INCOMINGDIR
+INCOMINGDIR = "/home/swhitton/lib/annex/doc/incoming"
+
+# from: http://stackoverflow.com/questions/510357/python-read-a-single-character-from-the-user
+def getch():
+    fd = sys.stdin.fileno()
+
+    oldterm = termios.tcgetattr(fd)
+    newattr = termios.tcgetattr(fd)
+    newattr[3] = newattr[3] & ~termios.ICANON & ~termios.ECHO
+    termios.tcsetattr(fd, termios.TCSANOW, newattr)
+
+    oldflags = fcntl.fcntl(fd, fcntl.F_GETFL)
+    fcntl.fcntl(fd, fcntl.F_SETFL, oldflags | os.O_NONBLOCK)
+
+    try:
+        while 1:
+            try:
+                c = sys.stdin.read(1)
+                break
+            except IOError: pass
+    finally:
+       termios.tcsetattr(fd, termios.TCSAFLUSH, oldterm)
+       fcntl.fcntl(fd, fcntl.F_SETFL, oldflags)
+       return c
+
+def main():
+    desktop = 0
+    while True:
+        if not(desktop):
+            savestr = "incoming folder"
+        else:
+            savestr = "desktop"
+
+        operation = menu("Choose an operation:",
+                         [("Single page B&W PDF", '1'),
+                          ("Multi-page B&W PDF", '2'),
+                          ("Single page colour PDF", '3'),
+                          ("Multi-page colour PDF", '4'),
+                          ("Single page OCR'd PDF", '5'), # greyscale 400dpi best for ocr http://web.archive.org/web/20080529012847/http://groundstate.ca/ocr
+                          ("Multi-page OCR'd PDF", '6'),
+                          ("Standard dpi full colour scan to PNG, autocrop", '7'),
+                          ("High dpi full colour scan to PNG, cropped to printed photo size", '8'),
+                          ("Single page colour PDF, letter size", '9'),
+                          ("Multi-page colour PDF, letter size", '0'),
+                          ("Single-page colour 300 dpi to PNG", 'a'),
+                          ("Toggle save location (currently: " + savestr + ")", 'd'),
+                          ("Quit", 'q')])
+
+        outdir = lambda desktop: subprocess.check_output(['xdg-user-dir', 'DESKTOP']).rstrip() if desktop else INCOMINGDIR
+        outdir = outdir(desktop)
+
+        if operation == 'q':
+            sys.exit()
+        elif operation == 'd':
+            if desktop:
+                desktop = 0
+            else:
+                desktop = 1
+
+        elif operation == '1':
+            scan(outdir, 150)
+        elif operation == '2':
+            scan(outdir, 150, True)
+        elif operation == '3':
+            scan(outdir, colour = True)
+        elif operation == '4':
+            scan(outdir, colour = True, multi = True)
+        elif operation == '9':
+            scan(outdir, colour = True, crop = 3)
+        elif operation == '0':
+            scan(outdir, colour = True, multi = True, crop = 3)
+        elif operation == 'a':
+            scan(outdir, colour = True, multi = False, crop = 4)
+        elif operation == '8':
+            scan(outdir, dpi = 600, multi = False, colour = True, depth = 16, crop = 2)
+        elif operation == '7':
+            scan(outdir, colour = True, crop = 0)
+        elif operation == '5':
+            scan(outdir, gray = True, crop = 1, ocr = True)
+        elif operation == '6':
+            scan(outdir, gray = True, crop = 1, ocr = True, multi = True)
+
+def scan(outdir, dpi = 300, multi = False, colour = False, gray = False, ocr = False, depth = 8, crop = 1, lineartFilter = "None"):
+    workdir = tempfile.mkdtemp()
+    print "scanning at " + str(dpi) + " dpi"
+
+    # build the command
+    scanimage = ["scanimage", "-vp", "--format=tiff"]
+    scanimage.append("--resolution=" + str(dpi))
+    scanimage.append("--depth=" + str(depth))
+    if colour:
+        scanimage.append("--mode=Color")
+    elif gray:
+        scanimage.append("--mode=Gray")
+    else:
+        scanimage = scanimage + ["--mode=Lineart", "--swdespeck=yes", "--color-filter=" + lineartFilter]
+
+    if crop == 2:
+        scanimage = scanimage + ['-x', '150', '-y', '100'] # dimensions of a standard photo
+    elif crop == 0:
+        scanimage.append("--swcrop=yes")
+    elif crop == 1:
+        scanimage = scanimage + ['-x', '210', '-y', '297'] # dimensions of A4
+    elif crop == 3:
+        scanimage = scanimage + ['-x', '215.9', '-y', '279.4'] # dimensions of American letter paper
+
+    # do the scan
+    i = 1
+    if multi:
+        while True:
+            print "\nscanning page #" + str(i)
+            doScan(scanimage, workdir, str(i))
+            i = 1 + i
+            print "hit q to quit, anything else to scan another image"
+            choice = getch()
+            if choice == 'q':
+                i = i - 1
+                break
+    else:
+        tiff = "1"
+        doScan(scanimage, workdir, tiff)
+
+    # post-processing
+
+    if crop == 1 or crop == 3:               # A4/LTR PDF output
+        output = workdir + '/output.pdf'
+        pages = []
+        for j in range(i):
+            pages.append(workdir + '/' + str(j + 1))
+        # if output TIFF isn't in monochrome, try first mogrify -monochrome file.png
+        subprocess.call(['convert'] + pages + [output])
+
+        # set PDF metadata
+        metadata = workdir + '/metadata'
+        metadataf = open(metadata, 'w')
+        metadataf.write("InfoKey: Title\nInfoValue: scan of "
+                        + datetime.datetime.now().strftime("%Y-%b-%d").lower()
+                        + "\nInfoKey: Author\nInfoValue: spw\n")
+        metadataf.close()
+        subprocess.call(['pdftk', output, 'update_info', metadata, 'output', workdir + '/process.pdf'])
+        shutil.move(workdir + '/process.pdf', output)
+
+        if ocr:
+            # https://github.com/gkovacs/pdfocr
+            # consider running unpaper before pdfocr to improve ocr performance
+            subprocess.call(['pdfocr', '-t', '-i', output, '-o', workdir + '/process.pdf'])
+            shutil.move(workdir + '/process.pdf', output)
+        else:
+            # compress PDF by flattening it
+            # more aggressive compression is possible: http://stackoverflow.com/questions/5296667/pdftk-compression-option
+
+            # pdfocr Ruby script does its own flattening
+            subprocess.call(['qpdf', '--linearize', output, output + '~'])
+            shutil.move(output + '~', output)
+    else:                       # single image output
+        output = workdir + '/output.png'
+        # subprocess.call(['convert', workdir + '/1', "-crop 7090x4760+0+0", output])
+        subprocess.call(['convert', workdir + '/1', output])
+
+    # output the file
+    outfile = outdir + '/' + str(int(time.time())) + '.' + output.split('.')[-1]
+    if not os.path.exists(outdir):
+        os.mkdir(outdir, 755)
+    shutil.copyfile(output, outfile)
+    print "wrote", hurry.filesize.size(os.path.getsize(outfile)), "to", outfile
+    shutil.rmtree(workdir)
+    print "press any key to return to main menu, or q to quit"
+    choice = getch()
+    if choice == 'q':
+        sys.exit()
+
+def doScan(scanimage, filedir, filename):
+    tiff = open(filedir + '/' + filename, 'w')
+    subprocess.call(scanimage, stdout = tiff)
+    # TODO: attach stderr to terminal more consistently
+    tiff.close()
+    time.sleep(1)
+
+    # work around genesys bug by resetting scanner, rather than physically replugging it
+    # the following code only required when connected via a USB 3.0 port
+    lsusb = subprocess.check_output(['lsusb'])
+    match = re.search('Bus ([0-9]+) Device ([0-9]+): ID 04a9:190a Canon, Inc. CanoScan LiDE 210', lsusb)
+    dev = '/dev/bus/usb/' + match.group(1) + '/' + match.group(2)
+    subprocess.call(['usbreset', dev])
+
+def menu(title, options):
+    while True:
+        os.system('clear')
+        print "\n",             # to deal with random char at start of
+                                # first line after non-existent answer
+        print title
+        print "=" * len(title),"\n"
+        for o in options:
+            print o[1] + ") " + o[0]
+        print "\n" + 'Your choice? ',
+        choice = getch()
+        if choice in [o[1] for o in options]:
+            print choice, "\n"
+            return choice
+
+if __name__ == "__main__":
+    main()

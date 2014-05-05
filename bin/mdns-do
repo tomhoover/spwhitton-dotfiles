@@ -1,0 +1,6 @@
+#!/bin/sh
+
+# update mdns from SSH session
+
+ip=`echo $SSH_CLIENT | cut -f 1 -d' '`
+mdns $ip

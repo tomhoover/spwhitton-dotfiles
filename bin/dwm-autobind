@@ -1,0 +1,22 @@
+#!/bin/sh
+
+# first fix keyboards
+
+if lsusb | grep -q "Aluminum Keyboard"; then
+   dwm-applebindings &
+else
+    setxkbmap -option ctrl:swapcaps
+    setxkbmap -option "compose:ralt"
+    setxkbmap -layout gb
+fi
+
+# now sort out monitors
+##auto-disper --change
+
+# finally fix stump mode-line as long as no argument telling us not to
+##if ! [ "$1" = "nomodeline" ]; then
+##    stumpish eval "(enable-mode-line (current-screen) (current-head) nil)"
+##    stumpish fnext
+##    stumpish eval "(enable-mode-line (current-screen) (current-head) t)"
+##    stumpish fnext
+##fi

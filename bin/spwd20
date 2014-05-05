@@ -1,0 +1,175 @@
+#!/usr/bin/env python
+
+import re
+import readline
+import subprocess
+import csv
+from os.path import expanduser
+from operator import itemgetter
+import random
+
+def main():
+    readline.parse_and_bind('tab: complete') # Emacs input editing
+    while True:
+        # input loop: get input
+        try:
+            cmd = raw_input(">>> ")
+        except (EOFError, KeyboardInterrupt):
+            print ""
+            break
+        # and act on it
+        if re.match(r'([0-9]*[d]{0,1}[0-9]+[+-])*[0-9]*[d]{0,1}[0-9]+', cmd):
+            print "\n    " + doRoll(cmd) + "\n"
+        elif cmd == "init":
+            doInit()
+        elif cmd == "hit" or cmd == "h":
+            print randDescrip(1)
+        elif cmd == "miss" or cmd == "m":
+            print randDescrip(0)
+        else:
+            print "invalid input"
+
+def doRoll(str):
+    # currently calling my Haskell code to do the dice rolls.  Ideally
+    # that Haskell will do everything this Python wrapper does
+    return subprocess.check_output(['spwd20-roll', str]).rstrip()
+
+def doInit():
+    inits = []
+
+    # first do the monster inits (while players are rolling)
+    i = 0
+    while True:
+        try:
+            name = raw_input("Monster (group) name: ")
+            modifier = raw_input("Monster (group) init modifier: ")
+            hp = raw_input("Monster (group) HD or HP (split into 1 + (n - 1)): ")
+        except (EOFError, KeyboardInterrupt):
+            print ""
+            break
+        if name == "" or modifier == "":
+            break
+
+        if hp == "":
+            hp = "0"
+        else:
+            hp = doRoll(hp)
+            hp = int(hp.partition(' ')[0])
+        if int(modifier) < 0:
+            roll = doRoll("1d20-" + modifier[1:])
+        else:
+            roll = doRoll("1d20+" + modifier)
+        roll = int(roll.partition(' ')[0])
+        inits.append({'name': name,
+                      'modifier': int(modifier),
+                      'roll': roll,
+                      'hp': int(hp)})
+
+    # now do the party inits
+    with open(expanduser("~") + '/.spwd20-party', 'rb') as csvfile:
+        partyreader = csv.reader(csvfile,
+                                     delimiter = ',')
+                                     # fieldnames = ["name", "init"])
+        for member in partyreader:
+            try:
+                roll = raw_input(member[0] + "'s (modified) initiative roll? ")
+            except (EOFError, KeyboardInterrupt):
+                print ""
+                break
+            inits.append({'name': member[0],
+                          'modifier': int(member[1]),
+                          'roll': int(roll),
+                          'hp': 0})
+
+    # sort them
+    inits.sort(key = itemgetter('roll', 'modifier'))
+    inits.reverse()
+
+    # output in an Org table
+    table = ["COMBAT ROUND TALLY: |", "",
+             "|Creature|Mod|Init|HP|Damage|Status|",
+             "|-"]
+
+    for creature in inits:
+        if creature['modifier'] > 0:
+            printmod = "+" + str(creature['modifier'])
+        else:
+            printmod = str(creature['modifier'])
+        if creature['hp'] == 0:
+            printhp = "-"
+        else:
+            printhp = str(creature['hp'])
+        table.append("|" + creature['name']
+                     + "|" + printmod
+                     + "|" + str(creature['roll'])
+                     + "|" + printhp
+                     + "| | |")
+
+    print "\n"
+    tabled = "\n".join(table)
+    print tabled
+
+    # copy to X selection
+    xsel = subprocess.Popen(["xsel", "-i"], stdin=subprocess.PIPE)
+    xsel.communicate(input = tabled)
+
+    print "\n    copied to X selection; Emacs: S-insert/C-y C-c C-c"
+
+def randDescrip(index):
+    descriptions = []
+    descriptions.append(["Your opponent side-steps out of the way",
+                         "You strike your opponent buts its armour/hide is not pierced",
+                         "Your opponent parries your strike",
+                         "Abruptly your opponent slides away from where you expect",
+                         "Your opponent dodges left, but your attack doesn't catch up to it",
+                         "Your weapon flies wildly missing your opponent",
+                         "From the corner of your eye, you are distracted by movement and your attack sails wide",
+                         "Your attack connects, but flances off your opponent's armour/hide",
+                         "You misjudge your opponent's movement and your attack misses",
+                         "Your opponent stops your attack with his shield/bracer",
+                         "Your weapon seems unbalanced and doesn't move as you expect",
+                         "Your opponent raises his weapon and successfully parries",
+                         "Your opponent howls, and you flinch throwing your attack off",
+                         "You nick your opponent, but the strike is so minor that no damage is done",
+                         "A light catches your eye and throws off your attack",
+                         "Your opponent changes his stance and you miss",
+                         "Your weapon only catches some of your adversary's clothes"
+                         "Your attack hits only armour/hide",
+                         "Timing your strike, your opponent shifts out of the way",
+                         "Your opponent shifts his most heavily armoured/protected part to your weapon's path",
+                         "The armour/hide of your opponent absorbs the attack",
+                         "You change your grip to adjust to your opponent's move, but it it too little and too late",
+                         "Your opponent's armour/hide is too strong for your strike",
+                         "Your attack hits the most protected part of your opponent, doing no damage",
+                         "A call from a party member distracts you and your attack does not connnect"])
+    descriptions.append(["You pierce the creature's armour/skin/scales",
+                         "Your attack rings true",
+                         "The creature winces in pain as your attack strikes",
+                         "You successfully smash it",
+                         "Your attack lands",
+                         "You strike it",
+                         "It cannot avoid your jab",
+                         "Your weapon meets flesh",
+                         "You find a soft spot in your foe's armour/skin/chitin",
+                         "Your attack slip past your foe's parry and draws blood",
+                         "Your strike tears into your opponent's flesh",
+                         "You split the creature's hide",
+                         "Your weapon bounces off the creature's parry and lands a blow",
+                         "You guess the creature's feint and strike flesh",
+                         "Your weapon sinks into the creature's flesh",
+                         "Your weapon sneaks through the creature's armour/skin/scales",
+                         "You strike glances off your opponent's shield but slides into the creature's flesh",
+                         "Your weapon lands a heavy blow",
+                         "Blood flies as your weapon strikes",
+                         "Your opponent dodges--just as you expected and your weapon draws blood",
+                         "The creature howls as your weapon leaves its mark",
+                         "Your opponent begins to wheeze as your attack hits",
+                         "Flesh falls as your attack lands",
+                         "The creature stumbles from your latest successful hit",
+                         "Your weapon finds flesh and bone"])
+
+    rand = random.randint(0, len(descriptions[index]) - 1)
+    return descriptions[index][rand]
+
+if __name__ == "__main__":
+    main()

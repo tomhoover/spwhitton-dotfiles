@@ -1,0 +1,5 @@
+#!/bin/zsh
+
+# string=`echo "emacsclient -nw --eval '(dired \\\\\\"$PWD\\\\\\")'"`
+
+tmux split-window "dired $PWD"

@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# rough
+pdftotext $1 - | tr " " "\n" | wc -l

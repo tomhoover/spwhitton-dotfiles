@@ -1,0 +1,16 @@
+#!/bin/sh
+
+if [ $# -ne 2 ]; then
+    echo "usage: cprelsymln SOURCEDIR DESTDIR"
+    exit
+fi
+
+if ! which symlinks; then
+    echo "need to apt-get install symlinks"
+    exit
+fi
+
+find "$1" -type l -exec sh -c '
+ln -s $(readlink -f "$0") '${2}'/"$(basename "$0")"
+' {} ';'
+symlinks -c $2

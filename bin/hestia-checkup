@@ -1,0 +1,19 @@
+#!/bin/sh
+
+echo "hestia weather report . . .\n"
+
+uptime
+
+echo -n "\nrtorrent pid: "
+
+pgrep rtorrent
+
+echo -n "\ngit annex assistant pid: "
+
+pgrep git-annex
+
+echo -n "\n my IP address according to OpenDNS: "
+
+dig +short myip.opendns.com @resolver1.opendns.com
+
+echo "\nmight want to take a look if either of the PIDs are blank~~"

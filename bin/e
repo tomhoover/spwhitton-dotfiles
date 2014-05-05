@@ -1,0 +1,21 @@
+#!/bin/sh
+
+# TODO: conditional on emacs being running, or do a split running zile
+# (if that exists: otherwise nano): then this works great on remote
+# machines too and can incorporate into .zshrc, maybe
+
+if pgrep -u $USER emacs; then
+    command="emacsclient -nw"
+elif which zile; then
+    command="zile"
+else
+    command="nano"
+fi
+
+progname=`basename $0`
+
+if [ "$progname" = "es" ]; then
+    tmux split-window "$command $@"
+else
+    $command $@
+fi

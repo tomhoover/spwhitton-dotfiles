@@ -1,0 +1,9 @@
+#!/bin/sh
+
+SMTPOPT="--relay localhost --encryption-method=NONE spw@sdf.org"
+WORKDIR=`mktemp -d` || exit 1
+
+nice -n 19 ebook-convert "The Economist.recipe" $WORKDIR/economist.mobi --output-profile kindle
+calibre-smtp --attachment $WORKDIR/economist.mobi $SMTPOPT spwhitt0n@free.kindle.com ""
+
+rm -r $WORKDIR

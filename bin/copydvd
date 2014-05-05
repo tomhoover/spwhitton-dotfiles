@@ -1,0 +1,55 @@
+#!/bin/bash
+
+#Usage: copydvd <read> <write>
+
+#Make sure we are running as root (otherwise we can't burn later)
+if [ `whoami` != "root" ]
+then
+echo "This script must be run as root."
+exit 1
+fi
+
+DEVICE1="$1"
+DEVICE2="$2"
+
+TMPDIR=`mktemp -d` || exit 1
+ISOPIPE="$TMPDIR/pipe.iso"
+READERR="$TMPDIR/mkisoerr"
+
+mkfifo "$ISOPIPE"
+
+echo "Burning directory..."
+
+growisofs -dvd-compat -Z "$DEVICE2"="$ISOPIPE" &
+BURNER=$!
+MD5=`dd if="$DEVICE1" 2>"$READERR" | tee "$ISOPIPE" | md5sum | egrep -o -i -e "^[0-9a-f]{32}"`
+
+EXTENTS=`egrep -e "^[0-9]+ extents written " "$READERR" | egrep -o -e "^[0-9]+"`
+
+wait "$BURNER"
+
+echo "Wrote $EXTENTS extents with a MD5 hash of $MD5."
+echo "Cycling drive tray..."
+
+eject "$DEVICE2"
+eject -t "$DEVICE2"
+
+# Arch Linux seems to have problems without a wait
+# here; gives dd: opening `/dev/sr1': No medium found otherwise
+sleep 15
+
+echo "Verifying..."
+
+DISCMD5=`dd if="$DEVICE2" bs=2048 count="$EXTENTS" | md5sum | egrep -o -i -e "^[0-9a-f]{32}"`
+
+echo "Disc has an MD5 hash of $DISCMD5."
+
+if [ "$MD5" == "$DISCMD5" ]
+then
+echo "Disc appears to have burned successfully!"
+else
+echo "Disc appears to have burned with errors."
+fi
+
+rm -r "$TMPDIR"
+

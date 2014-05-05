@@ -1,0 +1,7 @@
+#!/bin/sh
+
+cd ~/doc/
+git add org/*.org playlists/*.m3u
+
+# this command should never fail and stop mr
+git commit -a -m "auto commit on $(hostname -s)" || true

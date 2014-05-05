@@ -1,0 +1,21 @@
+#!/bin/sh
+
+SOURCE=`pwd`
+REPO=`basename $SOURCE`
+DEST=$HOME/html/git/$REPO
+
+git update-server-info
+
+rm -rf $DEST
+cp -rf $SOURCE $DEST
+
+#chgrp -R www $DEST
+#for d in `find $DEST -type d`; do
+#  chmod a+rx $d
+#done
+#for f in `find $DEST -type f`; do
+#  chmod a+r $f
+#done
+/usr/local/bin/setwebperms
+
+echo "Updated http access"

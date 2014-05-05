@@ -1,0 +1,134 @@
+#!/usr/bin/perl -w
+use strict;
+
+#########################################################
+# Flac to Mp3 Perl Converter
+# Created by: Somnorific
+# Based on: Scripts by Falkano and Nick Sklaventitis
+# Date: June 26, 2008
+#
+# Requires: perl, zenity, flac, lame, and rsync
+# Tested on: Ubuntu (Hardy)
+#########################################################
+
+# List of default encoding options, add to this list if you want more
+my %lameOptions = (
+"320" => ["-b 320 --ignore-tag-errors", ''],
+"V0" => ["-V 0 --vbr-new --ignore-tag-errors", ''],
+"V2" => ["-V 2 --vbr-new --ignore-tag-errors", '']
+);
+my $move_other = 0;
+
+# Ask for the directory containing the FLAC files
+my $dialog_flac = "zenity --file-selection --title 'FLAC directory' --directory";
+my $flac_dir = '';
+if (!($flac_dir = `$dialog_flac`)) {
+exit 0;
+}
+chomp($flac_dir);
+
+# Ask how the files should be encoded
+my $dialog_lame = "zenity --list --text 'LAME Options' --width 400 --height 300 --radiolist --column 'Choose' --column 'Option' TRUE";
+for my $lameOption ( keys %lameOptions ) {
+$dialog_lame .= " '" . $lameOption . "' FALSE";
+}
+$dialog_lame .= " 'All' FALSE 'Other'";
+my $lame_choice = '';
+if (!($lame_choice = `$dialog_lame`)) {
+exit 0;
+}
+chomp($lame_choice);
+if ($lame_choice eq 'Other') { # If other, present user with a text box to manually type in encoding options
+my $dialog_other = "zenity --entry --title 'LAME Options' --width 200 --text 'Please enter custom LAME encoder options'";
+if (!($lame_choice = `$dialog_other`)) {
+exit 0;
+}
+chomp($lame_choice);
+%lameOptions = ();
+%lameOptions = ( 'Custom' => [$lame_choice, ''] );
+} elsif ($lame_choice ne 'All') { # If a specific default encoding type is chosen, save it and remove the others
+my @temp = @{$lameOptions{$lame_choice}};
+%lameOptions = ();
+%lameOptions = ( $lame_choice => [$temp[0], ''] );
+}
+# If neither of the above, the array remains the same as all of the encoding types will be used
+
+# Ask if you would like to use default folder naming
+# Default folder naming places the files in a folder with this structure: "flac_dir (encoding_type)"
+my $dialog_type = "zenity --question --title 'MP3 Folder Naming' --text 'Use default folder naming?'";
+`$dialog_type`;
+if ($?) { # If not using default, ask the user which directory should be used for whichever encoding they chose
+foreach my $lame_option (keys %lameOptions) {
+my $dialog_mp3 = "zenity --file-selection --title 'MP3 directory for " . $lame_option . "' --directory";
+my $mp3_dir = '';
+if (!($mp3_dir = `$dialog_mp3`)) {
+exit 0;
+}
+chomp($mp3_dir);
+$lameOptions{ $lame_option }[1] = $mp3_dir;
+}
+} else { # If using default, make the directories using the default naming scheme
+foreach my $lame_option (keys %lameOptions) {
+my $mp3_dir = $flac_dir . " ($lame_option)";
+`mkdir "$mp3_dir"`;
+$lameOptions{ $lame_option }[1] = $mp3_dir;
+}
+}
+
+# Ask to move other files (playlists, image art, etc)
+my $dialog_move = "zenity --question --title 'Other Files' --text 'Move other non-FLAC files?'";
+`$dialog_move`;
+if (!$?) {
+$move_other = 1;
+}
+
+# Gather all of the flac files
+opendir(DIR, $flac_dir);
+my @files = grep(/\.flac$/,readdir(DIR));
+closedir(DIR);
+
+# Loop through each of the encodings chosen
+for my $lame_option ( keys %lameOptions ) {
+print "\nEncoding with $lame_option started...\n";
+
+# Pull out the directories and flags from the array
+my @mp3_arry = @{$lameOptions{$lame_option}};
+my $mp3_dir = $mp3_arry[1];
+my $lame_flags = $mp3_arry[0];
+
+# Loop through each of the FLAC files
+foreach my $file (@files) {
+# Create the destination mp3 filename
+my $mp3_filename = `basename "$file" .flac`;
+chomp($mp3_filename);
+$mp3_filename = $mp3_dir."/".$mp3_filename.".mp3";
+
+# Grab the tag info from the FLAC
+my %flac_tags = ('TITLE','','ALBUM','','ARTIST','','TRACKNUMBER','','GENRE','','COMMENT','','DATE','');
+for my $tag ( keys %flac_tags ) {
+$flac_tags{ $tag } = `metaflac --show-tag=$tag "$flac_dir/$file" | awk -F = '{ printf(\$2) }'`;
+}
+
+# Build the conversion script and do the actual conversion
+my $flac_command = "flac -dc \"$flac_dir/$file\" | lame $lame_flags " .
+"--tt \"" . $flac_tags{'TITLE'} . "\" " .
+"--tl \"" . $flac_tags{'ALBUM'} . "\" " .
+"--ta \"" . $flac_tags{'ARTIST'} . "\" " .
+"--tn \"" . $flac_tags{'TRACKNUMBER'} . "\" " .
+"--tg \"" . $flac_tags{'GENRE'} . "\" " .
+"--ty \"" . $flac_tags{'DATE'} . "\" " .
+"--add-id3v2 - \"$mp3_filename\" 2>&1";
+`$flac_command`;
+}
+
+print "\nEncoding with $lame_option finished...\n";
+
+# Move over any other files using rsync
+if ($move_other) {
+my $rsync_comm = "rsync -a --exclude \"*.flac\" \"$flac_dir/\" \"$mp3_dir/\"";
+`$rsync_comm`;
+}
+}
+
+print "\nAll encodings finished, bye...\n";
+

@@ -1,0 +1,16 @@
+#!/bin/sh
+
+# starts-up rtorrent and the git annex assistant--note that due to
+# the MTA setup being used the output of this script probably won't
+# reach my mailbox
+
+if ! pgrep -u $LOGNAME rtorrent >/dev/null; then
+    echo ">>> Removing probably-stale dtach socket and starting rtorrent..."
+    rm -f $HOME/local/rt/session/dtach.socket
+    TERM=xterm /usr/bin/nice -n 19 /usr/bin/dtach -n $HOME/local/rt/session/dtach.socket /usr/bin/rtorrent && echo "... ok"
+fi
+
+if ! pgrep -u $LOGNAME git-annex >/dev/null; then
+    echo ">>> Firing up the git annex assistant..."
+    /usr/bin/git annex assistant --autostart && echo "... ok"
+fi
