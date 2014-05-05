@@ -134,8 +134,8 @@ skip = ! [ -e ~/.s3ql/authinfo2 ]
 update = mkdir -p $HOME/tmp $HOME/src $HOME/local/src $HOME/local/bin $HOME/local/lib $HOME/local/pub
 checkout = mkdir -p $HOME/tmp $HOME/src $HOME/local/src $HOME/local/bin $HOME/local/lib $HOME/local/pub
 status = :
-#push = :
-#commit = :
+push = :
+commit = :
 chain = true
 
 # --- my personal documents, website and blog.  Override my global
