@@ -103,6 +103,19 @@ pre_update =
            git add .passwddb.pet .labbook.gpg
            git commit -a -m "auto passwddb and labbook commit on $(hostname -s)" || true
 
+# --- primary git annex
+
+[lib/annex]
+# it's slow so get it started first
+order = 1
+checkout = git clone '/s3ql/gitcrypt/lib.annex.git' 'annex'
+post_update = git annex merge
+
+# this repository can't be checked out until we put the authorisation
+# tokens in place manually, so that's a good enough indication as to
+# whether we want it on a host
+skip = ! [ -e ~/.s3ql/authinfo2 ]
+
 # --- source code repositories registered to their own mr config file,
 # --- and create my standard home directory subdirectories
 
