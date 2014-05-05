@@ -145,6 +145,11 @@ checkout = git clone 'ssh://ma/~/local/git/doc.www.blog.git' 'blog'
 update = git pull "$@"
 skip = ! mine
 
+# --- ~/bin/
+
+[bin]
+checkout = git clone 'http://spw.sdf.org/git/bin.git' 'bin'
+
 # --- temporary inclusion of old mr repository configurations
 
 include = cat ~/local/lib/vcsh
