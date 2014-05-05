@@ -29,7 +29,7 @@ lib =
 # --- tests
 
 lib =
-    hostname="$(hostname)"
+    hostname="$(hostname -s)"
     whoami="$(whoami)"
     on() {
         for host in $@; do
