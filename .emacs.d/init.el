@@ -255,7 +255,18 @@
   :config (progn
             (require 'smartparens-config)
             (setq sp-navigate-consider-symbols t)
-            (sp-use-paredit-bindings)))
+            (sp-use-paredit-bindings)
+
+            (defadvice sp-backward-kill-word (after sp-backward-kill-word-fix-punctuation activate)
+              ;; when killing the first word of a sentence, leave the
+              ;; two spaces after the previous sentence's terminal
+              ;; period
+              (save-excursion
+                (backward-char 2)
+                (if (looking-at "\\. ")
+                    (progn
+                      (forward-char 1)
+                      (insert " ")))))))
 
 ;;; save my places in buffers.  ido and recentf save recently opened
 ;;; files, and these two things together are enough session management
