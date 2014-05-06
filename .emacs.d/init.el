@@ -982,6 +982,9 @@ for easier reading and writing"
 (defalias 'rb 'revert-buffer)
 (defalias 'er 'eval-region)
 
+;;; don't ask me before following symlinks to files in version control
+(setq vc-follow-symlinks t)
+
 ;;;; ---- modes configuration ----
 
 ;;; mail mode for mutt
