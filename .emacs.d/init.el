@@ -528,7 +528,7 @@
 
 ;;; PHP mode
 
-(use-package php-mode :ensure)
+(use-package php-mode :ensure :mode (("\\.php" .  php-mode)))
 
 ;;; Deft
 
