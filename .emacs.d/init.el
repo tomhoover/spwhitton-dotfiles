@@ -540,7 +540,13 @@
                 deft-text-mode 'org-mode
                 deft-directory "~/doc/org/"
                 deft-use-filename-as-title nil
-                deft-auto-save-interval 20.0)))
+                deft-auto-save-interval 20.0
+
+                ;; don't just strip the leading hash but the whole #+TITLE:
+                deft-strip-title-regexp "\\(?:\\#\\+TITLE\\: \\|\\#\\+FILETAGS\\: \\|^%+\\|^[#* ]+\\|-\\*-[[:alpha:]]+-\\*-\\|#+$\\)"))
+  :config (progn
+            (bind-key "C-w" 'deft-filter-decrement-word deft-mode-map)
+            (bind-key "C-h" 'deft-filter-decrement deft-mode-map)))
 
 ;;; fast region expanding
 
