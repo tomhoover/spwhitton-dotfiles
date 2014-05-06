@@ -537,7 +537,7 @@
   :bind ("<f9>" . deft)
   :init (progn
           (setq deft-extension "org"
-                deft-textmode 'org-mode
+                deft-text-mode 'org-mode
                 deft-directory "~/doc/org/"
                 deft-use-filename-as-title nil
                 deft-auto-save-interval 20.0)))
