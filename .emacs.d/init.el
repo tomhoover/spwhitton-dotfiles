@@ -116,6 +116,7 @@
 
 (defconst emacs-tmp-dir (format "%s/%s%s/" temporary-file-directory "emacs" (user-uid)))
 (make-directory emacs-tmp-dir t)
+(chmod emacs-tmp-dir (string-to-number "700" 8))
 (setq backup-by-copying t                    ; don't clobber symlinks
       backup-directory-alist `((".*" . ,emacs-tmp-dir))
       tramp-backup-directory-alist backup-directory-alist
