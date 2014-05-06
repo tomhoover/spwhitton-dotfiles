@@ -646,6 +646,16 @@
 (use-package dired-sort-map
   :init (setq dired-listing-switches "--group-directories-first -alh"))
 
+;;; easily run the odd shell command in a real shell
+
+(use-package emamux
+  :ensure
+  :bind (("C-c t t" . emamux:run-command)
+         ("C-c t z" . emamux:zoom-runner)
+         ("C-c t [" . emamux:inspect-runner)
+         ("C-c t ]" . emamux:copy-kill-ring)
+         ("C-c t k" . emamux:close-runner-pane)))
+
 ;;;; ---- functions ----
 
 ;; backwards and forward deletions of words
@@ -882,9 +892,9 @@ for easier reading and writing"
 (bind-key "C-c x p" (lambda () (interactive) (swhitton/pyblosxom-fixups)))
 
 ;; get a tmux terminal in current dir
-(define-key global-map (kbd "C-c t") '(lambda ()
-                                        (interactive)
-                                       (shell-command (concat "tmux " "split-window -c " default-directory))))
+;; (define-key global-map (kbd "C-c t") '(lambda ()
+;;                                         (interactive)
+;;                                        (shell-command (concat "tmux " "split-window -c " default-directory))))
 
 (bind-key "S-<menu>" 'my-toggle-lang-env)
 (bind-key "S-<Multi_key>" 'my-toggle-lang-env) ; need this on Apple keyboard
