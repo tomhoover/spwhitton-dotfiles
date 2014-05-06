@@ -251,7 +251,7 @@
                  (org-agenda-start-with-entry-text-mode t))) ; doesn't work per block, so this does nothing atm
           (todo "TODO" ((org-agenda-todo-ignore-with-date t)
                         (org-agenda-overriding-header "Undated TODO items")
-                        (org-agenda-skip-function 'bh/skip-project-trees-and-habits)))
+                        (org-agenda-skip-function 'bh/skip-subprojects)))
           (agenda "day" ((org-agenda-ndays 7) (org-agenda-overriding-header "Schedule undated into the following schedule") (org-agenda-time-grid nil)))
 
           ;; (tags-todo "/!-SOMEDAY"
@@ -381,6 +381,27 @@
           (org-agenda-overriding-header "Sean's diary for the next three months")
           (org-agenda-files (quote ("~/doc/org/diary.org")))
           ) ("/tmp/diary.txt"))))
+
+;;; functions to skip subtasks from review view.  Such tasks might be
+;;; subtasks of a FREETIME task, in which case they shouldn't be
+;;; scheduled
+
+(defun bh/is-subproject-p ()
+  "Any task which is a subtask of another project"
+  (let ((is-subproject)
+        (is-a-task (member (nth 2 (org-heading-components)) org-todo-keywords-1)))
+    (save-excursion
+      (while (and (not is-subproject) (org-up-heading-safe))
+        (when (member (nth 2 (org-heading-components)) org-todo-keywords-1)
+          (setq is-subproject t))))
+        (and is-a-task is-subproject)))
+
+(defun bh/skip-subprojects ()
+  "Skip trees that are projects"
+  (let ((next-headline (save-excursion (outline-next-heading))))
+    (if (bh/is-subproject-p)
+        next-headline
+            nil)))
 
 (setq org-capture-templates
       '(("t" "Task" entry (file "~/doc/org/refile.org")
