@@ -76,6 +76,11 @@ fixups =
     ln -sf ~/src/dotfiles/home-mrconfig ~/.mrconfig
     ln -sf ~/src/dotfiles/.stow-global-ignore ~
 
+    # we don't want git doing any automated merges of master.  mr is
+    # configured not to do this (see redefinition of git_update at top
+    # of this file) but I often run git pull in this repo myself
+    git config branch.master.rebase true
+
 # create ~/.emacs.d/ before stowing so that the files inside are
 # symlinks, rather than the whole dir.  That way Emacs junk that gets
 # dumped in ~/.emacs.d doesn't have to be put into .gitignore
