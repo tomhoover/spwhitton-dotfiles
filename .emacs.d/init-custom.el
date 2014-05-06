@@ -39,7 +39,7 @@
  '(inhibit-startup-screen t)
  '(initial-buffer-choice t)
  '(initial-scratch-message nil)
- '(openwith-associations (quote (("\\.pdf\\'" "epdfview" (file)) ("\\.mp3\\'" "mplayer" (file)) ("\\.\\(?:mpe?g\\|avi\\|wmv\\)\\'" "mplayer" ("-idx" file)) ("\\.\\(doc\\|docx\\)\\'" "soffice" (file)))))
+ '(openwith-associations (quote (("\\.pdf\\'" "evince" (file)) ("\\.mp3\\'" "mplayer" (file)) ("\\.\\(?:mpe?g\\|avi\\|wmv\\)\\'" "mplayer" ("-idx" file)) ("\\.\\(doc\\|docx\\)\\'" "soffice" (file)))))
  '(openwith-confirm-invocation t)
  '(org-agenda-files (quote ("~/doc/org/efl.org" "~/doc/org/korea.org" "~/doc/org/pathfinder2013.org" "~/doc/org/diary.org" "~/doc/org/korean.org" "~/doc/org/summer2012.org" "~/doc/org/Academic.org" "~/doc/org/Drafts.org" "~/doc/org/Sean.org" "~/doc/org/SilentFlame.org" "~/doc/org/TechNotes.org" "~/doc/org/refile.org")))
  '(org-agenda-sticky t)
