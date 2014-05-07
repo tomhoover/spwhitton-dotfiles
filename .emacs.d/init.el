@@ -1037,10 +1037,13 @@ there's a region, all lines that region covers will be duplicated."
 
 ;;; abbreviations
 
-;; turn on for all buffers
-(setq abbrev-file-name "~/.emacs.d/abbrev_defs"
-      save-abbrevs t)
-(setq-default abbrev-mode t)
+(setq abbrev-file-name "~/doc/emacs-abbrevs")
+
+;; turn on for all buffers, if our abbrevs file is checked out
+(if (file-exists-p abbrev-file-name)
+    (progn
+      (setq save-abbrevs t)
+      (setq-default abbrev-mode t)))
 
 ;;; miscellaneous personal settings
 
