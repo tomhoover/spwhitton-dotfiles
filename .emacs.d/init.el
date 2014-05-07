@@ -922,6 +922,13 @@ for easier reading and writing"
 
 (define-key isearch-mode-map "\C-h" 'isearch-delete-char)
 
+;;; abbreviations
+
+;; turn on for all buffers
+(setq abbrev-file-name "~/.emacs.d/abbrev_defs"
+      save-abbrevs t)
+(setq-default abbrev-mode t)
+
 ;;; miscellaneous personal settings
 
 ;; isearch should leave you at the beginning of the match
