@@ -918,6 +918,7 @@ for easier reading and writing"
 (bind-key "C-M-SPC" 'fixup-whitespace)
 (unbind-key "C-c m")
 (bind-key "C-c s" 'join-setqs emacs-lisp-mode-map)
+(bind-key "M-/" 'hippie-expand)
 
 (define-key isearch-mode-map "\C-h" 'isearch-delete-char)
 
