@@ -693,6 +693,13 @@
          ("C-c t ]" . emamux:copy-kill-ring)
          ("C-c t k" . emamux:close-runner-pane)))
 
+;;; loads of visual help for working with Emacs regexps
+
+(use-package visual-regexp
+  :ensure
+  :bind (("C-c r" . vr/replace)
+         ("C-c q" . vr/query-replace)))
+
 ;;;; ---- functions ----
 
 ;; backwards and forward deletions of words
