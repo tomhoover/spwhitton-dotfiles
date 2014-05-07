@@ -415,12 +415,17 @@
 (use-package ibuffer
   :bind ("C-x C-b" . ibuffer))
 
-;;; colour those parentheses
+;;; colour those parentheses^Wblocks
 
 (setq-default frame-background-mode 'dark)
 (use-package rainbow-delimiters
   :ensure
+  :disabled t
   :commands rainbow-delimiters-mode)
+
+(use-package rainbow-blocks
+  :ensure
+  :commands rainbow-blocks-mode)
 
 ;;; and colour those colours
 
@@ -443,7 +448,7 @@
   (add-hook hook
             (lambda ()
               (turn-on-eldoc-mode)
-              (rainbow-delimiters-mode t))))
+              (rainbow-blocks-mode t))))
 
 ;;; boxquotes
 
