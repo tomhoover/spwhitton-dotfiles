@@ -996,6 +996,7 @@ there's a region, all lines that region covers will be duplicated."
 (bind-key "M-/" 'hippie-expand)
 (bind-key "C-c d" 'prelude-duplicate-current-line-or-region)
 (bind-key "C-c M-d" 'prelude-duplicate-and-comment-current-line-or-region)
+(bind-key "C-c p" 'proced)
 
 ;; remap C-a to `smarter-move-beginning-of-line'
 (bind-key "C-a" 'smarter-move-beginning-of-line)
