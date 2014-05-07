@@ -404,6 +404,12 @@
 
           (ido-mode 1)))
 
+;;; use ido to jump to imenu tags in all open files of the same mode
+
+(use-package imenu-anywhere
+  :ensure
+  :bind ("M-o" . imenu-anywhere))
+
 ;;; ibuffer
 
 (use-package ibuffer
