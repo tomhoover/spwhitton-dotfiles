@@ -1045,6 +1045,12 @@ there's a region, all lines that region covers will be duplicated."
       (setq save-abbrevs t)
       (setq-default abbrev-mode t)))
 
+;;; bookmarks
+
+(setq bookmark-default-file "~/doc/emacs-bookmarks"
+      ;; avoid annoying "Buffer emacs-bookmarks modified; kill anyway?" messages
+      bookmark-save-flag 1)
+
 ;;; miscellaneous personal settings
 
 ;; isearch should leave you at the beginning of the match
