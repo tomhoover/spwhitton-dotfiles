@@ -343,7 +343,9 @@
               (save-window-excursion
                 (magit-with-refresh
                   (shell-command "git --no-pager commit --amend --reuse-message=HEAD"))))
-            (define-key magit-status-mode-map (kbd "C-c C-a") 'magit-just-amend)))
+            (define-key magit-status-mode-map (kbd "C-c C-a") 'magit-just-amend)
+
+            (use-package magit-annex :ensure)))
 
 ;;; winner mode
 
@@ -657,6 +659,8 @@
 
 (use-package dired-sort-map
   :init (setq dired-listing-switches "--group-directories-first -alh"))
+
+(use-package git-annex :ensure)
 
 ;;; easily run the odd shell command in a real shell
 
