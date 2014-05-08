@@ -1047,15 +1047,17 @@ there's a region, all lines that region covers will be duplicated."
 
 ;;; bookmarks
 
-(setq bookmark-default-file "~/doc/emacs-bookmarks"
-      ;; avoid annoying "Buffer emacs-bookmarks modified; kill anyway?" messages
-      bookmark-save-flag 1)
+;; again, only do stuff if our bookmarks file is checked out
+(if (file-exists-p "~/doc/emacs-bookmarks")
+    (setq bookmark-default-file "~/doc/emacs-bookmarks"
+          ;; avoid annoying "Buffer emacs-bookmarks modified; kill anyway?" messages
+          bookmark-save-flag 1)
 
-;; something involved in setting bookmarks likes to try to kill the
-;; bookmarks file buffer which means an annoying y/n query.  So save the buffer
-(defadvice bookmark-write-file (before save-bookmarks-buffer activate)
-  (with-current-buffer (get-buffer "emacs-bookmarks")
-    (save-buffer)))
+  ;; something involved in setting bookmarks likes to try to kill the
+  ;; bookmarks file buffer which means an annoying y/n query.  So save the buffer
+  (defadvice bookmark-write-file (before save-bookmarks-buffer activate)
+    (with-current-buffer (get-buffer "emacs-bookmarks")
+      (save-buffer))))
 
 ;;; miscellaneous personal settings
 
