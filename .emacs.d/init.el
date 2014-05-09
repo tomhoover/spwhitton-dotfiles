@@ -700,6 +700,12 @@
   :bind (("C-c r" . vr/replace)
          ("C-c q" . vr/query-replace)))
 
+;;; simple projects
+
+(use-package projectile
+  :ensure
+  :idle (projectile-global-mode))
+
 ;;;; ---- functions ----
 
 ;; backwards and forward deletions of words
@@ -1028,7 +1034,7 @@ there's a region, all lines that region covers will be duplicated."
 (bind-key "M-/" 'hippie-expand)
 (bind-key "C-c d" 'prelude-duplicate-current-line-or-region)
 (bind-key "C-c M-d" 'prelude-duplicate-and-comment-current-line-or-region)
-(bind-key "C-c p" 'proced)
+(bind-key "C-c P" 'proced)
 
 ;; remap C-a to `smarter-move-beginning-of-line'
 (bind-key "C-a" 'smarter-move-beginning-of-line)
