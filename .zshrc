@@ -22,10 +22,10 @@ export QT_IM_MODULE=xim
 GPG_TTY=$(tty)
 export GPG_TTY
 
-# use gksudo rather than sudo if we're in an xterm
-if ! [[ -z "$DISPLAY" ]]; then
-    alias sudo=gksudo
-fi
+# # use gksudo rather than sudo if we're in an xterm
+# if ! [[ -z "$DISPLAY" ]]; then
+#     alias sudo=gksudo
+# fi
 
 export LC_ALL="en_GB.utf8"
 export LANG="en_GB.utf8"
