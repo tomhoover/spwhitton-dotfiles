@@ -93,17 +93,11 @@ lib =
         # sets, that his kitenet-mr stow library needs
         MR_NAME=priv
 stowable = true
-checkout = git clone /s3ql/gitcrypt/priv.git priv
+checkout = git clone gcrypt::ssh://ma/~/local/git/priv.git priv
 
-# rewrite some actions so that they only fire if the s3ql drive is mounted
-update = ! [ -e /s3ql/gitcrypt/priv.git ] || git pull "$@"
-fetch = ! [ -e /s3ql/gitcrypt/priv.git ] || git fetch --all --prune --tags
-push = ! [ -e /s3ql/gitcrypt/priv.git ] || git push "$@"
-
-# this repository can't be checked out until we put the authorisation
-# tokens in place manually, so that's a good enough indication as to
-# whether we want it on a host
-skip = ! [ -e ~/.s3ql/authinfo2 ]
+# this repository can't be checked out until we install
+# git-remote-gcrypt
+skip = ! which git-remote-gcrypt >/dev/null
 
 # convenience automatic permission setting and checking in of
 # frequently changed files
@@ -115,21 +109,12 @@ pre_update =
 # --- primary git annex
 
 [lib/annex]
-checkout = git clone '/s3ql/gitcrypt/lib.annex.git' 'annex'
+checkout = git clone 'gcrypt::ssh://ma/~/local/git/lib.annex.git' 'annex'
 post_update = git annex merge
 
-# it's slow so get it started first
-order = 1
-
-# rewrite some actions so that they only fire if the s3ql drive is mounted
-update = ! [ -e /s3ql/gitcrypt/lib.annex.git ] || git pull "$@"
-fetch = ! [ -e /s3ql/gitcrypt/lib.annex.git ] || git fetch --all --prune --tags
-push = ! [ -e /s3ql/gitcrypt/lib.annex.git ] || git push "$@"
-
-# this repository can't be checked out until we put the authorisation
-# tokens in place manually, so that's a good enough indication as to
-# whether we want it on a host
-skip = ! [ -e ~/.s3ql/authinfo2 ]
+# this repository can't be checked out until we install
+# git-remote-gcrypt
+skip = ! which git-remote-gcrypt >/dev/null
 
 # --- source code repositories registered to their own mr config file,
 # --- and create my standard home directory subdirectories
