@@ -327,7 +327,6 @@
                   bbdb-electric-p t
                   bbdb-popup-target-lines  1
                   bbdb-file "~/.bbdb")
-            (put 'narrow-to-region 'disabled nil)
             (bbdb-initialize 'message)))
 
 ;;; magit
