@@ -1053,8 +1053,9 @@ there's a region, all lines that region covers will be duplicated."
 (bind-key "C-m" 'reindent-then-newline-and-indent)
 (bind-key "RET" 'newline-and-indent python-mode-map)
 (bind-key "C-m" 'newline-and-indent python-mode-map)
-(bind-key "RET" 'newline-and-indent haskell-mode-map)
-(bind-key "C-m" 'newline-and-indent haskell-mode-map)
+(add-hook 'haskell-mode-hook (lambda()
+                               (bind-key "RET" 'newline-and-indent haskell-mode-map)
+                               (bind-key "C-m" 'newline-and-indent haskell-mode-map)))
 
 (bind-key "C-x M-t" 'transpose-paragraphs)
 (bind-key "C-M-SPC" 'fixup-whitespace)
