@@ -512,9 +512,18 @@
             (define-key company-active-map "\C-w" nil)
             (define-key company-active-map "\C-j" 'company-show-location)
 
-            (setq company-idle-delay 0.2)
+            (setq company-idle-delay 0.15)
             (add-to-list 'company-backends 'company-capf)
-            (add-to-list 'company-transformers 'company-sort-by-occurrence)))
+            (add-to-list 'company-transformers 'company-sort-by-occurrence)
+
+            ;;; python code completion
+
+            (use-package anaconda-mode
+              :ensure
+              :config (progn
+                        (add-hook 'python-mode-hook 'anaconda-mode)
+                        (add-to-list 'company-backends 'company-anaconda)
+                        (add-hook 'python-mode-hook 'anaconda-eldoc)))))
 ;; C-o during company isearch narrows to stuff matching that search;
 ;; mnemonic 'occur'.  C-M-s while outside of search to do the same
 ;; thing
@@ -591,10 +600,23 @@
 
           (add-hook 'text-mode-hook 'er/add-text-mode-expansions)))
 
+;;; allow lisp to interact with python
+
+(use-package pymacs :ensure)
+
+;;; Get Python documentation as info files
+
+(use-package python-info :ensure)
+(use-package pydoc-info :ensure)
+
 ;;; fix binding in python-mode
 
 (use-package python
   :config (define-key python-mode-map (kbd "C-h") 'python-indent-dedent-line-backspace))
+
+;;; flycheck
+
+(use-package flycheck :ensure :idle (global-flycheck-mode))
 
 ;;; edit minibuffer in a proper buffer
 
@@ -1024,8 +1046,16 @@ there's a region, all lines that region covers will be duplicated."
 (bind-key "C-x C-k" 'kill-region)
 (bind-key "C-h" 'delete-backward-char) ; overriden by smartparens
 (bind-key "C-x M-k" 'backward-kill-sentence)
+
+;; C-m and RET should reindent the current line only for languages
+;; that don't use semantic indentation
 (bind-key "RET" 'reindent-then-newline-and-indent)
 (bind-key "C-m" 'reindent-then-newline-and-indent)
+(bind-key "RET" 'newline-and-indent python-mode-map)
+(bind-key "C-m" 'newline-and-indent python-mode-map)
+(bind-key "RET" 'newline-and-indent haskell-mode-map)
+(bind-key "C-m" 'newline-and-indent haskell-mode-map)
+
 (bind-key "C-x M-t" 'transpose-paragraphs)
 (bind-key "C-M-SPC" 'fixup-whitespace)
 (unbind-key "C-c m")
