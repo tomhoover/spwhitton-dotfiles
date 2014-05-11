@@ -105,6 +105,9 @@ fixups = chmod 600 .passwddb.pet .s3ql/authinfo2
 pre_update =
            git add .passwddb.pet .labbook.gpg
            git commit -a -m "auto passwddb and labbook commit on $(hostname -s)" || true
+autoci =
+       git add .passwddb.pet .labbook.gpg
+       git commit -a -m "auto passwddb and labbook commit on $(hostname -s)" || true
 
 # --- primary git annex
 
@@ -125,6 +128,7 @@ checkout = mkdir -p $HOME/tmp $HOME/src $HOME/local/src $HOME/local/bin $HOME/lo
 status = :
 push = :
 commit = :
+autoci = :
 chain = true
 
 # --- my personal documents, website and blog.  Override my global
@@ -142,6 +146,8 @@ fixups = git-utime
 
 # automatically commit in the same way that my cron job does before pulling
 pre_update = doccheckin
+# ... and let me do it manually
+autoci = doccheckin
 
 # after pulling, update the online copy of my Org-mode agenda
 post_update = echo -n "Updating web calendar... ";emacs -batch -l ~/.emacs.d/init.el -eval "(org-batch-store-agenda-views)" >/dev/null 2>/dev/null;echo "hopefully done."
