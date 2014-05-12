@@ -409,7 +409,8 @@
 
 (use-package imenu-anywhere
   :ensure
-  :bind ("M-o" . imenu-anywhere))
+  ;; :bind ("M-o" . imenu-anywhere)
+  )
 
 ;;; ibuffer
 
@@ -726,6 +727,49 @@
 (use-package projectile
   :ensure
   :idle (projectile-global-mode))
+
+;;; move around my commonly used stuff fast
+
+(use-package helm
+  :ensure
+  :bind ("M-o" . helm-mini)
+  :init (progn
+          ;; autoloads aren't enough to make the above binding work
+          (require 'helm-config)
+
+          ;; extra sources
+          (use-package helm-projectile :ensure)
+          (use-package helm-dired-recent-dirs :ensure)
+
+          ;; new fuzzy matching
+          (setq helm-buffers-fuzzy-matching t
+                helm-time-zone-home-location "Seoul")
+
+          ;; rebind some keys
+          (bind-key "C-w" 'backward-delete-word helm-map)
+          (bind-key "C-h" 'backward-delete-char helm-map)
+          (bind-key "C-o" 'helm-execute-persistent-action helm-map)
+          (bind-key "M-i" 'helm-next-source helm-map)
+
+          ;; helm-mini shouldn't stop working just because we're not
+          ;; in a projectile project
+          (defadvice helm-mini (before spw/helm-mini activate)
+            "Remove projectile stuff if not in a project"
+            (if (projectile-project-p)
+                (setq helm-mini-default-sources '(helm-source-projectile-buffers-list
+                                                  helm-source-buffers-list
+                                                  helm-source-projectile-files-list
+                                                  helm-source-imenu-anywhere
+                                                  helm-source-bookmarks
+                                                  helm-source-dired-recent-dirs
+                                                  helm-source-recentf
+                                                  helm-source-dired-recent-dirs))
+              (setq helm-mini-default-sources '(helm-source-buffers-list
+                                                helm-source-imenu-anywhere
+                                                helm-source-bookmarks
+                                                helm-source-dired-recent-dirs
+                                                helm-source-recentf
+                                                helm-source-dired-recent-dirs))))))
 
 ;;;; ---- functions ----
 
