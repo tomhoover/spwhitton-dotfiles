@@ -771,6 +771,11 @@
                                                 helm-source-recentf
                                                 helm-source-dired-recent-dirs))))))
 
+(use-package yasnippet
+  :ensure
+  :diminish yas-global-mode
+  :idle (yas-global-mode))
+
 ;;;; ---- functions ----
 
 ;; backwards and forward deletions of words
