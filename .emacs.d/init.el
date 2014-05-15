@@ -1224,6 +1224,10 @@ there's a region, all lines that region covers will be duplicated."
 ;;; don't ask me before following symlinks to files in version control
 (setq vc-follow-symlinks t)
 
+;;; make it easy to revert window configuratin
+
+(winner-mode 1)
+
 ;;;; ---- modes configuration ----
 
 ;;; mail mode for mutt
