@@ -116,8 +116,11 @@
 
       org-todo-keywords
       '((sequence "TODO(t)" "|" "DONE(d)")
-        (sequence "WAITING(w)" "FREETIME(f)" "SOMEDAY(s)" "|" "CANCELLED(c)")
+        (sequence "WAITING(w)" "SOONDAY(f)" "SOMEDAY(s)" "|" "CANCELLED(c)")
         )
+
+      org-todo-keyword-faces '(("SOMEDAY" . (:foreground "#94BFF3" :weight bold)) ; zenburn-blue+1
+                               ("SOONDAY" . (:foreground "#F0DFAF" :weight bold))) ; zenburn-yellow
 
       ;; Include agenda archive files when searching for things
       org-agenda-text-search-extra-files (quote (agenda-archives))
@@ -255,9 +258,19 @@
                  (org-agenda-todo-ignore-scheduled nil)
                  (org-agenda-overriding-header "Items to refile")
                  (org-agenda-start-with-entry-text-mode t))) ; doesn't work per block, so this does nothing atm
+
+          ;; A headline with TODO needs to be done so it should be
+          ;; dated.  This block finds undated headlines.  Subprojects
+          ;; are skipped because it is only if they are subprojects of
+          ;; a TODO that they need to be scheduled; subtasks of a
+          ;; SOONDAY might well be TODO, but they need not be
+          ;; scheduled.  And projects with scheduled or deadlines
+          ;; subprojects are skipped because actioning the project has
+          ;; been scheduled or deadlined, which is sufficient.
           (todo "TODO" ((org-agenda-todo-ignore-with-date t)
-                        (org-agenda-overriding-header "Undated TODO items")
-                        (org-agenda-skip-function 'bh/skip-subprojects)))
+                        (org-agenda-overriding-header "Undated TODO items: add schedule or deadline to the project or a subtask, or change keyword to SOONDAY")
+                        (org-agenda-skip-function 'spw/skip-subprojects-and-projects-with-scheduled-or-deadlined-subprojects)))
+
           (agenda "day" ((org-agenda-ndays 7) (org-agenda-overriding-header "Schedule undated into the following schedule") (org-agenda-time-grid nil)))
 
           ;; (tags-todo "/!-SOMEDAY"
@@ -388,9 +401,7 @@
           (org-agenda-files (quote ("~/doc/org/diary.org")))
           ) ("/tmp/diary.txt"))))
 
-;;; functions to skip subtasks from review view.  Such tasks might be
-;;; subtasks of a FREETIME task, in which case they shouldn't be
-;;; scheduled
+;;; agenda skipping functions
 
 (defun bh/is-subproject-p ()
   "Any task which is a subtask of another project"
@@ -402,12 +413,54 @@
           (setq is-subproject t))))
         (and is-a-task is-subproject)))
 
-(defun bh/skip-subprojects ()
-  "Skip trees that are projects"
+(defun spw/skip-subprojects ()
+  "Skip trees that are subprojects"
   (let ((next-headline (save-excursion (outline-next-heading))))
     (if (bh/is-subproject-p)
         next-headline
-            nil)))
+      nil)))
+
+(defun spw/org-is-scheduled-or-deadlined-p ()
+  "A task that is scheduled or deadlined"
+  (let ((is-dated)
+        (is-a-task (member (nth 2 (org-heading-components)) org-todo-keywords-1))
+        (regexp (org-re-timestamp 'scheduled-or-deadline)))
+    (message regexp)
+    (save-excursion
+      (forward-line)
+      (org-beginning-of-line)
+      (if (looking-at regexp)
+          (setq is-dated t)))
+    (and is-a-task is-dated)))
+
+(defun spw/has-scheduled-or-deadlined-subproject-p ()
+  "A task that has a scheduled or deadlined subproject"
+  (let (has-scheduled-or-deadlined-subproject)
+    (save-excursion
+      (save-restriction
+        (org-narrow-to-subtree)
+        (while (ignore-errors (outline-next-heading))
+          (if (spw/org-is-scheduled-or-deadlined-p)
+              (setq has-scheduled-or-deadlined-subproject t)))))
+    has-scheduled-or-deadlined-subproject))
+
+(defun spw/skip-projects-with-scheduled-or-deadlined-subprojects ()
+  "Skip projects that have subtasks, where at least one of those
+  is scheduled or deadlined"
+  (let ((next-headline (save-excursion (outline-next-heading))))
+    (if (spw/has-scheduled-or-deadlined-subproject-p)
+        next-headline
+      nil)))
+
+(defun spw/skip-subprojects-and-projects-with-scheduled-or-deadlined-subprojects ()
+  "Skip subprojects projects that have subtasks, where at least
+  one of those is scheduled or deadlined.  Currently fails to
+  exclude subprojects that are the very last headline in a
+  buffer"
+  (let ((next-headline (save-excursion (outline-next-heading))))
+    (if (or (bh/is-subproject-p) (spw/has-scheduled-or-deadlined-subproject-p))
+        next-headline
+      nil)))
 
 (setq org-capture-templates
       '(("t" "Task" entry (file "~/doc/org/refile.org")
