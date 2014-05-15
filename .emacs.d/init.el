@@ -271,7 +271,33 @@
                 (if (and (looking-at "\\. ") (not (looking-back "^[1-9]+")))
                     (progn
                       (forward-char 1)
-                      (insert " ")))))))
+                      (insert " ")))))
+
+            (defadvice sp-backward-delete-char (around sp-backward-delete-char-remove-indentation activate)
+              ;; when after whitespace at the beginning of a line or
+              ;; an Org bullet or heading, delete it all
+              (if (or
+                   (looking-back "^[[:space:]]+")
+                   (looking-back "^[[:space:]]*- ")
+                   (looking-back "^[*]+ "))
+                  (kill-line 0)
+                ;; if not after whitespace at the beginning of the
+                ;; line, just call as usual
+                ad-do-it))
+
+            (defadvice sp-backward-kill-word (around sp-backward-delete-word-remove-indentation activate)
+              ;; when after whitespace at the beginning of a line or
+              ;; an Org bullet or heading, delete it all.  This is
+              ;; more intuitive when C-w is one's main way to delete
+              ;; stuff
+              (if (or
+                   (looking-back "^[[:space:]]+")
+                   (looking-back "^[[:space:]]*- ")
+                   (looking-back "^[*]+ "))
+                  (kill-line 0)
+                ;; if not after whitespace at the beginning of the
+                ;; line, just call as usual
+                ad-do-it))))
 
 ;;; save my places in buffers.  ido and recentf save recently opened
 ;;; files, and these two things together are enough session management
