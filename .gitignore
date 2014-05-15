@@ -5,3 +5,5 @@
 /.emacs.d/smex-items
 /.emacs.d/projectile-bookmarks.eld
 /.emacs.d/url/
+/.emacs.d/flycheck_init.el
+/.emacs.d/tramp
