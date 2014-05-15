@@ -763,13 +763,15 @@
                                                   helm-source-bookmarks
                                                   helm-source-dired-recent-dirs
                                                   helm-source-recentf
-                                                  helm-source-dired-recent-dirs))
+                                                  helm-source-dired-recent-dirs
+                                                  helm-source-org-headline))
               (setq helm-mini-default-sources '(helm-source-buffers-list
                                                 helm-source-imenu-anywhere
                                                 helm-source-bookmarks
                                                 helm-source-dired-recent-dirs
                                                 helm-source-recentf
-                                                helm-source-dired-recent-dirs))))))
+                                                helm-source-dired-recent-dirs
+                                                helm-source-org-headline))))))
 
 (use-package yasnippet
   :ensure
