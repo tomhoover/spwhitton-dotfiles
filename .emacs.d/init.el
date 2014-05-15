@@ -1113,7 +1113,10 @@ there's a region, all lines that region covers will be duplicated."
                                (bind-key "C-m" 'newline-and-indent haskell-mode-map)))
 
 (bind-key "C-x M-t" 'transpose-paragraphs)
-(bind-key "C-M-SPC" 'fixup-whitespace)
+
+;; fixup-whitespace seems to make just-one-space redundant
+(bind-key "M-SPC" 'fixup-whitespace)
+
 (unbind-key "C-c m")
 (bind-key "C-c s" 'join-setqs emacs-lisp-mode-map)
 (bind-key "M-/" 'hippie-expand)
