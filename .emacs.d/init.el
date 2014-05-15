@@ -245,6 +245,10 @@
          ("C-M-<left>" . sp-backward-slurp-sexp)
          ("C-M-<right>" . sp-backward-barf-sexp)
 
+         ;; for when I use Emacs via PuTTY
+         ("M-<right>" . sp-forward-slurp-sexp)
+         ("M-<left>" . sp-forward-barf-sexp)
+
          ("M-j" . sp-join-sexp)
 
          ;; ("C-]" . sp-select-next-thing-exchange)
