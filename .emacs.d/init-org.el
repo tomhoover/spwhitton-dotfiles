@@ -39,7 +39,7 @@
       ;; using indirect buffers for DnD and for now want them in their own
       ;; frames (use C-u)
       org-indirect-buffer-display 'dedicated-frame
-      org-agenda-dim-blocked-tasks 'dimmed
+      ;; org-agenda-dim-blocked-tasks 'dimmed
       org-stuck-projects (quote ("" nil nil ""))
       org-hide-emphasis-markers nil
       org-use-fast-todo-selection t
@@ -206,7 +206,7 @@
           (org-agenda-start-with-log-mode nil)
           ;;(org-agenda-start-with-log-mode '(4))
           (org-agenda-start-with-follow-mode nil)
-          (org-agenda-dim-blocked-tasks 'dimmed)
+          ;; (org-agenda-dim-blocked-tasks 'dimmed)
           ;;(org-agenda-start-with-entry-text-mode t)
           ;;(org-agenda-entry-text-maxlines 2)
           )
@@ -231,7 +231,7 @@
                                   (org-agenda-overriding-header "Undated TODO items")
                                   (org-agenda-files (quote ("~/doc/org/sariul.org" "~/doc/org/diary.org"))))))
          (
-          (org-agenda-dim-blocked-tasks 'dimmed)
+          ;; (org-agenda-dim-blocked-tasks 'dimmed)
           )
 
          )
