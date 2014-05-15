@@ -193,12 +193,12 @@
                     ;;        (org-agenda-todo-ignore-deadlines nil)
                     ;;        (org-agenda-todo-ignore-with-date nil)
                     ;;        (org-agenda-overriding-header "Unstuck project tasks")))
-                    (todo "WAITING" ((org-agenda-todo-ignore-scheduled nil)
-                                     (org-agenda-todo-ignore-deadlines nil)
-                                     (org-agenda-todo-ignore-with-date nil)
-                                     (org-agenda-overriding-header "Things waiting on others")))
-                    (todo "FREETIME" (
-                                      (org-agenda-overriding-header "Interesting things to do in blocks of free time")
+                    ;; (todo "WAITING" ((org-agenda-todo-ignore-scheduled nil)
+                    ;;                  (org-agenda-todo-ignore-deadlines nil)
+                    ;;                  (org-agenda-todo-ignore-with-date nil)
+                    ;;                  (org-agenda-overriding-header "Things waiting on others")))
+                    (todo "SOONDAY" (
+                                     (org-agenda-overriding-header "Things to be done that shouldn't be dated")
                                       ))
                     )
          (;; (org-habit-show-habits t)
