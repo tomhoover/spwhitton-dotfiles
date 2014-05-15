@@ -288,7 +288,7 @@
 
 
 
-          ) ((org-agenda-dim-blocked-tasks nil)))
+          ) ((org-agenda-dim-blocked-tasks nil) (org-agenda-tag-filter-preset '("-REPEATED"))))
         ;; ("X" "Printable agenda for current week or day"
         ;;       ((todo "PROJ|NEXT"
         ;;              ((org-agenda-todo-ignore-scheduled nil)
