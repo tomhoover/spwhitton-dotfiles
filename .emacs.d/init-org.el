@@ -108,6 +108,12 @@
       org-tags-match-list-sublevels t
       org-agenda-persistent-filter t
       org-agenda-skip-deadline-prewarning-if-scheduled 3
+
+      ;; this regexp in combination with "~/doc/org" being a member
+      ;; org-agenda-files ensures that all my Org files starting with
+      ;; an capital letter are included in the agenda
+      org-agenda-file-regexp "[A-Z]+.*\\.org"
+
       org-todo-keywords
       '((sequence "TODO(t)" "|" "DONE(d)")
         (sequence "WAITING(w)" "FREETIME(f)" "SOMEDAY(s)" "|" "CANCELLED(c)")
@@ -430,6 +436,33 @@
 
 ;; (defun swhitton/org-black-white-agenda ()
 ;;   (add-text-properties (point-min) (point-max) '(face (:foreground "black"))))
+
+;;; function and advice for my weekly review process (see the
+;;; docstrings immediately below)
+
+(defun spw/find-non-agenda-todos ()
+  "Find Org files that aren't in `org-agenda-files` that probably
+  should be"
+  (interactive)
+  (let ((default-directory org-directory)
+        (args-together))
+    (setq args-together "")
+    (dolist (elt org-agenda-files args-together)
+      (if (not (f-directory? elt))
+          (setq args-together (concat args-together " -not -name " (file-name-nondirectory elt)))))
+    (grep-find (concat "find " org-directory
+                       " -regextype posix-egrep -type f "
+                       args-together
+                       " -not -name archive.org -not -regex '" (expand-file-name org-directory) "/[ABCDEFGHIJKLMNOPQRSTUVWXYZ].*' -exec egrep -nH -e \"\\* \(TODO\|SOMEDAY\|WAITING\|SOONDAY\) \" {} +"))))
+
+(defadvice org-agenda (after spw/org-agenda-run-find-non-agenda-todos activate)
+  "Call grep to find Org files that aren't in `org-agenda-files'
+  but should be, when opening my agenda for my weekly Org-mode
+  review"
+  (if (equal (buffer-name) "*Org Agenda(#)*")
+      (progn
+        (delete-other-windows)
+        (call-interactively 'spw/find-non-agenda-todos))))
 
 ;;;; ---- export and referencing ----
 
