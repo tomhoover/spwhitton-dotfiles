@@ -251,7 +251,7 @@
           (todo "WAITING" ((org-agenda-todo-ignore-scheduled nil)
                            (org-agenda-todo-ignore-deadlines nil)
                            (org-agenda-todo-ignore-with-date nil)
-                           (org-agenda-overriding-header "Things waiting on others")))
+                           (org-agenda-overriding-header "Things waiting on others: chase them now or schedule a TODO to do so")))
           (tags "LEVEL=1+REFILE"
                 ((org-agenda-todo-ignore-with-date nil)
                  (org-agenda-todo-ignore-deadlines nil)
