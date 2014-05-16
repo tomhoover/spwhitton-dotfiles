@@ -40,7 +40,7 @@
       ;; using indirect buffers for DnD and for now want them in their own
       ;; frames (use C-u)
       org-indirect-buffer-display 'dedicated-frame
-      ;; org-agenda-dim-blocked-tasks 'dimmed
+      org-agenda-dim-blocked-tasks nil
       org-stuck-projects (quote ("" nil nil ""))
       org-hide-emphasis-markers nil
       org-use-fast-todo-selection t
