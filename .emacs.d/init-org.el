@@ -25,6 +25,7 @@
                                 ("3" . split-window-horizontally)
                                 ("m" . org-mark-subtree))
       org-agenda-include-all-todo nil
+      org-agenda-files "~/doc/org-agenda-files"
       org-agenda-persistent-filter t
       org-agenda-diary-file "~/doc/org/refile.org"
       org-agenda-insert-diary-strategy 'top-level
@@ -108,11 +109,6 @@
       org-tags-match-list-sublevels t
       org-agenda-persistent-filter t
       org-agenda-skip-deadline-prewarning-if-scheduled 3
-
-      ;; this regexp in combination with "~/doc/org" being a member
-      ;; org-agenda-files ensures that all my Org files starting with
-      ;; an capital letter are included in the agenda
-      org-agenda-file-regexp "[A-Z]+.*\\.org"
 
       org-todo-keywords
       '((sequence "TODO(t)" "|" "DONE(d)")
@@ -884,6 +880,39 @@
          (reftex-set-cite-format
           "[[cite:%l][]]"))))
 
+;;;; ---- functions ----
+
+;;; the default C-c [ and C-c ] expand the directory ~/doc/org in the
+;;; org-agenda-files variable using the local path,
+;;; e.g. /meta/s/spw/doc/org, which is not good when init-custom.el is
+;;; held in git.  So use alternative behaviour of storing the agenda
+;;; paths in a file (see documentation for `org-agenda-files').  Two
+;;; functions to do the work
+
+(defun spw/org-agenda-file-to-front ()
+  (interactive)
+  (let ((path (abbreviate-file-name buffer-file-name)))
+    (with-current-buffer (find-file-noselect org-agenda-files)
+      (save-excursion
+        (goto-char (point-min))
+        (if (not (search-forward path nil t))
+            (progn
+              (goto-char (point-max))
+              (insert path)
+              (save-buffer)))))))
+
+(defun spw/org-remove-file ()
+  (interactive)
+  (let ((path (abbreviate-file-name buffer-file-name)))
+    (with-current-buffer (find-file-noselect org-agenda-files)
+      (save-excursion
+        (goto-char (point-min))
+        (if (search-forward path nil t)
+            (progn
+              (beginning-of-line)
+              (kill-line 1)
+              (save-buffer)))))))
+
 ;;;; ---- hooks and keys ----
 
 (run-at-time "00:59" 3600 'org-save-all-org-buffers)
@@ -915,6 +944,9 @@
 (define-key org-mode-map (kbd "C-c C-SPC") 'org-mark-subtree)
 (define-key org-mode-map (kbd "<f10>") 'org-toggle-link-display)
 (define-key org-mode-map (kbd "C-c )") 'reftex-citation)
+
+(bind-key "C-c [" 'spw/org-agenda-file-to-front org-mode-map)
+(bind-key "C-c ]" 'spw/org-remove-file org-mode-map)
 
 ;;; urxvt bindings.  shift left and right seem to work
 
