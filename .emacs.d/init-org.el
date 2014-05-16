@@ -462,8 +462,8 @@
       '(("t" "Task" entry (file "~/doc/org/refile.org")
          "* TODO %^{Title}
 %?")
-        ("w" "Work task" entry (file+headline "~/doc/org/sariul.org" "Other tasks")
-         "* TODO %^{Title}
+        ("w" "Work task" entry (file "~/doc/org/refile.org")
+         "* TODO %^{Title}                      :Sariul:
 %?")
         ("n" "Note" entry (file "~/doc/org/refile.org")
          "* %^{Title}
