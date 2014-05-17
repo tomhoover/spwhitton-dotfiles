@@ -768,7 +768,6 @@
           ;; extra sources
           (use-package helm-projectile :ensure)
           (use-package helm-dired-recent-dirs :ensure)
-          (use-package helm-org)
 
           ;; new fuzzy matching
           (setq helm-buffers-fuzzy-matching t
@@ -792,16 +791,16 @@
                                                   helm-source-imenu-anywhere
                                                   helm-source-bookmarks
                                                   helm-source-dired-recent-dirs
-                                                  helm-source-recentf
-                                                  helm-source-dired-recent-dirs
-                                                  helm-source-org-headline))
+                                                  helm-source-recentf))
               (setq helm-mini-default-sources '(helm-source-buffers-list
                                                 helm-source-imenu-anywhere
                                                 helm-source-bookmarks
                                                 helm-source-dired-recent-dirs
-                                                helm-source-recentf
-                                                helm-source-dired-recent-dirs
-                                                helm-source-org-headline))))
+                                                helm-source-recentf)))
+
+            ;; once Org is loaded, can add Org headline source
+            (if (featurep 'org)
+                (add-to-list 'helm-mini-default-sources 'helm-source-org-headline t)))
 
           (use-package helm-descbinds
             :ensure

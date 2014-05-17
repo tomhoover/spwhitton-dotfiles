@@ -1,3 +1,9 @@
+;;;; ---- packages ----
+
+;;; get Org headline completion in helm-mini
+
+(use-package helm-org)
+
 ;;;; ---- preferences ----
 
 ;; custom doesn't actually set all the faces it should, so we'll do
