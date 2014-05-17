@@ -4,6 +4,13 @@
 
 (use-package helm-org)
 
+;;; with the new exporter in Org version 8, must explicitly require
+;;; the exporters I want to use
+
+(use-package ox-html)
+(use-package ox-latex)
+(use-package ox-ascii)
+
 ;;;; ---- preferences ----
 
 ;; custom doesn't actually set all the faces it should, so we'll do
@@ -149,24 +156,18 @@
       ido-show-dot-for-dired nil
       org-export-with-LaTeX-fragments t
       ;; org-export-initial-scope 'subtree
-      org-export-html-inline-images 'maybe ; need this to export images correctly for PyBlosxom
+      org-html-inline-images 'maybe ; need this to export images correctly for PyBlosxom
       ;; doesn't appear to work atm (possibly being cancelled out by
       ;; org-export-date-timestamp-format)
-      org-export-html-date-format-string "%A %Y-%m-%d"
-      org-latex-to-pdf-process '("texi2dvi --pdf --clean --batch %f" "rm %f" "rm -rf auto")
-      ;; ideally this would be set as "./export" which in ~/doc/org points
-      ;; to ~/tmp, rather than being set globally
-      org-export-publishing-directory "~/tmp/"
+      org-html-metadata-timestamp-format "%A %Y-%m-%d"
+      org-latex-pdf-process '("texi2dvi --pdf --clean --batch %f" "rm %f" "rm -rf auto")
       org-export-date-timestamp-format "%e %B %Y"
 
-      org-export-latex-default-class "wordlike"
-      ;; getting hyperref to not draw ugly coloured boxes is a pain.  See http://blog.miktex.org/post/2006/02/15/hyperref-configuration.aspx
-      ;; minor fix from http://orgmode.org/worg/org-tutorials/org-latex-export.html
-      org-export-latex-hyperref-format "\\ref{%s}"
+      org-latex-default-class "wordlike"
 
       org-export-headline-levels 3   ; set to 2 for spwoutline
 
-      org-export-latex-low-levels '("\\begin{lowitemize}\\setlength{\\parindent}{2em}" "\\end{lowitemize}" "\\item \\textbf{%s}\\indent %s")
+      ;; org-export-latex-low-levels '("\\begin{lowitemize}\\setlength{\\parindent}{2em}" "\\end{lowitemize}" "\\item \\textbf{%s}\\indent %s")
 
       ;; used after things like e.g. to prevent a double space
       org-entities-user '(("space" "\\ " nil " " " " " " " "))
@@ -522,9 +523,9 @@
 ;;;; ---- export and referencing ----
 
 (unless (boundp 'org-export-latex-classes)
-  (setq org-export-latex-classes nil))
+  (setq org-latex-classes nil))
 
-(add-to-list 'org-export-latex-classes
+(add-to-list 'org-latex-classes
              ;; we drop the default packages then re-add almost all of them--amssymb doesn't play nice with our font package
              '("spwoutline"
                "\\documentclass{spwoutline}
@@ -547,7 +548,7 @@
                ("\\subsection{%s}" . "\\subsection*{%s}")
                ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
 
-(add-to-list 'org-export-latex-classes
+(add-to-list 'org-latex-classes
              '("spwessay"
                "\\documentclass{spwessay}
 \[NO-DEFAULT-PACKAGES\]
@@ -570,7 +571,7 @@
 \\section{%s}" . "
 \\section*{%s}")))
 
-(add-to-list 'org-export-latex-classes
+(add-to-list 'org-latex-classes
              '("spwpaper"
                "\\documentclass{spwpaper}
 \[NO-DEFAULT-PACKAGES\]
@@ -594,7 +595,7 @@
 \\section{%s}" . "
 \\section*{%s}")))
 
-(add-to-list 'org-export-latex-classes
+(add-to-list 'org-latex-classes
              '("spwpaper-single"
                "\\documentclass[single]{spwpaper}
 \[NO-DEFAULT-PACKAGES\]
@@ -618,7 +619,7 @@
 \\section{%s}" . "
 \\section*{%s}")))
 
-(add-to-list 'org-export-latex-classes
+(add-to-list 'org-latex-classes
              '("spwpaper-pseudodouble"
                "\\documentclass[pseudodouble]{spwpaper}
 \[NO-DEFAULT-PACKAGES\]
@@ -642,7 +643,7 @@
 \\section{%s}" . "
 \\section*{%s}")))
 
-(add-to-list 'org-export-latex-classes
+(add-to-list 'org-latex-classes
              '("spwpaper-footnotes"
                "\\documentclass[footnotes]{spwpaper}
 \[NO-DEFAULT-PACKAGES\]
@@ -666,7 +667,7 @@
 \\section{%s}" . "
 \\section*{%s}")))
 
-(add-to-list 'org-export-latex-classes
+(add-to-list 'org-latex-classes
              '("spwpaper-footnotes-pseudodouble"
                "\\documentclass[footnotes,pseudodouble]{spwpaper}
 \[NO-DEFAULT-PACKAGES\]
@@ -690,7 +691,7 @@
 \\section{%s}" . "
 \\section*{%s}")))
 
-(add-to-list 'org-export-latex-classes
+(add-to-list 'org-latex-classes
              '("spwpaper-onehalf"
                "\\documentclass[onehalf]{spwpaper}
 \[NO-DEFAULT-PACKAGES\]
@@ -714,7 +715,7 @@
 \\section{%s}" . "
 \\section*{%s}")))
 
-(add-to-list 'org-export-latex-classes
+(add-to-list 'org-latex-classes
              '("spwdoc"
                "\\documentclass{spwdoc}
                     [EXTRA]"
@@ -722,7 +723,7 @@
                ("\\subsection{%s}" . "\\subsection*{%s}")
                ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
 
-(add-to-list 'org-export-latex-classes
+(add-to-list 'org-latex-classes
              '("spwdnd"
                "\\documentclass{spwdnd}
                     [EXTRA]"
@@ -730,9 +731,9 @@
                ("\\subsection{%s}" . "\\subsection*{%s}")
                ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
 
-(add-to-list 'org-export-latex-classes
+(add-to-list 'org-latex-classes
              '("wordlike"
-               "\\documentclass[12pt,a4paper]{article}
+               "\\\\documentclass[12pt,a4paper]{article}
                   \\usepackage{wordlike}
 \\usepackage{fancyhdr}
 \\pagestyle{fancy}
@@ -754,7 +755,17 @@
 (use-package org-publish
   :init (progn
           (load "~/doc/www/org-publish.el" 'noerror)
-          (load "~/doc/sf/www/org-publish.el" 'noerror)))
+          (load "~/doc/sf/www/org-publish.el" 'noerror)
+
+          ;; following is purely so that we can export my Org files to
+          ;; the desktop, not just into ~/doc/org
+          (add-to-list 'org-publish-project-alist
+                       '("spw-doc"
+                         :base-directory "~/doc/org"
+                         :base-extension "org"
+                         :publishing-function org-latex-publish-to-pdf
+                         :publishing-directory "~/tmp"))
+          ))
 
 ;;; reftex setup from
 ;;; http://tincman.wordpress.com/2011/01/04/research-paper-management-with-emacs-org-mode-and-reftex/
