@@ -798,7 +798,11 @@
                                                 helm-source-dired-recent-dirs
                                                 helm-source-recentf
                                                 helm-source-dired-recent-dirs
-                                                helm-source-org-headline))))))
+                                                helm-source-org-headline))))
+
+          (use-package helm-descbinds
+            :ensure
+            :idle (helm-descbinds-mode))))
 
 (use-package yasnippet
   :ensure
