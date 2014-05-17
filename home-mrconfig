@@ -63,7 +63,7 @@ checkout = git clone http://spw.sdf.org/git/dotfiles.git dotfiles
 # skip this repository if stow is not installed.  This should be a
 # prompt to download a tarball, and do
 #       ./configure --prefix=$HOME/local && make install
-skip = ! whereis stow >/dev/null
+skip = ! which stow >/dev/null
 
 # stow won't overwrite a real ~/.mrconfig with a symlink to the
 # version in my dotfiles repository.  Cannot just delete .mrconfig
