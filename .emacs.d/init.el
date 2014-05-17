@@ -1176,7 +1176,7 @@ there's a region, all lines that region covers will be duplicated."
 (bind-key "M-SPC" 'fixup-whitespace)
 
 (unbind-key "C-c m")
-(bind-key "C-c s" 'join-setqs emacs-lisp-mode-map)
+;; (bind-key "C-c s" 'join-setqs emacs-lisp-mode-map)
 (bind-key "M-/" 'hippie-expand)
 (bind-key "C-c d" 'prelude-duplicate-current-line-or-region)
 (bind-key "C-c M-d" 'prelude-duplicate-and-comment-current-line-or-region)
