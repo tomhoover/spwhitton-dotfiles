@@ -550,7 +550,11 @@
               :config (progn
                         (add-hook 'python-mode-hook 'anaconda-mode)
                         (add-to-list 'company-backends 'company-anaconda)
-                        (add-hook 'python-mode-hook 'anaconda-eldoc)))))
+                        (add-hook 'python-mode-hook 'anaconda-eldoc)))
+
+            ;; company completion in eshell buffers gums up TRAMP
+            (add-hook 'eshell-mode-hook (lambda ()
+                                          (company-mode 0)))))
 ;; C-o during company isearch narrows to stuff matching that search;
 ;; mnemonic 'occur'.  C-M-s while outside of search to do the same
 ;; thing
