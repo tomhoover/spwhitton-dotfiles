@@ -1296,6 +1296,10 @@ there's a region, all lines that region covers will be duplicated."
 
 (winner-mode 1)
 
+;;; colours in comint modes
+
+(ansi-color-for-comint-mode-on)
+
 ;;;; ---- modes configuration ----
 
 ;;; mail mode for mutt
