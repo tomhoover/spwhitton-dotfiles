@@ -239,22 +239,12 @@
   :commands (smartparens-global-strict-mode show-smartparens-global-mode)
   :bind (("C-w" . sp-backward-kill-word)
          ("M-d" . sp-kill-word)         ; ideally these would delete, not kill
-         ("C-M-e" . sp-up-sexp)
-         ("C-M-a" . sp-backward-down-sexp)
-
-         ("C-<right>" . sp-forward-slurp-sexp)
-         ("C-<left>" . sp-forward-barf-sexp)
-         ("C-M-<left>" . sp-backward-slurp-sexp)
-         ("C-M-<right>" . sp-backward-barf-sexp)
-
+         
          ;; for when I use Emacs via PuTTY
          ("M-<right>" . sp-forward-slurp-sexp)
          ("M-<left>" . sp-forward-barf-sexp)
 
-         ("M-j" . sp-join-sexp)
-
-         ;; ("C-]" . sp-select-next-thing-exchange)
-         ("C-M-]" . sp-select-next-thing))
+         ("M-j" . sp-join-sexp))
   :idle (progn
           (smartparens-global-strict-mode)
           (show-smartparens-global-mode))
@@ -262,7 +252,7 @@
   :config (progn
             (require 'smartparens-config)
             (setq sp-navigate-consider-symbols t)
-            (sp-use-paredit-bindings)
+            (sp-use-smartparens-bindings)
 
             (defadvice sp-backward-kill-word (after sp-backward-kill-word-fix-punctuation activate)
               ;; when killing the first word of a sentence, leave the
