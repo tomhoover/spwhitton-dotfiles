@@ -24,6 +24,12 @@
       org-indent-indentation-per-level 4
       org-directory "~/doc/org"
 
+      org-tag-alist '((:startgroup)
+                      ("@work" . ?W)
+                      ("@home" . ?H)
+                      ("@neighbourhood" . ?N)
+                      (:endgroup))
+
       ;; enable speed commands and bind N to narrow to subtree
       org-use-speed-commands t
       org-speed-commands-user '(("N" . org-narrow-to-subtree)
@@ -189,64 +195,22 @@
 
 (setq org-agenda-custom-commands
       '(("a" "Primary agenda view"
-         (          (agenda "day" ((org-agenda-ndays 1) (org-agenda-overriding-header "Today") (org-agenda-time-grid nil)))
-
-                    (agenda "" ((org-agenda-ndays 3)
-                                (org-agenda-start-day "+1d")
-                                (org-agenda-time-grid nil)
-                                (org-agenda-repeating-timestamp-show-all t)
-                                (org-agenda-entry-types '(:timestamp :sexp))
-                                (org-agenda-show-all-dates nil)
-                                (org-agenda-overriding-header "Coming up")
-                                (org-agenda-files (quote ("~/doc/org/diary.org")))))
-
-                    ;; (todo "NEXT"
-                    ;;       ((org-agenda-todo-ignore-scheduled nil)
-                    ;;        (org-agenda-todo-ignore-deadlines nil)
-                    ;;        (org-agenda-todo-ignore-with-date nil)
-                    ;;        (org-agenda-overriding-header "Unstuck project tasks")))
-                    ;; (todo "WAITING" ((org-agenda-todo-ignore-scheduled nil)
-                    ;;                  (org-agenda-todo-ignore-deadlines nil)
-                    ;;                  (org-agenda-todo-ignore-with-date nil)
-                    ;;                  (org-agenda-overriding-header "Things waiting on others")))
-                    (todo "SOONDAY" (
-                                     (org-agenda-overriding-header "Things to be done that shouldn't be dated")
-                                      ))
-                    )
-         (;; (org-habit-show-habits t)
-          ;;(org-agenda-log-mode-items '(closed clock state))
-          (org-agenda-start-with-log-mode nil)
-          ;;(org-agenda-start-with-log-mode '(4))
+         ((agenda "day" ((org-agenda-ndays 1)
+                         (org-agenda-overriding-header "Today")
+                         (org-agenda-time-grid nil)))
+          (agenda "" ((org-agenda-ndays 3)
+                      (org-agenda-start-day "+1d")
+                      (org-agenda-time-grid nil)
+                      (org-agenda-repeating-timestamp-show-all t)
+                      (org-agenda-entry-types '(:timestamp :sexp))
+                      (org-agenda-show-all-dates nil)
+                      (org-agenda-overriding-header "Coming up")
+                      (org-agenda-files (quote ("~/doc/org/diary.org")))))
+          (todo "SOONDAY" ((org-agenda-overriding-header "Things to be done that shouldn't be dated"))))
+         ((org-agenda-start-with-log-mode nil)
           (org-agenda-start-with-follow-mode nil)
-          ;; (org-agenda-dim-blocked-tasks 'dimmed)
-          ;;(org-agenda-start-with-entry-text-mode t)
-          ;;(org-agenda-entry-text-maxlines 2)
-          )
-         ;; ("/raven:htdocs/agenda.html" "/athena:htdocs/static/agenda.html")
-         )
-        ("i" "Work agenda view"
-         ;; (org-agenda-ndays 1) (org-agenda-overriding-header "Today") (org-agenda-time-grid t)
-         (          (agenda "day" ((org-agenda-files (quote ("~/doc/org/sariul.org" "~/doc/org/diary.org")))
-                                   (org-agenda-ndays 1)
-                                   (org-agenda-overriding-header "Today")
-                                   ;; (org-deadline-warning-days 1)
-                                   ))
-
-
-                    (todo "WAITING" ((org-agenda-todo-ignore-scheduled nil)
-                                     (org-agenda-todo-ignore-deadlines nil)
-                                     (org-agenda-todo-ignore-with-date nil)
-                                     (org-agenda-overriding-header "Things waiting on others")
-                                     (org-agenda-files (quote ("~/doc/org/sariul.org" "~/doc/org/diary.org")))
-                                     ))
-                    (todo "TODO" ((org-agenda-todo-ignore-with-date t)
-                                  (org-agenda-overriding-header "Undated TODO items")
-                                  (org-agenda-files (quote ("~/doc/org/sariul.org" "~/doc/org/diary.org"))))))
-         (
-          ;; (org-agenda-dim-blocked-tasks 'dimmed)
-          )
-
-         )
+          ;; (org-agenda-tag-filter-preset '("-Sariul"))
+          ))
         ("w" "Weekly agenda"
          ((agenda "week" ((org-agenda-ndays 7)))))
         ("#" "Review view"
@@ -274,114 +238,12 @@
                         (org-agenda-overriding-header "Undated TODO items: add schedule or deadline to the project or a subtask, or change keyword to SOONDAY")
                         (org-agenda-skip-function 'spw/skip-subprojects-and-projects-with-scheduled-or-deadlined-subprojects)))
 
-          (agenda "day" ((org-agenda-ndays 7) (org-agenda-overriding-header "Schedule undated into the following schedule") (org-agenda-time-grid nil)))
-
-          ;; (tags-todo "/!-SOMEDAY"
-          ;;            ((org-agenda-overriding-header "Stuck projects")
-          ;;             (org-agenda-skip-function 'bh/skip-non-stuck-projects)))
-          ;; (tags-todo "/!-SOMEDAY"
-          ;;            ((org-agenda-overriding-header "Projects")
-          ;;             (org-agenda-skip-function 'bh/skip-non-project-trees)
-          ;;             (org-agenda-sorting-strategy
-          ;;              '(category-keep))))
-          ;; (todo "TODO" ((org-agenda-todo-ignore-with-date t)
-          ;;               (org-agenda-overriding-header "Undated TODO items")
-          ;;               (org-agenda-skip-function 'bh/skip-project-trees-and-habits)))
-
-
-
-
-          ) ((org-agenda-dim-blocked-tasks nil) (org-agenda-tag-filter-preset '("-REPEATED"))))
-        ;; ("X" "Printable agenda for current week or day"
-        ;;       ((todo "PROJ|NEXT"
-        ;;              ((org-agenda-todo-ignore-scheduled nil)
-        ;;               (org-agenda-todo-ignore-deadlines nil)
-        ;;               (org-agenda-todo-ignore-with-date nil)
-        ;;               (org-agenda-overriding-header "Currently working on")))
-        ;;        (todo "WAITING" ((org-agenda-todo-ignore-scheduled nil)
-        ;;                         (org-agenda-todo-ignore-deadlines nil)
-        ;;                         (org-agenda-todo-ignore-with-date nil)
-        ;;                         (org-agenda-overriding-header "Things waiting on the perenially disorganised masses")))
-        ;;        (agenda "day" ((org-agenda-overriding-header "Timetable, diary & dated tasks")))
-        ;;        (todo "TODO" ((org-agenda-todo-ignore-with-date t)
-        ;;                      (org-agenda-overriding-header "Undated TODO items"))))
-        ;;       ((ps-number-of-columns 2)
-        ;;        (ps-landscape-mode t)
-        ;;        (ps-left-margin 15)
-        ;;        (ps-right-margin 65)
-        ;;        (ps-inter-column 15)
-        ;;        (ps-top-margin 15)
-        ;;        (ps-bottom-margin 15)
-        ;;                                      ;         (org-agenda-prefix-format " [ ] ")
-        ;;     (org-agenda-before-write-hook '(swhitton/org-black-white-agenda))
-        ;;        (org-agenda-with-colors nil)
-        ;;        (org-agenda-remove-tags t)
-        ;;        (org-agenda-remove-flag)) ("/athena:tmp/xyr/toprint/agenda.pdf"))
-        ;; ("w" "Tasks waiting on something" todo "WAITING"
-        ;;  ((org-use-tag-inheritance nil)
-        ;;   (org-agenda-todo-ignore-scheduled nil)
-        ;;   (org-agenda-todo-ignore-deadlines nil)
-        ;;   (org-agenda-todo-ignore-with-date nil)
-        ;;   (org-agenda-overriding-header "Waiting tasks")))
-        ;; ("n" "Currently working on" todo "STARTED"
-        ;;  ((org-agenda-todo-ignore-scheduled nil)
-        ;;   (org-agenda-todo-ignore-deadlines nil)
-        ;;   (org-agenda-todo-ignore-with-date nil)
-        ;;   (org-agenda-overriding-header "Started tasks")))
-        ;; ("f" . "Tasks marked SOMEDAY")
-        ;; ("fr" "Reading material" tags-todo "ToRead/!-DONE-CANCELLED"
-        ;;  ((org-use-tag-inheritance nil)
-        ;;   (org-agenda-todo-ignore-scheduled nil)
-        ;;   (org-agenda-todo-ignore-deadlines nil)
-        ;;   (org-agenda-todo-ignore-with-date nil)
-        ;;   (org-agenda-overriding-header "Reading list")))
-        ;; ("fw" "Writing" tags-todo "ToWrite/!-DONE-CANCELLED"
-        ;;  ((org-use-tag-inheritance nil)
-        ;;   (org-agenda-todo-ignore-scheduled nil)
-        ;;   (org-agenda-todo-ignore-deadlines nil)
-        ;;   (org-agenda-todo-ignore-with-date nil)
-        ;;   (org-agenda-overriding-header "Things to write about")))
-        ;; ("fc" "Cool stuff" tags-todo "ToCheckOut/!-DONE-CANCELLED"
-        ;;  ((org-use-tag-inheritance nil)
-        ;;   (org-agenda-todo-ignore-scheduled nil)
-        ;;   (org-agenda-todo-ignore-deadlines nil)
-        ;;   (org-agenda-todo-ignore-with-date nil)
-        ;;   (org-agenda-overriding-header "Cool stuff")))
-        ;; ("fp" "Projects" tags-todo "ProjectIdea/!-DONE-CANCELLED"
-        ;;  ((org-use-tag-inheritance nil)
-        ;;   (org-agenda-todo-ignore-scheduled nil)
-        ;;   (org-agenda-todo-ignore-deadlines nil)
-        ;;   (org-agenda-todo-ignore-with-date nil)
-        ;;   (org-agenda-overriding-header "Project ideas")))
-        ;; ("ft" "Tech maintenance" tags-todo "TechFix/!-DONE-CANCELLED"
-        ;;  ((org-use-tag-inheritance nil)
-        ;;   (org-agenda-todo-ignore-scheduled nil)
-        ;;   (org-agenda-todo-ignore-deadlines nil)
-        ;;   (org-agenda-todo-ignore-with-date nil)
-        ;;   (org-agenda-overriding-header "Maintenance tasks")))
-        ;; ("fm" "Other" tags-todo "-ToRead-ToWrite-ToCheckOut-ProjectIdea-TechFix/SOMEDAY"
-        ;;  ((org-use-tag-inheritance nil)
-        ;;   (org-agenda-todo-ignore-scheduled nil)
-        ;;   (org-agenda-todo-ignore-deadlines nil)
-        ;;   (org-agenda-todo-ignore-with-date nil)
-        ;;   (org-agenda-overriding-header "Miscellaneous SOMEDAY")))
+          (agenda "day" ((org-agenda-ndays 7) (org-agenda-overriding-header "Schedule undated into the following schedule") (org-agenda-time-grid nil)))) ((org-agenda-dim-blocked-tasks nil) (org-agenda-tag-filter-preset '("-REPEATED"))))
         ("A" "Tasks to be Archived" todo "DONE|CANCELLED|DELEGATED"
          ((org-agenda-overriding-header "Tasks to archive")
           (org-agenda-todo-ignore-scheduled nil)
           (org-agenda-todo-ignore-deadlines nil)
           (org-agenda-todo-ignore-with-date nil)))
-        ;; ("v" "Vac" tags-todo "Vac/-DONE-CANCELLED"
-        ;;  ((org-use-tag-inheritance nil)
-        ;;   (org-agenda-todo-ignore-scheduled nil)
-        ;;   (org-agenda-todo-ignore-deadlines nil)
-        ;;   (org-agenda-todo-ignore-with-date nil)
-        ;;   (org-agenda-overriding-header "Tasks for next/current vacation")))
-        ;; ("E" "Errands" tags "Errand"
-        ;;  ((org-agenda-todo-ignore-scheduled nil)
-        ;;   (org-agenda-todo-ignore-deadlines nil)
-        ;;   (org-agenda-todo-ignore-with-date nil)
-        ;;   (org-agenda-overriding-header "Tasks involving lots of walking around")))
-
         ("d" "Three-month diary" agenda ""
          ((org-agenda-ndays 90)
           (org-agenda-start-on-weekday 1)
@@ -400,7 +262,7 @@
           (org-agenda-repeating-timestamp-show-all t)
           (org-agenda-entry-types '(:timestamp :sexp))
           (org-agenda-show-all-dates nil)
-          (org-agenda-overriding-header "Sean's diary for the next three months")
+          (org-agenda-overriding-header "Sean's diary for today")
           (org-agenda-files (quote ("~/doc/org/diary.org")))
           ) ("/tmp/diary.txt"))))
 
@@ -470,7 +332,7 @@
          "* TODO %^{Title}
 %?")
         ("w" "Work task" entry (file "~/doc/org/refile.org")
-         "* TODO %^{Title}                      :Sariul:
+         "* TODO %^{Title}                      :@work:
 %?")
         ("n" "Note" entry (file "~/doc/org/refile.org")
          "* %^{Title}
@@ -489,9 +351,6 @@
 %?")
         ("u" "URI on clipboard" entry (file "~/doc/org/refile.org")
          "* SOMEDAY [[%^{URI|%x}][%^{Title}]]" :immediate-finish t)))
-
-;; (defun swhitton/org-black-white-agenda ()
-;;   (add-text-properties (point-min) (point-max) '(face (:foreground "black"))))
 
 ;;; function and advice for my weekly review process (see the
 ;;; docstrings immediately below)
