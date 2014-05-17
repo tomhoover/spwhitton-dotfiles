@@ -767,7 +767,7 @@
 
 (use-package helm
   :ensure
-  :bind ("M-o" . helm-mini)
+  :bind ("C-x b" . helm-mini)
   :init (progn
           ;; autoloads aren't enough to make the above binding work
           (require 'helm-config)
@@ -775,6 +775,7 @@
           ;; extra sources
           (use-package helm-projectile :ensure)
           (use-package helm-dired-recent-dirs :ensure)
+          (use-package helm-org)
 
           ;; new fuzzy matching
           (setq helm-buffers-fuzzy-matching t
@@ -789,10 +790,11 @@
           ;; helm-mini shouldn't stop working just because we're not
           ;; in a projectile project
           (defadvice helm-mini (before spw/helm-mini activate)
-            "Remove projectile stuff if not in a project"
-            (if (projectile-project-p)
-                (setq helm-mini-default-sources '(helm-source-projectile-buffers-list
-                                                  helm-source-buffers-list
+            "Remove projectile stuff if not in a project, unless it's my massive annex"
+            (if (and (projectile-project-p)
+                     (not (equal (projectile-project-name) "annex")))
+                (setq helm-mini-default-sources '(helm-source-buffers-list
+                                                  helm-source-projectile-buffers-list
                                                   helm-source-projectile-files-list
                                                   helm-source-imenu-anywhere
                                                   helm-source-bookmarks
