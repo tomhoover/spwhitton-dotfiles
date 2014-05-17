@@ -1173,7 +1173,7 @@ there's a region, all lines that region covers will be duplicated."
 ;; fixup-whitespace seems to make just-one-space redundant
 (bind-key "M-SPC" 'fixup-whitespace)
 
-(unbind-key "C-c m")
+(unbind-key "C-x m")
 ;; (bind-key "C-c s" 'join-setqs emacs-lisp-mode-map)
 (bind-key "M-/" 'hippie-expand)
 (bind-key "C-c d" 'prelude-duplicate-current-line-or-region)
