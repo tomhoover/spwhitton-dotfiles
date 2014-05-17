@@ -167,7 +167,7 @@
       wrap-prefix "    ")
 
 ;; kill the fringes
-(if window-system (fringe-mode 0))
+(set-fringe-mode 0)
 
 ;; Terminus
 (if (member "Terminus-11" (font-family-list))
