@@ -691,11 +691,10 @@
 
 (use-package tramp
   :config (progn
-            (setq tramp-default-method "scpc")
+            (setq tramp-default-method "scp")
 
-            (add-to-list 'tramp-default-user-alist '("ssh" "athena" "swhitton"))
+            (add-to-list 'tramp-default-user-alist '(nil "athena" "swhitton"))
             (add-to-list 'tramp-default-user-alist '(nil "sdf" "spw"))
-            (add-to-list 'tramp-default-user-alist '(nil "raven" "ball3162"))
             (add-to-list 'tramp-default-user-alist '("sudo" "localhost" "root"))
             (add-to-list 'tramp-default-user-alist '(nil nil "swhitton") t)
             (add-to-list 'tramp-default-user-alist '(nil "ma" "spw"))
@@ -707,7 +706,11 @@
             (add-to-list 'tramp-default-proxies-alist
                          '((regexp-quote (system-name)) nil nil))
 
-            (setq tramp-verbose 0)))
+            (setq tramp-verbose 0)
+
+            ;; TRAMP and zsh are not friends so might as well switch
+            ;; over here
+            (setenv "SHELL" "/bin/bash")))
 
 ;;; ebib for editing BiBTeX databases
 
