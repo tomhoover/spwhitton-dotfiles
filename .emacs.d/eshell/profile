@@ -1,0 +1,2 @@
+# tell commands that they can go ahead and emit ANSI colour sequences
+export TERM=vt100

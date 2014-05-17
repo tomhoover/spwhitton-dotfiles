@@ -148,6 +148,8 @@
 (add-hook 'term-mode-hook (lambda ()
                             (setq show-trailing-whitespace nil)
                             (goto-address-mode)))
+(add-hook 'eshell-mode-hook (lambda ()
+                              (setq show-trailing-whitespace nil)))
 
 ;; don't prompt to create scratch buffers
 (setq confirm-nonexistent-file-or-buffer nil)
@@ -807,6 +809,33 @@
   :ensure
   :diminish yas-global-mode
   :idle (yas-global-mode))
+
+;;; eshell's plan9-style smart shell
+
+(use-package em-smart
+  :init (progn
+          (setq eshell-where-to-jump 'begin
+                eshell-review-quick-commands nil
+                eshell-smart-space-goes-to-end t)))
+
+;;; easily switch between eshells
+
+(use-package shell-switcher
+  :ensure
+  :init (progn (setq shell-switcher-mode t
+                     shell-switcher-ask-before-creating-new t)
+
+               (define-key shell-switcher-mode-map (kbd "C-c s")
+                 'shell-switcher-switch-buffer)
+               (define-key shell-switcher-mode-map (kbd "C-c 4 s")
+                 'shell-switcher-switch-buffer-other-window)
+
+               (defadvice shell-switcher-switch-buffer (around shell-switcher-switch-buffer-add-arg (arg) activate)
+                 "Use the universal argument to create new
+                 shells, rather than binding another key
+                 to (shell-switcher-new-shell)"
+                 (interactive "P")
+                 (if arg (shell-switcher-new-shell) ad-do-it))))
 
 ;;;; ---- functions ----
 
