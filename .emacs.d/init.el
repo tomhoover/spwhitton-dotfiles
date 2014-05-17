@@ -1216,7 +1216,8 @@ there's a region, all lines that region covers will be duplicated."
 ;; isearch should leave you at the beginning of the match
 (add-hook 'isearch-mode-end-hook 'my-goto-match-beginning)
 (defun my-goto-match-beginning ()
-  (when isearch-forward (goto-char isearch-other-end)))
+  (when isearch-other-end
+    (when isearch-forward (goto-char isearch-other-end))))
 
 ;; save script files as executable automatically
 (add-hook 'after-save-hook
