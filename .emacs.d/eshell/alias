@@ -1,4 +1,5 @@
-alias ga git annex $*
-alias d dired $1
-alias g git $*
+alias ll ls -al
 alias ff find-file $1
+alias g git $*
+alias d dired $1
+alias ga git annex $*
