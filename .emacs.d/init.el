@@ -323,7 +323,10 @@
 
 ;;; fix up whitespace around kill and yanking
 
-(use-package smart-whitespace-comment-fixup :ensure)
+(use-package smart-whitespace-comment-fixup :ensure
+  ;; the advice that this package applies to indent-for-tab-command
+  ;; uses a function (line-matches) which doesn't seem to exist
+  :config (ad-deactivate 'indent-for-tab-command))
 
 ;;; more useful unique buffer names
 
