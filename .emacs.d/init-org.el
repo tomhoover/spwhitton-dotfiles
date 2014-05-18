@@ -362,11 +362,13 @@
   (let ((default-directory org-directory)
         (args-together))
     (setq args-together "")
-    (dolist (elt org-agenda-files args-together)
-      (if (not (f-directory? elt))
-          (setq args-together (concat args-together " -not -name " (file-name-nondirectory elt)))))
+    (with-temp-buffer
+      (insert-file-contents org-agenda-files)
+      (dolist (elt (split-string (buffer-string) "\n" t) args-together)
+        (if (not (f-directory? elt))
+            (setq args-together (concat args-together " -not -name " (file-name-nondirectory elt))))))
     (grep-find (concat "find " org-directory
-                       " -regextype posix-egrep -type f "
+                       " -regextype posix-egrep -type f"
                        args-together
                        " -not -name archive.org -not -regex '" (expand-file-name org-directory) "/[ABCDEFGHIJKLMNOPQRSTUVWXYZ].*' -exec egrep -nH -e \"\\* \(TODO\|SOMEDAY\|WAITING\|SOONDAY\) \" {} +"))))
 
