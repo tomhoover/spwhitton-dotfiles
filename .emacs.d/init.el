@@ -269,10 +269,15 @@
             (defadvice sp-backward-delete-char (around sp-backward-delete-char-remove-indentation activate)
               ;; when after whitespace at the beginning of a line or
               ;; an Org bullet or heading, delete it all
-              (if (or
-                   (looking-back "^[[:space:]]+")
-                   (looking-back "^[[:space:]]*- ")
-                   (looking-back "^[*]+ "))
+              (if (and
+                   ;; do it if we're not at the beginning of the line,
+                   ;; and there's whitespace: if we're at the
+                   ;; beginning of the line we should always delete
+                   (not (equal (point) (line-beginning-position)))
+                   (or
+                    (looking-back "^[[:space:]]+")
+                    (looking-back "^[[:space:]]*- ")
+                    (looking-back "^[*]+ ")))
                   (kill-line 0)
                 ;; if not after whitespace at the beginning of the
                 ;; line, just call as usual
@@ -283,10 +288,15 @@
               ;; an Org bullet or heading, delete it all.  This is
               ;; more intuitive when C-w is one's main way to delete
               ;; stuff
-              (if (or
-                   (looking-back "^[[:space:]]+")
-                   (looking-back "^[[:space:]]*- ")
-                   (looking-back "^[*]+ "))
+              (if (and
+                   ;; do it if we're not at the beginning of the line,
+                   ;; and there's whitespace: if we're at the
+                   ;; beginning of the line we should always delete
+                   (not (equal (point) (line-beginning-position)))
+                   (or
+                         (looking-back "^[[:space:]]+")
+                         (looking-back "^[[:space:]]*- ")
+                         (looking-back "^[*]+ ")))
                   (kill-line 0)
                 ;; if not after whitespace at the beginning of the
                 ;; line, just call as usual
