@@ -1390,3 +1390,9 @@ there's a region, all lines that region covers will be duplicated."
 ;; (setq TeX-parse-self t)
 (setq-default TeX-master t)
 (make-variable-buffer-local 'TeX-master)
+
+;;; the Emacs calculator
+
+;; disable line numbering primarily so that killing and copying stack
+;; entries puts the number alone in the kill-ring
+(setq calc-line-numbering nil)
