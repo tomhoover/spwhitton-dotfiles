@@ -186,6 +186,25 @@
       (quote
        ("~/doc/spw.bib")))
 
+;;; add all my notes files to Org text search (e.g. C-c a /)
+
+;; first clear out the (agenda-archives) from such searches; I only
+;; have one so can easily search it manually
+(setq org-agenda-text-search-extra-files nil)
+
+(with-current-buffer (find-file-noselect org-agenda-files)
+  (dolist (file (directory-files org-directory nil "\\.org$" t))
+    (save-excursion
+      (goto-char (point-min))
+      ;; search for the file name in ~/doc/org-agenda-files.  If it's
+      ;; there, don't add to the list: agenda files are included in
+      ;; text searches automatically
+      (if (not (search-forward file nil t))
+          (add-to-list 'org-agenda-text-search-extra-files (concat "~/doc/org/" file))))))
+
+;; remove my massive archive file; can search that manually if necessary
+(delete "~/doc/org/archive.org" org-agenda-text-search-extra-files)
+
 ;;; Org habit
 
 (use-package org-habit)
