@@ -75,7 +75,7 @@ skip = ! which stow >/dev/null
 fixups =
     ln -sf ~/src/dotfiles/home-mrconfig ~/.mrconfig
     ln -sf ~/src/dotfiles/.stow-global-ignore ~
-    mkdir ~/.mutt-tmp
+    mkdir -p ~/.mutt-tmp
     # we don't want git doing any automated merges of master.  mr is
     # configured not to do this (see redefinition of git_update at top
     # of this file) but I often run git pull in this repo myself
