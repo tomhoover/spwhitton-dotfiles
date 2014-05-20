@@ -1306,6 +1306,9 @@ there's a region, all lines that region covers will be duplicated."
 (defalias 'rb 'revert-buffer)
 (defalias 'er 'eval-region)
 
+;; I often want to toggle this
+(defalias 'oim 'org-indent-mode)
+
 ;;; don't ask me before following symlinks to files in version control
 (setq vc-follow-symlinks t)
 
