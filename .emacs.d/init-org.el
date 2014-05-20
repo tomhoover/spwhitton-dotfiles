@@ -633,20 +633,22 @@
                ("\\subsection{%s}" . "\\subsection*{%s}")
                ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
 
-(use-package org-publish
-  :init (progn
-          (load "~/doc/www/org-publish.el" 'noerror)
-          (load "~/doc/sf/www/org-publish.el" 'noerror)
+;;; load up Org publishing settings
 
-          ;; following is purely so that we can export my Org files to
-          ;; the desktop, not just into ~/doc/org
-          (add-to-list 'org-publish-project-alist
-                       '("spw-doc"
-                         :base-directory "~/doc/org"
-                         :base-extension "org"
-                         :publishing-function org-latex-publish-to-pdf
-                         :publishing-directory "~/tmp"))
-          ))
+(load "~/doc/www/org-publish.el" 'noerror)
+;; (load "~/doc/sf/www/org-publish.el" 'noerror)
+
+;;; set some more Org publishing settings
+
+;; following is purely so that we can export my Org files to
+;; the desktop, not just into ~/doc/org
+(add-to-list 'org-publish-project-alist
+             '("spw-doc"
+               :base-directory "~/doc/org"
+               :base-extension "org"
+               :publishing-function org-latex-publish-to-pdf
+               :publishing-directory "~/tmp"))
+
 
 ;;; reftex setup from
 ;;; http://tincman.wordpress.com/2011/01/04/research-paper-management-with-emacs-org-mode-and-reftex/
