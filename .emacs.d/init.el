@@ -869,6 +869,12 @@
 
 (use-package htmlize :ensure)
 
+;;; close old buffers once per day
+
+(use-package midnight
+  :init (progn
+          (midnight-delay-set 'midnight-delay "3am")))
+
 ;;;; ---- functions ----
 
 ;; backwards and forward deletions of words
