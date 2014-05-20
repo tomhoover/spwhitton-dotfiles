@@ -1,0 +1,1 @@
+$0http://spw.sdf.org/blog/${1:filename}.${2:extension}][http://spw.sdf.org/blog/$1thumb.$2]]
