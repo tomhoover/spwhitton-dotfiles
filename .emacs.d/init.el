@@ -300,7 +300,15 @@
                   (kill-line 0)
                 ;; if not after whitespace at the beginning of the
                 ;; line, just call as usual
-                ad-do-it))))
+                ad-do-it))
+
+            ;; define some additional pairings for Org-mode
+            (sp-local-pair 'org-mode "=" "=")
+            (sp-local-pair 'org-mode "*" "*")
+            (sp-local-pair 'org-mode "/" "/") ; verbatim
+            (sp-local-pair 'org-mode "~" "~") ; code
+            (sp-local-pair 'org-mode "+" "+")
+            (sp-local-pair 'org-mode "_" "_")))
 
 ;;; save my places in buffers.  ido and recentf save recently opened
 ;;; files, and these two things together are enough session management
