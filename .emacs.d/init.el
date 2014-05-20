@@ -865,6 +865,10 @@
                  (interactive "P")
                  (if arg (shell-switcher-new-shell) ad-do-it))))
 
+;;; htmlize for Org HTML export/publishing
+
+(use-package htmlize :ensure)
+
 ;;;; ---- functions ----
 
 ;; backwards and forward deletions of words
