@@ -27,7 +27,6 @@
       org-tag-alist '((:startgroup)
                       ("@work" . ?W)
                       ("@home" . ?H)
-                      ("@neighbourhood" . ?N)
                       (:endgroup))
 
       ;; enable speed commands and bind N to narrow to subtree
