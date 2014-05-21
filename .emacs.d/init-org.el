@@ -44,7 +44,7 @@
                                 ("3" . split-window-horizontally)
                                 ("m" . org-mark-subtree))
       org-agenda-include-all-todo nil
-      org-agenda-files "~/doc/org-agenda-files"
+      org-agenda-files "~/doc/emacs-org-agenda-files"
       org-agenda-persistent-filter t
       org-agenda-diary-file "~/doc/org/refile.org"
       org-agenda-insert-diary-strategy 'top-level
