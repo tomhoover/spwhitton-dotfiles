@@ -1,2 +1,7 @@
 # tell commands that they can go ahead and emit ANSI colour sequences
 export TERM=vt100
+
+# commands that want to open an editor should call emacsclient, and
+# eshell knows what to do.  Without these lines we get lots of garbage
+export EDITOR=emacsclient
+export VISUAL=emacsclient
