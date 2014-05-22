@@ -240,7 +240,7 @@
   :commands (smartparens-global-strict-mode show-smartparens-global-mode)
   :bind (("C-w" . sp-backward-kill-word)
          ("M-d" . sp-kill-word)         ; ideally these would delete, not kill
-         
+
          ;; for when I use Emacs via PuTTY
          ("M-<right>" . sp-forward-slurp-sexp)
          ("M-<left>" . sp-forward-barf-sexp)
