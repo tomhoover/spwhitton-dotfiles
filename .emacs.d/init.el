@@ -255,6 +255,12 @@
             (setq sp-navigate-consider-symbols t)
             (sp-use-smartparens-bindings)
 
+            ;; override smartparens binding for C-k outside of lisp,
+            ;; since sp-kill-hybrid-sexp isn't very smart in comint
+            ;; and I like using C-u C-k
+            (define-key smartparens-strict-mode-map [remap kill-line] 'kill-line)
+            (bind-key "C-k" 'sp-kill-hybrid-sexp emacs-lisp-mode-map)
+
             (defadvice sp-backward-kill-word (after sp-backward-kill-word-fix-punctuation activate)
               ;; when killing the first word of a sentence, leave the
               ;; two spaces after the previous sentence's terminal
