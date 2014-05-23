@@ -881,6 +881,16 @@
   :init (progn
           (midnight-delay-set 'midnight-delay "3am")))
 
+;;; electric spacing around mathematical operators
+
+(use-package smart-operator
+  ;; :ensure                               ; MELPA version six years out of date
+  :init (progn
+          ;; I've trained my fingers well to double-space manually
+          (setq smart-operator-double-space-docs nil)
+
+          (add-hook 'python-mode-hook 'smart-operator-mode)))
+
 ;;; make indentation in python nice and visible
 
 (use-package highlight-indentation
