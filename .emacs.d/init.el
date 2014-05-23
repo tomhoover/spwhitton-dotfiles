@@ -881,6 +881,13 @@
   :init (progn
           (midnight-delay-set 'midnight-delay "3am")))
 
+;;; make indentation in python nice and visible
+
+(use-package highlight-indentation
+  :ensure
+  :init (progn
+          (add-hook 'python-mode-hook 'highlight-indentation-current-column-mode)))
+
 ;;;; ---- functions ----
 
 ;; backwards and forward deletions of words
