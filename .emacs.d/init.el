@@ -644,6 +644,7 @@
 
 (use-package expand-region
   :ensure
+  :disabled t
   :bind ("M-m" . er/expand-region)
   :init (progn
           (defun er/add-text-mode-expansions ()
