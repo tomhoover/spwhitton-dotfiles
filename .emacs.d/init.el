@@ -899,6 +899,21 @@
   :init (progn
           (add-hook 'python-mode-hook 'highlight-indentation-current-column-mode)))
 
+;;; jump around what's visible
+
+(use-package ace-jump-mode
+  :ensure
+  :bind ("M-o" . ace-jump-mode))
+
+(use-package jump-char
+  :ensure
+  :bind (("M-m"   . jump-char-forward)
+         ("M-S-m" . jump-char-backward)))
+
+(use-package ace-link
+  :ensure
+  :idle (ace-link-setup-default))
+
 ;;;; ---- functions ----
 
 ;; backwards and forward deletions of words
