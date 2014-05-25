@@ -834,7 +834,9 @@
 
             ;; once Org is loaded, can add Org headline source
             (if (featurep 'org)
-                (add-to-list 'helm-mini-default-sources 'helm-source-org-headline t)))
+                (add-to-list 'helm-mini-default-sources 'helm-source-org-headline t))
+
+            (helm-adaptative-mode))
 
           (use-package helm-descbinds
             :ensure
@@ -1456,3 +1458,4 @@ there's a region, all lines that region covers will be duplicated."
 ;; disable line numbering primarily so that killing and copying stack
 ;; entries puts the number alone in the kill-ring
 (setq calc-line-numbering nil)
+(put 'narrow-to-region 'disabled nil)
