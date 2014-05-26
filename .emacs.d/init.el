@@ -247,9 +247,21 @@
 
          ("M-j" . sp-join-sexp))
   :idle (progn
-          (smartparens-global-strict-mode)
+          ;; non-strict mode the default, and strict mode in some
+          ;; programming language major modes
+          (smartparens-global-mode)
+          (dolist (hook '(emacs-lisp-mode-hook
+                lisp-mode-hook
+                lisp-interaction-mode-hook
+                ielm-mode-hook
+                scheme-mode-hook
+                inferior-scheme-mode-hook
+                python-mode-hook))
+            (add-hook hook
+            (lambda ()
+              (smartparens-strict-mode))))
           (show-smartparens-global-mode))
-  :diminish smartparens-mode
+  ;; :diminish smartparens-mode
   :config (progn
             (require 'smartparens-config)
             (setq sp-navigate-consider-symbols t)
