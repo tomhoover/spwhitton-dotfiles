@@ -511,7 +511,7 @@
                 lisp-interaction-mode-hook
                 ielm-mode-hook
                 scheme-mode-hook
-                inferior-scheme-mode-hoo
+                inferior-scheme-mode-hook
                 ))
   (add-hook hook
             (lambda ()
