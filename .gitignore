@@ -9,3 +9,4 @@
 /.emacs.d/tramp
 /.emacs.d/eshell/history
 /.emacs.d/eshell/lastdir
+/.emacs.d/helm-adaptive-history
