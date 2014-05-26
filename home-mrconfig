@@ -158,13 +158,13 @@ autoci = doccheckin
 order = 5
 checkout = git clone 'ssh://ma/~/local/git/doc.www.git' 'www'
 update = git pull "$@"
-skip = ! mine
+skip = ! ( mine || on spw@ma )
 
 [doc/www/blog]
 order = 6
 checkout = git clone 'ssh://ma/~/local/git/doc.www.blog.git' 'blog'
 update = git pull "$@"
-skip = ! mine
+skip = ! ( mine || on spw@ma )
 
 # --- backup to portable HDD if plugged in
 
