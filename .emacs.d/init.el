@@ -1427,12 +1427,14 @@ there's a region, all lines that region covers will be duplicated."
 
 ;;; dired
 
-;; should load dired-x, and use dired-omit to hide dotfiles
+;; dired omit mode mapping conflicts with my ace jump mode
+;; binding
+(define-key dired-mode-map (kbd "M-o") 'nil)
+(define-key dired-mode-map (kbd "C-c M-o") 'dired-omit-mode)
+
+(use-package dired-x)
+(setq-default dired-omit-mode t)
 (setq dired-omit-files "^\\...+$")
-(add-hook 'dired-load-hook
-          (lambda ()
-            (load "dired-x")
-            (dired-omit-mode 1)))
 
 ;; bind two useful functions from ergoemacs
 (define-key dired-mode-map (kbd "C-c C-o") 'ergoemacs-open-in-external-app)
