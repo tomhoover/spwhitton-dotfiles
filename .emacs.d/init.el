@@ -1273,6 +1273,8 @@ there's a region, all lines that region covers will be duplicated."
 ;; remap C-a to `smarter-move-beginning-of-line'
 (bind-key "C-a" 'smarter-move-beginning-of-line)
 
+(bind-key "C-c SPC" 'fixup-whitespace)
+
 (define-key isearch-mode-map "\C-h" 'isearch-delete-char)
 
 ;;; abbreviations
