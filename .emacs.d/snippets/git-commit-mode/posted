@@ -1,0 +1,4 @@
+`(let ((raw-git (shell-command-to-string "git diff-index --cached HEAD")))
+  (if (string-match "\\([^ 	]*\\.\\)org" raw-git)
+      (concat "/" (match-string 1 raw-git) "html posted")
+    ""))`
