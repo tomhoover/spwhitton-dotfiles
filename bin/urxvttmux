@@ -1,6 +1,6 @@
 #!/bin/sh
 
-urxvt ++iso14755 ++iso14755_52 -e /bin/sh -c 'tmux attach'
+urxvt ++iso14755 ++iso14755_52 -title "Local tmux" -e /bin/sh -c 'tmux attach'
 sleep 10
 winid=`wmctrl -l | grep tmux | cut -d" " -f1`
 wmctrl -i -c $winid -b add,maximized_vert,maximized_horz
