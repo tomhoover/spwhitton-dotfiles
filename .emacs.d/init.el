@@ -395,7 +395,6 @@
 
 (use-package magit
   :ensure
-  :bind ("C-c g" . magit-status)
   :diminish magit-auto-revert-mode
   :config (progn
             ;; C-c C-a to amend without any prompt
@@ -796,6 +795,7 @@
 
 (use-package projectile
   :ensure
+  :bind ("C-c g" .  projectile-vc)
   :idle (projectile-global-mode))
 
 ;;; move around my commonly used stuff fast
