@@ -1,0 +1,16 @@
+#!/bin/sh
+
+case $1 in
+    www)
+        wmctrl -a Iceweasel || iceweasel &
+        ;;
+    emacs)
+        wmctrl -a emacs@`hostname -f` || emacsclient -c &
+        ;;
+    ma)
+        wmctrl -a "spw@ma" || urxvtma &
+        ;;
+    term)
+        wmctrl -a "Local tmux" || urxvttmux &
+        ;;
+esac
