@@ -56,7 +56,7 @@ With optional argument NOTHUMBS, exclude thumbnail files."
 
     (dolist (elt to-publish)
       (org-publish-file elt)
-      (magit-stage-item elt)))
+      (magit-stage-item (f-filename elt))))
   ;; 3. open a magit status buffer
   (magit-status default-directory))
 
