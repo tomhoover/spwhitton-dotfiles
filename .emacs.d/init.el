@@ -973,22 +973,21 @@ With argument, do this that many times."
     (while (search-forward-regexp "\n\n\n+" nil "noerror")
       (replace-match "\n\n"))))
 
-(defun swhitton/cleanup ()
+(defun spw/cleanup ()
   (interactive)
-  (if (eq major-mode 'haskell-mode)
-      (progn
-        (delete-trailing-whitespace-except-current-line)
-        (compact-blank-lines)
-        ))
-  (if (eq major-mode 'python-mode)
-      (progn
-        (delete-trailing-whitespace-except-current-line)
-        (compact-blank-lines)
-        ))
-  (if (eq major-mode 'message-mode)
-      (whitespace-cleanup)))
+  (case major-mode
+    (haskell-mode
+     (delete-trailing-whitespace-except-current-line)
+     (compact-blank-lines))
+    (python-mode
+     (delete-trailing-whitespace-except-current-line)
+     (compact-blank-lines))
+    (message-mode
+     (whitespace-cleanup))
+    (emacs-lisp-mode
+     (delete-trailing-whitespace-except-current-line))))
 
-(add-hook 'before-save-hook 'swhitton/cleanup)
+(add-hook 'before-save-hook 'spw/cleanup)
 
 ;;; Typing Hangul
 
