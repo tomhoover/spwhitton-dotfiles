@@ -112,9 +112,10 @@ With prefix argument ARG, thumbnail it."
 ;;;###autoload
 (defun spw-pyblosxom-org-mode-hook ()
   "Perhaps enable spw-pyblosxom-mode when firing up Org-mode."
-  (if (string-match-p (concat (substitute-in-file-name "$HOME") "/doc/www/blog/")
-                      (file-name-directory (or load-file-name buffer-file-name)))
-      (spw-pyblosxom-mode 1)))
+  (if (or load-file-name buffer-file-name)
+      (if (string-match-p (concat (substitute-in-file-name "$HOME") "/doc/www/blog/")
+                          (file-name-directory (or load-file-name buffer-file-name)))
+          (spw-pyblosxom-mode))))
 
 ;;;###autoload
 (define-minor-mode spw-pyblosxom-mode
