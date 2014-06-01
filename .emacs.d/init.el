@@ -279,7 +279,12 @@
               ;; period
               (save-excursion
                 (backward-char 2)
-                (if (and (looking-at "\\. ") (not (looking-back "^[1-9]+")))
+                (if (and
+                     (or
+                      (looking-at "\\. ")
+                      (looking-at   "! ")
+                      (looking-at "\\? "))
+                     (not (looking-back "^[1-9]+")))
                     (progn
                       (forward-char 1)
                       (insert " ")))))
