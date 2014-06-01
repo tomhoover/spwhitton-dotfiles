@@ -4,41 +4,41 @@
 // Put all your code except special key, set*key, hook, blacklist.
 // ========================================================================= //
 //{{%PRESERVE%
-key.setViewKey(["C-x", "b"], function (ev, arg){
+key.setGlobalKey(["C-x", "b"], function (ev, arg){
 
     ext.exec("tanything", arg);
 
 }, "view all tabs", true);
 
-key.setViewKey('e', function (aEvent, aArg){
+key.setGlobalKey('e', function (aEvent, aArg){
 
     ext.exec("hok-start-foreground-mode", aArg);
 
 }, 'Hok - Foreground hint mode', true);
 
 
-key.setViewKey('E', function (aEvent, aArg){
+key.setGlobalKey('E', function (aEvent, aArg){
 
     ext.exec("hok-start-background-mode", aArg);
 
 }, 'HoK - Background hint mode', true);
 
 
-key.setViewKey(';', function (aEvent, aArg){
+key.setGlobalKey(';', function (aEvent, aArg){
 
     ext.exec("hok-start-extended-mode", aArg);
 
 }, 'HoK - Extented hint mode', true);
 
 
-key.setViewKey(['C-c', 'C-e'], function (aEvent, aArg){
+key.setGlobalKey(['C-c', 'C-e'], function (aEvent, aArg){
 
     ext.exec("hok-start-continuous-mode", aArg);
 
 }, 'Start continuous HaH', true);
 
 
-key.setViewKey('c', function (aEvent, aArg){
+key.setGlobalKey('c', function (aEvent, aArg){
 
     ext.exec("hok-yank-foreground-mode", aArg);
 
@@ -46,11 +46,11 @@ key.setViewKey('c', function (aEvent, aArg){
 
 plugins.options["bmany.default_open_type"] = "tab";
 
-key.setViewKey(['C-c', 'b'], function (ev, arg) {
+key.setGlobalKey(['C-c', 'b'], function (ev, arg) {
     ext.exec("bmany-list-all-bookmarks", arg, ev);
 }, 'bmany - List all bookmarks');
 
-key.setViewKey(['C-c', 'h'], function (ev, arg) {
+key.setGlobalKey(['C-c', 'h'], function (ev, arg) {
     ext.exec("history-show", arg, ev);
 }, 'History - show histories list');
 //}}%PRESERVE%
