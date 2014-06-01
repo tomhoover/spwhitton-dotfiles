@@ -43,6 +43,16 @@ key.setViewKey('c', function (aEvent, aArg){
     ext.exec("hok-yank-foreground-mode", aArg);
 
 }, 'Hok - Foreground yank hint mode', true);
+
+plugins.options["bmany.default_open_type"] = "tab";
+
+key.setViewKey(['C-c', 'b'], function (ev, arg) {
+    ext.exec("bmany-list-all-bookmarks", arg, ev);
+}, 'bmany - List all bookmarks');
+
+key.setViewKey(['C-c', 'h'], function (ev, arg) {
+    ext.exec("history-show", arg, ev);
+}, 'History - show histories list');
 //}}%PRESERVE%
 // ========================================================================= //
 
