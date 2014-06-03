@@ -933,6 +933,8 @@
   :ensure
   :idle (ace-link-setup-default))
 
+(use-package pomodoro)
+
 ;;;; ---- functions ----
 
 ;; backwards and forward deletions of words
