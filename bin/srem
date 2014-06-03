@@ -83,12 +83,12 @@ def doCron(rems):
     dbv = dbf.readline()
     dbf.close()
     os.environ['DBUS_SESSION_BUS_ADDRESS'] = dbv
+    os.environ['DISPLAY'] = "0:0"
 
     for rem in rems:
-        subprocess.Popen(['/usr/bin/zenity',
-                          '--notification',
-                          '--text=' + rem,
-                          '--display=:0.0'], stderr = zenerr, env = os.environ)
+        subprocess.Popen(['/usr/bin/notify-send',
+                          '--hint=int:transient:1',
+                          rem], stderr = zenerr, env = os.environ)
         subprocess.call(['/usr/bin/aplay', '/home/swhitton/lib/annex/sounds/beep.wav'])
     zenerr.close()
 
