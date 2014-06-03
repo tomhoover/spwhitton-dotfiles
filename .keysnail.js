@@ -71,6 +71,7 @@ key.suspendKey           = "<f2>";
 
 // ================================= Hooks ================================= //
 
+
 hook.setHook('KeyBoardQuit', function (aEvent) {
     if (key.currentKeySequence.length) return;
 
@@ -95,6 +96,7 @@ hook.setHook('KeyBoardQuit', function (aEvent) {
         key.generateKey(aEvent.originalTarget, KeyEvent.DOM_VK_ESCAPE, true);
     }
 });
+
 
 // ============================= Key bindings ============================== //
 
@@ -194,14 +196,6 @@ key.setGlobalKey(['C-c', 'C-c', 'C-c'], function (ev) {
                 command.clearConsole();
             }, 'Clear Javascript console', true);
 
-key.setGlobalKey('C-M-f', function (ev) {
-                getBrowser().mTabContainer.advanceSelectedTab(1, true);
-            }, 'Select next tab');
-
-key.setGlobalKey('C-M-b', function (ev) {
-                getBrowser().mTabContainer.advanceSelectedTab(-1, true);
-            }, 'Select previous tab');
-
 key.setViewKey(['C-x', 'b'], function (ev, arg){
 
     ext.exec("tanything", arg);
@@ -235,6 +229,14 @@ key.setViewKey(['C-c', 'C-e'], function (aEvent, aArg){
     ext.exec("hok-start-continuous-mode", aArg);
 
 }, 'Start continuous HaH', true);
+
+key.setViewKey(['C-c', 'b'], function (ev, arg) {
+    ext.exec("bmany-list-all-bookmarks", arg, ev);
+}, 'bmany - List all bookmarks');
+
+key.setViewKey(['C-c', 'h'], function (ev, arg) {
+    ext.exec("history-show", arg, ev);
+}, 'History - show histories list');
 
 key.setViewKey('c', function (aEvent, aArg){
 
@@ -274,11 +276,11 @@ key.setViewKey([['M->'], ['G']], function (ev) {
                 goDoCommand("cmd_scrollBottom");
             }, 'Scroll to the bottom of the page', true);
 
-key.setViewKey('l', function (ev) {
+key.setViewKey('k', function (ev) {
                 getBrowser().mTabContainer.advanceSelectedTab(1, true);
             }, 'Select next tab');
 
-key.setViewKey('h', function (ev) {
+key.setViewKey('j', function (ev) {
                 getBrowser().mTabContainer.advanceSelectedTab(-1, true);
             }, 'Select previous tab');
 
