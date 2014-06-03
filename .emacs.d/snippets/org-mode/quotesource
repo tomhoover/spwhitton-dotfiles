@@ -1,0 +1,5 @@
+#+BEGIN_QUOTE
+${1:quotation} ---${2:author}$0
+#+END_QUOTE
+
+(`(org-insert-link nil nil "source")`)
