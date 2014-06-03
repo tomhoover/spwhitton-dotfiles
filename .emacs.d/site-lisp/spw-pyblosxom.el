@@ -8,6 +8,7 @@
 
 (require 'magit)
 (require 'f)
+(require 's)
 
 (defvar spw-pyblosxom-image-extensions '("png" "jpg")
   "Extensions for image files that may be inserted with `spw-pyblosxom-insert-image'.")
@@ -109,6 +110,13 @@ With prefix argument ARG, thumbnail it."
                   "]"))
         (insert "]")))))
 
+(defun spw-pyblosxom-insert-page-link (link)
+  "Grab HTML <title> of LINK, ask user to edit and then insert Org URI link."
+  (interactive "sPaste URL: ")
+  (let ((title (s-trim (shell-command-to-string (concat "httphtmltitle.py " link)))))
+    (let ((edited-title (read-string "Edit title: " title)))
+      (insert "[[" link "][" edited-title  "]]"))))
+
 ;;;###autoload
 (defun spw-pyblosxom-org-mode-hook ()
   "Perhaps enable spw-pyblosxom-mode when firing up Org-mode."
@@ -124,6 +132,7 @@ With prefix argument ARG, thumbnail it."
   :keymap (let ((map (make-sparse-keymap)))
             (define-key map (kbd "C-c C-M-b p") 'spw-pyblosxom-publish)
             (define-key map (kbd "C-c C-M-b i") 'spw-pyblosxom-insert-image)
+            (define-key map (kbd "C-c C-M-b l") 'spw-pyblosxom-insert-page-link)
             map))
 
 ;;;###autoload
