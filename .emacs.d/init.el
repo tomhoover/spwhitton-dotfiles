@@ -289,6 +289,11 @@
                       (forward-char 1)
                       (insert " ")))))
 
+            ;; fix cursor position after M-d at the beginning of a line
+            (defadvice sp-kill-word (after sp-kill-word-beg-of-line-fix activate)
+              (if (looking-back "^[[:space:]]")
+                  (backward-char 1)))
+
             (defadvice sp-backward-delete-char (around sp-backward-delete-char-remove-indentation activate)
               ;; when after whitespace at the beginning of a line or
               ;; an Org bullet or heading, delete it all
