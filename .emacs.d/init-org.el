@@ -650,7 +650,15 @@
                :base-directory "~/doc/org"
                :base-extension "org"
                :publishing-function org-latex-publish-to-pdf
-               :publishing-directory "~/tmp"))
+               :publishing-directory "~/tmp"
+               :completion-function spw/cleanup-org-pdfs))
+
+
+
+(defun spw/cleanup-org-pdfs ()
+  (interactive)
+  (dolist (file (f-glob "~/doc/org/*.pdf"))
+    (delete-file file)))
 
 
 ;;; reftex setup from
