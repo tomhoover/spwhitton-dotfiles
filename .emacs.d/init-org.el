@@ -617,7 +617,7 @@
 
 (add-to-list 'org-latex-classes
              '("wordlike"
-               "\\\\documentclass[12pt,a4paper]{article}
+               "\\documentclass[12pt,a4paper]{article}
                   \\usepackage{wordlike}
 \\usepackage{fancyhdr}
 \\pagestyle{fancy}
