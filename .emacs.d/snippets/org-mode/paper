@@ -1,0 +1,10 @@
+#+TITLE: ${title}
+#+AUTHOR: by Sean Whitton
+#+DATE: ${date}
+#+SETUPFILE: setupfiles/spwpaper
+#+LaTeX_CLASS_OPTIONS: [${footnotes}]
+
+* 
+$0
+
+\notesandrefs{$HOME/doc/spw.bib}
