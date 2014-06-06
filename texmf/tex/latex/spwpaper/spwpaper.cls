@@ -19,6 +19,8 @@
 \RequirePackage[a4paper,headheight=0.5in,margin=1in,nofoot]{geometry}
 % \RequirePackage[headings]{fullpage}
 
+\RequirePackage{amsmath}
+
 \RequirePackage{enumitem}
 \setenumerate[1]{resume,label={\arabic*.},ref={(\arabic*)},itemindent=0.30in,labelsep=1em,itemsep=-1em,before=\vspace{-0.5em},after=\vspace{-0.5em}}
 
