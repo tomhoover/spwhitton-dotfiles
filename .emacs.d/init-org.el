@@ -55,7 +55,7 @@
       org-goto-interface 'outline
       org-archive-mark-done nil
       org-archive-save-context-info '(time file olpath)
-      org-archive-location "~/doc/org/archive.org::* From %s"
+      org-archive-location "~/doc/org/archive/archive.org::* From %s"
       org-cycle-global-at-bob t
       org-startup-folded t
 
