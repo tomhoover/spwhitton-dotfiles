@@ -4,14 +4,6 @@
 
 xset b off
 
-# Fire up GNOME keyring manager
-
-export `gnome-keyring-daemon --start`
-
-# Bind some keys
-
-xbindkeys
-
 # Source the standard xfce4 configuration
 
 . /etc/xdg/xfce4/xinitrc
