@@ -7,9 +7,5 @@ output="${input%.*}.mobi"
 
 ebook-convert $input $output                        \
     --output-profile kindle_pw                      \
-    --smarten-punctuation                           \
-    --enable-heuristics                             \
     --authors "$author"                             \
-    --title "$title"                                \
-    --mobi-keep-original-images                     \
-    --mobi-file-type new
+    --title "$title"
