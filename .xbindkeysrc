@@ -1,0 +1,20 @@
+"/home/swhitton/bin/gnome3-runorraise emacs"
+  Mod4 + j
+
+"/home/swhitton/bin/gnome3-runorraise term"
+  Mod4 + k
+
+"/home/swhitton/bin/gnome3-runorraise www"
+  Mod4 + l
+
+"/home/swhitton/bin/gnome3-runorraise ma"
+  Mod4 + semicolon
+
+"/home/swhitton/bin/xmousetidy"
+  Mod4 + m
+
+"xscreensaver-command -activate"
+  Control + Mod4 + l
+
+"sonata --toggle"
+  Mod4 + h
