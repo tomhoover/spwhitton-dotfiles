@@ -428,6 +428,8 @@
 
 (use-package switch-window
   :ensure
+  ;; ace-jump-mode is better
+  :disabled t
   :bind ("C-x o" . switch-window))
 
 ;;; pointback mode
