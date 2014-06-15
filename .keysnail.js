@@ -244,13 +244,21 @@ key.setViewKey('c', function (aEvent, aArg){
 
 }, 'Hok - Foreground yank hint mode', true);
 
-key.setViewKey([['C-n'], ['j']], function (ev) {
+key.setViewKey('C-n', function (ev) {
                 key.generateKey(ev.originalTarget, KeyEvent.DOM_VK_DOWN, true);
             }, 'Scroll line down');
 
-key.setViewKey([['C-p'], ['k']], function (ev) {
+key.setViewKey('u', function (ev) {
+                getBrowser().mTabContainer.advanceSelectedTab(-1, true);
+            }, 'Select previous tab');
+
+key.setViewKey('C-p', function (ev) {
                 key.generateKey(ev.originalTarget, KeyEvent.DOM_VK_UP, true);
             }, 'Scroll line up');
+
+key.setViewKey('i', function (ev) {
+                getBrowser().mTabContainer.advanceSelectedTab(1, true);
+            }, 'Select next tab');
 
 key.setViewKey([['C-f'], ['.']], function (ev) {
                 key.generateKey(ev.originalTarget, KeyEvent.DOM_VK_RIGHT, true);
@@ -275,14 +283,6 @@ key.setViewKey([['M-<'], ['g']], function (ev) {
 key.setViewKey([['M->'], ['G']], function (ev) {
                 goDoCommand("cmd_scrollBottom");
             }, 'Scroll to the bottom of the page', true);
-
-key.setViewKey('k', function (ev) {
-                getBrowser().mTabContainer.advanceSelectedTab(1, true);
-            }, 'Select next tab');
-
-key.setViewKey('j', function (ev) {
-                getBrowser().mTabContainer.advanceSelectedTab(-1, true);
-            }, 'Select previous tab');
 
 key.setViewKey(':', function (ev, arg) {
                 shell.input(null, arg);
