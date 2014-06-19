@@ -1,0 +1,30 @@
+#+TITLE: Grade $1, Lesson $2, Period $3: $4
+#+LATEX_HEADER: \usepackage{multicol} \usepackage[nonfrench,finemath]{kotex} \usehangulfontspec{ut} \SetHangulFonts{utgt}{utgt}{uttz} \usepackage{dhucs-setspace} \usepackage{dhucs-gremph}
+#+OPTIONS: num:nil
+
+#+LATEX: \begin{multicols}{2}
+* Preparation
+** Pages
+- S :: $5
+- T :: $6
+- CD :: $7
+** Files
+- E-textbook
+- 
+** Materials
+- Ss' textbooks
+- 
+** Objective
+After this lesson we can
+** Key expressions
+- A :: $0
+#+LATEX: \noindent\makebox[\linewidth]{\rule{\columnwidth}{5pt}}
+* Procedure
+| Stage   | Time | Cuml |
+|---------+------+------|
+| Lead-in |    2 |    2 |
+|         |      |      |
+** Lead-in
+- Greeting & date
+
+#+LATEX: \end{multicols}
