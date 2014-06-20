@@ -196,7 +196,8 @@
 
 ;;; I'm in Korea
 
-(set-time-zone-rule "/usr/share/zoneinfo/Asia/Seoul")
+(if (not (eq system-type 'windows-nt))
+    (set-time-zone-rule "/usr/share/zoneinfo/Asia/Seoul"))
 
 ;;; be sure to start the server
 
