@@ -289,6 +289,18 @@
           (org-agenda-files (quote ("~/doc/org/diary.org")))
           ) ("/tmp/diary.txt"))))
 
+;;; sensible automatic tag filtering
+
+(defun org-my-auto-exclude-function (tag)
+  (and (cond
+        ((string= tag "@home")
+         (string= (system-name) "SPWHITTON"))
+        ((string= tag "@work")
+         (not (string= (system-name) "SPWHITTON"))))
+       (concat "-" tag)))
+
+(setq org-agenda-auto-exclude-function 'org-my-auto-exclude-function)
+
 ;;; agenda skipping functions
 
 (defun bh/is-subproject-p ()
