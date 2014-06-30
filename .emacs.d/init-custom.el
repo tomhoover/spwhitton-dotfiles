@@ -42,7 +42,7 @@
  '(inhibit-startup-screen t)
  '(initial-buffer-choice t)
  '(initial-scratch-message nil)
- '(openwith-associations (quote (("\\.pdf\\'" "evince" (file)) ("\\.mp3\\'" "mplayer" (file)) ("\\.\\(doc\\|docx\\)\\'" "soffice" (file)) ("\\.mkv\\'" "vlc" (file)) ("\\.avi\\'" "vlc" (file)) ("\\.mp4\\'" "vlc" (file)) ("\\.ppt\\'" "soffice" (file)) ("\\.pptx\\'" "soffice" (file)))))
+ '(openwith-associations (quote (("\\.pdf\\'" "evince" (file)) ("\\.mp3\\'" "mplayer" (file)) ("\\.\\(doc\\|docx\\)\\'" "soffice" (file)) ("\\.mkv\\'" "vlc" (file)) ("\\.avi\\'" "vlc" (file)) ("\\.mp4\\'" "vlc" (file)) ("\\.ppt\\'" "soffice" (file)) ("\\.pptx\\'" "soffice" (file)) ("\\.wmv\\'" "vlc" (file)))))
  '(openwith-confirm-invocation t)
  '(org-agenda-sticky t)
  '(org-agenda-time-grid (quote ((daily weekly today require-timed) #("----------------" 0 16 (org-heading t)) (800 1000 1200 1400 1600 1800 2000))))
