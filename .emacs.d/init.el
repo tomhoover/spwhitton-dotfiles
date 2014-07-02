@@ -761,7 +761,7 @@
             (add-to-list 'tramp-default-proxies-alist
                          '(nil "\\`root\\'" "/scpc:%h:"))
             (add-to-list 'tramp-default-proxies-alist
-                         '((regexp-quote (system-name)) nil nil))
+                         '("localhost" nil nil))
 
             (setq tramp-verbose 0)
 

@@ -5,3 +5,7 @@ export TERM=vt100
 # eshell knows what to do.  Without these lines we get lots of garbage
 export EDITOR=emacsclient
 export VISUAL=emacsclient
+
+# add to the path
+addpath /usr/sbin
+addpath /home/swhitton/local/bin
