@@ -1323,7 +1323,7 @@ there's a region, all lines that region covers will be duplicated."
 
   (defadvice kill-buffer (before kill-buffer-clear-modified activate)
     (with-current-buffer (get-buffer "emacs-bookmarks")
-      (not-modified))))
+      (set-buffer-modified-p nil))))
 
 ;;; miscellaneous personal settings
 
