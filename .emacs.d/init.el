@@ -1313,10 +1313,17 @@ there's a region, all lines that region covers will be duplicated."
           bookmark-save-flag 1)
 
   ;; something involved in setting bookmarks likes to try to kill the
-  ;; bookmarks file buffer which means an annoying y/n query.  So save the buffer
-  (defadvice bookmark-write-file (before save-bookmarks-buffer activate)
+  ;; bookmarks file buffer which means an annoying y/n query since
+  ;; something likes setting the modified flag without actually
+  ;; modifying anything.  So clear that flag
+
+  ;; (defadvice bookmark-write-file (before save-bookmarks-buffer activate)
+  ;;   (with-current-buffer (get-buffer "emacs-bookmarks")
+  ;;     (save-buffer)))
+
+  (defadvice kill-buffer (before kill-buffer-clear-modified activate)
     (with-current-buffer (get-buffer "emacs-bookmarks")
-      (save-buffer))))
+      (not-modified))))
 
 ;;; miscellaneous personal settings
 
