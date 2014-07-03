@@ -1307,19 +1307,19 @@ there's a region, all lines that region covers will be duplicated."
 ;;; bookmarks
 
 ;; again, only do stuff if our bookmarks file is checked out
-(if (file-exists-p "~/doc/emacs-bookmarks")
-    (setq bookmark-default-file "~/doc/emacs-bookmarks"
-          ;; avoid annoying "Buffer emacs-bookmarks modified; kill anyway?" messages
-          bookmark-save-flag 1)
+(when (file-exists-p "~/doc/emacs-bookmarks")
+  (setq bookmark-default-file "~/doc/emacs-bookmarks"
+        ;; avoid annoying "Buffer emacs-bookmarks modified; kill anyway?" messages
+        bookmark-save-flag 1)
 
   ;; something involved in setting bookmarks likes to try to kill the
   ;; bookmarks file buffer which means an annoying y/n query since
   ;; something likes setting the modified flag without actually
   ;; modifying anything.  So clear that flag
 
-  ;; (defadvice bookmark-write-file (before save-bookmarks-buffer activate)
-  ;;   (with-current-buffer (get-buffer "emacs-bookmarks")
-  ;;     (save-buffer)))
+  (defadvice bookmark-write-file (before save-bookmarks-buffer activate)
+    (with-current-buffer (get-buffer "emacs-bookmarks")
+      (save-buffer)))
 
   (defadvice kill-buffer (before kill-buffer-clear-modified activate)
     (with-current-buffer (get-buffer "emacs-bookmarks")
