@@ -1315,15 +1315,16 @@ there's a region, all lines that region covers will be duplicated."
   ;; something involved in setting bookmarks likes to try to kill the
   ;; bookmarks file buffer which means an annoying y/n query since
   ;; something likes setting the modified flag without actually
-  ;; modifying anything.  So clear that flag
-
+  ;; modifying anything.  So save it, or for the very frequently
+  ;; called `kill-buffer', clear modification flag for these bogus
+  ;; modifications
   (defadvice bookmark-write-file (before save-bookmarks-buffer activate)
     (with-current-buffer (get-buffer "emacs-bookmarks")
       (save-buffer)))
-
   (defadvice kill-buffer (before kill-buffer-clear-modified activate)
-    (with-current-buffer (get-buffer "emacs-bookmarks")
-      (set-buffer-modified-p nil))))
+    (if (get-buffer "emacs-bookmarks")
+        (with-current-buffer (get-buffer "emacs-bookmarks")
+          (set-buffer-modified-p nil)))))
 
 ;;; miscellaneous personal settings
 
