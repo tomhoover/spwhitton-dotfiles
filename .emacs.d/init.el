@@ -1501,3 +1501,9 @@ there's a region, all lines that region covers will be duplicated."
 ;; entries puts the number alone in the kill-ring
 (setq calc-line-numbering nil)
 (put 'narrow-to-region 'disabled nil)
+
+;;; finally, maximise the window if we're on Windows.  Seems to
+;;; require Emacs to have been launched with -mm option in order for
+;;; this to work
+(if (eq system-type 'windows-nt)
+    (w32-send-sys-command 61488))
