@@ -1319,8 +1319,9 @@ there's a region, all lines that region covers will be duplicated."
   ;; called `kill-buffer', clear modification flag for these bogus
   ;; modifications
   (defadvice bookmark-write-file (before save-bookmarks-buffer activate)
-    (with-current-buffer (get-buffer "emacs-bookmarks")
-      (save-buffer)))
+    (if (get-buffer "emacs-bookmarks")
+        (with-current-buffer (get-buffer "emacs-bookmarks")
+          (save-buffer))))
   (defadvice kill-buffer (before kill-buffer-clear-modified activate)
     (if (get-buffer "emacs-bookmarks")
         (with-current-buffer (get-buffer "emacs-bookmarks")
