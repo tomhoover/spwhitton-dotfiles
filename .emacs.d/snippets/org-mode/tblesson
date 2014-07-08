@@ -13,7 +13,7 @@
 - Ss' textbooks
 - 
 ** Objective
-After this lesson we can $8
+After this lesson we can ${8:use our expressions in dialogues.}
 ** Key expressions
 - A :: $0
 #+LATEX: \noindent\makebox[\linewidth]{\rule{\columnwidth}{5pt}}
@@ -24,5 +24,5 @@ After this lesson we can $8
 |         |      |      |
 ** Lead-in
 - Greeting & date
-
+** 
 #+LATEX: \end{multicols}
