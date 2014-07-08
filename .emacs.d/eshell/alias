@@ -3,3 +3,4 @@ alias ff find-file $1
 alias g git $*
 alias d dired $1
 alias ga git annex $*
+alias blank sleep 1;xset dpms force off
