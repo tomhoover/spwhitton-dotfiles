@@ -847,7 +847,8 @@
               (if (and (projectile-project-p)
                        (not (equal (projectile-project-name) "annex")))
                   (setq helm-mini-default-sources '(helm-source-buffers-list
-                                                    helm-source-projectile-buffers-list
+                                                    ;; this one is pointless since everything in it is contained in the one above.  Only useful if they are switched over but I don't think it's worth the processing time
+                                                    ;; helm-source-projectile-buffers-list
                                                     helm-source-projectile-files-list
                                                     helm-source-imenu-anywhere
                                                     helm-source-bookmarks
