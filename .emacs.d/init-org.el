@@ -14,6 +14,7 @@
 (use-package ox-html)
 (use-package ox-latex)
 (use-package ox-ascii)
+(use-package ox-odt)
 
 ;;;; ---- preferences ----
 
