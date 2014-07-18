@@ -132,6 +132,7 @@
       org-tags-match-list-sublevels t
       org-agenda-persistent-filter t
       org-agenda-skip-deadline-prewarning-if-scheduled 3
+      org-agenda-window-setup 'current-window
 
       org-todo-keywords
       '((sequence "TODO(t)" "|" "DONE(d)")
