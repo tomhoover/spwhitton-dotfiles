@@ -268,7 +268,8 @@
          ((org-agenda-overriding-header "Tasks to archive")
           (org-agenda-todo-ignore-scheduled nil)
           (org-agenda-todo-ignore-deadlines nil)
-          (org-agenda-todo-ignore-with-date nil)))
+          (org-agenda-todo-ignore-with-date nil)
+          (org-agenda-tag-filter-preset '("-APPT"))))
         ("d" "Three-month diary" agenda ""
          ((org-agenda-ndays 90)
           (org-agenda-start-on-weekday 1)
