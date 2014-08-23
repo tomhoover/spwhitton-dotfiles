@@ -1,3 +1,3 @@
 #!/bin/sh
 
-calibre-smtp --attachment $1 --relay localhost --encryption-method=NONE spw@sdf.org spwhitt0n@free.kindle.com ""
+calibre-smtp --attachment "$1" --relay localhost --encryption-method=NONE spw@sdf.org spwhitt0n@free.kindle.com ""

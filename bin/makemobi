@@ -5,7 +5,7 @@ title="$2"
 author="$3"
 output="${input%.*}.mobi"
 
-ebook-convert $input $output                        \
+ebook-convert "$input" "$output"                        \
     --output-profile kindle_pw                      \
     --authors "$author"                             \
     --title "$title"
