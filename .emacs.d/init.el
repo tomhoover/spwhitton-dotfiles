@@ -1250,6 +1250,12 @@ there's a region, all lines that region covers will be duplicated."
 ;; my function to fix my published blog
 (bind-key "C-c x p" (lambda () (interactive) (swhitton/pyblosxom-fixups)))
 
+;; sometimes need to forcefully access the system clipboard,
+;; especially on Windows
+(bind-key "C-c x C-y" 'clipboard-yank)
+(bind-key "C-c x M-w" 'clipboard-kill-ring-save)
+(bind-key "C-c x C-x C-k" 'clipboard-kill-region)
+
 ;; get a tmux terminal in current dir
 ;; (define-key global-map (kbd "C-c t") '(lambda ()
 ;;                                         (interactive)
