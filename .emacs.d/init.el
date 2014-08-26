@@ -1240,6 +1240,25 @@ there's a region, all lines that region covers will be duplicated."
         (setq end (point))))
         (goto-char (+ origin (* (length region) arg) arg))))
 
+;; from http://blog.gleitzman.com/post/35416335505/hunting-for-unicode-in-emacs
+(defun unicode-hunt ()
+  "Tidy up a buffer by replacing all special Unicode characters
+   (smart quotes, etc.) with their more sane cousins"
+  (interactive)
+  (let ((unicode-map '(("[\u2018\|\u2019\|\u201A\|\uFFFD]" . "'")
+                       ("[\u201c\|\u201d\|\u201e]" . "\"")
+                       ("[\u2013\|\u2014]" . "-")
+                       ("\u2026" . "...")
+                       ("\u00A9" . "(c)")
+                       ("\u00AE" . "(r)")
+                       ("\u2122" . "TM")
+                       ("[\u02DC\|\u00A0]" . " "))))
+    (save-excursion
+      (loop for (key . value) in unicode-map
+            do
+            (goto-char (point-min))
+            (replace-regexp key value)))))
+
 ;;;; ---- personal settings ----
 
 ;;; key bindings
@@ -1271,6 +1290,7 @@ there's a region, all lines that region covers will be duplicated."
 (bind-key "C-x C-k" 'kill-region)
 (bind-key "C-h" 'delete-backward-char) ; overriden by smartparens
 (bind-key "C-x M-k" 'backward-kill-sentence)
+(bind-key "C-c u" 'unicode-hunt)
 
 ;; C-m and RET should reindent the current line only for languages
 ;; that don't use semantic indentation
