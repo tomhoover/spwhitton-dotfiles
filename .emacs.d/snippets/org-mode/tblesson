@@ -1,16 +1,14 @@
 #+TITLE: Grade $1, Lesson $2, Period $3: $4
 #+LATEX_HEADER: \usepackage{multicol} \usepackage[nonfrench,finemath]{kotex} \usehangulfontspec{ut} \SetHangulFonts{utgt}{utgt}{uttz} \usepackage{dhucs-setspace} \usepackage{dhucs-gremph}
 #+OPTIONS: num:nil
+#+ODT_STYLES_FILE: "~/Documents/Templates/twocol.odt"
 
-#+LATEX: \begin{multicols}{2}
 * Preparation
-** Pages
-- S :: $5
 ** Files
 - E-textbook
 - 
 ** Materials
-- Ss' textbooks
+- Ss' textbooks (pp. $5)
 - 
 ** Objective
 After this lesson we can ${8:use our expressions in dialogues.}
@@ -18,11 +16,9 @@ After this lesson we can ${8:use our expressions in dialogues.}
 - A :: $0
 #+LATEX: \noindent\makebox[\linewidth]{\rule{\columnwidth}{5pt}}
 * Procedure
-| Stage   | Time | Cuml |
-|---------+------+------|
-| Lead-in |    2 |    2 |
-|         |      |      |
+| Stage   | Time | Cumulative |
+|---------+------+------------|
+| Lead-in |    2 |          2 |
+|         |      |            |
 ** Lead-in
 - Greeting & date
-** 
-#+LATEX: \end{multicols}
