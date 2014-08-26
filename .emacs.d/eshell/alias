@@ -5,3 +5,4 @@ alias d dired $1
 alias ga git annex $*
 alias blank sleep 1;xset dpms force off
 alias docs cd ~/doc;mr autoci;git pull;git push
+alias git-rebase-workstation-on-master git checkout workstation;git rebase master;git checkout ${hostname};git rebase workstation
