@@ -14,7 +14,6 @@
 After this lesson we can ${8:use our expressions in dialogues.}
 ** Key expressions
 - A :: $0
-#+LATEX: \noindent\makebox[\linewidth]{\rule{\columnwidth}{5pt}}
 * Procedure
 | Stage   | Time | Cumulative |
 |---------+------+------------|
