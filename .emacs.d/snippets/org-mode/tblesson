@@ -1,5 +1,4 @@
 #+TITLE: Grade $1, Lesson $2, Period $3: $4
-#+LATEX_HEADER: \usepackage{multicol} \usepackage[nonfrench,finemath]{kotex} \usehangulfontspec{ut} \SetHangulFonts{utgt}{utgt}{uttz} \usepackage{dhucs-setspace} \usepackage{dhucs-gremph}
 #+OPTIONS: num:nil
 #+ODT_STYLES_FILE: "~/Documents/Templates/twocol.odt"
 
