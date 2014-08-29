@@ -416,7 +416,11 @@
                   (shell-command "git --no-pager commit --amend --reuse-message=HEAD"))))
             (define-key magit-status-mode-map (kbd "C-c C-a") 'magit-just-amend)
 
-            (use-package magit-annex :ensure)))
+            (use-package magit-annex :ensure)
+
+            (use-package magit-wip
+              :diminish magit-wip-save-mode
+              :config (global-magit-wip-save-mode 1))))
 
 ;;; winner mode
 
