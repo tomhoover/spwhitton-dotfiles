@@ -1,6 +1,14 @@
-#!/bin/sh
+#!/bin/zsh
 
 cd ~/doc/
+
+# don't do anything if waiting on a manual merge; don't want just
+# blanket commit that merge
+gstatus=$(git status)
+if [[ $gstatus =~ 'You have unmerged paths.' ]]; then
+    exit
+fi
+
 git add org/*.org playlists/*.m3u emacs-abbrevs emacs-bookmarks mutt-aliases mutt-groups
 
 # this command should never fail and stop mr
