@@ -120,6 +120,8 @@
                                             ("*" . "-")
                                             ("1." . "-")
                                             ("1)" . "-")))
+      org-list-use-circular-motion t
+      org-M-RET-may-split-line '((default . t))
       org-agenda-todo-ignore-with-date nil
       org-agenda-todo-ignore-deadlines nil
       org-agenda-todo-ignore-scheduled 'future
