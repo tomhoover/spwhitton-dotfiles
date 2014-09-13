@@ -853,16 +853,20 @@
                   (setq helm-mini-default-sources '(helm-source-buffers-list
                                                     ;; this one is pointless since everything in it is contained in the one above.  Only useful if they are switched over but I don't think it's worth the processing time
                                                     ;; helm-source-projectile-buffers-list
+                                                    helm-source-ido-virtual-buffers
                                                     helm-source-projectile-files-list
                                                     helm-source-imenu-anywhere
                                                     helm-source-bookmarks
                                                     helm-source-dired-recent-dirs
-                                                    helm-source-recentf))
+                                                    helm-source-recentf
+                                                    helm-source-buffer-not-found))
                 (setq helm-mini-default-sources '(helm-source-buffers-list
+                                                  helm-source-ido-virtual-buffers
                                                   helm-source-imenu-anywhere
                                                   helm-source-bookmarks
                                                   helm-source-dired-recent-dirs
-                                                  helm-source-recentf)))
+                                                  helm-source-recentf
+                                                  helm-source-buffer-not-found)))
               ad-do-it)
 
             ;; once Org is loaded, can add Org headline source
