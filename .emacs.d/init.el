@@ -720,6 +720,7 @@
 
 (use-package smex
   :ensure
+  :disable t
   :commands smex-initialize
   :bind (("C-x C-m" . smex)
          ("C-x C-," . smex-major-mode-commands))
@@ -822,9 +823,13 @@
 
 (use-package helm
   :ensure
-  :bind ("C-x b" . helm-mini)
+  :bind (("C-x b" . helm-mini)
+         ("C-x C-f" . helm-find-files)
+         ("C-x C-m" . helm-M-x))
+  :idle (helm-mode)
+  :diminish helm-mode
   :init (progn
-          ;; autoloads aren't enough to make the above binding work
+          ;; autoloads aren't enough to make the above bindings work
           (require 'helm-config)
 
           ;; extra sources
@@ -833,13 +838,26 @@
 
           ;; new fuzzy matching
           (setq helm-buffers-fuzzy-matching t
-                helm-time-zone-home-location "Seoul")
+                helm-time-zone-home-location "Seoul"
+                helm-quick-update t
+                helm-split-window-in-side-p t
+                helm-ff-search-library-in-sexp t
+                helm-ff-file-name-history-use-recentf t)
 
           ;; rebind some keys
           (bind-key "C-w" 'backward-delete-word helm-map)
           (bind-key "C-h" 'backward-delete-char helm-map)
-          (bind-key "C-o" 'helm-execute-persistent-action helm-map)
+          (bind-key "C-o" 'helm-select-action helm-map)
           (bind-key "M-i" 'helm-next-source helm-map)
+
+          ;; swap <tab> and C-z in helm since use persistent action
+          ;; much more frequently
+          (bind-key "<tab>" 'helm-execute-persistent-action helm-map)
+          (bind-key "C-i" 'helm-execute-persistent-action helm-map)
+          (bind-key "C-z" 'helm-select-action helm-map)
+
+          ;; eshell history
+          (bind-key "C-c h" 'helm-eshell-history eshell-mode-map)
 
           ;; helm-mini shouldn't stop working just because we're not
           ;; in a projectile project.  And it's way too slow to use
