@@ -973,6 +973,10 @@
 
 (use-package pomodoro)
 
+(use-package flex-isearch
+  :idle (flex-isearch-mode)
+  :config (setq flex-isearch-auto t))
+
 ;;;; ---- functions ----
 
 ;; backwards and forward deletions of words
