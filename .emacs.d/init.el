@@ -720,7 +720,7 @@
 
 (use-package smex
   :ensure
-  :disable t
+  :disabled t
   :commands smex-initialize
   :bind (("C-x C-m" . smex)
          ("C-x C-," . smex-major-mode-commands))
