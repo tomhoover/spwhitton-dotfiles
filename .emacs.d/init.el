@@ -826,7 +826,6 @@
   :bind (("C-x b" . helm-mini)
          ("C-x C-f" . helm-find-files)
          ("C-x C-m" . helm-M-x))
-  :idle (helm-mode)
   :diminish helm-mode
   :init (progn
           ;; autoloads aren't enough to make the above bindings work
@@ -895,7 +894,9 @@
 
           (use-package helm-descbinds
             :ensure
-            :idle (helm-descbinds-mode))))
+            :idle (helm-descbinds-mode))
+
+          (helm-mode)))
 
 (use-package yasnippet
   :ensure
