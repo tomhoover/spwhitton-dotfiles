@@ -846,6 +846,7 @@
           ;; rebind some keys
           (bind-key "C-w" 'backward-delete-word helm-map)
           (bind-key "C-h" 'backward-delete-char helm-map)
+          (bind-key "C-h" 'backward-delete-char helm-find-files-map)
           (bind-key "C-o" 'helm-select-action helm-map)
           (bind-key "M-i" 'helm-next-source helm-map)
 
