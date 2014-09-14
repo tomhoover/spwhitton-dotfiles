@@ -856,8 +856,10 @@
           (bind-key "C-i" 'helm-execute-persistent-action helm-map)
           (bind-key "C-z" 'helm-select-action helm-map)
 
-          ;; eshell history
-          (bind-key "C-c h" 'helm-eshell-history eshell-mode-map)
+          ;; eshell history -- let Helm handle eshell completion
+          (add-hook 'eshell-mode-hook
+                    #'(lambda ()
+                        (define-key eshell-mode-map [remap yas-expand] 'helm-esh-pcomplete)))
 
           ;; helm-mini shouldn't stop working just because we're not
           ;; in a projectile project.  And it's way too slow to use
