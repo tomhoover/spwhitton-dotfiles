@@ -5,7 +5,7 @@
   Mod4 + k
 
 "gnome3-runorraise www"
-  Mod4 + l
+  Mod4 + f
 
 "gnome3-runorraise ma"
   Mod4 + semicolon
@@ -13,8 +13,8 @@
 "xmousetidy"
   Mod4 + m
 
-"xscreensaver-command -activate"
-  Control + Mod4 + l
+"xscreensaver-command -lock"
+  Mod4 + l
 
 "sonata --toggle"
   Mod4 + h
