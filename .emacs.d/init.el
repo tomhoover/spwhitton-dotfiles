@@ -333,11 +333,12 @@
 
             ;; define some additional pairings for Org-mode
             (sp-local-pair 'org-mode "=" "=") ; verbatim
-            (sp-local-pair 'org-mode "*" "*")
-            (sp-local-pair 'org-mode "/" "/")
+            ;; (sp-local-pair 'org-mode "*" "*")
+            ;; (sp-local-pair 'org-mode "/" "/")
             (sp-local-pair 'org-mode "~" "~") ; code
-            (sp-local-pair 'org-mode "+" "+")
-            (sp-local-pair 'org-mode "_" "_")))
+            ;; (sp-local-pair 'org-mode "+" "+")
+            ;; (sp-local-pair 'org-mode "_" "_")
+            ))
 
 ;;; save my places in buffers.  ido and recentf save recently opened
 ;;; files, and these two things together are enough session management
