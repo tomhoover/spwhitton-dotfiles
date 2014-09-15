@@ -842,7 +842,8 @@
                 helm-quick-update t
                 helm-split-window-in-side-p t
                 helm-ff-search-library-in-sexp t
-                helm-ff-file-name-history-use-recentf t)
+                helm-ff-file-name-history-use-recentf t
+                helm-ff-newfile-prompt-p nil)
 
           ;; rebind some keys
           (bind-key "C-w" 'backward-delete-word helm-map)
