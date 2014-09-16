@@ -16,6 +16,10 @@
 (use-package ox-ascii)
 (use-package ox-odt)
 
+;;; checklist helper functions including automatic resetting
+
+(use-package org-checklist)
+
 ;;;; ---- preferences ----
 
 ;; custom doesn't actually set all the faces it should, so we'll do
