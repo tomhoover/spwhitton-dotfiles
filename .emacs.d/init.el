@@ -665,6 +665,7 @@
                 deft-directory "~/doc/org/"
                 deft-use-filename-as-title nil
                 deft-auto-save-interval 20.0
+                deft-incremental-search nil
 
                 ;; don't just strip the leading hash but the whole #+TITLE:
                 deft-strip-title-regexp "\\(?:\\#\\+TITLE\\: \\|\\#\\+FILETAGS\\: \\|^%+\\|^[#* ]+\\|-\\*-[[:alpha:]]+-\\*-\\|#+$\\)"))
@@ -887,8 +888,7 @@
                                                   helm-source-imenu-anywhere
                                                   helm-source-bookmarks
                                                   helm-source-dired-recent-dirs
-                                                  helm-source-recentf
-                                                  helm-source-buffer-not-found)))
+                                                  helm-source-recentf)))
               ad-do-it)
 
             ;; once Org is loaded, can add Org headline source
