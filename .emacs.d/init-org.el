@@ -163,9 +163,7 @@
       ;; Targets start with the file name - allows creating level 1 tasks
       org-refile-use-outline-path (quote file)
 
-      ;; Ideally this is true and targets complete in steps so we
-      ;; start with filename, TAB shows the next level of targets etc.
-      ;; However must be false to work well with Helm
+      ;; This has to be nil to work with helm (http://lists.gnu.org/archive/html/emacs-orgmode/2014-06/msg00846.html)
       org-outline-path-complete-in-steps nil
 
       ;; Allow refile to create parent tasks with confirmation
