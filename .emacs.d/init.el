@@ -921,7 +921,7 @@
 (use-package shell-switcher
   :ensure
   :init (progn (setq shell-switcher-mode t
-                     shell-switcher-ask-before-creating-new t)
+                     shell-switcher-ask-before-creating-new nil)
 
                (define-key shell-switcher-mode-map (kbd "C-c s")
                  'shell-switcher-switch-buffer)
