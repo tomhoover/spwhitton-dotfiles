@@ -239,7 +239,7 @@
 (use-package smartparens
   :ensure
   :commands (smartparens-global-strict-mode show-smartparens-global-mode)
-  :bind (("C-w" . sp-backward-kill-word)
+  :bind (("C-w" . kill-region-or-backward-word)
          ("M-d" . sp-kill-word)         ; ideally these would delete, not kill
 
          ;; for when I use Emacs via PuTTY
@@ -800,6 +800,7 @@
 ;;; easily run the odd shell command in a real shell
 
 (use-package emamux
+  :disabled t
   :ensure
   :bind (("C-c t t" . emamux:run-command)
          ("C-c t z" . emamux:zoom-runner)
@@ -1316,9 +1317,74 @@ there's a region, all lines that region covers will be duplicated."
             (goto-char (point-min))
             (replace-regexp key value)))))
 
+;;; functions from magnars's emacs config
+
+(defun current-quotes-char ()
+  (nth 3 (syntax-ppss)))
+
+(defalias 'point-is-in-string-p 'current-quotes-char)
+
+(defun transpose-params ()
+  "Presumes that params are in the form (p, p, p) or {p, p, p} or [p, p, p]"
+  (interactive)
+  (let* ((end-of-first (cond
+                        ((looking-at ", ") (point))
+                        ((and (looking-back ",") (looking-at " ")) (- (point) 1))
+                        ((looking-back ", ") (- (point) 2))
+                        (t (error "Place point between params to transpose."))))
+         (start-of-first (save-excursion
+                           (goto-char end-of-first)
+                           (move-backward-out-of-param)
+                           (point)))
+         (start-of-last (+ end-of-first 2))
+         (end-of-last (save-excursion
+                        (goto-char start-of-last)
+                        (move-forward-out-of-param)
+                        (point))))
+    (transpose-regions start-of-first end-of-first start-of-last end-of-last)))
+
+(defun move-forward-out-of-param ()
+  (while (not (looking-at ")\\|, \\| ?}\\| ?\\]"))
+    (cond
+     ((point-is-in-string-p) (move-point-forward-out-of-string))
+     ((looking-at "(\\|{\\|\\[") (forward-list))
+     (t (forward-char)))))
+
+(defun move-backward-out-of-param ()
+  (while (not (looking-back "(\\|, \\|{ ?\\|\\[ ?"))
+    (cond
+     ((point-is-in-string-p) (move-point-backward-out-of-string))
+     ((looking-back ")\\|}\\|\\]") (backward-list))
+     (t (backward-char)))))
+
+(defun copy-line (arg)
+  "Copy to end of line, or as many lines as prefix argument"
+  (interactive "P")
+  (if (null arg)
+      (copy-to-end-of-line)
+    (copy-whole-lines (prefix-numeric-value arg))))
+
+(defun save-region-or-current-line (arg)
+  (interactive "P")
+  (if (region-active-p)
+      (kill-ring-save (region-beginning) (region-end))
+    (copy-line arg)))
+
+(defun kill-region-or-backward-word ()
+  (interactive)
+  (if (region-active-p)
+      (kill-region (region-beginning) (region-end))
+    (sp-backward-kill-word 1)))
+
 ;;;; ---- personal settings ----
 
 ;;; key bindings
+
+;; movement
+(bind-key "C-c t p" 'transpose-params)
+
+;; dwim alternatives to standard bindings
+(bind-key "M-w" 'save-region-or-current-line)
 
 ;; I almost never want to quit and if I do there is Alt-F4
 (global-set-key (kbd "C-x C-c") 'delete-frame)
