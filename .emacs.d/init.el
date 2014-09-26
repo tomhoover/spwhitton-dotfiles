@@ -966,7 +966,8 @@
 
 (use-package ace-jump-mode
   :ensure
-  :bind ("M-o" . ace-jump-mode))
+  ;; :bind ("M-o" . ace-jump-mode)
+  )
 
 (use-package jump-char
   :ensure
@@ -982,6 +983,18 @@
 (use-package flex-isearch
   :idle (flex-isearch-mode)
   :config (setq flex-isearch-auto t))
+
+(use-package expand-region
+  :ensure
+  :bind ("M-o" . er/expand-region))
+
+(use-package change-inner
+  :ensure
+  :bind (("M-I" . change-inner)
+         ("M-O" . change-outer)
+         ;; ("M-I" . copy-inner)
+         ;; ("C-O" . copy-outer)
+         ))
 
 ;;;; ---- functions ----
 
