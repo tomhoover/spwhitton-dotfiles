@@ -996,6 +996,14 @@
          ;; ("C-O" . copy-outer)
          ))
 
+(use-package key-chord
+  :ensure
+  :init (progn
+          (key-chord-define-global "fd" 'ace-jump-mode)
+          (key-chord-define-global "jk" 'jump-char-forward)
+          (key-chord-define-global "JK" 'jump-char-backward)
+          (key-chord-mode 1)))
+
 ;;;; ---- functions ----
 
 ;; backwards and forward deletions of words
