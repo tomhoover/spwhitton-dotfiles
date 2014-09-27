@@ -1524,7 +1524,7 @@ there's a region, all lines that region covers will be duplicated."
 (setq select-active-regions nil
       mouse-drag-copy-region t
       x-select-enable-primary t
-      x-select-enable-clipboard nil)
+      x-select-enable-clipboard t)
 (global-set-key [mouse-2] 'mouse-yank-at-click)
 
 ;; always add a new line
