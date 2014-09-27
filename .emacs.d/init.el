@@ -996,12 +996,12 @@
          ;; ("C-O" . copy-outer)
          ))
 
+(use-package god-mode :ensure)
+
 (use-package key-chord
   :ensure
   :init (progn
-          (key-chord-define-global "fd" 'ace-jump-mode)
-          (key-chord-define-global "jk" 'jump-char-forward)
-          (key-chord-define-global "JK" 'jump-char-backward)
+          (key-chord-define-global "jk" 'god-mode-all) 
           (key-chord-mode 1)))
 
 ;;;; ---- functions ----
