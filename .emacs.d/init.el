@@ -967,8 +967,7 @@
 
 (use-package ace-jump-mode
   :ensure
-  ;; :bind ("M-o" . ace-jump-mode)
-  )
+  :bind ("M-o" . ace-jump-mode))
 
 (use-package jump-char
   :ensure
@@ -987,7 +986,7 @@
 
 (use-package expand-region
   :ensure
-  :bind ("M-o" . er/expand-region))
+  :bind ("M-r" . er/expand-region))
 
 (use-package change-inner
   :ensure
