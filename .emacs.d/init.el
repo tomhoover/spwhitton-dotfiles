@@ -1001,7 +1001,7 @@
 (use-package key-chord
   :ensure
   :init (progn
-          (key-chord-define-global "jk" 'god-mode-all) 
+          (key-chord-define-global "jk" 'god-mode-all)
           (key-chord-mode 1)))
 
 ;;;; ---- functions ----
