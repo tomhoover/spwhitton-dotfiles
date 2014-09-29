@@ -755,7 +755,7 @@
                                    (define-key org-agenda-mode-map " " 'org-agenda-cycle-show)))
 
 (define-key org-mode-map (kbd "C-c C-SPC") 'org-mark-subtree)
-(define-key org-mode-map (kbd "<f10>") 'org-toggle-link-display)
+(define-key org-mode-map (kbd "<f11>") 'org-toggle-link-display)
 (define-key org-mode-map (kbd "C-c )") 'reftex-citation)
 
 (bind-key "C-c [" 'spw/org-agenda-file-to-front org-mode-map)
