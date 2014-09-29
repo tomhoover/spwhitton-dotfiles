@@ -820,7 +820,22 @@
 (use-package projectile
   :ensure
   :bind ("C-c g" .  projectile-vc)
-  :idle (projectile-global-mode))
+  :idle (projectile-global-mode)
+  :config (progn
+            (setq projectile-switch-project-action 'projectile-dired
+                  projectile-completion-system 'helm)))
+
+(use-package persp-projectile :ensure)
+
+(use-package perspective
+  :ensure
+  :bind ("<f10>" . persp-toggle)
+  :idle (persp-mode)
+  :init (progn
+          (defun persp-toggle (arg)
+            (interactive "P")
+            (if arg (call-interactively 'persp-switch)
+              (persp-switch (persp-name persp-last))))))
 
 ;;; move around my commonly used stuff fast
 
@@ -873,30 +888,27 @@
             (if (equal major-mode 'eshell-mode)
                 (ido-switch-buffer)
               (if (and (projectile-project-p)
-                       (not (equal (projectile-project-name) "annex")))
+                       (not (equal (projectile-project-name) "annex"))
+                       (not (equal (persp-name persp-curr) "main")))
+
                   (setq helm-mini-default-sources '(helm-source-buffers-list
-                                                    ;; this one is pointless since everything in it is contained in the one above.  Only useful if they are switched over but I don't think it's worth the processing time
-                                                    ;; helm-source-projectile-buffers-list
-                                                    helm-source-ido-virtual-buffers
-                                                    helm-source-projectile-files-list
-                                                    helm-source-imenu-anywhere
-                                                    helm-source-bookmarks
-                                                    helm-source-dired-recent-dirs
-                                                    helm-source-recentf
-                                                    helm-source-buffer-not-found))
-                (setq helm-mini-default-sources '(helm-source-buffers-list
-                                                  helm-source-ido-virtual-buffers
-                                                  helm-source-imenu-anywhere
-                                                  helm-source-bookmarks
-                                                  helm-source-dired-recent-dirs
-                                                  helm-source-recentf)))
-              ad-do-it)
+                                                         helm-source-projectile-files-list
+                                                         helm-source-imenu-anywhere
+                                                         helm-source-bookmarks
+                                                         helm-source-buffer-not-found))
+                       (setq helm-mini-default-sources '(helm-source-buffers-list
+                                                         ;; helm-source-ido-virtual-buffers
+                                                         helm-source-imenu-anywhere
+                                                         helm-source-bookmarks
+                                                         helm-source-dired-recent-dirs
+                                                         helm-source-recentf)))
+                  ad-do-it)
 
-            ;; once Org is loaded, can add Org headline source
-            (if (featurep 'org)
-                (add-to-list 'helm-mini-default-sources 'helm-source-org-headline t))
+              ;; once Org is loaded, can add Org headline source
+              (if (featurep 'org)
+                  (add-to-list 'helm-mini-default-sources 'helm-source-org-headline t))
 
-            (helm-adaptative-mode))
+              (helm-adaptative-mode))
 
           (use-package helm-descbinds
             :ensure
