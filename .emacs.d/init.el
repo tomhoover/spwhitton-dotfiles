@@ -1407,7 +1407,7 @@ there's a region, all lines that region covers will be duplicated."
 ;; especially on Windows
 (bind-key "C-c x C-y" 'clipboard-yank)
 (bind-key "C-c x M-w" 'clipboard-kill-ring-save)
-(bind-key "C-c x C-x C-k" 'clipboard-kill-region)
+(bind-key "C-c x C-w" 'clipboard-kill-region)
 
 ;; get a tmux terminal in current dir
 ;; (define-key global-map (kbd "C-c t") '(lambda ()
@@ -1421,7 +1421,7 @@ there's a region, all lines that region covers will be duplicated."
 (bind-key "C-c d" 'spwd20)
 (bind-key "C-c S" 'toggle-window-split)
 (bind-key "C-c R" 'rotate-windows)
-(bind-key "C-x C-k" 'kill-region)
+;; (bind-key "C-x C-k" 'kill-region)
 (bind-key "C-h" 'delete-backward-char) ; overriden by smartparens
 (bind-key "C-x M-k" 'backward-kill-sentence)
 (bind-key "C-c u" 'unicode-hunt)
