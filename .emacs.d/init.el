@@ -829,7 +829,8 @@
 
 (use-package perspective
   :ensure
-  :bind ("<f10>" . persp-toggle)
+  :bind (("<f10>" . persp-toggle)
+         ("C-c j" . persp-switch))
   :idle (persp-mode)
   :init (progn
           (defun persp-toggle (arg)
