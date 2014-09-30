@@ -894,8 +894,7 @@
                   (setq helm-mini-default-sources '(helm-source-buffers-list
                                                          helm-source-projectile-files-list
                                                          helm-source-imenu-anywhere
-                                                         helm-source-bookmarks
-                                                         helm-source-buffer-not-found))
+                                                         helm-source-bookmarks))
                        (setq helm-mini-default-sources '(helm-source-buffers-list
                                                          ;; helm-source-ido-virtual-buffers
                                                          helm-source-imenu-anywhere
