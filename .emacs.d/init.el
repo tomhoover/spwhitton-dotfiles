@@ -142,14 +142,16 @@
 ;; don't handle keyboard events before redrawing
 (setq redisplay-dont-pause t)
 
+;; no need to hide trailing white space since it gets zapped by my cleanup functions
+
 ;; show trailing whitespace ...
-(setq-default show-trailing-whitespace t)
+;; (setq-default show-trailing-whitespace t)
 ;; ... but not in terminals
-(add-hook 'term-mode-hook (lambda ()
-                            (setq show-trailing-whitespace nil)
-                            (goto-address-mode)))
-(add-hook 'eshell-mode-hook (lambda ()
-                              (setq show-trailing-whitespace nil)))
+;; (add-hook 'term-mode-hook (lambda ()
+;;                             (setq show-trailing-whitespace nil)
+;;                             (goto-address-mode)))
+;; (add-hook 'eshell-mode-hook (lambda ()
+;;                               (setq show-trailing-whitespace nil)))
 
 ;; don't prompt to create scratch buffers
 (setq confirm-nonexistent-file-or-buffer nil)
