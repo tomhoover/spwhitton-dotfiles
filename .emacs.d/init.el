@@ -1061,7 +1061,7 @@ With argument, do this that many times."
     (while (search-forward-regexp "\n\n\n+" nil "noerror")
       (replace-match "\n\n"))))
 
-(defun spw/cleanup ()
+(defun spw/auto-cleanup ()
   (interactive)
   (case major-mode
     (haskell-mode
@@ -1071,11 +1071,21 @@ With argument, do this that many times."
      (delete-trailing-whitespace-except-current-line)
      (compact-blank-lines))
     (message-mode
-     (whitespace-cleanup))
+     (save-excursion
+       (message-goto-body)
+       (save-restriction
+         (narrow-to-region (point) (point-max))
+         (whitespace-cleanup))))
     (emacs-lisp-mode
      (delete-trailing-whitespace-except-current-line))))
 
-(add-hook 'before-save-hook 'spw/cleanup)
+(defun spw/manual-cleanup ()
+  (interactive)
+  (spw/auto-cleanup)
+  (untabify (point-min) (point-max))
+  (indent-region (point-min) (point-max)))
+
+(add-hook 'before-save-hook 'spw/auto-cleanup)
 
 ;;; Typing Hangul
 
