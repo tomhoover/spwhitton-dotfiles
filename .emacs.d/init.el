@@ -1399,6 +1399,33 @@ there's a region, all lines that region covers will be duplicated."
       (kill-region (region-beginning) (region-end))
     (sp-backward-kill-word 1)))
 
+;; from Emacs Prelude/Redux author
+
+(defun eval-and-replace ()
+  "Replace the preceding sexp with its value."
+  (interactive)
+  (backward-kill-sexp)
+  (condition-case nil
+      (prin1 (eval (read (current-kill 0)))
+             (current-buffer))
+    (error (message "Invalid expression")
+           (insert (current-kill 0)))))
+
+;; from magnars
+
+(defun new-line-dwim ()
+  (interactive)
+  (let ((break-open-pair (or (and (looking-back "{" 1) (looking-at "}"))
+                             (and (looking-back ">" 1) (looking-at "<"))
+                             (and (looking-back "(" 1) (looking-at ")"))
+                             (and (looking-back "\\[" 1) (looking-at "\\]")))))
+    (newline)
+    (when break-open-pair
+      (save-excursion
+        (newline)
+        (indent-for-tab-command)))
+    (indent-for-tab-command)))
+
 ;;;; ---- personal settings ----
 
 ;;; key bindings
@@ -1437,6 +1464,7 @@ there's a region, all lines that region covers will be duplicated."
 (bind-key "C-h" 'delete-backward-char) ; overriden by smartparens
 (bind-key "C-x M-k" 'backward-kill-sentence)
 (bind-key "C-c u" 'unicode-hunt)
+(bind-key "M-RET" 'new-line-dwim)
 
 ;; C-m and RET should reindent the current line only for languages
 ;; that don't use semantic indentation
@@ -1469,6 +1497,10 @@ there's a region, all lines that region covers will be duplicated."
 
 ;; cleanup
 (bind-key "C-c n" 'spw/manual-cleanup)
+
+;; eval and replace elisp wherever we want
+(bind-key "C-c e" 'eval-and-replace)
+
 ;;; abbreviations
 
 (setq abbrev-file-name "~/doc/emacs-abbrevs")
