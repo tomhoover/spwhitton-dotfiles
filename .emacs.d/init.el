@@ -46,7 +46,7 @@
   (if (getenv "TMUX")
       (let ((map (copy-keymap xterm-function-map)))
         (set-keymap-parent map (keymap-parent input-decode-map))
-            (set-keymap-parent input-decode-map map))))
+        (set-keymap-parent input-decode-map map))))
 
 ;;; From the Emacswiki: should allow some more modified keys to work
 ;;; in Emacs over ssh via PuTTY
@@ -161,12 +161,12 @@
                          (set-frame-height (selected-frame) ; fails atm
                                            (round
                                             (/ (- (x-display-pixel-height) 28)
-                                                       (frame-char-height))))))
+                                               (frame-char-height))))))
 
 ;; soft word wrapping for easier editing of long lines
 (setq-default visual-line-mode t
-      word-wrap t
-      wrap-prefix "    ")
+              word-wrap t
+              wrap-prefix "    ")
 
 ;; kill the fringes, if we have window system support compiled in
 (if (fboundp 'set-fringe-mode)
@@ -254,15 +254,15 @@
           ;; programming language major modes
           (smartparens-global-mode)
           (dolist (hook '(emacs-lisp-mode-hook
-                lisp-mode-hook
-                lisp-interaction-mode-hook
-                ielm-mode-hook
-                scheme-mode-hook
-                inferior-scheme-mode-hook
-                python-mode-hook))
+                          lisp-mode-hook
+                          lisp-interaction-mode-hook
+                          ielm-mode-hook
+                          scheme-mode-hook
+                          inferior-scheme-mode-hook
+                          python-mode-hook))
             (add-hook hook
-            (lambda ()
-              (smartparens-strict-mode))))
+                      (lambda ()
+                        (smartparens-strict-mode))))
           (show-smartparens-global-mode))
   ;; :diminish smartparens-mode
   :config (progn
@@ -325,9 +325,9 @@
                    ;; beginning of the line we should always delete
                    (not (equal (point) (line-beginning-position)))
                    (or
-                         (looking-back "^[[:space:]]+")
-                         (looking-back "^[[:space:]]*- ")
-                         (looking-back "^[*]+ ")))
+                    (looking-back "^[[:space:]]+")
+                    (looking-back "^[[:space:]]*- ")
+                    (looking-back "^[*]+ ")))
                   (kill-line 0)
                 ;; if not after whitespace at the beginning of the
                 ;; line, just call as usual
@@ -416,7 +416,7 @@
               (interactive)
               (save-window-excursion
                 (magit-with-refresh
-                  (shell-command "git --no-pager commit --amend --reuse-message=HEAD"))))
+                 (shell-command "git --no-pager commit --amend --reuse-message=HEAD"))))
             (define-key magit-status-mode-map (kbd "C-c C-a") 'magit-just-amend)
 
             (use-package magit-annex :ensure)
@@ -612,7 +612,7 @@
                                           (company-mode 0)))
             ;; company in Org-mode more often annoying than useful
             (add-hook 'org-mode-hook (lambda ()
-                                          (company-mode 0)))))
+                                       (company-mode 0)))))
 ;; C-o during company isearch narrows to stuff matching that search;
 ;; mnemonic 'occur'.  C-M-s while outside of search to do the same
 ;; thing
@@ -846,7 +846,8 @@
   :ensure
   :bind (("C-x b" . helm-mini)
          ("C-x C-f" . helm-find-files)
-         ("C-x C-m" . helm-M-x))
+         ("C-x C-m" . helm-M-x)
+         ("M-s o" . helm-occur))
   :diminish helm-mode
   :init (progn
           ;; autoloads aren't enough to make the above bindings work
@@ -895,22 +896,22 @@
                        (not (equal (persp-name persp-curr) "main")))
 
                   (setq helm-mini-default-sources '(helm-source-buffers-list
-                                                         helm-source-projectile-files-list
-                                                         helm-source-imenu-anywhere
-                                                         helm-source-bookmarks))
-                       (setq helm-mini-default-sources '(helm-source-buffers-list
-                                                         ;; helm-source-ido-virtual-buffers
-                                                         helm-source-imenu-anywhere
-                                                         helm-source-bookmarks
-                                                         helm-source-dired-recent-dirs
-                                                         helm-source-recentf)))
-                  ad-do-it)
+                                                    helm-source-projectile-files-list
+                                                    helm-source-imenu-anywhere
+                                                    helm-source-bookmarks))
+                (setq helm-mini-default-sources '(helm-source-buffers-list
+                                                  ;; helm-source-ido-virtual-buffers
+                                                  helm-source-imenu-anywhere
+                                                  helm-source-bookmarks
+                                                  helm-source-dired-recent-dirs
+                                                  helm-source-recentf)))
+              ad-do-it)
 
-              ;; once Org is loaded, can add Org headline source
-              (if (featurep 'org)
-                  (add-to-list 'helm-mini-default-sources 'helm-source-org-headline t))
+            ;; once Org is loaded, can add Org headline source
+            (if (featurep 'org)
+                (add-to-list 'helm-mini-default-sources 'helm-source-org-headline t))
 
-              (helm-adaptative-mode))
+            (helm-adaptative-mode))
 
           (use-package helm-descbinds
             :ensure
@@ -1018,6 +1019,10 @@
           (key-chord-define-global "jk" 'god-mode-all)
           (key-chord-mode 1)))
 
+(use-package toggle-quotes
+  :bind ("C-'" . toggle-quotes)
+  :init (define-key shell-switcher-mode-map (kbd "C-'") nil))
+
 ;;;; ---- functions ----
 
 ;; backwards and forward deletions of words
@@ -1094,12 +1099,12 @@ With argument, do this that many times."
 (defun my-korean-setup ()
   "Set up my Korean environment."
   (if (equal current-language-environment "Korean")
-    (set-input-method "korean-hangul")))
+      (set-input-method "korean-hangul")))
 
 (defun my-english-setup ()
   "Set up my English environment."
   (if (equal current-language-environment "English")
-    (set-input-method nil)))
+      (set-input-method nil)))
 
 (add-hook 'set-language-environment-hook 'my-korean-setup)
 (add-hook 'set-language-environment-hook 'my-english-setup)
@@ -1126,10 +1131,10 @@ for easier reading and writing"
   (setq mode-line-format nil)
   (other-window 1)
   (if arg (progn
-              (shrink-window-horizontally (- (window-width) 95))
-              (other-window 1)
-              (switch-to-buffer "*blank*")
-              (other-window -1)))
+            (shrink-window-horizontally (- (window-width) 95))
+            (other-window 1)
+            (switch-to-buffer "*blank*")
+            (other-window -1)))
   )
 
 ;;; run my DnD helper script in an appropriately sized window
@@ -1319,7 +1324,7 @@ there's a region, all lines that region covers will be duplicated."
         (newline)
         (insert region)
         (setq end (point))))
-        (goto-char (+ origin (* (length region) arg) arg))))
+    (goto-char (+ origin (* (length region) arg) arg))))
 
 ;; from http://blog.gleitzman.com/post/35416335505/hunting-for-unicode-in-emacs
 (defun unicode-hunt ()
