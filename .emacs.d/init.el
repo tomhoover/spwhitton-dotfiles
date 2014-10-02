@@ -1467,6 +1467,8 @@ there's a region, all lines that region covers will be duplicated."
 
 (define-key isearch-mode-map "\C-h" 'isearch-delete-char)
 
+;; cleanup
+(bind-key "C-c n" 'spw/manual-cleanup)
 ;;; abbreviations
 
 (setq abbrev-file-name "~/doc/emacs-abbrevs")
