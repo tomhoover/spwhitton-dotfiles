@@ -225,6 +225,9 @@
 
 ;;;; ---- agenda and refile ----
 
+(defadvice org-agenda (before persp-org-agenda activate)
+  (projectile-persp-switch-project "~/doc"))
+
 (setq org-agenda-custom-commands
       '(("a" "Primary agenda view"
          ((agenda "day" ((org-agenda-ndays 1)
