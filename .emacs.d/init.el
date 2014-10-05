@@ -1483,9 +1483,10 @@ there's a region, all lines that region covers will be duplicated."
                        "-c"
                        (shell-quote-argument exec)))
 
-(defun persp-eshell ()
+(defun persp-eshell (arg)
   "Switch to perspective's eshell or create it"
-  (interactive)
+  (interactive "P")
+  (when arg (split-window-right) (other-window 1))
   (if (and (projectile-project-p)
            (not (equal (persp-name persp-curr) "main")))
       ;; we're in a project: name buffer carefully
