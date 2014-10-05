@@ -824,7 +824,7 @@
 (use-package projectile
   :ensure
   :bind ("C-c g" .  projectile-vc)
-  :idle (projectile-global-mode)
+  :init (projectile-global-mode)
   :config (progn
             (setq projectile-switch-project-action 'projectile-dired
                   projectile-completion-system 'helm)))
@@ -835,8 +835,8 @@
   :ensure
   :bind (("<f10>" . persp-toggle)
          ("C-c j" . persp-switch))
-  :idle (persp-mode)
   :init (progn
+          (persp-mode)
           (defun persp-toggle (arg)
             (interactive "P")
             (if arg (call-interactively 'persp-switch)
