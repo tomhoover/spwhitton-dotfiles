@@ -1032,6 +1032,11 @@
             (load-file "~/.emacs.d/init-jabber.el")
             (jabber-connect-all)))
 
+(use-package async
+  :ensure
+  :init (when (require 'dired-aux)
+          (require 'dired-async)))
+
 ;;;; ---- functions ----
 
 ;; backwards and forward deletions of words
@@ -1439,6 +1444,18 @@ there's a region, all lines that region covers will be duplicated."
         (newline)
         (indent-for-tab-command)))
     (indent-for-tab-command)))
+
+(defun terminal-emulator (arg exec)
+  (interactive "P\nsexec: ")
+  (async-start-process "term" "/usr/bin/urxvt" 'ignore
+                       "++iso14755"
+                       "++iso14755_52"
+                       "-title"
+                       (shell-quote-argument exec)
+                       "-e"
+                       "/bin/sh"
+                       "-c"
+                       (shell-quote-argument exec)))
 
 ;;;; ---- personal settings ----
 
