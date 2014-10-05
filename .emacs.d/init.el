@@ -1041,6 +1041,13 @@
   :init (when (require 'dired-aux)
           (require 'dired-async)))
 
+(use-package image-dired
+  :init (image-dired-setup-dired-keybindings))
+
+(use-package eimp
+  :ensure
+  :init (add-hook 'image-mode-hook 'eimp-mode))
+
 ;;;; ---- functions ----
 
 ;; backwards and forward deletions of words
@@ -1460,13 +1467,6 @@ there's a region, all lines that region covers will be duplicated."
                        "/bin/sh"
                        "-c"
                        (shell-quote-argument exec)))
-
-(use-package image-dired
-  :init (image-dired-setup-dired-keybindings))
-
-(use-package eimp
-  :ensure
-  :init (add-hook 'image-mode-hook 'eimp-mode))
 
 ;;;; ---- personal settings ----
 
