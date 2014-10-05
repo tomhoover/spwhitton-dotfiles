@@ -1013,9 +1013,10 @@
          ;; ("C-O" . copy-outer)
          ))
 
-(use-package god-mode :ensure)
+(use-package god-mode :disabled t :ensure)
 
 (use-package key-chord
+  :disabled t
   :ensure
   :init (progn
           (key-chord-define-global "jk" 'god-mode-all)
