@@ -1724,7 +1724,7 @@ there's a region, all lines that region covers will be duplicated."
                                (footnote-mode)
                                (define-key message-mode-map (kbd "C-c C-s") 'djcb-snip)
                                (message-goto-body)
-                               (orgstruct++-mode) ; must go last for some reason
+                               ;; (orgstruct++-mode) ; must go last for some reason
                                ))
 
 ;;; IELM
