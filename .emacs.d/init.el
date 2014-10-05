@@ -760,9 +760,8 @@
 
 (use-package tramp
   :config (progn
-            (setq tramp-default-method "scp")
+            (setq tramp-default-method "rsync")
 
-            (add-to-list 'tramp-default-user-alist '(nil "athena" "swhitton"))
             (add-to-list 'tramp-default-user-alist '(nil "sdf" "spw"))
             (add-to-list 'tramp-default-user-alist '("sudo" "localhost" "root"))
             (add-to-list 'tramp-default-user-alist '(nil nil "swhitton") t)
@@ -771,15 +770,15 @@
             ;; from the TRAMP manual: For all hosts except my local one connect via
             ;; ssh first, and apply sudo -u root afterwards
             (add-to-list 'tramp-default-proxies-alist
-                         '(nil "\\`root\\'" "/scpc:%h:"))
+                         '(nil "\\`root\\'" "/ssh:%h:"))
             (add-to-list 'tramp-default-proxies-alist
-                         '("localhost" nil nil))
+                         '((regexp-quote (system-name)) nil nil))
 
             (setq tramp-verbose 0)
 
             ;; TRAMP and zsh are not friends so might as well switch
             ;; over here
-            (setenv "SHELL" "/bin/bash")))
+            (setenv "SHELL" "/bin/sh")))
 
 ;;; ebib for editing BiBTeX databases
 
