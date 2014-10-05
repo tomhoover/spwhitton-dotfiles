@@ -610,8 +610,11 @@
             ;; company completion in eshell buffers gums up TRAMP
             (add-hook 'eshell-mode-hook (lambda ()
                                           (company-mode 0)))
-            ;; company in Org-mode more often annoying than useful
+            ;; company in Org-mode and message-mode more often
+            ;; annoying than useful
             (add-hook 'org-mode-hook (lambda ()
+                                       (company-mode 0)))
+            (add-hook 'message-mode-hook (lambda ()
                                        (company-mode 0)))))
 ;; C-o during company isearch narrows to stuff matching that search;
 ;; mnemonic 'occur'.  C-M-s while outside of search to do the same
