@@ -1461,6 +1461,13 @@ there's a region, all lines that region covers will be duplicated."
                        "-c"
                        (shell-quote-argument exec)))
 
+(use-package image-dired
+  :init (image-dired-setup-dired-keybindings))
+
+(use-package eimp
+  :ensure
+  :init (add-hook 'image-mode-hook 'eimp-mode))
+
 ;;;; ---- personal settings ----
 
 ;;; key bindings

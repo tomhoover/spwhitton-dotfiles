@@ -26,6 +26,7 @@
  '(ebib-additional-fields (quote (crossref url annote abstract keywords file timestamp translator booktitle)))
  '(ebib-index-display-fields (quote (title)))
  '(ebib-save-xrefs-first t)
+ '(eimp-ignore-read-only-modes (quote (gnus-article-mode puzzle-mode tumme-display-image-mode tumme-thumbnail-mode w3m-mode image-mode)))
  '(emamux:use-nearest-pane t)
  '(fci-rule-color "#383838")
  '(footnote-narrow-to-footnotes-when-editing t)
