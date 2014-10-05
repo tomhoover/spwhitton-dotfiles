@@ -7,7 +7,7 @@
  '(flymake-warnline ((((class color)) (:underline "yellow"))) t)
  '(git-annex-dired-annexed-available ((t (:foreground "color-151"))))
  '(git-annex-dired-annexed-unavailable ((t (:foreground "color-167"))))
- '(org-hide ((t (:foreground "#3f3f3f" :slant normal :weight normal :height 110 :width normal :foundry "xos4" :family "Terminus"))) t)
+ '(org-hide ((t (:foreground "#3f3f3f" :slant normal :weight normal :height 110 :width normal :foundry "xos4" :family "Terminus"))))
  '(sr-directory-face ((t (:foreground "#94bff3" :weight bold))) t)
  '(sr-symlink-directory-face ((t (:foreground "#94bff3" :slant italic))) t)
  '(visible-mark-face ((t (:background "#607080"))) t))
