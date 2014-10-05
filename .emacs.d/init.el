@@ -923,6 +923,21 @@
             :ensure
             :idle (helm-descbinds-mode))
 
+          ;; redefine this Helm function to work nicely with
+          ;; perspectives: just replace its code to create or switch
+          ;; to the shell buffer with a call to my function
+          (defun helm-ff-switch-to-eshell (_candidate)
+            "Switch to eshell and cd to `helm-ff-default-directory'."
+            (let ((cd-eshell #'(lambda ()
+                                 (eshell-kill-input)
+                                 (goto-char (point-max))
+                                 (insert
+                                  (format "cd '%s'" helm-ff-default-directory))
+                                 (eshell-send-input))))
+              (persp-eshell)
+              (unless (get-buffer-process (current-buffer))
+                (funcall cd-eshell))))
+
           (helm-mode)))
 
 (use-package yasnippet
@@ -941,6 +956,7 @@
 ;;; easily switch between eshells
 
 (use-package shell-switcher
+  :disabled t
   :ensure
   :init (progn (setq shell-switcher-mode t
                      shell-switcher-ask-before-creating-new nil)
@@ -1027,8 +1043,7 @@
           (key-chord-mode 1)))
 
 (use-package toggle-quotes
-  :bind ("C-'" . toggle-quotes)
-  :init (define-key shell-switcher-mode-map (kbd "C-'") nil))
+  :bind ("C-'" . toggle-quotes))
 
 (use-package jabber
   :ensure
@@ -1468,6 +1483,21 @@ there's a region, all lines that region covers will be duplicated."
                        "-c"
                        (shell-quote-argument exec)))
 
+(defun persp-eshell ()
+  "Switch to perspective's eshell or create it"
+  (interactive)
+  (if (and (projectile-project-p)
+           (not (equal (persp-name persp-curr) "main")))
+      ;; we're in a project: name buffer carefully
+      (if (get-buffer (concat "*eshell* (" (persp-name persp-curr) ")"))
+          (helm-switch-to-buffer (concat "*eshell* (" (persp-name persp-curr) ")"))
+        (call-interactively 'eshell)
+        (rename-buffer (concat "*eshell* (" (persp-name persp-curr) ")")))
+    ;; we're not in a project: don't
+    (if (get-buffer "*eshell*")
+        (helm-switch-to-buffer "*eshell*")
+      (call-interactively 'eshell))))
+
 ;;;; ---- personal settings ----
 
 ;;; key bindings
@@ -1519,6 +1549,8 @@ there's a region, all lines that region covers will be duplicated."
                                (bind-key "C-m" 'newline-and-indent haskell-mode-map)))
 
 (bind-key "C-x M-t" 'transpose-paragraphs)
+
+(bind-key "C-c s" 'persp-eshell)
 
 ;; fixup-whitespace seems to make just-one-space redundant
 (bind-key "M-SPC" 'fixup-whitespace)
