@@ -1026,6 +1026,12 @@
   :bind ("C-'" . toggle-quotes)
   :init (define-key shell-switcher-mode-map (kbd "C-'") nil))
 
+(use-package jabber
+  :ensure
+  :config (when (f-exists? "~/.emacs.d/init-jabber.el")
+            (load-file "~/.emacs.d/init-jabber.el")
+            (jabber-connect-all)))
+
 ;;;; ---- functions ----
 
 ;; backwards and forward deletions of words
