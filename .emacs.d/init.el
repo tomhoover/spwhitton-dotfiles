@@ -1644,6 +1644,9 @@ there's a region, all lines that region covers will be duplicated."
 (electric-layout-mode 1)
 (electric-indent-mode 1)
 
+;; templates when creating new files
+(auto-insert-mode 1)
+
 ;; disable for python mode where it makes a mess
 (defun electric-indent-ignore-python (char)
   "Ignore electric indentation for python-mode"
