@@ -22,7 +22,7 @@
  '(auto-completion-syntax-alist (quote (accept . word)))
  '(cdlatex-math-modify-alist (quote ((98 "\\mathbb" "$\\mathbb" t nil nil) (66 "\\mathbf" "\\textbf" t nil nil))))
  '(cdlatex-math-symbol-alist (quote ((123 ("\\subseteq")))))
- '(custom-safe-themes (quote ("1e194b1010c026b1401146e24a85e4b7c545276845fc38b8c4b371c8338172ad" "3b819bba57a676edf6e4881bd38c777f96d1aa3b3b5bc21d8266fa5b0d0f1ebf" "146d24de1bb61ddfa64062c29b5ff57065552a7c4019bee5d869e938782dfc2a" "cd70962b469931807533f5ab78293e901253f5eeb133a46c2965359f23bfb2ea" "dd4db38519d2ad7eb9e2f30bc03fba61a7af49a185edfd44e020aa5345e3dca7" "71b172ea4aad108801421cc5251edb6c792f3adbaecfa1c52e94e3d99634dee7" default)))
+ '(custom-safe-themes (quote ("3b819bba57a676edf6e4881bd38c777f96d1aa3b3b5bc21d8266fa5b0d0f1ebf" "146d24de1bb61ddfa64062c29b5ff57065552a7c4019bee5d869e938782dfc2a" "cd70962b469931807533f5ab78293e901253f5eeb133a46c2965359f23bfb2ea" "dd4db38519d2ad7eb9e2f30bc03fba61a7af49a185edfd44e020aa5345e3dca7" "71b172ea4aad108801421cc5251edb6c792f3adbaecfa1c52e94e3d99634dee7" default)))
  '(ebib-additional-fields (quote (crossref url annote abstract keywords file timestamp translator booktitle)))
  '(ebib-index-display-fields (quote (title)))
  '(ebib-save-xrefs-first t)

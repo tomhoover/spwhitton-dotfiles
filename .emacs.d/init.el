@@ -191,10 +191,10 @@
 ;; get the mouse out of the way
 (mouse-avoidance-mode 'cat-and-mouse)
 
-;;; Ample theme
+;;; zenburn
 
-(use-package ample-zen-theme :ensure)
-(load-theme 'ample-zen)
+(use-package zenburn-theme :ensure)
+(load-theme 'zenburn)
 
 ;;; I'm in Korea
 
