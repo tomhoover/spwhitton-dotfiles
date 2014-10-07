@@ -217,6 +217,8 @@
 
 (use-package diminish :ensure)
 
+(use-package f :ensure) (use-package s :ensure)
+
 ;;; Org
 
 (use-package org
