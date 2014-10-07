@@ -617,7 +617,7 @@
             (add-hook 'org-mode-hook (lambda ()
                                        (company-mode 0)))
             (add-hook 'message-mode-hook (lambda ()
-                                       (company-mode 0)))))
+                                           (company-mode 0)))))
 ;; C-o during company isearch narrows to stuff matching that search;
 ;; mnemonic 'occur'.  C-M-s while outside of search to do the same
 ;; thing
@@ -832,7 +832,16 @@
   :init (projectile-global-mode)
   :config (progn
             (setq projectile-switch-project-action 'projectile-dired
-                  projectile-completion-system 'helm)))
+                  projectile-completion-system 'helm)
+
+            ;; from http://cupfullofcode.com/invalidate-projectile-cache-on-delete/
+            (defadvice delete-file (before purge-from-projectile-cache (filename &amp) activate)
+              (if (projectile-project-p)
+                  (progn
+                    (let* ((true-filename (file-truename filename))
+                           (relative-filename (file-relative-name true-filename (projectile-project-root))))
+                      (if (projectile-file-cached-p relative-filename (projectile-project-root))
+                          (projectile-purge-file-from-cache relative-filename))))))))
 
 (use-package persp-projectile :ensure)
 
