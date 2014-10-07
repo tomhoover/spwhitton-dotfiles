@@ -1506,7 +1506,7 @@ there's a region, all lines that region covers will be duplicated."
       ;; we're in a project: name buffer carefully
       (if (get-buffer (concat "*eshell* (" (persp-name persp-curr) ")"))
           (helm-switch-to-buffer (concat "*eshell* (" (persp-name persp-curr) ")"))
-        (call-interactively 'eshell)
+        (eshell "a")
         (rename-buffer (concat "*eshell* (" (persp-name persp-curr) ")")))
     ;; we're not in a project: don't
     (if (get-buffer "*eshell*")
