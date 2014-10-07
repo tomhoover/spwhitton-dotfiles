@@ -15,6 +15,11 @@ $MAILDIR/spam
 * ^From.*<newletters@slacker.com>
 $MAILDIR/spam
 
+# moar
+:0:
+* ^Subject.*SEAnews.*
+$MAILDIR/spam
+
 :0:
 * ^Subject.*BitFolk VPS 'seaotter' data transfer report
 $MAILDIR/archive
