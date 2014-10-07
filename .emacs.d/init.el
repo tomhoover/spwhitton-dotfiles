@@ -835,13 +835,13 @@
                   projectile-completion-system 'helm)
 
             ;; from http://cupfullofcode.com/invalidate-projectile-cache-on-delete/
-            (defadvice delete-file (before purge-from-projectile-cache (filename &amp) activate)
-              (if (projectile-project-p)
-                  (progn
-                    (let* ((true-filename (file-truename filename))
-                           (relative-filename (file-relative-name true-filename (projectile-project-root))))
-                      (if (projectile-file-cached-p relative-filename (projectile-project-root))
-                          (projectile-purge-file-from-cache relative-filename))))))))
+            ;; (defadvice delete-file (after purge-from-projectile-cache (filename &amp) activate)
+            ;;   (when (projectile-project-p)
+            ;;     (let* ((true-filename (file-truename filename))
+            ;;            (relative-filename (file-relative-name true-filename (projectile-project-root))))
+            ;;       (if (projectile-file-cached-p relative-filename (projectile-project-root))
+            ;;           (projectile-purge-file-from-cache relative-filename)))))
+            ))
 
 (use-package persp-projectile :ensure)
 
