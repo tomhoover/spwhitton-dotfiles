@@ -1456,7 +1456,9 @@ there's a region, all lines that region covers will be duplicated."
   (interactive)
   (if (region-active-p)
       (kill-region (region-beginning) (region-end))
-    (sp-backward-kill-word 1)))
+    (if smartparens-mode
+        (sp-backward-kill-word 1)
+      (backward-delete-word 1))))
 
 ;; from Emacs Prelude/Redux author
 
