@@ -57,7 +57,10 @@ IceMessenger()
 #u::ToggleWinMinimize("3~4", "C:\e-Book\start\TitleList.exe")
 #i::ToggleWinMinimize(" CD", "c:\Users\swhitton\Old shortcuts\grades5and6")
 #o::IceMessenger()  
-  
+
+; empty the Recycle Bin
+#^r::FileRecycleEmpty, C:\
+
 ; swap caps lock and control, of course
 Capslock::Control
 Control::Capslock
