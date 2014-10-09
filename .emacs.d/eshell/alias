@@ -7,4 +7,5 @@ alias ga git annex $*
 alias blank sleep 1;xset dpms force off
 alias docs cd ~/doc;mr autoci;git pull;git push
 alias git-rebase-workstation-on-master git checkout workstation;git rebase master;git checkout ${hostname};git rebase workstation
+alias git-push-workstation-master git push origin master;git push -f origin workstation ${hostname}
 alias workgit cd ~/doc;git commit -a -e -m "work commit";git push
