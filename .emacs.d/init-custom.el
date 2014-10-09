@@ -45,6 +45,8 @@
  '(initial-scratch-message nil)
  '(jabber-alert-message-hooks (quote (jabber-message-libnotify jabber-message-scroll)))
  '(jabber-alert-presence-hooks nil)
+ '(mairix-file-path "~/local")
+ '(mairix-search-file "mairixresults")
  '(openwith-associations (quote (("\\.pdf\\'" "evince" (file)) ("\\.mp3\\'" "mplayer" (file)) ("\\.\\(doc\\|docx\\)\\'" "soffice" (file)) ("\\.mkv\\'" "vlc" (file)) ("\\.avi\\'" "vlc" (file)) ("\\.mp4\\'" "vlc" (file)) ("\\.ppt\\'" "soffice" (file)) ("\\.pptx\\'" "soffice" (file)) ("\\.wmv\\'" "vlc" (file)) ("\\.flv\\'" "vlc" (file)) ("\\.hwp\\'" "hanword" (file)))))
  '(org-agenda-sticky t)
  '(org-agenda-time-grid (quote ((daily weekly today require-timed) #("----------------" 0 16 (org-heading t)) (800 1000 1200 1400 1600 1800 2000))))

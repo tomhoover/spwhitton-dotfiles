@@ -1077,6 +1077,9 @@
   :ensure
   :init (add-hook 'image-mode-hook 'eimp-mode))
 
+(use-package org-mairix-el
+  :bind ("C-c m" . org-mairix-el-insert-link))
+
 ;;;; ---- functions ----
 
 ;; backwards and forward deletions of words

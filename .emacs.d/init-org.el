@@ -379,6 +379,10 @@
       '(("t" "Task" entry (file "~/doc/org/refile.org")
          "* TODO %^{Title}
 %?")
+        ("e" "Task from an e-mail" entry (file "~/doc/org/refile.org")
+         "* TODO %^{Title}
+%(org-mairix-el-link)
+%?")
         ("w" "Work task" entry (file "~/doc/org/refile.org")
          "* TODO %^{Title}                      :@work:
 %?")

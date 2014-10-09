@@ -1,0 +1,3 @@
+#!/bin/zsh
+
+cat /dev/stdin | grep -i "^Message-ID:" | sed "s/^Message-I[dD]: <//" | sed "s/>$//" > ~/.org-mairix-el-link
