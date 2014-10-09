@@ -388,6 +388,9 @@
         ("a" "Appointment" entry (file+datetree "~/doc/org/diary.org")
          "* %^{Time} %^{Title & location}
 %^t" :immediate-finish t)
+        ("A" "Appointment (untimed)" entry (file+datetree "~/doc/org/diary.org")
+         "* %^{Title & location}
+%^t" :immediate-finish t)
         ("s" "For the future" entry (file "~/doc/org/refile.org")
          "* SOMEDAY %^{Title}
 %?")
