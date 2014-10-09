@@ -100,7 +100,7 @@
       org-yank-folded-subtrees nil
       org-id-method (quote uuidgen)
       org-deadline-warning-days 60
-      org-return-follows-link t
+      org-return-follows-link nil
       org-display-internal-link-with-indirect-buffer t
       org-remove-highlights-with-change nil
       org-M-RET-may-split-line '((default . nil))
