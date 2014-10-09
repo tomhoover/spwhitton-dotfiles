@@ -4,5 +4,5 @@ output=$(mairix $@)
 #echo $output
 
 if ! [ "$output" = "Matched 0 messages" ]; then
-    mutt -Rf ~/lib/annex/doc/mail/mairixresults
+    mutt -Rf ~/local/mairixresults
 fi
