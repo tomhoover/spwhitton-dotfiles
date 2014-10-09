@@ -113,14 +113,14 @@ macro pager <F5> "<limit>~(((~N|~O)!~D))<enter><home>"
 macro index <F6> "lall\n<end>"
 macro pager <F6> "lall\n<end>"
 
-macro index <F7> "c=INBOX<return>" "switch to inbox"
-macro pager <F7> "c=INBOX<return>" "switch to inbox"
+macro index <F9> "c=INBOX<return>" "switch to inbox"
+macro pager <F9> "c=INBOX<return>" "switch to inbox"
 
-macro index <F8> "c=sent<return>" "switch to sent"
-macro pager <F8> "c=sent<return>" "switch to sent"
+macro index <F10> "c=sent<return>" "switch to sent"
+macro pager <F10> "c=sent<return>" "switch to sent"
 
-macro index <F9> "c=archive<return>" "switch to archive"
-macro pager <F9> "c=archive<return>" "switch to archive"
+macro index <F11> "c=archive<return>" "switch to archive"
+macro pager <F11> "c=archive<return>" "switch to archive"
 
 # limit to the messages I haven't dealt with yet when opening inbox
 folder-hook INBOX$ push <F5>
