@@ -32,15 +32,19 @@
 
 (org-add-link-type "mairixel" 'org-mairix-el-open)
 
+(defun org-mairix-el--get-link ()
+  "Return link from `org-mairix-el-store' file."
+  (substring (s-trim (f-read org-mairix-el-store)) 0 31))
+
 (defun org-mairix-el-open (search)
   "Function to open a mairix link SEARCH."
-  (mairix-search (concat "m:" search) nil))
+  (mairix-search (concat "m:" search "=") nil))
 
 (defun org-mairix-el-link ()
   "Return a link with description DESCRIPTION to a message by its ID."
   (interactive )
   (when (f-exists? org-mairix-el-store)
-    (let ((message-id (s-trim (f-read org-mairix-el-store))))
+    (let ((message-id (org-mairix-el--get-link)))
       (concat "[[mairixel:"
               message-id
               "]["
@@ -51,7 +55,7 @@
   "Store a link to a message by its ID."
   (interactive)
   (when (f-exists? org-mairix-el-store)
-    (let ((message-id (s-trim (f-read org-mairix-el-store))))
+    (let ((message-id (org-mairix-el--get-link)))
       (org-insert-link nil (concat "mairixel:" message-id)))))
 
 (provide 'org-mairix-el)
