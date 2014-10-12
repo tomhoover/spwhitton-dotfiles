@@ -22,7 +22,7 @@ status_backend = sqlite
 
 [Repository Local]
 type = Maildir
-localfolders =~/.offlinemail
+localfolders = ~/.offlinemail
 
 [Repository ma]
 type = IMAP
