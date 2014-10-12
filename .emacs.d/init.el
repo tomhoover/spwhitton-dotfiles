@@ -1596,6 +1596,9 @@ there's a region, all lines that region covers will be duplicated."
 ;; eval and replace elisp wherever we want
 (bind-key "C-c e" 'eval-and-replace)
 
+;; insert mode headers
+(bind-key "C-c i h" 'add-file-local-variable-prop-line)
+
 ;;; abbreviations
 
 (setq abbrev-file-name "~/doc/emacs-abbrevs")
