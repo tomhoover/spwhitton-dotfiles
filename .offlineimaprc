@@ -21,6 +21,7 @@ remoterepository = ma
 status_backend = sqlite
 # autorefresh = 15
 # quick = 5
+postsynchook = mairix -F -Q
 
 [Repository Local]
 type = Maildir
