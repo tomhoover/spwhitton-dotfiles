@@ -1005,7 +1005,8 @@
           ;; I've trained my fingers well to double-space manually
           (setq smart-operator-double-space-docs nil)
 
-          (add-hook 'python-mode-hook 'smart-operator-mode)))
+          (add-hook 'python-mode-hook 'smart-operator-mode)
+          (add-hook 'conf-mode-hook 'smart-operator-mode)))
 
 ;;; make indentation in python nice and visible
 
