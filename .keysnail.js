@@ -53,6 +53,16 @@ key.setViewKey(['C-c', 'b'], function (ev, arg) {
 key.setViewKey(['C-c', 'h'], function (ev, arg) {
     ext.exec("history-show", arg, ev);
 }, 'History - show histories list');
+
+function getShortcutOrURI(k, d) {
+    return PlacesUtils.getURLAndPostDataForKeyword(k)[0];
+}
+
+key.setViewKey(['C-c', 'r'], function (ev, arg) {
+    if (window.loadURI) {
+        loadURI("javascript:(function(){readStyle%3D'style-apertura'%3BreadSize%3D'size-large'%3BreadMargin%3D'margin-wide'%3B_readability_script%3Ddocument.createElement('SCRIPT')%3B_readability_script.type%3D'text/javascript'%3B_readability_script.src%3D'http://spw.sdf.org/tech/old-readability.js?x%3D'%2B(Math.random())%3Bdocument.getElementsByTagName('head')%5B0%5D.appendChild(_readability_script)%3B_readability_css%3Ddocument.createElement('LINK')%3B_readability_css.rel%3D'stylesheet'%3B_readability_css.href%3D'http://spw.sdf.org/tech/old-readability.css'%3B_readability_css.type%3D'text/css'%3B_readability_css.media%3D'all'%3Bdocument.getElementsByTagName('head')%5B0%5D.appendChild(_readability_css)%3B_readability_print_css%3Ddocument.createElement('LINK')%3B_readability_print_css.rel%3D'stylesheet'%3B_readability_print_css.href%3D'http://spw.sdf.org/tech/old-readability-print.css'%3B_readability_print_css.media%3D'print'%3B_readability_print_css.type%3D'text/css'%3Bdocument.getElementsByTagName('head')%5B0%5D.appendChild(_readability_print_css)%3B})()%3B");
+    }
+}, 'Good old Readability');
 //}}%PRESERVE%
 // ========================================================================= //
 
