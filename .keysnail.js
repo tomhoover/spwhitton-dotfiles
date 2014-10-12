@@ -76,7 +76,6 @@ function getCurrentURL(){
 }
 
 key.setViewKey(['C-c', 'k'], function (ev, arg){
-    alert(getCurrentURL())
     Components.utils.import("resource://gre/modules/FileUtils.jsm");
 
     // http://stackoverflow.com/questions/10215643/how-to-execute-a-windows-command-from-firefox-addon
@@ -89,7 +88,6 @@ key.setViewKey(['C-c', 'k'], function (ev, arg){
         .createInstance(Components.interfaces.nsIProcess);
     process.init(shell);
     process.runAsync(args, args.length);
-    alert("done")
 }, 'Send to Kindle and add to Org reading list');
 //}}%PRESERVE%
 // ========================================================================= //
