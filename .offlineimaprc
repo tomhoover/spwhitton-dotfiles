@@ -1,3 +1,5 @@
+# -*- mode: conf-unix; -*-
+
 [general]
 accounts = SDF
 maxsyncaccounts = 1
