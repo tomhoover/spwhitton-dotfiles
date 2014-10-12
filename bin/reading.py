@@ -17,7 +17,8 @@ READINGORG = "/home/swhitton/doc/org/reading.org"
 def main():
     url = sys.argv[1]
     page = urllib.urlopen(url)
-    # following from blabblah's read2text
+    # encoding stuff from
+    # http://cdn3.brettterpstra.com/downloads/Read2Text1.zip
     try:
         from feedparser import _getCharacterEncoding as enc
     except ImportError:
