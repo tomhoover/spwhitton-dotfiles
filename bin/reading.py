@@ -1,11 +1,13 @@
 #!/usr/bin/env python
 
+"""reading.py -- adds stuff to my reading list"""
+
 import subprocess
 import sys
 import os
 from readability.readability import Document
 import html2text
-import urllib
+import urllib2
 import time
 import socket
 import tempfile
@@ -15,8 +17,16 @@ READINGDIR = "/home/swhitton/local/reading"
 READINGORG = "/home/swhitton/doc/org/reading.org"
 
 def main():
+    """Run the script"""
     url = sys.argv[1]
-    page = urllib.urlopen(url)
+    req = urllib2.Request(url,
+                          headers={'User-Agent':
+                                   'Mozilla/5.0 (X11; Linux i686; rv:32.0)'
+                                   + 'Gecko/20100101 Firefox/32.0'
+                                   + 'Iceweasel/32.0'})
+    page = urllib2.urlopen(req)
+    unreadable_html = page.read()
+
     # encoding stuff from
     # http://cdn3.brettterpstra.com/downloads/Read2Text1.zip
     try:
@@ -24,9 +34,10 @@ def main():
     except ImportError:
         enc = lambda x, y: ('utf-8', 1)
 
-    unreadable_html = page.read()
-    readable_html = Document(unreadable_html).summary().encode('ascii', 'ignore')
-    readable_title = Document(unreadable_html).short_title().encode('ascii', 'ignore')
+    readable_html = Document(unreadable_html).summary().encode('ascii',
+                                                               'ignore')
+    readable_title = Document(unreadable_html).short_title().encode('ascii',
+                                                                    'ignore')
 
     encoding = enc(page.headers, readable_html)[0]
     if encoding == 'us-ascii': encoding = 'utf-8'
