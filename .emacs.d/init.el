@@ -1086,6 +1086,10 @@
   :bind ("C-x o" . ace-window)
   :init (setq aw-keys '(?j ?k ?l ?\; ?f ?d ?s ?a)))
 
+(use-package hungry-delete
+  :ensure
+  :idle (global-hungry-delete-mode))
+
 ;;;; ---- functions ----
 
 ;; backwards and forward deletions of words
