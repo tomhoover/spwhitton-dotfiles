@@ -1573,6 +1573,12 @@ there's a region, all lines that region covers will be duplicated."
 
 (bind-key "C-c s" 'persp-eshell)
 
+;; automatically rebalance windows
+(defadvice split-window-below (after rebalance-windows activate)
+  (balance-windows))
+(defadvice split-window-right (after rebalance-windows activate)
+  (balance-windows))
+
 ;; fixup-whitespace seems to make just-one-space redundant
 (bind-key "M-SPC" 'fixup-whitespace)
 
