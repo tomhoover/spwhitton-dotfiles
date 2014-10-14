@@ -1081,6 +1081,11 @@
 (use-package org-mairix-el
   :bind ("C-c m" . org-mairix-el-insert-link))
 
+(use-package ace-window
+  :ensure
+  :bind ("C-x o" . ace-window)
+  :init (setq aw-keys '(?j ?k ?l ?\; ?f ?d ?s ?a)))
+
 ;;;; ---- functions ----
 
 ;; backwards and forward deletions of words
