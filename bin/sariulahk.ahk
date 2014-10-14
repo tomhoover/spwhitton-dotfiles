@@ -48,8 +48,8 @@ IceMessenger()
 #j::ToggleWinMinimize("emacs", "c:\emacs\bin\runemacs.exe -mm")
 ;#k::ToggleWinMinimize("cmd", "cmd.exe")
 #k::ToggleWinMinimize("MINGW32", "c:\Users\swhitton\Old shortcuts\Git Bash")
-#;::ToggleWinMinimize("spw@ma", "c:\Users\swhitton\Software\putty.exe -load ma")
-#f::ToggleWinMinimize("Mozilla Firefox", "Firefox")
+#h::ToggleWinMinimize("spw@ma", "c:\Users\swhitton\Software\putty.exe -load ma")
+#;::ToggleWinMinimize("Mozilla Firefox", "Firefox")
 
 ; additional run-or-raise for school
 ; grades5and6 renamed because this autohotkey doesn't like Hangeul
