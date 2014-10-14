@@ -5,10 +5,10 @@
   Mod4 + k
 
 "gnome3-runorraise www"
-  Mod4 + f
+  Mod4 + semicolon
 
 "gnome3-runorraise ma"
-  Mod4 + semicolon
+  Mod4 + h
 
 "xmousetidy"
   Mod4 + m
@@ -17,4 +17,4 @@
   Mod4 + l
 
 "sonata --toggle"
-  Mod4 + h
+  Mod4 + f
