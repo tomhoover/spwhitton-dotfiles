@@ -110,10 +110,10 @@ source ~/.mutt/groups           # keep shortcut groups in a separate
 macro index <F2> "<limit>((~N|~O)!~D)<enter><home>"
 macro pager <F2> "<limit>~(((~N|~O)!~D))<enter><home>"
 
-macro index, pager <F3> "lall\n<end>"
-macro index, pager <F5> "c=INBOX<return>" "switch to inbox"
-macro index, pager <F6> "c=sent<return>" "switch to sent"
-macro index, pager <F7> "c=archive<return>" "switch to archive"
+macro index,pager <F3> "lall\n<end>"
+macro index,pager <F5> "c=INBOX<return>" "switch to inbox"
+macro index,pager <F6> "c=sent<return>" "switch to sent"
+macro index,pager <F7> "c=archive<return>" "switch to archive"
 
 # limit to the messages I haven't dealt with yet when opening inbox
 folder-hook INBOX$ push <F2>
