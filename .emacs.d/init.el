@@ -665,7 +665,7 @@
 
 (use-package deft
   :ensure
-  :bind ("<f9>" . deft)
+  :bind ("C-c h" . deft)
   :init (progn
           (setq deft-extension "org"
                 deft-text-mode 'org-mode

@@ -45,18 +45,18 @@ IceMessenger()
 
 ; my run-or-raise shortcuts from unix
 
-#j::ToggleWinMinimize("emacs", "c:\emacs\bin\runemacs.exe -mm")
+F9::ToggleWinMinimize("emacs", "c:\emacs\bin\runemacs.exe -mm")
 ;#k::ToggleWinMinimize("cmd", "cmd.exe")
-#k::ToggleWinMinimize("MINGW32", "c:\Users\swhitton\Old shortcuts\Git Bash")
-#h::ToggleWinMinimize("spw@ma", "c:\Users\swhitton\Software\putty.exe -load ma")
-#;::ToggleWinMinimize("Mozilla Firefox", "Firefox")
+F10::ToggleWinMinimize("MINGW32", "c:\Users\swhitton\Old shortcuts\Git Bash")
+F11::ToggleWinMinimize("spw@ma", "c:\Users\swhitton\Software\putty.exe -load ma")
+F12::ToggleWinMinimize("Mozilla Firefox", "Firefox")
 
 ; additional run-or-raise for school
 ; grades5and6 renamed because this autohotkey doesn't like Hangeul
 
-#u::ToggleWinMinimize("3~4", "C:\e-Book\start\TitleList.exe")
-#i::ToggleWinMinimize(" CD", "c:\Users\swhitton\Old shortcuts\grades5and6")
-#o::IceMessenger()  
++F9::ToggleWinMinimize("3~4", "C:\e-Book\start\TitleList.exe")
++F10::ToggleWinMinimize(" CD", "c:\Users\swhitton\Old shortcuts\grades5and6")
++F11::IceMessenger()  
 
 ; empty the Recycle Bin
 #^r::FileRecycleEmpty, C:\

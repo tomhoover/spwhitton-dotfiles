@@ -1,20 +1,20 @@
 "gnome3-runorraise emacs"
-  Mod4 + j
+  F9
 
 "gnome3-runorraise term"
-  Mod4 + k
+  F10
 
 "gnome3-runorraise www"
-  Mod4 + semicolon
+  F12
 
 "gnome3-runorraise ma"
-  Mod4 + h
+  F11
 
 "xmousetidy"
-  Mod4 + m
+  Shift + F10
 
 "xscreensaver-command -lock"
   Mod4 + l
 
 "sonata --toggle"
-  Mod4 + f
+ Shift + F9
