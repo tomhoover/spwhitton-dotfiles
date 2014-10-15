@@ -5,7 +5,10 @@ case $1 in
         wmctrl -a Iceweasel || iceweasel &
         ;;
     emacs)
-        wmctrl -a emacs@`hostname -f` || emacsclient -c &
+        if ! pgrep emacs; then
+            emacs --daemon
+        fi
+        wmctrl -a emacs@`hostname -f` || emacsclient -c &        
         ;;
     ma)
         wmctrl -a "spw@ma" || urxvtma &
