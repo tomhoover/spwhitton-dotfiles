@@ -1024,7 +1024,7 @@
 (use-package jump-char
   :ensure
   :bind (("M-m" . jump-char-forward)
-         ("M-M" . jump-char-backward)))
+         ("C-M-m" . jump-char-backward)))
 
 (use-package ace-link
   :ensure
