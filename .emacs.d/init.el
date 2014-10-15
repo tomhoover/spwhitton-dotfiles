@@ -1024,7 +1024,7 @@
 (use-package jump-char
   :ensure
   :bind (("M-m" . jump-char-forward)
-         ("C-M-m" . jump-char-backward)))
+         ("M-M" . jump-char-backward)))
 
 (use-package ace-link
   :ensure
@@ -1086,9 +1086,11 @@
   :bind ("C-x o" . ace-window)
   :init (setq aw-keys '(?j ?k ?l ?\; ?f ?d ?s ?a)))
 
-(use-package hungry-delete
+(use-package key-chord
   :ensure
-  :idle (global-hungry-delete-mode))
+  :init (key-chord-mode 1)
+  :config (progn
+            (key-chord-define-global "df" 'keyboard-quit)))
 
 ;;;; ---- functions ----
 
