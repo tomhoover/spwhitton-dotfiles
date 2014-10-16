@@ -185,6 +185,21 @@
 (use-package zenburn-theme :ensure)
 (load-theme 'zenburn)
 
+;;; sexy mode line
+
+(use-package smart-mode-line
+  :ensure
+  :init (progn
+          (use-package powerline :ensure)
+          (use-package smart-mode-line-powerline-theme :ensure)
+          (sml/setup)
+          (sml/apply-theme 'powerline)
+          (setq sml/shorten-directory t
+                sml/shorten-modes t
+                sml/name-width 30
+                sml/mode-width 40)
+          ))
+
 ;;; I'm in Korea
 
 (if (not (eq system-type 'windows-nt))
@@ -815,6 +830,7 @@
   :ensure
   :bind ("C-c g" .  projectile-vc)
   :init (projectile-global-mode)
+  :diminish 'projectile-mode
   :config (progn
             (setq projectile-switch-project-action 'projectile-dired
                   projectile-completion-system 'helm)
