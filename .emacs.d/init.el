@@ -1487,7 +1487,7 @@ there's a region, all lines that region covers will be duplicated."
 (bind-key "C-c d" 'spwd20)
 (bind-key "C-c S" 'toggle-window-split)
 (bind-key "C-c R" 'rotate-windows)
-;; (bind-key "C-x C-k" 'kill-region)
+(bind-key "C-x C-k" 'kill-region)
 (bind-key "C-h" 'delete-backward-char) ; overriden by smartparens
 (bind-key "C-x M-k" 'backward-kill-sentence)
 (bind-key "C-c u" 'unicode-hunt)
