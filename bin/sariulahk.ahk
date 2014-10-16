@@ -82,3 +82,7 @@ Capslock::
 
 @::"
 "::@
+
+; disable my beloved RSI-inducing shortcuts
+^h::Return
+^m::Return

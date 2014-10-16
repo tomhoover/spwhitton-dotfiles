@@ -17,4 +17,12 @@
   Mod4 + l
 
 "sonata --toggle"
- Shift + F9
+  Shift + F9
+
+# banned
+  
+"/bin/false"
+  Control + h
+
+"/bin/false"
+  Control + m
