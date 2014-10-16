@@ -142,17 +142,6 @@
 ;; don't handle keyboard events before redrawing
 (setq redisplay-dont-pause t)
 
-;; no need to hide trailing white space since it gets zapped by my cleanup functions
-
-;; show trailing whitespace ...
-;; (setq-default show-trailing-whitespace t)
-;; ... but not in terminals
-;; (add-hook 'term-mode-hook (lambda ()
-;;                             (setq show-trailing-whitespace nil)
-;;                             (goto-address-mode)))
-;; (add-hook 'eshell-mode-hook (lambda ()
-;;                               (setq show-trailing-whitespace nil)))
-
 ;; don't prompt to create scratch buffers
 (setq confirm-nonexistent-file-or-buffer nil)
 
@@ -205,17 +194,13 @@
 
 (server-start)
 
-;; bind C-x k to end edit (C-x C-c seems to be already bound to this)
-;; (add-hook 'server-switch-hook
-;;           (lambda ()
-;;             (when (current-local-map)
-;;               (use-local-map (copy-keymap (current-local-map))))
-;;             (when server-buffer-clients
-;;               (local-set-key (kbd "C-x k") 'server-edit))))
-
 ;;;; ---- packages ----
 
+;;; clean up the mode line
+
 (use-package diminish :ensure)
+
+;;; libraries of useful lisp functions
 
 (use-package f :ensure) (use-package s :ensure)
 
