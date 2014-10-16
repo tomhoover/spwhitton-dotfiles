@@ -757,7 +757,7 @@
   :bind (("C-c r" . vr/replace)
          ("C-c q" . vr/query-replace)))
 
-;;; simple projects
+;;; simple concept of projects
 
 (use-package projectile
   :ensure
