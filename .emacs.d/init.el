@@ -894,6 +894,7 @@
           (bind-key "<tab>" 'helm-execute-persistent-action helm-map)
           (bind-key "C-i" 'helm-execute-persistent-action helm-map)
           (bind-key "C-z" 'helm-select-action helm-map)
+          (bind-key "<escape>" 'helm-keyboard-quit helm-map)
 
           ;; eshell history -- let Helm handle eshell completion
           (add-hook 'eshell-mode-hook
@@ -1533,6 +1534,10 @@ there's a region, all lines that region covers will be duplicated."
 ;;;; ---- personal settings ----
 
 ;;; key bindings
+
+;; ESC prefix map not much use and I have caps lock jointly control
+;; and escape
+(bind-key "<escape>" 'keyboard-quit)
 
 ;; movement
 (bind-key "C-c t p" 'transpose-params)

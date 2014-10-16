@@ -62,8 +62,21 @@ F12::ToggleWinMinimize("Mozilla Firefox", "Firefox")
 #^r::FileRecycleEmpty, C:\
 
 ; swap caps lock and control, of course
-Capslock::Control
-Control::Capslock
+; Capslock::Control
+; Control::Capslock
+
+; Author: fwompner gmail com
+#InstallKeybdHook
+SetCapsLockState, alwaysoff
+Capslock::
+  Send {LControl Down}
+  KeyWait, CapsLock
+  Send {LControl Up}
+  if ( A_PriorKey = "CapsLock" )
+  {
+    Send {Esc}
+  }
+  return
 
 ; some British keyboard layout conventions
 
