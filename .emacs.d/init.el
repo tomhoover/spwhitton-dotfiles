@@ -798,6 +798,7 @@
           ;; extra sources
           (use-package helm-projectile :ensure)
           (use-package helm-dired-recent-dirs :ensure)
+          (use-package imenu-anywhere :ensure)
 
           ;; new fuzzy matching
           (setq helm-buffers-fuzzy-matching t
