@@ -549,6 +549,7 @@
   (add-hook hook
             (lambda ()
               (turn-on-eldoc-mode)
+              (diminish 'eldoc-mode)
               (rainbow-delimiters-mode t))))
 
 ;;; boxquotes
@@ -958,7 +959,7 @@
 
 (use-package yasnippet
   :ensure
-  :diminish yas-global-mode
+  :diminish yas-minor-mode
   :idle (yas-global-mode))
 
 ;;; eshell's plan9-style smart shell
@@ -1630,7 +1631,8 @@ there's a region, all lines that region covers will be duplicated."
 (if (file-exists-p abbrev-file-name)
     (progn
       (setq save-abbrevs t)
-      (setq-default abbrev-mode t)))
+      (setq-default abbrev-mode t)
+      (diminish 'abbrev-mode)))
 
 ;;; bookmarks
 
