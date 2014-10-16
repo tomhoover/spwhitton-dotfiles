@@ -1448,7 +1448,7 @@ there's a region, all lines that region covers will be duplicated."
 
 ;; ESC prefix map not much use and I have caps lock jointly control
 ;; and escape
-(bind-key "<escape>" 'keyboard-quit)
+(bind-key* "<escape>" 'keyboard-quit)
 
 ;; movement
 (bind-key "C-t p" 'transpose-params)
