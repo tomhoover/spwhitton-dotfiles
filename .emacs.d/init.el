@@ -209,6 +209,10 @@
 
 (server-start)
 
+;;; unbind transpose since we're making it a prefix map
+
+(global-set-key (kbd "C-t") nil)
+
 ;;;; ---- packages ----
 
 ;;; clean up the mode line
