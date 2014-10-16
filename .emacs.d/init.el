@@ -243,7 +243,7 @@
 (use-package smartparens
   :ensure
   :commands (smartparens-global-strict-mode show-smartparens-global-mode)
-  :bind (("C-w" . kill-region-or-backward-word)
+  :bind (("C-w" . sp-backward-kill-word)
          ("M-d" . sp-kill-word)         ; ideally these would delete, not kill
 
          ;; for when I use Emacs via PuTTY
@@ -449,52 +449,6 @@
   :commands pointback-mode
   :idle (pointback-mode))
 
-;;; Ido
-
-(use-package ido
-  :ensure
-  :init (progn
-          (setq ido-enable-flex-matching t
-                ido-everywhere t
-                ido-use-filename-at-point 'guess
-                ido-create-new-buffer 'always
-                ido-file-extensions-order '(".org" ".tex" ".py" )
-                ido-default-file-method 'selected-window
-                ido-max-directory-size 100000
-                ido-auto-merge-delay-time 99999 ; only search when I tell you to M-s
-                ido-use-virtual-buffers t
-                ido-use-virtual-buffers-automatically t
-                ido-enable-regexp nil
-                ido-use-url-at-point nil
-                ido-max-file-prompt-width 0.1
-                ido-save-directory-list-file "~/.emacs.d/ido.last")
-          (add-hook 'ido-setup-hook (lambda ()
-                                      (define-key ido-completion-map "\C-w" 'ido-delete-backward-word-updir)
-                                      (define-key ido-completion-map " \C-h" 'ido-delete-backward-updir)))
-
-          (use-package flx-ido
-            :ensure
-            :init (flx-ido-mode 1)
-            :config (progn
-                      (setq ido-use-faces nil
-                            flx-ido-threshhold 7500
-                            gc-cons-threshold 20000000)))
-          (use-package ido-ubiquitous
-            :ensure
-            :init (ido-ubiquitous))
-          (use-package ido-vertical-mode
-            :ensure
-            :init (ido-vertical-mode 1))
-
-          (ido-mode 1)))
-
-;;; use ido to jump to imenu tags in all open files of the same mode
-
-(use-package imenu-anywhere
-  :ensure
-  ;; :bind ("M-o" . imenu-anywhere)
-  )
-
 ;;; ibuffer
 
 (use-package ibuffer
@@ -623,11 +577,6 @@
 ;; mnemonic 'occur'.  C-M-s while outside of search to do the same
 ;; thing
 
-;;; auto indent mode inc. smart yanking
-
-(use-package auto-indent-mode :ensure
-  :disabled t)
-
 ;;; smart tabs - tabs AND spaces (but just spaces by default)
 
 (setq-default indent-tabs-mode nil)
@@ -689,7 +638,7 @@
 (use-package expand-region
   :ensure
   :disabled t
-  :bind ("M-m" . er/expand-region)
+  :bind ("M-r" . er/expand-region)
   :init (progn
           (defun er/add-text-mode-expansions ()
             (make-variable-buffer-local 'er/try-expand-list)
@@ -754,13 +703,7 @@
 ;;; anchored transpose
 
 (use-package anchored-transpose
-  :bind ("C-x t" . anchored-transpose))
-
-;;; let's make it possible to toggle editing as root
-;;; http://atomized.org/2011/01/toggle-between-root-non-root-in-emacs-with-tramp/
-
-(use-package toggle-root
-  :bind ("C-c C-M-x C-M-q" . toggle-alternate-file-as-root))
+  :bind ("C-t a" . anchored-transpose))
 
 ;;; TRAMP
 
@@ -807,17 +750,6 @@
 
 (use-package git-annex :ensure)
 
-;;; easily run the odd shell command in a real shell
-
-(use-package emamux
-  :disabled t
-  :ensure
-  :bind (("C-c t t" . emamux:run-command)
-         ("C-c t z" . emamux:zoom-runner)
-         ("C-c t [" . emamux:inspect-runner)
-         ("C-c t ]" . emamux:copy-kill-ring)
-         ("C-c t k" . emamux:close-runner-pane)))
-
 ;;; loads of visual help for working with Emacs regexps
 
 (use-package visual-regexp
@@ -834,22 +766,14 @@
   :diminish 'projectile-mode
   :config (progn
             (setq projectile-switch-project-action 'projectile-dired
-                  projectile-completion-system 'helm)
+                  projectile-completion-system 'helm)))
 
-            ;; from http://cupfullofcode.com/invalidate-projectile-cache-on-delete/
-            ;; (defadvice delete-file (after purge-from-projectile-cache (filename &amp) activate)
-            ;;   (when (projectile-project-p)
-            ;;     (let* ((true-filename (file-truename filename))
-            ;;            (relative-filename (file-relative-name true-filename (projectile-project-root))))
-            ;;       (if (projectile-file-cached-p relative-filename (projectile-project-root))
-            ;;           (projectile-purge-file-from-cache relative-filename)))))
-            ))
 
 (use-package persp-projectile :ensure)
 
 (use-package perspective
   :ensure
-  :bind (("<f10>" . persp-toggle)
+  :bind (("C-t p" . persp-toggle)
          ("C-c j" . persp-switch))
   :init (progn
           (persp-mode)
@@ -1024,44 +948,37 @@
   :ensure
   :bind ("M-o" . ace-jump-mode))
 
+;;; move quickly within current line
+
 (use-package jump-char
   :ensure
   :bind (("M-m" . jump-char-forward)
          ("M-M" . jump-char-backward)))
 
+;;; use ace-jump-mode to move between links in help file
+
 (use-package ace-link
   :ensure
   :idle (ace-link-setup-default))
 
+;;; simple pomodoro timer
+
 (use-package pomodoro)
 
-(use-package flex-isearch
-  :idle (flex-isearch-mode)
-  :config (setq flex-isearch-auto t))
-
-(use-package expand-region
-  :ensure
-  :bind ("M-r" . er/expand-region))
+;;; vim's very useful ci and ca commands
 
 (use-package change-inner
   :ensure
+  ;; universal argument to these two means M-w ("yank") not change
   :bind (("M-I" . change-inner)
-         ("M-O" . change-outer)
-         ;; ("M-I" . copy-inner)
-         ;; ("C-O" . copy-outer)
-         ))
+         ("M-O" . change-outer)))
 
-(use-package god-mode :disabled t :ensure)
-
-(use-package key-chord
-  :disabled t
-  :ensure
-  :init (progn
-          (key-chord-define-global "jk" 'god-mode-all)
-          (key-chord-mode 1)))
+;;; toggle between single and double quotation marks
 
 (use-package toggle-quotes
   :bind ("C-'" . toggle-quotes))
+
+;;; chat on Jabber
 
 (use-package jabber
   :ensure
@@ -1069,31 +986,30 @@
             (load-file "~/.emacs.d/init-jabber.el")
             (jabber-connect-all)))
 
+;;; make dired copy and move asynchronous
+
 (use-package async
   :ensure
   :init (when (require 'dired-aux)
           (require 'dired-async)))
 
+;;; give dired some nice keybindings for browsing images
+
 (use-package image-dired
   :init (image-dired-setup-dired-keybindings))
+
+;;; allow Emacs to resize images: keybinding S f
 
 (use-package eimp
   :ensure
   :init (add-hook 'image-mode-hook 'eimp-mode))
 
-(use-package org-mairix-el
-  :bind ("C-c m" . org-mairix-el-insert-link))
+;;; switch between windows with an ace-jump-mode-like interface
 
 (use-package ace-window
   :ensure
   :bind ("C-x o" . ace-window)
   :init (setq aw-keys '(?j ?k ?l ?\; ?f ?d ?s ?a)))
-
-(use-package key-chord
-  :ensure
-  :init (key-chord-mode 1)
-  :config (progn
-            (key-chord-define-global "df" 'keyboard-quit)))
 
 ;;;; ---- functions ----
 
@@ -1470,14 +1386,6 @@ there's a region, all lines that region covers will be duplicated."
       (kill-ring-save (region-beginning) (region-end))
     (copy-line arg)))
 
-(defun kill-region-or-backward-word ()
-  (interactive)
-  (if (region-active-p)
-      (kill-region (region-beginning) (region-end))
-    (if smartparens-mode
-        (sp-backward-kill-word 1)
-      (backward-delete-word 1))))
-
 ;; from Emacs Prelude/Redux author
 
 (defun eval-and-replace ()
@@ -1542,10 +1450,13 @@ there's a region, all lines that region covers will be duplicated."
 (bind-key "<escape>" 'keyboard-quit)
 
 ;; movement
-(bind-key "C-c t p" 'transpose-params)
+(bind-key "C-t p" 'transpose-params)
 
 ;; dwim alternatives to standard bindings
 (bind-key "M-w" 'save-region-or-current-line)
+
+;; toggle map
+(bind-key "C-t C-t" 'transpose-chars)
 
 ;; I almost never want to quit and if I do there is Alt-F4
 (global-set-key (kbd "C-x C-c") 'delete-frame)
@@ -1557,7 +1468,7 @@ there's a region, all lines that region covers will be duplicated."
 ;; especially on Windows
 (bind-key "C-c x C-y" 'clipboard-yank)
 (bind-key "C-c x M-w" 'clipboard-kill-ring-save)
-(bind-key "C-c x C-w" 'clipboard-kill-region)
+(bind-key "C-c x C-x C-k" 'clipboard-kill-region)
 
 ;; get a tmux terminal in current dir
 ;; (define-key global-map (kbd "C-c t") '(lambda ()

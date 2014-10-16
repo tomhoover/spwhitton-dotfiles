@@ -20,6 +20,11 @@
 
 (use-package org-checklist)
 
+;;; links to mairix messages by message-id in Org
+
+(use-package org-mairix-el
+  :bind ("C-c m" . org-mairix-el-insert-link))
+
 ;;;; ---- preferences ----
 
 ;; custom doesn't actually set all the faces it should, so we'll do
