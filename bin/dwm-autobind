@@ -6,6 +6,7 @@ if lsusb | grep -q "Aluminum Keyboard"; then
    dwm-applebindings &
 else
     setxkbmap -option ctrl:swapcaps
+    xcape -e 'Control_L=Escape'
     setxkbmap -option "compose:ralt"
     setxkbmap -layout gb
 fi

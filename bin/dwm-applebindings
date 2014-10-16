@@ -2,6 +2,7 @@
 
 #emacsclient -c &
 setxkbmap -option ctrl:swapcaps
+xcape -e 'Control_L=Escape'
 setxkbmap -option "compose:ralt"
 setxkbmap -layout gb
 echo 2 | sudo tee /sys/module/hid_apple/parameters/fnmode > /dev/null
