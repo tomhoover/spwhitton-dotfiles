@@ -59,7 +59,7 @@ F12::ToggleWinMinimize("Mozilla Firefox", "Firefox")
 +F11::IceMessenger()  
 
 ; empty the Recycle Bin
-#^r::FileRecycleEmpty, C:\
++#r::FileRecycleEmpty, C:\
 
 ; swap caps lock and control, of course
 ; Capslock::Control
