@@ -1156,6 +1156,11 @@ point reaches the beginning or end of the buffer, stop there."
 
 ;;;; ---- personal settings ----
 
+;;; show parens
+
+(setq show-paren-delay 0)
+(show-paren-mode 1)
+
 ;;; no tabs please
 
 (setq-default indent-tabs-mode nil)
