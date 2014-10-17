@@ -241,7 +241,16 @@
 
             (evil-define-key 'normal org-mode-map "go" 'org-meta-return)
             (evil-define-key 'normal org-mode-map "gO" 'org-insert-heading-respect-content)
-            ))                          ; the above should also go into insert mode and should move to the end of beginning of the item as apropraite
+
+            ;;; Advice
+
+            ;; make Evil respect the eshell prompt
+            (defadvice evil-insert-line (after spw/evil-eshell-bol activate)
+              (if (eq major-mode 'eshell-mode)
+                  (call-interactively 'eshell-bol)))
+            (defadvice evil-first-non-blank (after spw/evil-eshell-bol activate)
+              (if (eq major-mode 'eshell-mode)
+                  (call-interactively 'eshell-bol)))            ))                          ; the above should also go into insert mode and should move to the end of beginning of the item as apropraite
 
 ;; evil support packages
 
