@@ -228,7 +228,10 @@
   :ensure
   :config (progn
             (setq evil-want-fine-undo t)
-            (evil-set-initial-state 'deft-mode 'insert)))
+            (evil-set-initial-state 'deft-mode 'insert)
+            (evil-define-key 'normal org-mode-map "go" 'org-meta-return)
+            (evil-define-key 'normal org-mode-map "gO" 'org-insert-heading-respect-content)
+            ))                          ; the above should also go into insert mode and should move to the end of beginning of the item as apropraite
 
 (use-package evil-god-state :ensure)
 
@@ -261,7 +264,8 @@
             "l" 'persp-toggle
             "p" 'projectile-persp-switch-project
             "g" 'projectile-vc
-            "o" 'ace-window)
+            "o" 'ace-window
+            "c" 'org-capture)
 
           ;; get rid of <escape> prefix map and make it do what C-g does
           (global-set-key (kbd "<escape>") 'keyboard-quit)
