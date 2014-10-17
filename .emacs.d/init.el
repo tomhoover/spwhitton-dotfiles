@@ -1170,6 +1170,10 @@ point reaches the beginning or end of the buffer, stop there."
 ;; I almost never want to quit and if I do there is Alt-F4
 (global-set-key (kbd "C-x C-c") 'delete-frame)
 
+;; vim navigation
+(global-set-key (kbd "M-j") 'next-line)
+(global-set-key (kbd "M-k") 'previous-line)
+
 ;; my function to fix my published blog
 (bind-key "C-c x p" (lambda () (interactive) (swhitton/pyblosxom-fixups)))
 
