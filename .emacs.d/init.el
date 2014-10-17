@@ -222,6 +222,69 @@
 
 (use-package f :ensure) (use-package s :ensure)
 
+;;; the zen of vim from my youth
+
+(use-package evil
+  :ensure
+  :config (progn
+            (setq evil-want-fine-undo t)
+            (evil-set-initial-state 'deft-mode 'insert)))
+
+(use-package evil-god-state :ensure)
+
+(use-package evil-surround :ensure)
+
+(use-package evil-leader
+  :ensure
+  :init (progn
+          ;; fire up evil and evil leader
+          (evil-leader/set-leader "<SPC>")
+          (setq evil-leader/in-all-states nil)
+          (setq evil-leader/non-normal-prefix "<escape>")
+          (global-evil-leader-mode 1)
+          (evil-mode)
+          (global-evil-surround-mode t)
+          (remove-hook 'evil-local-mode-hook 'evil-turn-on-undo-tree-mode)
+          (global-undo-tree-mode 0)
+
+          ;; set up my shortcut keys to Emacs stuff that doesn't have natural vim bindings
+          (evil-leader/set-key
+            "<RET>" 'evil-execute-in-god-state
+            "<SPC>" 'ace-jump-mode
+            "C-<SPC>" 'pop-global-mark
+            "e" 'eval-surrounding-sexp
+            "f" 'helm-find-files
+            "j" 'helm-mini
+            "x" 'helm-M-x
+            "k" 'kill-buffer
+            "a" 'org-agenda
+            "l" 'persp-toggle
+            "p" 'projectile-persp-switch-project
+            "g" 'projectile-vc
+            "o" 'ace-window)
+
+          ;; get rid of <escape> prefix map and make it do what C-g does
+          (global-set-key (kbd "<escape>") 'keyboard-quit)
+
+          ;; `evil-leader/in-all-states' binds <escape> in normal
+          ;; state, but we want it emacs state only.  So do this with
+          ;; a hook
+          (defun evil-leader/add-to-emacs-state ()
+            (let* ((prefixed (read-kbd-macro (concat evil-leader/non-normal-prefix evil-leader/leader)))
+                   (no-prefix (read-kbd-macro evil-leader/leader))
+                   (mode-map (cdr (assoc major-mode evil-leader--mode-maps)))
+                   (map (or mode-map evil-leader--default-map)))
+              (if evil-leader-mode
+                  (progn
+                    (evil-normalize-keymaps)
+                    (define-key evil-emacs-state-local-map prefixed map)
+                    (define-key evil-emacs-state-local-map (kbd "<escape> <escape>") 'keyboard-quit)))))
+
+          (add-hook 'evil-local-mode-hook 'evil-leader/add-to-emacs-state)
+          (bind-key* "<escape>" 'keyboard-quit)
+          ;; (evil-define-key 'emacs global "<escape>" 'evil-execute-in-normal-state)
+          ))
+
 ;;; Org
 
 (use-package org
@@ -554,7 +617,7 @@
             (define-key company-active-map "\C-w" nil)
             (define-key company-active-map "\C-j" 'company-show-location)
 
-            (setq company-idle-delay 0.15)
+            (setq company-idle-delay 0)
             (add-to-list 'company-backends 'company-capf)
             (add-to-list 'company-transformers 'company-sort-by-occurrence)
 
@@ -1019,6 +1082,14 @@
 
 ;;;; ---- functions ----
 
+;; eval the surrounding sexp (https://stackoverflow.com/posts/2172827/revisions)
+
+(defun eval-surrounding-sexp (levels)
+  (interactive "p")
+  (save-excursion
+    (up-list (abs levels))
+    (eval-last-sexp nil)))
+
 ;; backwards and forward deletions of words
 
 (defun delete-word (arg)
@@ -1228,7 +1299,7 @@ for easier reading and writing"
    ((string-equal system-type "darwin") (shell-command "open ."))
    ((string-equal system-type "gnu/linux")
     (let ((process-connection-type nil)) (start-process "" nil "xdg-open" "."))
-    ;; (shell-command "xdg-open .") ;; 2013-02-10 this sometimes froze emacs till the folder is closed. ⁖ with nautilus
+    ;; (shell-command "xdg-open .") ;; 2013-02-10 this sometimes froze emacs till the folder is closed.   with nautilus
     )))
 
 (defun join-setqs ()
@@ -1450,11 +1521,6 @@ there's a region, all lines that region covers will be duplicated."
 ;;;; ---- personal settings ----
 
 ;;; key bindings
-
-;; ESC prefix map not much use and I have caps lock jointly control
-;; and escape
-(global-unset-key (kbd "<escape>"))
-(bind-key* "<escape>" 'keyboard-quit)
 
 ;; movement
 (bind-key "C-t p" 'transpose-params)
