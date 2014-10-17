@@ -45,7 +45,7 @@ IceMessenger()
 
 ; my run-or-raise shortcuts from unix
 
-F9::ToggleWinMinimize("emacs", "c:\emacs\bin\runemacs.exe -mm")
+F9::ToggleWinMinimize("emacs", "c:\emacs\bin\runemacs.exe")
 ;#k::ToggleWinMinimize("cmd", "cmd.exe")
 F10::ToggleWinMinimize("MINGW32", "c:\Users\swhitton\Old shortcuts\Git Bash")
 F11::ToggleWinMinimize("spw@ma", "c:\Users\swhitton\Software\putty.exe -load ma")
