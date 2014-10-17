@@ -194,9 +194,8 @@
           (use-package smart-mode-line-powerline-theme :ensure)
           (sml/setup)
           (sml/apply-theme 'powerline)
-          (setq sml/shorten-directory t
+          (setq sml/shorten-directory nil
                 sml/shorten-modes t
-                sml/name-width 30
                 sml/mode-width 'right
                 sml/vc-mode-show-backend t)))
 
