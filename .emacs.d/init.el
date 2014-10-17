@@ -1454,6 +1454,7 @@ there's a region, all lines that region covers will be duplicated."
 
 ;; ESC prefix map not much use and I have caps lock jointly control
 ;; and escape
+(global-unset-key (kbd "<escape>"))
 (bind-key* "<escape>" 'keyboard-quit)
 
 ;; movement
