@@ -228,6 +228,12 @@
             (evil-define-key 'normal global-map (kbd "C-r") 'isearch-backward)
             (evil-global-set-key 'normal (kbd "g s") 'paredit-forward)
 
+            ;; escape to quit
+            (define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
+            (define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
+            (define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
+            (define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
+            (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
 
             ;; Org-mode
 
