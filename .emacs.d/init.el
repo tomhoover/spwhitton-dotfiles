@@ -1,7 +1,3 @@
-;; when --debug-init isn't enough
-;;(setq debug-on-error t
-;;      debug-on-quit t)
-
 ;;;; ---- package management ----
 
 (add-to-list 'load-path "~/.emacs.d/site-lisp/")
@@ -145,12 +141,8 @@
 ;; don't prompt to create scratch buffers
 (setq confirm-nonexistent-file-or-buffer nil)
 
-;; initial frame size
-(if window-system (progn (set-frame-width (selected-frame) 80)
-                         (set-frame-height (selected-frame) ; fails atm
-                                           (round
-                                            (/ (- (x-display-pixel-height) 28)
-                                               (frame-char-height))))))
+;; initial frame width
+(if window-system (set-frame-width (selected-frame) 80))
 
 ;; soft word wrapping for easier editing of long lines
 (setq-default visual-line-mode t
@@ -208,10 +200,6 @@
 
 (server-start)
 
-;;; unbind transpose since we're making it a prefix map
-
-(global-set-key (kbd "C-t") nil)
-
 ;;;; ---- packages ----
 
 ;;; clean up the mode line
@@ -227,34 +215,56 @@
 (use-package evil
   :ensure
   :config (progn
+            ;;; settings
+
             (setq evil-want-fine-undo t)
+
+            ;;; initial states
             (evil-set-initial-state 'deft-mode 'insert)
+
+            ;;; bindings
+
+            (evil-define-key 'normal global-map "C-r" 'isearch-backward)
+
+            ;; Org-mode
+
             (evil-define-key 'normal org-mode-map "go" 'org-meta-return)
             (evil-define-key 'normal org-mode-map "gO" 'org-insert-heading-respect-content)
             ))                          ; the above should also go into insert mode and should move to the end of beginning of the item as apropraite
 
-(use-package evil-god-state :ensure)
+;; evil support packages
 
+(use-package evil-god-state :ensure)
 (use-package evil-surround :ensure)
+(use-package evil-args :ensure)
+(use-package paredit :ensure)
+(use-package evil-paredit :ensure)
+(use-package evil-indent-textobject :ensure)
+
+;; evil-leader
 
 (use-package evil-leader
   :ensure
   :init (progn
-          ;; fire up evil and evil leader
           (evil-leader/set-leader "<SPC>")
           (setq evil-leader/in-all-states nil)
           (setq evil-leader/non-normal-prefix "<escape>")
-          (global-evil-leader-mode 1)
-          (evil-mode)
-          (global-evil-surround-mode t)
-          (remove-hook 'evil-local-mode-hook 'evil-turn-on-undo-tree-mode)
-          (global-undo-tree-mode 0)
+
+          (define-prefix-command 'evil-leader/toggle-map)
+          (define-key evil-leader/toggle-map (kbd "e") 'toggle-debug-on-error)
+          (define-key evil-leader/toggle-map (kbd "i") 'org-indent-mode)
+          (define-key evil-leader/toggle-map (kbd "w") 'wc-mode)
+
+          (defun pop-mark ()
+            (interactive)
+            (call-interactively
+             (set-mark-command 4)))
 
           ;; set up my shortcut keys to Emacs stuff that doesn't have natural vim bindings
           (evil-leader/set-key
-            "<RET>" 'evil-execute-in-god-state
+            "<escape>" 'evil-execute-in-god-state
             "<SPC>" 'ace-jump-mode
-            "C-<SPC>" 'pop-global-mark
+            "C-<SPC>" 'pop-mark
             "e" 'eval-surrounding-sexp
             "f" 'helm-find-files
             "j" 'helm-mini
@@ -265,7 +275,10 @@
             "p" 'projectile-persp-switch-project
             "g" 'projectile-vc
             "o" 'ace-window
-            "c" 'org-capture)
+            "c" 'org-capture
+            "s" 'persp-eshell
+            "d" 'deft
+            "t" 'evil-leader/toggle-map)
 
           ;; get rid of <escape> prefix map and make it do what C-g does
           (global-set-key (kbd "<escape>") 'keyboard-quit)
@@ -284,10 +297,18 @@
                     (define-key evil-emacs-state-local-map prefixed map)
                     (define-key evil-emacs-state-local-map (kbd "<escape> <escape>") 'keyboard-quit)))))
 
-          (add-hook 'evil-local-mode-hook 'evil-leader/add-to-emacs-state)
           (bind-key* "<escape>" 'keyboard-quit)
           ;; (evil-define-key 'emacs global "<escape>" 'evil-execute-in-normal-state)
           ))
+
+;; fire up Evil and associated packages
+
+(global-evil-leader-mode 1)
+(add-hook 'evil-local-mode-hook 'evil-leader/add-to-emacs-state)
+(remove-hook 'evil-local-mode-hook 'evil-turn-on-undo-tree-mode)
+(evil-mode)
+(global-evil-surround-mode t)
+(global-undo-tree-mode 0)
 
 ;;; Org
 
@@ -308,115 +329,7 @@
   :commands popwin-mode
   :idle (popwin-mode 1))
 
-;;; modern replacement for the mighty paredit
-
-(use-package smartparens
-  :ensure
-  :commands (smartparens-global-strict-mode show-smartparens-global-mode)
-  :bind (("C-w" . sp-backward-kill-word)
-         ("M-d" . sp-kill-word)         ; ideally these would delete, not kill
-
-         ;; for when I use Emacs via PuTTY
-         ("M-<right>" . sp-forward-slurp-sexp)
-         ("M-<left>" . sp-forward-barf-sexp)
-
-         ("M-j" . sp-join-sexp))
-  :idle (progn
-          ;; non-strict mode the default, and strict mode in some
-          ;; programming language major modes
-          (smartparens-global-mode)
-          (dolist (hook '(emacs-lisp-mode-hook
-                          lisp-mode-hook
-                          lisp-interaction-mode-hook
-                          ielm-mode-hook
-                          scheme-mode-hook
-                          inferior-scheme-mode-hook
-                          python-mode-hook))
-            (add-hook hook
-                      (lambda ()
-                        (smartparens-strict-mode))))
-          (show-smartparens-global-mode))
-  ;; :diminish smartparens-mode
-  :config (progn
-            (require 'smartparens-config)
-            (setq sp-navigate-consider-symbols t)
-            (sp-use-smartparens-bindings)
-
-            ;; override smartparens binding for C-k outside of lisp,
-            ;; since sp-kill-hybrid-sexp isn't very smart in comint
-            ;; and I like using C-u C-k
-            (define-key smartparens-strict-mode-map [remap kill-line] 'kill-line)
-            (bind-key "C-k" 'sp-kill-hybrid-sexp emacs-lisp-mode-map)
-
-            (defadvice sp-backward-kill-word (after sp-backward-kill-word-fix-punctuation activate)
-              ;; when killing the first word of a sentence, leave the
-              ;; two spaces after the previous sentence's terminal
-              ;; period
-              (save-excursion
-                (backward-char 2)
-                (if (and
-                     (or
-                      (looking-at "\\. ")
-                      (looking-at   "! ")
-                      (looking-at "\\? "))
-                     (not (looking-back "^[1-9]+")))
-                    (progn
-                      (forward-char 1)
-                      (insert " ")))))
-
-            ;; fix cursor position after M-d at the beginning of a line
-            (defadvice sp-kill-word (after sp-kill-word-beg-of-line-fix activate)
-              (if (looking-back "^[[:space:]]")
-                  (backward-char 1)))
-
-            (defadvice sp-backward-delete-char (around sp-backward-delete-char-remove-indentation activate)
-              ;; when after whitespace at the beginning of a line or
-              ;; an Org bullet or heading, delete it all
-              (if (and
-                   ;; do it if we're not at the beginning of the line,
-                   ;; and there's whitespace: if we're at the
-                   ;; beginning of the line we should always delete
-                   (not (equal (point) (line-beginning-position)))
-                   (or
-                    (looking-back "^[[:space:]]+")
-                    (looking-back "^[[:space:]]*- ")
-                    (looking-back "^[*]+ ")))
-                  (kill-line 0)
-                ;; if not after whitespace at the beginning of the
-                ;; line, just call as usual
-                ad-do-it))
-
-            (defadvice sp-backward-kill-word (around sp-backward-delete-word-remove-indentation activate)
-              ;; when after whitespace at the beginning of a line or
-              ;; an Org bullet or heading, delete it all.  This is
-              ;; more intuitive when C-w is one's main way to delete
-              ;; stuff
-              (if (and
-                   ;; do it if we're not at the beginning of the line,
-                   ;; and there's whitespace: if we're at the
-                   ;; beginning of the line we should always delete
-                   (not (equal (point) (line-beginning-position)))
-                   (or
-                    (looking-back "^[[:space:]]+")
-                    (looking-back "^[[:space:]]*- ")
-                    (looking-back "^[*]+ ")))
-                  (kill-line 0)
-                ;; if not after whitespace at the beginning of the
-                ;; line, just call as usual
-                ad-do-it))
-
-            ;; define some additional pairings for Org-mode
-            (sp-local-pair 'org-mode "=" "=") ; verbatim
-            ;; (sp-local-pair 'org-mode "*" "*")
-            ;; (sp-local-pair 'org-mode "/" "/")
-            (sp-local-pair 'org-mode "~" "~") ; code
-            ;; (sp-local-pair 'org-mode "+" "+")
-            ;; (sp-local-pair 'org-mode "_" "_")
-            ))
-
-;;; save my places in buffers.  ido and recentf save recently opened
-;;; files, and these two things together are enough session management
-;;; for me
+;;; save my places in buffers; this is all the session management I need
 
 (setq recentf-save-file "~/.emacs.d/recentf")
 
@@ -460,23 +373,6 @@
               doc-view-continuous t)
   :config (add-hook 'doc-view-mode-hook 'auto-revert-mode))
 
-;;; bbdb
-
-(use-package bbdb
-  :ensure
-  :commands bbdb
-  :config (progn
-            (setq bbdb-complete-name-full-completion t
-                  bbdb-completion-type 'primary-or-name
-                  bbdb-complete-name-allow-cycling t
-                  bbdb-dwim-net-address-allow-redundancy t
-                  bbdb-offer-save 1
-                  bbdb-use-pop-up t
-                  bbdb-electric-p t
-                  bbdb-popup-target-lines  1
-                  bbdb-file "~/.bbdb")
-            (bbdb-initialize 'message)))
-
 ;;; magit
 
 (use-package magit
@@ -504,46 +400,12 @@
   :commands winner-mode
   :idle (winner-mode 1))
 
-;;; better window switching
-
-(use-package switch-window
-  :ensure
-  ;; ace-jump-mode is better
-  :disabled t
-  :bind ("C-x o" . switch-window))
-
 ;;; pointback mode
 
 (use-package pointback
   :ensure
   :commands pointback-mode
   :idle (pointback-mode))
-
-;;; ibuffer
-
-(use-package ibuffer
-  :bind ("C-x C-b" . ibuffer)
-  :config (progn
-            (add-hook 'ibuffer-hook
-                      (lambda ()
-                        (ibuffer-vc-set-filter-groups-by-vc-root)
-                        (unless (eq ibuffer-sorting-mode 'alphabetic)
-                          (ibuffer-do-sort-by-alphabetic))))))
-
-(use-package ibuffer-vc
-  :ensure
-  :commands ibuffer-vc-set-filter-groups-by-vc-root
-  :config (setq ibuffer-formats
-                '((mark modified read-only vc-status-mini " "
-                        (name 18 18 :left :elide)
-                        " "
-                        (size 9 -1 :right)
-                        " "
-                        (mode 16 16 :left :elide)
-                        " "
-                        (vc-status 16 16 :left)
-                        " "
-                        filename-and-process))))
 
 ;;; colour those parentheses
 
@@ -605,15 +467,14 @@
 
 ;;; word count in modeline, when I want it
 
-(use-package wc-mode
-  :ensure
-  :bind ("C-c w" . wc-mode))
+(use-package wc-mode :ensure)
 
 ;;; company-mode for smart and easy completion
 
 (use-package company
   :ensure
   :commands global-company-mode
+  :bind ("<tab>" . company-complete)
   :idle (global-company-mode)
   :diminish company-mode
   :config (progn
@@ -621,7 +482,11 @@
             (define-key company-active-map "\C-w" nil)
             (define-key company-active-map "\C-j" 'company-show-location)
 
-            (setq company-idle-delay 0)
+            ;; vim-like selection
+            (define-key company-active-map "\M-j" 'company-select-next)
+            (define-key company-active-map "\M-k" 'company-select-previous)
+
+            (setq company-idle-delay nil)
             (add-to-list 'company-backends 'company-capf)
             (add-to-list 'company-transformers 'company-sort-by-occurrence)
 
@@ -647,23 +512,6 @@
 ;; mnemonic 'occur'.  C-M-s while outside of search to do the same
 ;; thing
 
-;;; smart tabs - tabs AND spaces (but just spaces by default)
-
-(setq-default indent-tabs-mode nil)
-(use-package smart-tabs-mode
-  :ensure
-  :disabled t
-  :commands smart-tabs-insinuate
-  :idle (smart-tabs-insinuate 'c 'javascript))
-
-;;; guess a file's indentation style
-
-(use-package dtrt-indent
-  :ensure
-  :disabled t
-  :commands dtrt-indent-mode
-  :idle (dtrt-indent-mode 1))
-
 ;;; Randomize the order of lines in a region
 
 (use-package randomize-region :commands randomize-region)
@@ -685,7 +533,7 @@
 
 (use-package deft
   :ensure
-  :bind ("C-c h" . deft)
+  :commands deft
   :init (progn
           (setq deft-extension "org"
                 deft-text-mode 'org-mode
@@ -702,22 +550,6 @@
 
             (defadvice deft (before persp-deft activate)
               (projectile-persp-switch-project "~/doc"))))
-
-;;; fast region expanding
-
-(use-package expand-region
-  :ensure
-  :disabled t
-  :bind ("M-r" . er/expand-region)
-  :init (progn
-          (defun er/add-text-mode-expansions ()
-            (make-variable-buffer-local 'er/try-expand-list)
-            (setq er/try-expand-list (append
-                                      er/try-expand-list
-                                      '(mark-paragraph
-                                        mark-page))))
-
-          (add-hook 'text-mode-hook 'er/add-text-mode-expansions)))
 
 ;;; allow lisp to interact with python
 
@@ -747,33 +579,6 @@
           (define-key minibuffer-local-ns-map "\M-\C-e" 'miniedit)
           (define-key minibuffer-local-completion-map "\M-\C-e" 'miniedit)
           (define-key minibuffer-local-must-match-map "\M-\C-e" 'miniedit)))
-
-;;; smex
-
-(use-package smex
-  :ensure
-  :disabled t
-  :commands smex-initialize
-  :bind (("C-x C-m" . smex)
-         ("C-x C-," . smex-major-mode-commands))
-  :idle (smex-initialize)
-  :config (progn
-            (setq smex-save-file "~/.emacs.d/smex-items")
-
-            ;; restore space bar for hyphens (should be faster)
-            (defadvice smex (around space-inserts-hyphen activate compile)
-              (let ((ido-cannot-complete-command
-                     `(lambda ()
-                        (interactive)
-                        (if (string= " " (this-command-keys))
-                            (insert ?-)
-                          (funcall ,ido-cannot-complete-command)))))
-                ad-do-it))))
-
-;;; anchored transpose
-
-(use-package anchored-transpose
-  :bind ("C-t a" . anchored-transpose))
 
 ;;; TRAMP
 
@@ -824,14 +629,13 @@
 
 (use-package visual-regexp
   :ensure
-  :bind (("C-c r" . vr/replace)
-         ("C-c q" . vr/query-replace)))
+  :commands (vr/replace vr/query-replace))
 
 ;;; simple concept of projects
 
 (use-package projectile
   :ensure
-  :bind ("C-c g" .  projectile-vc)
+  :commands projectile-vc
   :init (projectile-global-mode)
   :diminish 'projectile-mode
   :config (progn
@@ -844,8 +648,7 @@
 
 (use-package perspective
   :ensure
-  :bind (("C-t p" . persp-toggle)
-         ("C-c j" . persp-switch))
+  :commands (persp-toggle persp-switch)
   :init (progn
           (setq persp-modestring-dividers '("" "" "|"))
           (persp-mode)
@@ -858,13 +661,8 @@
 
 (use-package helm
   :ensure
-  :bind (("C-x b" . helm-mini)
-         ("C-x C-f" . helm-find-files)
-         ("C-x C-m" . helm-M-x)
-         ("M-s o" . helm-occur))
   :diminish helm-mode
   :init (progn
-          ;; autoloads aren't enough to make the above bindings work
           (require 'helm-config)
 
           ;; extra sources
@@ -872,7 +670,7 @@
           (use-package helm-dired-recent-dirs :ensure)
           (use-package imenu-anywhere :ensure)
 
-          ;; new fuzzy matching
+          ;; new fuzzy matching and other settings
           (setq helm-buffers-fuzzy-matching t
                 helm-time-zone-home-location "Seoul"
                 helm-quick-update t
@@ -883,17 +681,15 @@
 
           ;; rebind some keys
           (bind-key "C-w" 'backward-delete-word helm-map)
-          (bind-key "C-h" 'backward-delete-char helm-map)
-          (bind-key "C-h" 'backward-delete-char helm-find-files-map)
           (bind-key "C-o" 'helm-select-action helm-map)
           (bind-key "M-i" 'helm-next-source helm-map)
+          (bind-key "<escape>" 'helm-keyboard-quit helm-map)
 
           ;; swap <tab> and C-z in helm since use persistent action
           ;; much more frequently
           (bind-key "<tab>" 'helm-execute-persistent-action helm-map)
           (bind-key "C-i" 'helm-execute-persistent-action helm-map)
           (bind-key "C-z" 'helm-select-action helm-map)
-          (bind-key "<escape>" 'helm-keyboard-quit helm-map)
 
           ;; eshell history -- let Helm handle eshell completion
           (add-hook 'eshell-mode-hook
@@ -928,8 +724,8 @@
             ad-do-it
 
             ;; once Org is loaded, can add Org headline source
-            (if (featurep 'org)
-                (add-to-list 'helm-mini-default-sources 'helm-source-org-headline t))
+            (eval-after-load 'org
+              (add-to-list 'helm-mini-default-sources 'helm-source-org-headline t))
 
             (helm-adaptative-mode))
 
@@ -967,26 +763,6 @@
                 eshell-review-quick-commands nil
                 eshell-smart-space-goes-to-end t)))
 
-;;; easily switch between eshells
-
-(use-package shell-switcher
-  :disabled t
-  :ensure
-  :init (progn (setq shell-switcher-mode t
-                     shell-switcher-ask-before-creating-new nil)
-
-               (define-key shell-switcher-mode-map (kbd "C-c s")
-                 'shell-switcher-switch-buffer)
-               (define-key shell-switcher-mode-map (kbd "C-c 4 s")
-                 'shell-switcher-switch-buffer-other-window)
-
-               (defadvice shell-switcher-switch-buffer (around shell-switcher-switch-buffer-add-arg (arg) activate)
-                 "Use the universal argument to create new
-                 shells, rather than binding another key
-                 to (shell-switcher-new-shell)"
-                 (interactive "P")
-                 (if arg (shell-switcher-new-shell) ad-do-it))))
-
 ;;; htmlize for Org HTML export/publishing
 
 (use-package htmlize :ensure)
@@ -996,17 +772,6 @@
 (use-package midnight
   :init (progn
           (midnight-delay-set 'midnight-delay "3am")))
-
-;;; electric spacing around mathematical operators
-
-(use-package smart-operator
-  ;; :ensure                               ; MELPA version six years out of date
-  :init (progn
-          ;; I've trained my fingers well to double-space manually
-          (setq smart-operator-double-space-docs nil)
-
-          (add-hook 'python-mode-hook 'smart-operator-mode)
-          (add-hook 'conf-mode-hook 'smart-operator-mode)))
 
 ;;; make indentation in python nice and visible
 
@@ -1019,14 +784,7 @@
 
 (use-package ace-jump-mode
   :ensure
-  :bind ("M-o" . ace-jump-mode))
-
-;;; move quickly within current line
-
-(use-package jump-char
-  :ensure
-  :bind (("M-m" . jump-char-forward)
-         ("M-M" . jump-char-backward)))
+  :commands ace-jump-mode)
 
 ;;; use ace-jump-mode to move between links in help file
 
@@ -1038,19 +796,6 @@
 
 (use-package pomodoro)
 
-;;; vim's very useful ci and ca commands
-
-(use-package change-inner
-  :ensure
-  ;; universal argument to these two means M-w ("yank") not change
-  :bind (("M-I" . change-inner)
-         ("M-O" . change-outer)))
-
-;;; toggle between single and double quotation marks
-
-(use-package toggle-quotes
-  :bind ("C-'" . toggle-quotes))
-
 ;;; chat on Jabber
 
 (use-package jabber
@@ -1059,7 +804,7 @@
             (load-file "~/.emacs.d/init-jabber.el")
             (jabber-connect-all)))
 
-;;; make dired copy and move asynchronous
+;;; make dired copy and move asynchronously
 
 (use-package async
   :ensure
@@ -1076,13 +821,6 @@
 (use-package eimp
   :ensure
   :init (add-hook 'image-mode-hook 'eimp-mode))
-
-;;; switch between windows with an ace-jump-mode-like interface
-
-(use-package ace-window
-  :ensure
-  :bind ("C-x o" . ace-window)
-  :init (setq aw-keys '(?j ?k ?l ?\; ?f ?d ?s ?a)))
 
 ;;;; ---- functions ----
 
@@ -1108,10 +846,8 @@ With argument, do this that many times."
   (interactive "p")
   (delete-word (- arg)))
 
-;; disabled in favour of smartparens versions, though these are delete
-;; and the ones I'm currently using are kill
-;;(global-set-key "\C-w" 'backward-delete-word)
-;;(global-set-key "\M-d" 'delete-word)
+(global-set-key "\C-w" 'backward-delete-word)
+(global-set-key "\M-d" 'delete-word)
 
 ;;; my buffer save cleanup functions
 
@@ -1206,18 +942,6 @@ for easier reading and writing"
             (other-window -1)))
   )
 
-;;; run my DnD helper script in an appropriately sized window
-
-(defun spwd20 ()
-  (interactive)
-  (find-file "~/doc/org/pathfinder2013.org")
-  (delete-other-windows)
-  (split-window-below)
-  (other-window 1)
-  (shrink-window (- (window-height) 6))
-  (switch-to-buffer
-   (make-comint "spwd20" "/home/swhitton/bin/spwd20")))
-
 ;;; toggle orientation of a two window split
 
 (defun toggle-window-split ()
@@ -1272,40 +996,6 @@ for easier reading and writing"
              (set-window-start w2 s1)
              (setq i (1+ i)))))))
 
-(defun ergoemacs-open-in-external-app ()
-  "Open the current file or dired marked files in external app."
-  (interactive)
-  (let ( doIt
-         (myFileList
-          (cond
-           ((string-equal major-mode "dired-mode") (dired-get-marked-files))
-           (t (list (buffer-file-name))))))
-
-    (setq doIt (if (<= (length myFileList) 5)
-                   t
-                 (y-or-n-p "Open more than 5 files?")))
-
-    (when doIt
-      (cond
-       ((string-equal system-type "windows-nt")
-        (mapc (lambda (fPath) (w32-shell-execute "open" (replace-regexp-in-string "/" "\\" fPath t t))) myFileList))
-       ((string-equal system-type "darwin")
-        (mapc (lambda (fPath) (shell-command (format "open \"%s\"" fPath)))  myFileList))
-       ((string-equal system-type "gnu/linux")
-        (mapc (lambda (fPath) (let ((process-connection-type nil)) (start-process "" nil "xdg-open" fPath))) myFileList))))))
-
-(defun ergoemacs-open-in-desktop ()
-  "Show current file in desktop (OS's file manager)."
-  (interactive)
-  (cond
-   ((string-equal system-type "windows-nt")
-    (w32-shell-execute "explore" (replace-regexp-in-string "/" "\\" default-directory t t)))
-   ((string-equal system-type "darwin") (shell-command "open ."))
-   ((string-equal system-type "gnu/linux")
-    (let ((process-connection-type nil)) (start-process "" nil "xdg-open" "."))
-    ;; (shell-command "xdg-open .") ;; 2013-02-10 this sometimes froze emacs till the folder is closed.   with nautilus
-    )))
-
 (defun join-setqs ()
   "Interactively join a series of setq forms into a single definition"
   (interactive)
@@ -1348,52 +1038,6 @@ point reaches the beginning or end of the buffer, stop there."
     (back-to-indentation)
     (when (= orig-point (point))
       (move-beginning-of-line 1))))
-
-(defun prelude-get-positions-of-line-or-region ()
-  "Return positions (beg . end) of the current line
-or region."
-  (let (beg end)
-    (if (and mark-active (> (point) (mark)))
-        (exchange-point-and-mark))
-    (setq beg (line-beginning-position))
-    (if mark-active
-        (exchange-point-and-mark))
-    (setq end (line-end-position))
-    (cons beg end)))
-
-(defun prelude-duplicate-current-line-or-region (arg)
-  "Duplicates the current line or region ARG times.
-If there's no region, the current line will be duplicated. However, if
-there's a region, all lines that region covers will be duplicated."
-  (interactive "p")
-  (pcase-let* ((origin (point))
-               (`(,beg . ,end) (prelude-get-positions-of-line-or-region))
-               (region (buffer-substring-no-properties beg end)))
-    (-dotimes arg
-      (lambda (n)
-        (goto-char end)
-        (newline)
-        (insert region)
-        (setq end (point))))
-    (goto-char (+ origin (* (length region) arg) arg))))
-
-(defun prelude-duplicate-and-comment-current-line-or-region (arg)
-  "Duplicates and comments the current line or region ARG times.
-If there's no region, the current line will be duplicated. However, if
-there's a region, all lines that region covers will be duplicated."
-  (interactive "p")
-  (pcase-let* ((origin (point))
-               (`(,beg . ,end) (prelude-get-positions-of-line-or-region))
-               (region (buffer-substring-no-properties beg end)))
-    (comment-or-uncomment-region beg end)
-    (setq end (line-end-position))
-    (-dotimes arg
-      (lambda (n)
-        (goto-char end)
-        (newline)
-        (insert region)
-        (setq end (point))))
-    (goto-char (+ origin (* (length region) arg) arg))))
 
 ;; from http://blog.gleitzman.com/post/35416335505/hunting-for-unicode-in-emacs
 (defun unicode-hunt ()
@@ -1454,19 +1098,6 @@ there's a region, all lines that region covers will be duplicated."
      ((looking-back ")\\|}\\|\\]") (backward-list))
      (t (backward-char)))))
 
-(defun copy-line (arg)
-  "Copy to end of line, or as many lines as prefix argument"
-  (interactive "P")
-  (if (null arg)
-      (copy-to-end-of-line)
-    (copy-whole-lines (prefix-numeric-value arg))))
-
-(defun save-region-or-current-line (arg)
-  (interactive "P")
-  (if (region-active-p)
-      (kill-ring-save (region-beginning) (region-end))
-    (copy-line arg)))
-
 ;; from Emacs Prelude/Redux author
 
 (defun eval-and-replace ()
@@ -1492,7 +1123,8 @@ there's a region, all lines that region covers will be duplicated."
       (save-excursion
         (newline)
         (indent-for-tab-command)))
-    (indent-for-tab-command)))
+    (indent-for-tab-command)
+    (evil-insert 1)))
 
 (defun terminal-emulator (arg exec)
   (interactive "P\nsexec: ")
@@ -1524,16 +1156,11 @@ there's a region, all lines that region covers will be duplicated."
 
 ;;;; ---- personal settings ----
 
+;;; no tabs please
+
+(setq-default indent-tabs-mode nil)
+
 ;;; key bindings
-
-;; movement
-(bind-key "C-t p" 'transpose-params)
-
-;; dwim alternatives to standard bindings
-(bind-key "M-w" 'save-region-or-current-line)
-
-;; toggle map
-(bind-key "C-t C-t" 'transpose-chars)
 
 ;; I almost never want to quit and if I do there is Alt-F4
 (global-set-key (kbd "C-x C-c") 'delete-frame)
@@ -1547,37 +1174,21 @@ there's a region, all lines that region covers will be duplicated."
 (bind-key "C-c x M-w" 'clipboard-kill-ring-save)
 (bind-key "C-c x C-x C-k" 'clipboard-kill-region)
 
-;; get a tmux terminal in current dir
-;; (define-key global-map (kbd "C-c t") '(lambda ()
-;;                                         (interactive)
-;;                                        (shell-command (concat "tmux " "split-window -c " default-directory))))
-
 (bind-key "S-<menu>" 'my-toggle-lang-env)
 (bind-key "S-<Multi_key>" 'my-toggle-lang-env) ; need this on Apple keyboard
 
 (bind-key "C-c c" 'swhitton/centralise-current-window)
-(bind-key "C-c d" 'spwd20)
 (bind-key "C-c S" 'toggle-window-split)
 (bind-key "C-c R" 'rotate-windows)
-(bind-key "C-x C-k" 'kill-region)
-(bind-key "C-h" 'delete-backward-char) ; overriden by smartparens
-(bind-key "C-x M-k" 'backward-kill-sentence)
 (bind-key "C-c u" 'unicode-hunt)
-(bind-key "M-RET" 'new-line-dwim)
+(bind-key "M-o" 'new-line-dwim)
 
 ;; C-m and RET should reindent the current line only for languages
 ;; that don't use semantic indentation
 (bind-key "RET" 'reindent-then-newline-and-indent)
-(bind-key "C-m" 'reindent-then-newline-and-indent)
 (bind-key "RET" 'newline-and-indent python-mode-map)
-(bind-key "C-m" 'newline-and-indent python-mode-map)
 (add-hook 'haskell-mode-hook (lambda()
-                               (bind-key "RET" 'newline-and-indent haskell-mode-map)
-                               (bind-key "C-m" 'newline-and-indent haskell-mode-map)))
-
-(bind-key "C-x M-t" 'transpose-paragraphs)
-
-(bind-key "C-c s" 'persp-eshell)
+                               (bind-key "RET" 'newline-and-indent haskell-mode-map)))
 
 ;; automatically rebalance windows
 (defadvice split-window-below (after rebalance-windows activate)
@@ -1589,24 +1200,10 @@ there's a region, all lines that region covers will be duplicated."
 (bind-key "M-SPC" 'fixup-whitespace)
 
 (unbind-key "C-x m")
-;; (bind-key "C-c s" 'join-setqs emacs-lisp-mode-map)
 (bind-key "M-/" 'hippie-expand)
-(bind-key "C-c d" 'prelude-duplicate-current-line-or-region)
-(bind-key "C-c M-d" 'prelude-duplicate-and-comment-current-line-or-region)
-(bind-key "C-c P" 'proced)
 
 ;; remap C-a to `smarter-move-beginning-of-line'
 (bind-key "C-a" 'smarter-move-beginning-of-line)
-
-(bind-key "C-c SPC" 'fixup-whitespace)
-
-(define-key isearch-mode-map "\C-h" 'isearch-delete-char)
-
-;; cleanup
-(bind-key "C-c n" 'spw/manual-cleanup)
-
-;; eval and replace elisp wherever we want
-(bind-key "C-c e" 'eval-and-replace)
 
 ;; insert mode headers
 (bind-key "C-c i h" 'add-file-local-variable-prop-line)
@@ -1699,18 +1296,11 @@ there's a region, all lines that region covers will be duplicated."
       x-select-enable-clipboard t)
 (global-set-key [mouse-2] 'mouse-yank-at-click)
 
-;; always add a new line
-(setq require-final-newline t)
-
 ;; require a buffer to have a final newline
 (setq require-final-newline 'visit-save)
 
 ;; scrolling
 (setq scroll-preserve-screen-position t)
-;;;(setq scroll-margin 5)
-;;;(setq scroll-conservatively 4)
-;;;(setq scroll-up-aggressively 0.3) ; don't try and just slap all these three on at once!
-;; see http://www.gnu.org/software/emacs/manual/html_node/emacs/Auto-Scrolling.html
 
 (setq switch-to-visible-buffer nil)
 (setq ido-default-buffer-method 'selected-window)
@@ -1721,20 +1311,8 @@ there's a region, all lines that region covers will be duplicated."
 ;; view mode should be read-only
 (setq view-read-only t)
 
-;;; command aliases
-
-(defalias 'rb 'revert-buffer)
-(defalias 'er 'eval-region)
-
-;; I often want to toggle this
-(defalias 'oim 'org-indent-mode)
-
 ;;; don't ask me before following symlinks to files in version control
 (setq vc-follow-symlinks t)
-
-;;; make it easy to revert window configuratin
-
-(winner-mode 1)
 
 ;;; colours in comint modes
 
@@ -1784,10 +1362,6 @@ there's a region, all lines that region covers will be duplicated."
 (use-package dired-x)
 (setq-default dired-omit-mode t)
 (setq dired-omit-files "^\\...+$")
-
-;; bind two useful functions from ergoemacs
-(define-key dired-mode-map (kbd "C-c C-o") 'ergoemacs-open-in-external-app)
-(define-key dired-mode-map (kbd "C-c C-d") 'ergoemacs-open-in-desktop)
 
 ;;; LaTeX
 
