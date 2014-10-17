@@ -225,7 +225,9 @@
 
             ;;; bindings
 
-            (evil-define-key 'normal global-map "C-r" 'isearch-backward)
+            (evil-define-key 'normal global-map (kbd "C-r") 'isearch-backward)
+            (evil-global-set-key 'normal (kbd "g s") 'paredit-forward)
+
 
             ;; Org-mode
 
