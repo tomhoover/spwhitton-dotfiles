@@ -1,4 +1,4 @@
-#+TITLE: Grade $1, Lesson $2, Period $3: $4
+#+TITLE: Grade `(f-filename (f-dirname (f-dirname (f-dirname (f-this-file)))))`, Lesson `(f-filename (f-dirname (f-dirname (f-this-file))))`, Period `(f-filename (f-dirname (f-this-file)))`: $1
 #+OPTIONS: num:nil
 #+ODT_STYLES_FILE: "~/Documents/Templates/twocol.odt"
 
@@ -7,10 +7,10 @@
 - E-textbook
 - 
 ** Materials
-- Ss' textbooks (pp. $5)
+- Ss' textbooks (pp. $2)
 - 
 ** Objective
-After this lesson we can ${8:use our expressions in dialogues.}
+${3:After this lesson we can} ${4:use our expressions in dialogues.}
 ** Key expressions
 - A :: $0
 * Procedure
