@@ -221,7 +221,9 @@
                   evil-want-visual-char-semi-exclusive t)
 
             ;;; initial states
+
             (evil-set-initial-state 'deft-mode 'insert)
+            (evil-set-initial-state 'git-commit-mode 'insert)
 
             ;;; bindings
 
