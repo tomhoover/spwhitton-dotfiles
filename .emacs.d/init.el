@@ -217,7 +217,8 @@
   :config (progn
             ;;; settings
 
-            (setq evil-want-fine-undo t)
+            (setq evil-want-fine-undo t
+                  evil-want-visual-char-semi-exclusive t)
 
             ;;; initial states
             (evil-set-initial-state 'deft-mode 'insert)
