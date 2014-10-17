@@ -237,7 +237,16 @@
 (use-package evil-god-state :ensure)
 (use-package evil-surround :ensure)
 (use-package evil-args :ensure)
-(use-package paredit :ensure)
+(use-package evil-matchit :ensure)
+
+(use-package paredit
+  :ensure
+  :commands paredit-mode
+  :init (progn
+          (add-hook 'emacs-lisp-mode-hook #'enable-paredit-mode)
+          (add-hook 'emacs-lisp-mode-hook #'evil-paredit-mode)))
+
+
 (use-package evil-paredit :ensure)
 (use-package evil-indent-textobject :ensure)
 
@@ -308,6 +317,7 @@
 (remove-hook 'evil-local-mode-hook 'evil-turn-on-undo-tree-mode)
 (evil-mode)
 (global-evil-surround-mode t)
+(global-evil-matchit-mode t)
 (global-undo-tree-mode 0)
 
 ;;; Org
