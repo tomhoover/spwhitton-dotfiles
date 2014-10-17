@@ -190,15 +190,15 @@
 (use-package smart-mode-line
   :ensure
   :init (progn
-          (use-package powerline :ensure)
+          (use-package powerline :ensure) ; dependency
           (use-package smart-mode-line-powerline-theme :ensure)
           (sml/setup)
           (sml/apply-theme 'powerline)
           (setq sml/shorten-directory t
                 sml/shorten-modes t
                 sml/name-width 30
-                sml/mode-width 40)
-          ))
+                sml/mode-width 'right
+                sml/vc-mode-show-backend t)))
 
 ;;; I'm in Korea
 
@@ -770,7 +770,8 @@
   :diminish 'projectile-mode
   :config (progn
             (setq projectile-switch-project-action 'projectile-dired
-                  projectile-completion-system 'helm)))
+                  projectile-completion-system 'helm)
+            (diminish 'projectile-mode)))
 
 
 (use-package persp-projectile :ensure)
@@ -780,6 +781,7 @@
   :bind (("C-t p" . persp-toggle)
          ("C-c j" . persp-switch))
   :init (progn
+          (setq persp-modestring-dividers '("" "" "|"))
           (persp-mode)
           (defun persp-toggle (arg)
             (interactive "P")
