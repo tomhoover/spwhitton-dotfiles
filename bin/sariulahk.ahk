@@ -69,6 +69,7 @@ F12::ToggleWinMinimize("Mozilla Firefox", "Firefox")
 #InstallKeybdHook
 SetCapsLockState, alwaysoff
 Capslock::
+  SetCapsLockState, off
   Send {LControl Down}
   KeyWait, CapsLock
   Send {LControl Up}
@@ -77,6 +78,7 @@ Capslock::
     Send {Esc}
   }
   return
+  SetCapsLockState, off
 
 ; some British keyboard layout conventions
 
