@@ -474,7 +474,7 @@
 (use-package company
   :ensure
   :commands global-company-mode
-  :bind ("<tab>" . company-complete)
+  ;; :bind ("<tab>" . company-complete)
   :idle (global-company-mode)
   :diminish company-mode
   :config (progn
