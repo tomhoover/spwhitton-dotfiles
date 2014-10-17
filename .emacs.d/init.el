@@ -705,6 +705,8 @@
           (bind-key "C-o" 'helm-select-action helm-map)
           (bind-key "M-i" 'helm-next-source helm-map)
           (bind-key "<escape>" 'helm-keyboard-quit helm-map)
+          (bind-key "M-j" 'helm-next-line helm-map)
+          (bind-key "M-k" 'helm-previous-line helm-map)
 
           ;; swap <tab> and C-z in helm since use persistent action
           ;; much more frequently
