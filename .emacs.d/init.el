@@ -258,6 +258,7 @@
 (use-package evil-surround :ensure)
 (use-package evil-args :ensure)
 (use-package evil-matchit :ensure)
+(use-package evil-jumper :ensure)
 
 (use-package paredit
   :ensure
@@ -336,6 +337,7 @@
 (add-hook 'evil-local-mode-hook 'evil-leader/add-to-emacs-state)
 (remove-hook 'evil-local-mode-hook 'evil-turn-on-undo-tree-mode)
 (evil-mode)
+(require 'evil-jumper)
 (global-evil-surround-mode t)
 (global-evil-matchit-mode t)
 (global-undo-tree-mode 0)
