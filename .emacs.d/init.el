@@ -230,6 +230,10 @@
             (evil-define-key 'normal global-map (kbd "C-r") 'isearch-backward)
             (evil-global-set-key 'normal (kbd "g s") 'paredit-forward)
 
+            ;; get rid of <escape> prefix map and make it do what C-g does
+            (global-set-key (kbd "<escape>") 'keyboard-quit)
+            (bind-key* "<escape>" 'keyboard-quit)
+
             ;; escape to quit
             (define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
             (define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
@@ -276,21 +280,8 @@
 (use-package evil-leader
   :ensure
   :init (progn
+          ;; leader binding
           (evil-leader/set-leader "<SPC>")
-          (setq evil-leader/in-all-states nil)
-          (setq evil-leader/non-normal-prefix "<escape>")
-
-          (define-prefix-command 'evil-leader/toggle-map)
-          (define-key evil-leader/toggle-map (kbd "e") 'toggle-debug-on-error)
-          (define-key evil-leader/toggle-map (kbd "i") 'org-indent-mode)
-          (define-key evil-leader/toggle-map (kbd "w") 'wc-mode)
-
-          (defun pop-mark ()
-            (interactive)
-            (call-interactively
-             (set-mark-command 4)))
-
-          ;; set up my shortcut keys to Emacs stuff that doesn't have natural vim bindings
           (evil-leader/set-key
             "<escape>" 'evil-execute-in-god-state
             "<SPC>" 'ace-jump-mode
@@ -308,14 +299,15 @@
             "c" 'org-capture
             "s" 'persp-eshell
             "d" 'deft
-            "t" 'evil-leader/toggle-map)
-
-          ;; get rid of <escape> prefix map and make it do what C-g does
-          (global-set-key (kbd "<escape>") 'keyboard-quit)
+            "te" 'toggle-debug-on-error
+            "ti" 'org-indent-mode
+            "tw" 'wc-mode)
 
           ;; `evil-leader/in-all-states' binds <escape> in normal
           ;; state, but we want it emacs state only.  So do this with
           ;; a hook
+          (setq evil-leader/in-all-states nil)
+          (setq evil-leader/non-normal-prefix "<escape>")
           (defun evil-leader/add-to-emacs-state ()
             (let* ((prefixed (read-kbd-macro (concat evil-leader/non-normal-prefix evil-leader/leader)))
                    (no-prefix (read-kbd-macro evil-leader/leader))
