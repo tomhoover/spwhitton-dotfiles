@@ -478,7 +478,7 @@
   (add-hook hook
             (lambda ()
               (turn-on-eldoc-mode)
-              (diminish 'eldoc-mode)
+              ;; (diminish 'eldoc-mode)
               (rainbow-delimiters-mode t))))
 
 ;;; boxquotes
