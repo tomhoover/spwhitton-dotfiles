@@ -420,6 +420,8 @@
   :ensure
   :diminish magit-auto-revert-mode
   :config (progn
+            (bind-key (kbd "M-j") 'magit-goto-next-section magit-mode-map)
+            (bind-key (kbd "M-k") 'magit-goto-previous-section magit-mode-map)
             ;; C-c C-a to amend without any prompt
             (defun magit-just-amend ()
               (interactive)
