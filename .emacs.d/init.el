@@ -899,6 +899,19 @@ With argument, do this that many times."
     (while (search-forward-regexp "\n\n\n+" nil "noerror")
       (replace-match "\n\n"))))
 
+(defun spw/clean-lisp-dangling-brackets ()
+  "Clean up dangling brackets"
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    (while (search-forward-regexp "^[[:space:]\\)]*\)[[:space:]\\)]*$" nil "noerror")
+      (save-excursion
+        (previous-line)
+        (beginning-of-line)
+        (when (not (looking-at ".*;.*"))
+          (next-line)
+          (delete-indentation))))))
+
 (defun spw/auto-cleanup ()
   (interactive)
   (case major-mode
@@ -921,7 +934,10 @@ With argument, do this that many times."
   (interactive)
   (spw/auto-cleanup)
   (untabify (point-min) (point-max))
-  (indent-region (point-min) (point-max)))
+  (indent-region (point-min) (point-max))
+  (case major-mode
+    (emacs-lisp-mode
+     (spw/clean-lisp-dangling-brackets))))
 
 (add-hook 'before-save-hook 'spw/auto-cleanup)
 
