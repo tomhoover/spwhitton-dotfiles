@@ -278,25 +278,47 @@
           ;; leader binding
           (evil-leader/set-leader "<SPC>")
           (evil-leader/set-key
-            "<escape>" 'evil-execute-in-god-state
+            ;; core map
+            ";" 'evil-execute-in-god-state
             "<SPC>" 'ace-jump-mode
-            "C-<SPC>" 'pop-mark
-            "e" 'eval-surrounding-sexp
             "f" 'helm-find-files
             "j" 'helm-mini
             "x" 'helm-M-x
             "k" 'kill-buffer
             "a" 'org-agenda
             "l" 'persp-toggle
-            "p" 'projectile-persp-switch-project
-            "g" 'projectile-vc
+            "v" 'projectile-vc
             "o" 'ace-window
             "c" 'org-capture
-            "s" 'persp-eshell
-            "d" 'deft
+            "ee" 'eval-and-replace
+
+            ;; launcher map
+            "pp" 'projectile-persp-switch-project
+            "ps" 'persp-eshell
+            "pc" 'spw/manual-cleanup
+            "pd" 'deft
+
+            ;; toggle map
             "te" 'toggle-debug-on-error
             "ti" 'org-indent-mode
             "tw" 'wc-mode)
+
+          (evil-leader/set-key-for-mode 'emacs-lisp-mode
+            ;; paredit map
+            "sj" 'paredit-join-sexps
+            "ss" 'paredit-split-sexp
+            "sp" 'paredit-splice-sexp
+            "su" 'paredit-up-sexp
+            "sl" 'paredit-forward-slurp-sexp
+            "sh" 'paredit-forward-barf-sexp
+            "sL" 'paredit-backward-slurp-sexp
+            "sH" 'paredit-backwrad-barf-sexp
+
+            ;; evaluation map
+            "ee" 'eval-surrounding-sexp
+            "ef" 'eval-defun
+            )
+
 
           ;; `evil-leader/in-all-states' binds <escape> in normal
           ;; state, but we want it emacs state only.  So do this with
