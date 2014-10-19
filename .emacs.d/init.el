@@ -317,6 +317,7 @@
             "sh" 'paredit-forward-barf-sexp
             "sL" 'paredit-backward-slurp-sexp
             "sH" 'paredit-backwrad-barf-sexp
+            "sk" 'paredit-kill
 
             ;; evaluation map
             "ee" 'eval-surrounding-sexp
