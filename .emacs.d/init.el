@@ -293,6 +293,7 @@
             "L" 'persp-main
             "v" 'projectile-vc
             "C-w" 'evil-window-map
+            "w" 'other-window
             "ee" 'eval-and-replace
 
             ;; Org-mode map
