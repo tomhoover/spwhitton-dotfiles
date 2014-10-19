@@ -313,7 +313,7 @@
             "sj" 'paredit-join-sexps
             "ss" 'paredit-split-sexp
             "sp" 'paredit-splice-sexp
-            "su" 'paredit-up-sexp
+            "su" 'paredit-backward-up
             "sl" 'paredit-forward-slurp-sexp
             "sh" 'paredit-forward-barf-sexp
             "sL" 'paredit-backward-slurp-sexp
