@@ -722,11 +722,14 @@
                 helm-ff-file-name-history-use-recentf t
                 helm-ff-newfile-prompt-p nil)
 
+          (helm-mode)
+
           ;; rebind some keys
           (bind-key "C-w" 'backward-delete-word helm-map)
           (bind-key "C-o" 'helm-select-action helm-map)
           (bind-key "M-i" 'helm-next-source helm-map)
           (bind-key "<escape>" 'helm-keyboard-quit helm-map)
+          (bind-key "<escape>" 'helm-keyboard-quit helm-comp-read-map)
           (bind-key "M-j" 'helm-next-line helm-map)
           (bind-key "M-k" 'helm-previous-line helm-map)
 
@@ -791,9 +794,7 @@
                                  (eshell-send-input))))
               (persp-eshell)
               (unless (get-buffer-process (current-buffer))
-                (funcall cd-eshell))))
-
-          (helm-mode)))
+                (funcall cd-eshell))))))
 
 (use-package yasnippet
   :ensure
