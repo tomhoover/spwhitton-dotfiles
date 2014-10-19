@@ -1424,11 +1424,6 @@ point reaches the beginning or end of the buffer, stop there."
 
 ;;; dired
 
-;; dired omit mode mapping conflicts with my ace jump mode
-;; binding
-(define-key dired-mode-map (kbd "M-o") 'nil)
-(define-key dired-mode-map (kbd "C-c M-o") 'dired-omit-mode)
-
 (use-package dired-x)
 (setq-default dired-omit-mode t)
 (setq dired-omit-files "^\\...+$")
