@@ -710,6 +710,23 @@
 
 ;;;; ---- functions ----
 
+(defun evil-org-meta-return (arg)
+  (interactive "P")
+  (let ((org-M-RET-may-split-line nil))
+    (end-of-line)
+    (if arg (org-insert-heading-respect-content) (org-meta-return))
+    (evil-insert-state 1)))
+
+(defun evil-org-backwards-meta-return (arg)
+  (interactive "P")
+  (let ((org-M-RET-may-split-line nil))
+    (beginning-of-line)
+    (if arg (org-insert-heading-respect-content) (org-meta-return))
+    (evil-insert-state 1)))
+
+(evil-define-key 'normal org-mode-map "go" 'evil-org-meta-return)
+(evil-define-key 'normal org-mode-map "gO" 'evil-org-backwards-meta-return)
+
 ;;; the default C-c [ and C-c ] expand the directory ~/doc/org in the
 ;;; org-agenda-files variable using the local path,
 ;;; e.g. /meta/s/spw/doc/org, which is not good when init-custom.el is
@@ -772,6 +789,11 @@
 (define-key org-mode-map (kbd "C-c C-SPC") 'org-mark-subtree)
 (define-key org-mode-map (kbd "<f11>") 'org-toggle-link-display)
 (define-key org-mode-map (kbd "C-c )") 'reftex-citation)
+
+(evil-define-key 'normal org-mode-map (kbd "M-j") 'org-metadown)
+(evil-define-key 'normal org-mode-map (kbd "M-k") 'org-metaup)
+(evil-define-key 'normal org-mode-map (kbd "M-h") 'org-metaleft)
+(evil-define-key 'normal org-mode-map (kbd "M-l") 'org-metaright)
 
 (bind-key "C-c [" 'spw/org-agenda-file-to-front org-mode-map)
 (bind-key "C-c ]" 'spw/org-remove-file org-mode-map)

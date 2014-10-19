@@ -241,11 +241,6 @@
             (define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
             (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
 
-            ;; Org-mode
-
-            (evil-define-key 'normal org-mode-map "go" 'org-meta-return)
-            (evil-define-key 'normal org-mode-map "gO" 'org-insert-heading-respect-content)
-
             ;;; Advice
 
             ;; make Evil respect the eshell prompt
