@@ -291,6 +291,7 @@
             "k" 'kill-buffer
             "a" 'org-agenda
             "l" 'persp-toggle
+            "L" 'persp-main
             "v" 'projectile-vc
             "o" 'ace-window
             "c" 'org-capture
@@ -1217,6 +1218,13 @@ point reaches the beginning or end of the buffer, stop there."
     (if (get-buffer "*eshell*")
         (helm-switch-to-buffer "*eshell*")
       (call-interactively 'eshell))))
+
+(defun persp-main ()
+  "Switch to perspective named 'main', or toggle if we're already in that perspective"
+  (interactive)
+  (if (equal (persp-name persp-curr) "main")
+      (persp-toggle nil)
+    (persp-switch "main")))
 
 ;;;; ---- personal settings ----
 
