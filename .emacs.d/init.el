@@ -771,9 +771,9 @@
                                                 helm-source-recentf)))
             ad-do-it
 
-            ;; once Org is loaded, can add Org headline source
-            (eval-after-load 'org
-              (add-to-list 'helm-mini-default-sources 'helm-source-org-headline t))
+            ;; ;; once Org is loaded, can add Org headline source
+            ;; (eval-after-load 'org
+            ;;   (add-to-list 'helm-mini-default-sources 'helm-source-org-headline t))
 
             (helm-adaptative-mode))
 
