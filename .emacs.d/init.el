@@ -421,7 +421,7 @@
   :config (progn
             (bind-key (kbd "M-j") 'magit-goto-next-section magit-mode-map)
             (bind-key (kbd "M-k") 'magit-goto-previous-section magit-mode-map)
-            
+
             ;; C-c C-a to amend without any prompt
             (defun magit-just-amend ()
               (interactive)
@@ -545,6 +545,7 @@
             ;; company completion in eshell buffers gums up TRAMP
             (add-hook 'eshell-mode-hook (lambda ()
                                           (company-mode 0)))
+
             ;; company in Org-mode and message-mode more often
             ;; annoying than useful
             (add-hook 'org-mode-hook (lambda ()
