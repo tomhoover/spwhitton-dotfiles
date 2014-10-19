@@ -227,8 +227,9 @@
 
             ;;; bindings
 
-            (evil-define-key 'normal global-map (kbd "C-r") 'isearch-backward)
             (evil-global-set-key 'normal (kbd "g s") 'paredit-forward)
+            (evil-global-set-key 'normal (kbd "C-s") 'evil-search-forward)
+            (evil-define-key 'normal global-map (kbd "C-r") 'evil-search-backward)
 
             ;; get rid of <escape> prefix map and make it do what C-g does
             (global-set-key (kbd "<escape>") 'keyboard-quit)
