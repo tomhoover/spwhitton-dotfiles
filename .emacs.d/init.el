@@ -310,7 +310,11 @@
             ;; toggle map
             "te" 'toggle-debug-on-error
             "ti" 'org-indent-mode
-            "tw" 'wc-mode)
+            "tw" 'wc-mode
+
+            ;; Jabber map ('c' for 'chat')
+            "cj" 'jabber-activity-switch-to
+            "cc" 'jabber-chat-with)
 
           (evil-leader/set-key-for-mode 'emacs-lisp-mode
             ;; paredit map
