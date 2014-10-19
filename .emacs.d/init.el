@@ -230,6 +230,8 @@
             (evil-global-set-key 'normal (kbd "C-s") 'evil-search-forward)
             (evil-define-key 'normal global-map (kbd "C-r") 'evil-search-backward)
             (evil-global-set-key 'normal (kbd ")") 'paredit-forward)
+            (evil-global-set-key 'insert (kbd "C-<tab>") 'yas-expand-from-trigger-key)
+            (evil-global-set-key 'insert (kbd "<tab>") 'company-complete)
 
             ;; get rid of <escape> prefix map and make it do what C-g does
             (global-set-key (kbd "<escape>") 'keyboard-quit)
