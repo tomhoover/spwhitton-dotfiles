@@ -964,7 +964,12 @@ With argument, do this that many times."
        (message-goto-body)
        (save-restriction
          (narrow-to-region (point) (point-max))
+         (fill-region (point-min) (point-max))
          (whitespace-cleanup))))
+    (org-mode
+     (when (not (string= "gpg" (f-ext (f-this-file))))
+       (fill-region (point-min) (point-max))
+       (delete-trailing-whitespace-except-current-line)))
     (emacs-lisp-mode
      (delete-trailing-whitespace-except-current-line))))
 
