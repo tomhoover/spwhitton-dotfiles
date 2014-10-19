@@ -1411,8 +1411,9 @@ point reaches the beginning or end of the buffer, stop there."
 
 ;;; mail mode for mutt
 
-(add-to-list 'auto-mode-alist '("/mutt" . message-mode))
-(add-hook 'message-mode-hook 'message-goto-body)
+(use-package message
+  :mode ("/mutt-.*$" . message-mode)
+  :init (add-hook 'message-mode-hook 'message-goto-body))
 
 (defun djcb-snip (b e summ)
   "remove selected lines, and replace it with [snip:summary (n lines)]"
