@@ -436,19 +436,20 @@
               :diminish magit-wip-save-mode
               :config (global-magit-wip-save-mode 1))))
 
-;;; winner mode
+;;; winner mode: undo window configuration changes
 
 (use-package winner-mode
-  :disabled t
   :commands winner-mode
   :idle (winner-mode 1))
 
-;;; pointback mode
+;;; pointback mode: make sure that point is back where I left it when
+;;; switching between buffers where at least one buffer is displayed
+;;; in more than one window
 
 (use-package pointback
   :ensure
-  :commands pointback-mode
-  :idle (pointback-mode))
+  :commands global-pointback-mode
+  :idle (global-pointback-mode 1))
 
 ;;; colour those parentheses
 
