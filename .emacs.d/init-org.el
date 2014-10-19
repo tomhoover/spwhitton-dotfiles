@@ -122,8 +122,7 @@
                             ("\\.pdf\\'" . system)
                             ("\\.jpg\\'" . "/usr/bin/eog %s")
                             ("\\.png\\'" . "/usr/bin/eog %s")
-                            ("\\.gif\\'" . "/usr/bin/eog %s")
-                            ))
+                            ("\\.gif\\'" . "/usr/bin/eog %s")))
       org-list-demote-modify-bullet (quote (("-" . "+")
                                             ("+" . "*")
                                             ("*" . "-")
@@ -148,8 +147,7 @@
 
       org-todo-keywords
       '((sequence "TODO(t)" "|" "DONE(d)")
-        (sequence "WAITING(w)" "SOONDAY(f)" "SOMEDAY(s)" "|" "CANCELLED(c)")
-        )
+        (sequence "WAITING(w)" "SOONDAY(f)" "SOMEDAY(s)" "|" "CANCELLED(c)"))
 
       org-todo-keyword-faces '(("SOMEDAY" . (:foreground "#94BFF3" :weight bold)) ; zenburn-blue+1
                                ("SOONDAY" . (:foreground "#F0DFAF" :weight bold))) ; zenburn-yellow
@@ -329,7 +327,7 @@
       (while (and (not is-subproject) (org-up-heading-safe))
         (when (member (nth 2 (org-heading-components)) org-todo-keywords-1)
           (setq is-subproject t))))
-        (and is-a-task is-subproject)))
+    (and is-a-task is-subproject)))
 
 (defun spw/skip-subprojects ()
   "Skip trees that are subprojects"

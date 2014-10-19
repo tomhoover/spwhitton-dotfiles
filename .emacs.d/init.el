@@ -249,7 +249,7 @@
                   (call-interactively 'eshell-bol)))
             (defadvice evil-first-non-blank (after spw/evil-eshell-bol activate)
               (if (eq major-mode 'eshell-mode)
-                  (call-interactively 'eshell-bol)))            ))                          ; the above should also go into insert mode and should move to the end of beginning of the item as apropraite
+                  (call-interactively 'eshell-bol)))))
 
 ;; evil support packages
 
@@ -473,8 +473,7 @@
                 lisp-interaction-mode-hook
                 ielm-mode-hook
                 scheme-mode-hook
-                inferior-scheme-mode-hook
-                ))
+                inferior-scheme-mode-hook))
   (add-hook hook
             (lambda ()
               (turn-on-eldoc-mode)
@@ -1001,8 +1000,7 @@ for easier reading and writing"
             (shrink-window-horizontally (- (window-width) 95))
             (other-window 1)
             (switch-to-buffer "*blank*")
-            (other-window -1)))
-  )
+            (other-window -1))))
 
 ;;; toggle orientation of a two window split
 
@@ -1050,8 +1048,7 @@ for easier reading and writing"
                   (b2 (window-buffer w2))
 
                   (s1 (window-start w1))
-                  (s2 (window-start w2))
-                  )
+                  (s2 (window-start w2)))
              (set-window-buffer w1  b2)
              (set-window-buffer w2 b1)
              (set-window-start w1 s2)
