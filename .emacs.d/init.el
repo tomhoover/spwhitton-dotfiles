@@ -337,11 +337,7 @@
                   (progn
                     (evil-normalize-keymaps)
                     (define-key evil-emacs-state-local-map prefixed map)
-                    (define-key evil-emacs-state-local-map (kbd "<escape> <escape>") 'keyboard-quit)))))
-
-          (bind-key* "<escape>" 'keyboard-quit)
-          ;; (evil-define-key 'emacs global "<escape>" 'evil-execute-in-normal-state)
-          ))
+                    (define-key evil-emacs-state-local-map (kbd "<escape> <escape>") 'keyboard-quit)))))))
 
 ;; fire up Evil and associated packages
 
