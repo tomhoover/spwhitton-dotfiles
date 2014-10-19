@@ -322,7 +322,9 @@
 
             ;; evaluation map
             "ee" 'eval-surrounding-sexp
-            "ef" 'eval-defun)
+            "ef" 'eval-defun
+            "er" 'eval-region
+            "eb" 'eval-buffer)
 
           ;; `evil-leader/in-all-states' binds <escape> in insert
           ;; state, but we want it emacs state only.  So do this with
