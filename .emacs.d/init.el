@@ -589,7 +589,7 @@
                 deft-strip-title-regexp "\\(?:\\#\\+TITLE\\: \\|\\#\\+FILETAGS\\: \\|^%+\\|^[#* ]+\\|-\\*-[[:alpha:]]+-\\*-\\|#+$\\)"))
   :config (progn
             (bind-key "C-w" 'deft-filter-decrement-word deft-mode-map)
-            (bind-key "C-h" 'deft-filter-decrement deft-mode-map)
+            ;; (bind-key "C-h" 'deft-filter-decrement deft-mode-map)
 
             (defadvice deft (before persp-deft activate)
               (projectile-persp-switch-project "~/doc"))))
