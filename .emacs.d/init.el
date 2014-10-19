@@ -229,7 +229,7 @@
 
             (evil-global-set-key 'normal (kbd "C-s") 'evil-search-forward)
             (evil-define-key 'normal global-map (kbd "C-r") 'evil-search-backward)
-            (evil-global-set-key 'normal (kbd ")") 'paredit-forward)
+            (evil-define-key 'normal emacs-lisp-mode-map (kbd ")") 'paredit-forward)
             (evil-global-set-key 'insert (kbd "C-<tab>") 'yas-expand-from-trigger-key)
             (evil-global-set-key 'insert (kbd "<tab>") 'company-complete)
 
