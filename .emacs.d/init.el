@@ -743,7 +743,7 @@
           ;; eshell history -- let Helm handle eshell completion
           (add-hook 'eshell-mode-hook
                     #'(lambda ()
-                        (define-key eshell-mode-map [remap yas-expand] 'helm-esh-pcomplete)))
+                        (define-key eshell-mode-map [remap company-complete] 'helm-esh-pcomplete)))
 
           ;; helm-mini shouldn't stop working just because we're not
           ;; in a projectile project.  And it's way too slow to use
