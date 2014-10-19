@@ -448,6 +448,7 @@
 ;;; winner mode: undo window configuration changes
 
 (use-package winner-mode
+  :disabled t
   :commands winner-mode
   :idle (winner-mode 1))
 
