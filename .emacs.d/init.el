@@ -236,6 +236,7 @@
             ;; get rid of <escape> prefix map and make it do what C-g does
             (global-set-key (kbd "<escape>") 'keyboard-quit)
             (bind-key* "<escape>" 'keyboard-quit)
+            (bind-key "<escape>" 'isearch-cancel isearch-mode-map)
 
             ;; escape to quit
             (define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
