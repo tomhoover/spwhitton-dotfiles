@@ -317,8 +317,7 @@
 
             ;; evaluation map
             "ee" 'eval-surrounding-sexp
-            "ef" 'eval-defun
-            )
+            "ef" 'eval-defun)
 
 
           ;; `evil-leader/in-all-states' binds <escape> in normal
