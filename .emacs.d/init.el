@@ -323,7 +323,7 @@
             "ee" 'eval-surrounding-sexp
             "ef" 'eval-defun)
 
-          ;; `evil-leader/in-all-states' binds <escape> in normal
+          ;; `evil-leader/in-all-states' binds <escape> in insert
           ;; state, but we want it emacs state only.  So do this with
           ;; a hook
           (setq evil-leader/in-all-states nil)
