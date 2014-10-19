@@ -289,13 +289,16 @@
             "j" 'helm-mini
             "x" 'helm-M-x
             "k" 'kill-buffer
-            "a" 'org-agenda
             "l" 'persp-toggle
             "L" 'persp-main
             "v" 'projectile-vc
-            "o" 'ace-window
-            "c" 'org-capture
+            "C-w" 'evil-window-map
             "ee" 'eval-and-replace
+
+            ;; Org-mode map
+            "oc" 'org-capture
+            "ol" 'org-store-link
+            "oa" 'org-agenda
 
             ;; launcher map
             "pp" 'projectile-persp-switch-project
@@ -359,9 +362,12 @@
   :ensure org-plus-contrib
   :mode (("\\.org" . org-mode)
          ("\\.org_archive" . org-mode))
-  :bind (("C-M-c" . org-capture)
-         ("C-c l" . org-store-link)
-         ("C-c a" . org-agenda))
+  :commands (org-capture
+             org-store-link
+             org-agenda)
+  ;; :bind (("C-M-c" . org-capture)
+  ;;        ("C-c l" . org-store-link)
+  ;;        ("C-c a" . org-agenda))
   :diminish org-indent-mode
   :config (load "~/.emacs.d/init-org.el"))
 
