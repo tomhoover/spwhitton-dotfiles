@@ -701,7 +701,7 @@
             (if arg (call-interactively 'persp-switch)
               (persp-switch (persp-name persp-last))))))
 
-;;; move around my commonly used stuff fast
+;;; powerful completion everywhere, especially for jumping between files
 
 (use-package helm
   :ensure
@@ -796,6 +796,8 @@
               (persp-eshell)
               (unless (get-buffer-process (current-buffer))
                 (funcall cd-eshell))))))
+
+;;; snippets
 
 (use-package yasnippet
   :ensure
