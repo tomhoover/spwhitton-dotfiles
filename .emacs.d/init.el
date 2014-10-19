@@ -605,8 +605,8 @@
 
 ;;; fix binding in python-mode
 
-(use-package python
-  :config (define-key python-mode-map (kbd "C-h") 'python-indent-dedent-line-backspace))
+;; (use-package python
+;;   :config (define-key python-mode-map (kbd "C-h") 'python-indent-dedent-line-backspace))
 
 ;;; flycheck
 
@@ -614,14 +614,14 @@
 
 ;;; edit minibuffer in a proper buffer
 
-(use-package miniedit
-  :ensure
-  :commands miniedit
-  :init (progn
-          (define-key minibuffer-local-map "\M-\C-e" 'miniedit)
-          (define-key minibuffer-local-ns-map "\M-\C-e" 'miniedit)
-          (define-key minibuffer-local-completion-map "\M-\C-e" 'miniedit)
-          (define-key minibuffer-local-must-match-map "\M-\C-e" 'miniedit)))
+;; (use-package miniedit
+;;   :ensure
+;;   :commands miniedit
+;;   :init (progn
+;;           (define-key minibuffer-local-map "\M-\C-e" 'miniedit)
+;;           (define-key minibuffer-local-ns-map "\M-\C-e" 'miniedit)
+;;           (define-key minibuffer-local-completion-map "\M-\C-e" 'miniedit)
+;;           (define-key minibuffer-local-must-match-map "\M-\C-e" 'miniedit)))
 
 ;;; TRAMP
 
