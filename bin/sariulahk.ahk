@@ -43,20 +43,15 @@ IceMessenger()
   Send, {Down}
 }
 
-; my run-or-raise shortcuts from unix
-
 F9::ToggleWinMinimize("emacs", "c:\emacs\bin\runemacs.exe")
-;#k::ToggleWinMinimize("cmd", "cmd.exe")
 F10::ToggleWinMinimize("MINGW32", "c:\Users\swhitton\Old shortcuts\Git Bash")
-F11::ToggleWinMinimize("spw@ma", "c:\Users\swhitton\Software\putty.exe -load ma")
+F11::Send !{F4}
 F12::ToggleWinMinimize("Mozilla Firefox", "Firefox")
-
-; additional run-or-raise for school
-; grades5and6 renamed because this autohotkey doesn't like Hangeul
 
 +F9::ToggleWinMinimize("3~4", "C:\e-Book\start\TitleList.exe")
 +F10::ToggleWinMinimize(" CD", "c:\Users\swhitton\Old shortcuts\grades5and6")
-+F11::IceMessenger()  
++F11::ToggleWinMinimize("spw@ma", "c:\Users\swhitton\Software\putty.exe -load ma")
++F12::IceMessenger()  
 
 ; empty the Recycle Bin
 +#r::FileRecycleEmpty, C:\
@@ -79,6 +74,7 @@ Capslock::
   }
   return
   SetCapsLockState, off
+  return
 
 ; some British keyboard layout conventions
 
