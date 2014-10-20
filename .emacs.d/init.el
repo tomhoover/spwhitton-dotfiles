@@ -1287,7 +1287,11 @@ point reaches the beginning or end of the buffer, stop there."
   (let ((break-open-pair (or (and (looking-back "{" 1) (looking-at "}"))
                              (and (looking-back ">" 1) (looking-at "<"))
                              (and (looking-back "(" 1) (looking-at ")"))
-                             (and (looking-back ")" 1) (looking-at ")"))
+                             ;; we always break out in elisp since
+                             ;; it's easier to see for writing code,
+                             ;; and then my cleanup function will
+                             ;; handle the dangling parentheses
+                             (and (eq major-mode 'emacs-lisp-mode) (looking-at ")"))
                              (and (looking-back "\\[" 1) (looking-at "\\]")))))
     (newline)
     (when break-open-pair
