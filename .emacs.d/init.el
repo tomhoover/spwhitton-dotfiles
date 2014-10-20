@@ -966,8 +966,11 @@ With argument, do this that many times."
          (whitespace-cleanup))))
     (org-mode
      (when (not (string= "gpg" (f-ext (f-this-file))))
-       (fill-region (point-min) (point-max))
-       ))
+       (save-excursion
+         (goto-char (point-min))
+         (ignore-errors 
+           (while (org-forward-paragraph)
+             (org-fill-paragraph))))))
     (emacs-lisp-mode
      (delete-trailing-whitespace-except-current-line))))
 
