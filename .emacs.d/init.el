@@ -242,6 +242,54 @@
             (define-key minibuffer-local-must-match-map (kbd "ESC") 'abort-recursive-edit)
             (define-key minibuffer-local-isearch-map (kbd "ESC") 'abort-recursive-edit)
 
+            ;;; text objects
+
+            (evil-define-text-object evil-org-subtree (count &optional beg end type)
+              "An Org subtree.  Uses code from `org-mark-subtree`"
+              (save-excursion
+                ;; get to the top of the tree
+                (org-with-limited-levels
+                 (cond ((org-at-heading-p) (beginning-of-line))
+                       ((org-before-first-heading-p) (user-error "Not in a subtree"))
+                       (t (outline-previous-visible-heading 1))))
+
+                (decf count)
+                (when count (while (and (> count 0) (org-up-heading-safe)) (decf count)))
+
+                ;; extract the beginning and end of the tree
+                (let ((element (org-element-at-point)))
+                  (message "%s" (org-element-property :end element))
+                  (list (org-element-property :end element)
+                        (org-element-property :begin element)))))
+            (define-key evil-outer-text-objects-map "S" 'evil-org-subtree)
+
+            (evil-define-text-object evil-org-outer-item (count &optional beg end type)
+              (let* ((regionp (org-region-active-p))
+                     (struct (progn
+                               (re-search-backward "^[[:space:]]*- ")
+                               (org-list-struct)))
+                     (begin (org-list-get-item-begin))
+                     (end (org-list-get-item-end (point-at-bol) struct)))
+                (if (or (not begin) (not end))
+                    nil
+                  (list begin end))))
+
+            (evil-define-text-object evil-org-inner-item (count &optional beg end type)
+              (let* ((regionp (org-region-active-p))
+                     (struct (progn
+                               (re-search-backward "^[[:space:]]*- ")
+                               (org-list-struct)))
+                     (begin (progn (goto-char (org-list-get-item-begin))
+                                   (forward-char 2)
+                                   (point)))
+                     (end (org-list-get-item-end-before-blank (point-at-bol) struct)))
+                (if (or (not begin) (not end))
+                    nil
+                  (list begin end))))
+
+            (define-key evil-inner-text-objects-map "I" 'evil-org-inner-item)
+            (define-key evil-outer-text-objects-map "I" 'evil-org-outer-item)
+
             ;;; Advice
 
             ;; make Evil respect the eshell prompt
