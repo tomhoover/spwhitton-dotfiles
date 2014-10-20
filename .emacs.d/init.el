@@ -1243,7 +1243,7 @@ point reaches the beginning or end of the buffer, stop there."
   (let* ((path (f-join "~/Documents/Teaching" grade lesson period))
          (name (f-join path (concat grade "-" lesson "-" period ".org"))))
     (if (not (f-exists? name))
-      (f-mkdir path))
+        (f-mkdir path))
     (find-file name)
     (when (not (f-exists? name))
       (insert "tblesson")
@@ -1293,7 +1293,7 @@ point reaches the beginning or end of the buffer, stop there."
 ;; that don't use semantic indentation
 (bind-key "RET" 'reindent-then-newline-and-indent)
 (add-hook 'python-mode-map (lambda ()
-			     (bind-key "RET" 'newline-and-indent python-mode-map)))
+                             (bind-key "RET" 'newline-and-indent python-mode-map)))
 (add-hook 'haskell-mode-hook (lambda ()
                                (bind-key "RET" 'newline-and-indent haskell-mode-map)))
 
