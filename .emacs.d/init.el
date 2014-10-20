@@ -303,6 +303,7 @@
             "ps" 'persp-eshell
             "pc" 'spw/manual-cleanup
             "pd" 'deft
+            "pl" 'tblesson
 
             ;; toggle map
             "te" 'toggle-debug-on-error
@@ -1234,6 +1235,20 @@ point reaches the beginning or end of the buffer, stop there."
     (if (get-buffer "*eshell*")
         (helm-switch-to-buffer "*eshell*")
       (call-interactively 'eshell))))
+
+(defun tblesson (grade lesson period)
+  "Start writing a lesson plan for a standard textbook-based lesson"
+  (interactive "sGrade: \nsGrade %s, lesson: \nsGrade %s, lesson %s, period: ")
+  (projectile-persp-switch-project "~/Documents/Teaching")
+  (let* ((path (f-join "~/Documents/Teaching" grade lesson period))
+         (name (f-join path (concat grade "-" lesson "-" period ".org"))))
+    (if (not (f-exists? name))
+      (f-mkdir path))
+    (find-file name)
+    (when (not (f-exists? name))
+      (insert "tblesson")
+      (if evil-mode (evil-append-line 1))
+      (yas-expand))))
 
 ;;;; ---- personal settings ----
 
