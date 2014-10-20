@@ -229,9 +229,10 @@
 
             (evil-global-set-key 'normal (kbd "C-s") 'evil-search-forward)
             (evil-define-key 'normal global-map (kbd "C-r") 'evil-search-backward)
-            (evil-define-key 'normal emacs-lisp-mode-map (kbd ")") 'paredit-forward)
+            (evil-define-key 'normal emacs-lisp-mode-map (kbd ")") 'paredit-forward-up)
             (evil-global-set-key 'insert (kbd "C-<tab>") 'yas-expand-from-trigger-key)
             (evil-global-set-key 'insert (kbd "<tab>") 'company-complete)
+            (evil-define-key 'insert org-mode-map (kbd "<tab>") 'org-cycle)
 
             ;; get rid of <escape> prefix map and make it do what C-g does
             (global-set-key (kbd "<escape>") 'keyboard-quit)
