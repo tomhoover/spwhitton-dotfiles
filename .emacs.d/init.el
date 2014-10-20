@@ -234,17 +234,13 @@
             (evil-global-set-key 'insert (kbd "<tab>") 'company-complete)
             (evil-define-key 'insert org-mode-map (kbd "<tab>") 'org-cycle)
 
-            ;; get rid of <escape> prefix map and make it do what C-g does
-            (global-set-key (kbd "<escape>") 'keyboard-quit)
-            (bind-key* "<escape>" 'keyboard-quit)
+            ;; escape quits
             (bind-key "<escape>" 'isearch-cancel isearch-mode-map)
-
-            ;; escape to quit
-            (define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
-            (define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
-            (define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
-            (define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
-            (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
+            (define-key minibuffer-local-map (kbd "ESC") 'abort-recursive-edit)
+            (define-key minibuffer-local-ns-map (kbd "ESC") 'abort-recursive-edit)
+            (define-key minibuffer-local-completion-map (kbd "ESC") 'abort-recursive-edit)
+            (define-key minibuffer-local-must-match-map (kbd "ESC") 'abort-recursive-edit)
+            (define-key minibuffer-local-isearch-map (kbd "ESC") 'abort-recursive-edit)
 
             ;;; Advice
 
