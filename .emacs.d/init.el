@@ -404,11 +404,10 @@
             "sj" 'paredit-join-sexps
             "ss" 'paredit-split-sexp
             "sp" 'paredit-splice-sexp
-            "su" 'paredit-backward-up
             "sl" 'paredit-forward-slurp-sexp
             "sh" 'paredit-forward-barf-sexp
             "sL" 'paredit-backward-slurp-sexp
-            "sH" 'paredit-backwrad-barf-sexp
+            "sH" 'paredit-backward-barf-sexp
             "sk" 'paredit-kill
 
             ;; evaluation map
