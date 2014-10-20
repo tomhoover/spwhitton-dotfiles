@@ -967,7 +967,7 @@ With argument, do this that many times."
     (org-mode
      (when (not (string= "gpg" (f-ext (f-this-file))))
        (fill-region (point-min) (point-max))
-       (delete-trailing-whitespace-except-current-line)))
+       ))
     (emacs-lisp-mode
      (delete-trailing-whitespace-except-current-line))))
 
