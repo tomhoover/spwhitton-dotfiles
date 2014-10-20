@@ -968,7 +968,7 @@ With argument, do this that many times."
      (when (not (string= "gpg" (f-ext (f-this-file))))
        (save-excursion
          (goto-char (point-min))
-         (ignore-errors 
+         (ignore-errors
            (while (org-forward-paragraph)
              (org-fill-paragraph))))))
     (emacs-lisp-mode
