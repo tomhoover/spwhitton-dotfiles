@@ -975,8 +975,10 @@
 (defun eval-surrounding-sexp (levels)
   (interactive "p")
   (save-excursion
-    (up-list (abs levels))
-    (eval-last-sexp nil)))
+    (if (looking-at "(")
+        (progn (forward-char 1) (eval-surrounding-sexp 1))
+      (up-list (abs levels))
+      (eval-last-sexp nil))))
 
 ;; backwards and forward deletions of words
 
