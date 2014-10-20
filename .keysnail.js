@@ -275,6 +275,27 @@ key.setViewKey(['C-c', 'h'], function (ev, arg) {
     ext.exec("history-show", arg, ev);
 }, 'History - show histories list');
 
+key.setViewKey(['C-c', 'r'], function (ev, arg) {
+    if (window.loadURI) {
+        loadURI("javascript:(function(){readStyle%3D'style-apertura'%3BreadSize%3D'size-large'%3BreadMargin%3D'margin-wide'%3B_readability_script%3Ddocument.createElement('SCRIPT')%3B_readability_script.type%3D'text/javascript'%3B_readability_script.src%3D'http://spw.sdf.org/tech/old-readability.js?x%3D'%2B(Math.random())%3Bdocument.getElementsByTagName('head')%5B0%5D.appendChild(_readability_script)%3B_readability_css%3Ddocument.createElement('LINK')%3B_readability_css.rel%3D'stylesheet'%3B_readability_css.href%3D'http://spw.sdf.org/tech/old-readability.css'%3B_readability_css.type%3D'text/css'%3B_readability_css.media%3D'all'%3Bdocument.getElementsByTagName('head')%5B0%5D.appendChild(_readability_css)%3B_readability_print_css%3Ddocument.createElement('LINK')%3B_readability_print_css.rel%3D'stylesheet'%3B_readability_print_css.href%3D'http://spw.sdf.org/tech/old-readability-print.css'%3B_readability_print_css.media%3D'print'%3B_readability_print_css.type%3D'text/css'%3Bdocument.getElementsByTagName('head')%5B0%5D.appendChild(_readability_print_css)%3B})()%3B");
+    }
+}, 'Good old Readability');
+
+key.setViewKey(['C-c', 'k'], function (ev, arg){
+    Components.utils.import("resource://gre/modules/FileUtils.jsm");
+
+    // http://stackoverflow.com/questions/10215643/how-to-execute-a-windows-command-from-firefox-addon
+    var env = Components.classes["@mozilla.org/process/environment;1"]
+        .getService(Components.interfaces.nsIEnvironment);
+    var shell = new FileUtils.File("/bin/bash");
+    var args = ["-c", "reading.py ".concat(getCurrentURL())];
+
+    var process = Components.classes["@mozilla.org/process/util;1"]
+        .createInstance(Components.interfaces.nsIProcess);
+    process.init(shell);
+    process.runAsync(args, args.length);
+}, 'Send to Kindle and add to Org reading list');
+
 key.setViewKey('c', function (aEvent, aArg){
 
     ext.exec("hok-yank-foreground-mode", aArg);
