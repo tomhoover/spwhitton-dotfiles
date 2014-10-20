@@ -330,7 +330,8 @@
                   (call-interactively 'eshell-bol)))
             (defadvice evil-first-non-blank (after spw/evil-eshell-bol activate)
               (if (eq major-mode 'eshell-mode)
-                  (call-interactively 'eshell-bol)))))
+                  (call-interactively 'eshell-bol)))
+
             ;; make Evil respect Org line prefixes when inserting at
             ;; the beginning of the line
             (defadvice evil-insert-line (after spw/evil-org-bol activate)
