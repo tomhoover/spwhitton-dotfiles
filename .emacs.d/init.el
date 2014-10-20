@@ -244,7 +244,11 @@
 
             ;;; text objects
 
-            (evil-define-text-object evil-org-subtree (count &optional beg end type)
+            ;; TODO: make the following work well with counts i.e. selecting more than one subtree or list item
+
+            ;; TODO: item text objects should not include subitems
+
+            (evil-define-text-object evil-org-outer-subtree (count &optional beg end type)
               "An Org subtree.  Uses code from `org-mark-subtree`"
               (save-excursion
                 ;; get to the top of the tree
@@ -258,10 +262,35 @@
 
                 ;; extract the beginning and end of the tree
                 (let ((element (org-element-at-point)))
-                  (message "%s" (org-element-property :end element))
                   (list (org-element-property :end element)
                         (org-element-property :begin element)))))
-            (define-key evil-outer-text-objects-map "S" 'evil-org-subtree)
+
+            (evil-define-text-object evil-org-inner-subtree (count &optional beg end type)
+              "An Org subtree, minus its header and concluding line break.  Uses code from `org-mark-subtree`"
+              (save-excursion
+                ;; get to the top of the tree
+                (org-with-limited-levels
+                 (cond ((org-at-heading-p) (beginning-of-line))
+                       ((org-before-first-heading-p) (user-error "Not in a subtree"))
+                       (t (outline-previous-visible-heading 1))))
+
+                (decf count)
+                (when count (while (and (> count 0) (org-up-heading-safe)) (decf count)))
+
+                ;; extract the beginning and end of the tree
+                (let* ((element (org-element-at-point))
+                       (begin (save-excursion
+                                (goto-char (org-element-property :begin element))
+                                (next-line)
+                                (point)))
+                       (end (save-excursion
+                              (goto-char (org-element-property :end element))
+                              (backward-char 1)
+                              (point))))
+                  (list end begin))))
+
+            (define-key evil-outer-text-objects-map "S" 'evil-org-outer-subtree)
+            (define-key evil-inner-text-objects-map "S" 'evil-org-inner-subtree)
 
             (evil-define-text-object evil-org-outer-item (count &optional beg end type)
               (let* ((regionp (org-region-active-p))
