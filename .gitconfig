@@ -16,6 +16,7 @@
         # --simplify-by-decoration
         v  = log --graph --full-history -n 30 --decorate --oneline --branches --all
         ov = log --graph --full-history -n 30 --decorate --oneline --branches --all --simplify-by-decoration
+        co = checkout
 
 [core]
         # no pager thanks
