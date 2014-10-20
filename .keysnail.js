@@ -4,6 +4,7 @@
 // Put all your code except special key, set*key, hook, blacklist.
 // ========================================================================= //
 //{{%PRESERVE%
+
 key.setViewKey(["C-x", "b"], function (ev, arg){
 
     ext.exec("tanything", arg);
@@ -89,12 +90,13 @@ key.setViewKey(['C-c', 'k'], function (ev, arg){
     process.init(shell);
     process.runAsync(args, args.length);
 }, 'Send to Kindle and add to Org reading list');
+
 //}}%PRESERVE%
 // ========================================================================= //
 
 // ========================= Special key settings ========================== //
 
-key.quitKey              = "C-g";
+key.quitKey              = "ESC";
 key.helpKey              = "<f1>";
 key.escapeKey            = "C-q";
 key.macroStartKey        = "<f3>";
@@ -106,7 +108,6 @@ key.negativeArgument3Key = "M--";
 key.suspendKey           = "<f2>";
 
 // ================================= Hooks ================================= //
-
 
 hook.setHook('KeyBoardQuit', function (aEvent) {
     if (key.currentKeySequence.length) return;
