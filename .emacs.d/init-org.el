@@ -807,3 +807,6 @@
 (define-key org-mode-map (kbd "M-[ 1 ; 2 b") 'org-shiftdown)
 (define-key org-mode-map (kbd "M-[ 1 ; 2 C") 'org-shiftright)
 (define-key org-mode-map (kbd "M-[ 1 ; 2 D") 'org-shiftleft)
+
+;;; rebind <space> in agenda mode so that have access to evil's leader
+(bind-key (kbd "M-SPC") 'org-agenda-cycle-show org-agenda-mode-map)

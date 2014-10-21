@@ -417,11 +417,10 @@
             "er" 'eval-region
             "eb" 'eval-buffer)
 
-          ;; `evil-leader/in-all-states' binds <escape> in insert
-          ;; state, but we want it emacs state only.  So do this with
-          ;; a hook
+          ;; `evil-leader/in-all-states' binds in insert state, but we
+          ;; want it emacs state only.  So do this with a hook
           (setq evil-leader/in-all-states nil)
-          (setq evil-leader/non-normal-prefix "<escape>")
+          (setq evil-leader/non-normal-prefix "")
           (defun evil-leader/add-to-emacs-state ()
             (let* ((prefixed (read-kbd-macro (concat evil-leader/non-normal-prefix evil-leader/leader)))
                    (no-prefix (read-kbd-macro evil-leader/leader))
@@ -518,6 +517,9 @@
   :config (progn
             (bind-key (kbd "M-j") 'magit-goto-next-section magit-mode-map)
             (bind-key (kbd "M-k") 'magit-goto-previous-section magit-mode-map)
+
+            ;; restore usual magit spacebar command to M-SPC
+            (bind-key (kbd "M-SPC") 'magit-show-item-or-scroll-up)
 
             ;; C-c C-a to amend without any prompt
             (defun magit-just-amend ()
