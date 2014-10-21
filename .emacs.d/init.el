@@ -340,7 +340,8 @@
 
 ;; evil support packages
 
-(use-package evil-god-state :ensure)
+(use-package evil-god-state :ensure
+  :config (evil-global-set-key 'god (kbd "ESC") 'evil-force-normal-state))
 (use-package evil-surround :ensure)
 (use-package evil-args :ensure)
 (use-package evil-matchit :ensure)
