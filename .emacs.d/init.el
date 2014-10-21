@@ -377,6 +377,7 @@
             "v" 'projectile-vc
             "C-w" 'evil-window-map
             "w" 'other-window
+            "W" 'winner-undo
             "ee" 'eval-and-replace
 
             ;; Org-mode map
@@ -537,10 +538,7 @@
 
 ;;; winner mode: undo window configuration changes
 
-(use-package winner-mode
-  :disabled t
-  :commands winner-mode
-  :idle (winner-mode 1))
+(winner-mode 1)
 
 ;;; pointback mode: make sure that point is back where I left it when
 ;;; switching between buffers where at least one buffer is displayed
