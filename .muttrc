@@ -133,7 +133,7 @@ message-hook .  'macro index,pager \cb ,b "URL viewer"'
 message-hook ~G 'macro index,pager \cb ,B "URL viewer"'
 
 # send Message-Id over to Emacs so that I can link to messages
-macro index,pager <F12> "|~/bin/org-mairix-el-store-link\n"
+macro index,pager <F8> "|~/bin/org-mairix-el-store-link\n"
 
 # open RSS links in browser
 macro index,pager <F4> "<pipe-message>grep '\^http' | sed 's/\^/-new-tab /' | xargs iceweasel<enter>" "open all URLs at beginning of lines in message in browser tabs"
