@@ -343,7 +343,18 @@
 ;; evil support packages
 
 (use-package evil-god-state :ensure
-  :config (evil-global-set-key 'god (kbd "ESC") 'evil-force-normal-state))
+  :config (progn
+            (evil-global-set-key 'god (kbd "ESC") 'evil-god-state-bail)
+
+            ;; god mode doesn't work in special-mode buffers such
+            ;; as the Org agenda.  This is okay when one isn't
+            ;; using Evil because in such modes bindings aren't
+            ;; generally prefixed with C- and M-.  However, when using
+            ;; with evil-god-state, this means that god state gets
+            ;; turned on but god mode doesn't which is very confusing.
+            ;; And it's still useful to have one-shot god-mode when
+            ;; one is using evil.  So TODO: have god-mode start up in special modes
+            ))
 (use-package evil-surround :ensure)
 (use-package evil-args :ensure)
 (use-package evil-matchit :ensure)
