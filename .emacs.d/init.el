@@ -222,7 +222,11 @@
 
             ;;; bindings
 
+            (define-key evil-window-map (kbd "u") 'winner-undo)
+
             (evil-global-set-key 'emacs (kbd "C-w") 'evil-window-map)
+            (evil-global-set-key 'emacs (kbd ",") 'evil-execute-in-god-state)
+            (evil-global-set-key 'normal (kbd ",") 'evil-execute-in-god-state)
 
             (evil-global-set-key 'normal (kbd "C-s") 'evil-search-forward)
             (evil-define-key 'normal global-map (kbd "C-r") 'evil-search-backward)
@@ -364,7 +368,6 @@
           (evil-leader/set-leader "<SPC>")
           (evil-leader/set-key
             ;; core map
-            ";" 'evil-execute-in-god-state
             "<SPC>" 'ace-jump-mode
             "f" 'helm-find-files
             "j" 'helm-mini
@@ -375,7 +378,6 @@
             "v" 'projectile-vc
             "C-w" 'evil-window-map
             "w" 'other-window
-            "W" 'winner-undo
             "ee" 'eval-and-replace
 
             ;; Org-mode map
