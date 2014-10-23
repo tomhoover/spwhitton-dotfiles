@@ -227,6 +227,7 @@
             (evil-global-set-key 'emacs (kbd "C-w") 'evil-window-map)
             (evil-global-set-key 'emacs (kbd ",") 'evil-execute-in-god-state)
             (evil-global-set-key 'normal (kbd ",") 'evil-execute-in-god-state)
+            (evil-global-set-key 'insert (kbd "M-,") 'evil-execute-in-god-state)
 
             (evil-global-set-key 'normal (kbd "C-s") 'evil-search-forward)
             (evil-define-key 'normal global-map (kbd "C-r") 'evil-search-backward)
