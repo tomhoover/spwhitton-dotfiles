@@ -1541,6 +1541,14 @@ point reaches the beginning or end of the buffer, stop there."
 
 ;;;; ---- modes configuration ----
 
+;;; auto fill comments in modes with a reliable comment syntax
+
+(defun turn-on-comment-filling ()
+  (setq-local comment-auto-fill-only-comments t)
+  (auto-fill-mode 1))
+
+(add-hook 'emacs-lisp-mode-hook 'turn-on-comment-filling)
+
 ;;; mail mode for mutt
 
 (use-package message
