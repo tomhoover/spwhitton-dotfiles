@@ -240,6 +240,7 @@
 
             ;; escape quits
             (bind-key "<escape>" 'isearch-cancel isearch-mode-map)
+            (define-key org-read-date-minibuffer-local-map (kbd "ESC") 'abort-recursive-edit)
             (define-key minibuffer-local-map (kbd "ESC") 'abort-recursive-edit)
             (define-key minibuffer-local-ns-map (kbd "ESC") 'abort-recursive-edit)
             (define-key minibuffer-local-completion-map (kbd "ESC") 'abort-recursive-edit)
