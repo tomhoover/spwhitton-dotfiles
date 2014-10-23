@@ -9,7 +9,7 @@
         # http://stackoverflow.com/a/17722977.  Updates master while
         # allowing only fast-forward merges and does not require
         # checking out master; can remain on current branch
-        sync = !sh -c 'git checkout --quiet HEAD; git fetch origin master:master; git checkout --quiet -'
+        sync = "!git checkout --quiet HEAD; git fetch origin master:master; git checkout --quiet -"
 
         # nice way to view history (most recent 30 commits).  ov
         # ('overview') collapses linear commits with addition of
