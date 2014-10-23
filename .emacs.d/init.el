@@ -846,7 +846,11 @@
           (bind-key "<escape>" 'helm-keyboard-quit helm-comp-read-map)
           (bind-key "M-j" 'helm-next-line helm-map)
           (bind-key "M-k" 'helm-previous-line helm-map)
-          (bind-key "M-J" 'helm-end-of-buffer helm-map)
+          (defun helm-choose-last ()
+            (interactive)
+            (helm-end-of-buffer)
+            (helm-exit-minibuffer))
+          (bind-key "M-RET" 'helm-choose-last helm-map)
 
           ;; swap <tab> and C-z in helm since use persistent action
           ;; much more frequently
