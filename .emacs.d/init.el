@@ -345,15 +345,28 @@
   :config (progn
             (evil-global-set-key 'god (kbd "ESC") 'evil-god-state-bail)
 
-            ;; god mode doesn't work in special-mode buffers such
-            ;; as the Org agenda.  This is okay when one isn't
-            ;; using Evil because in such modes bindings aren't
-            ;; generally prefixed with C- and M-.  However, when using
-            ;; with evil-god-state, this means that god state gets
-            ;; turned on but god mode doesn't which is very confusing.
-            ;; And it's still useful to have one-shot god-mode when
-            ;; one is using evil.  So TODO: have god-mode start up in special modes
-            ))
+            ;; god-mode doesn't work well in special-mode buffers such as
+            ;; the Org agenda.  These buffers bind functions
+            ;; other than `self-insert-command` to letter and number
+            ;; keys, and god-local-mode intercepts key presses by
+            ;; remapping `self-insert-command` to its own function.
+            ;; So it fails to get a grip in special-mode buffers.
+
+            ;; This is okay when one isn't using Evil
+            ;; because in such modes bindings aren't generally
+            ;; prefixed with C- and M-: there's little reason to use god-mode.
+
+            ;; However, I want to use evil-god-state from the Emacs
+            ;; state in Org agenda buffers.  So manually remap all the keys.
+            (let ((map god-local-mode-map)
+                  (keys '("a" "b" "c" "d" "e" "f" "g" "h" "i" "j" "k"
+                          "l" "m" "n" "o" "p" "q" "r" "s" "t" "u" "v"
+                          "w" "x" "y" "z" "A" "B" "C" "D" "E" "F" "G"
+                          "H" "I" "J" "K" "L" "M" "N" "O" "P" "Q" "R"
+                          "S" "T" "U" "V" "W" "X" "Y" "Z" "0" "1" "2"
+                          "3" "4" "5" "6" "7" "8" "9" "0")))
+              (dolist (key keys)
+                (define-key map (kbd key) 'god-mode-self-insert)))))
 (use-package evil-surround :ensure)
 (use-package evil-args :ensure)
 (use-package evil-matchit :ensure)
