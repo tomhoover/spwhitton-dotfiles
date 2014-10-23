@@ -344,6 +344,8 @@
 (use-package evil-god-state :ensure
   :config (progn
             (evil-global-set-key 'god (kbd "ESC") 'evil-god-state-bail)
+            (add-hook 'evil-god-start-hook (lambda () (diminish 'god-local-mode)))
+            (add-hook 'evil-god-stop-hook (lambda () (diminish-undo 'god-local-mode)))
 
             ;; god-mode doesn't work well in special-mode buffers such as
             ;; the Org agenda.  These buffers bind functions
