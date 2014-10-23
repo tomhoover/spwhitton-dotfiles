@@ -529,7 +529,9 @@
   :diminish magit-auto-revert-mode
   :config (progn
             (bind-key (kbd "M-j") 'magit-goto-next-section magit-mode-map)
+            (bind-key (kbd "M-J") 'magit-goto-next-sibling-section magit-mode-map)
             (bind-key (kbd "M-k") 'magit-goto-previous-section magit-mode-map)
+            (bind-key (kbd "M-K") 'magit-goto-previous-sibling-section magit-mode-map)
 
             ;; restore usual magit spacebar command to M-SPC
             (bind-key (kbd "M-SPC") 'magit-show-item-or-scroll-up)
@@ -832,6 +834,7 @@
           (bind-key "<escape>" 'helm-keyboard-quit helm-comp-read-map)
           (bind-key "M-j" 'helm-next-line helm-map)
           (bind-key "M-k" 'helm-previous-line helm-map)
+          (bind-key "M-J" 'helm-end-of-buffer helm-map)
 
           ;; swap <tab> and C-z in helm since use persistent action
           ;; much more frequently
