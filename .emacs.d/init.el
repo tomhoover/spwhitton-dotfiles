@@ -1098,7 +1098,8 @@ With argument, do this that many times."
            (while (org-forward-paragraph)
              (org-fill-paragraph))))))
     (emacs-lisp-mode
-     (delete-trailing-whitespace-except-current-line))))
+     (delete-trailing-whitespace-except-current-line)
+     (compact-blank-lines))))
 
 (defun spw/manual-cleanup ()
   (interactive)
