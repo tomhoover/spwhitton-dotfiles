@@ -384,9 +384,10 @@
           (add-hook 'emacs-lisp-mode-hook #'enable-paredit-mode)
           (add-hook 'emacs-lisp-mode-hook #'evil-paredit-mode)))
 
-
 (use-package evil-paredit :ensure)
 (use-package evil-indent-textobject :ensure)
+(use-package evil-operator-comment
+  :init (setq evil-operator-comment-key "Q"))
 
 ;; evil-leader
 
@@ -471,6 +472,7 @@
 ;; (require 'evil-jumper)
 (global-evil-surround-mode t)
 (global-evil-matchit-mode t)
+(global-evil-operator-comment-mode 1)
 (global-undo-tree-mode 0)
 
 ;;; Org
