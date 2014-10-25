@@ -195,7 +195,6 @@
       ;; used after things like e.g. to prevent a double space
       org-entities-user '(("space" "\\ " nil " " " " " " " "))
 
-
       org-export-with-toc nil         ; default to no table of contents
       org-footnote-section "Notes"
 
@@ -569,13 +568,10 @@
                :publishing-directory "~/tmp"
                :completion-function spw/cleanup-org-pdfs))
 
-
-
 (defun spw/cleanup-org-pdfs ()
   (interactive)
   (dolist (file (f-glob "~/doc/org/*.pdf"))
     (delete-file file)))
-
 
 ;;; reftex setup from
 ;;; http://tincman.wordpress.com/2011/01/04/research-paper-management-with-emacs-org-mode-and-reftex/
