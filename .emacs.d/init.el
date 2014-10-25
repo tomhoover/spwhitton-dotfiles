@@ -425,11 +425,10 @@
             "oa" 'org-agenda
 
             ;; launcher map
-            "pp" 'projectile-persp-switch-project
-            "ps" 'persp-eshell
-            "pc" 'spw/manual-cleanup
-            "pd" 'deft
-            "pl" 'tblesson
+            "gs" 'persp-eshell
+            "gc" 'spw/manual-cleanup
+            "gd" 'deft
+            "gl" 'tblesson
 
             ;; toggle map
             "te" 'toggle-debug-on-error
@@ -814,8 +813,9 @@
   :config (progn
             (setq projectile-switch-project-action 'projectile-dired
                   projectile-completion-system 'helm)
+            ;; access projectile thorugh evil leader
+            (define-key evil-leader--default-map (kbd "p") projectile-command-map)
             (diminish 'projectile-mode)))
-
 
 (use-package persp-projectile :ensure)
 
