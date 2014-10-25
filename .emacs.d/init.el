@@ -395,8 +395,8 @@
 
 (use-package evil-paredit :ensure)
 (use-package evil-indent-textobject :ensure)
-(use-package evil-operator-comment
-  :init (setq evil-operator-comment-key "Q"))
+(setq evil-operator-comment-key "Q")
+(use-package evil-operator-comment)
 
 ;; evil-leader
 
