@@ -812,3 +812,11 @@
 ;;; escape to get out of date entry
 
 (define-key org-read-date-minibuffer-local-map (kbd "ESC") 'abort-recursive-edit)
+
+;;; evil surround pairs
+
+(defun evil-surround-org-pairs ()
+  (push '(?= . ("=" . "=")) evil-surround-pairs-alist)
+  (push '(?~ . ("~" . "~")) evil-surround-pairs-alist))
+
+(add-hook 'org-mode-hook 'evil-surround-org-pairs)
