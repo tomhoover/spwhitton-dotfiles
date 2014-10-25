@@ -134,7 +134,6 @@ hook.setHook('KeyBoardQuit', function (aEvent) {
     }
 });
 
-
 // ============================= Key bindings ============================== //
 
 key.setGlobalKey('C-M-r', function (ev) {
@@ -307,16 +306,12 @@ key.setViewKey('C-n', function (ev) {
 }, 'Scroll line down');
 
 key.setViewKey('u', function (ev) {
-    getBrowser().mTabContainer.advanceSelectedTab(-1, true);
-}, 'Select previous tab');
+    undoCloseTab();
+}, 'Undo closed tab');
 
 key.setViewKey('C-p', function (ev) {
     key.generateKey(ev.originalTarget, KeyEvent.DOM_VK_UP, true);
 }, 'Scroll line up');
-
-key.setViewKey('i', function (ev) {
-    getBrowser().mTabContainer.advanceSelectedTab(1, true);
-}, 'Select next tab');
 
 key.setViewKey([['C-f'], ['.']], function (ev) {
     key.generateKey(ev.originalTarget, KeyEvent.DOM_VK_RIGHT, true);
@@ -369,6 +364,18 @@ key.setViewKey('M-p', function (ev) {
 key.setViewKey('M-n', function (ev) {
     command.walkInputElement(command.elementsRetrieverButton, false, true);
 }, 'Focus to the previous button');
+
+key.setViewKey('q', function (ev) {
+    BrowserCloseTabOrWindow();
+}, 'Close tab / window');
+
+key.setViewKey('/', function (ev) {
+    command.iSearchForwardKs(ev);
+}, 'Emacs like incremental search forward', true);
+
+key.setViewKey('?', function (ev) {
+    command.iSearchBackward();
+}, 'Incremental search backward', true);
 
 key.setEditKey(['C-x', 'h'], function (ev) {
     command.selectAll(ev);
@@ -630,3 +637,11 @@ key.setCaretKey('M-p', function (ev) {
 key.setCaretKey('M-n', function (ev) {
     command.walkInputElement(command.elementsRetrieverButton, false, true);
 }, 'Focus to the previous button');
+
+key.setViewKey('o', function (ev) {
+    getBrowser().mTabContainer.advanceSelectedTab(1, true);
+}, 'Select next tab');
+
+key.setViewKey('i', function (ev) {
+    getBrowser().mTabContainer.advanceSelectedTab(-1, true);
+}, 'Select previous tab');

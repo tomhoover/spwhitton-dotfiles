@@ -234,9 +234,6 @@
             (evil-global-set-key 'normal (kbd ",") 'evil-execute-in-god-state)
             (evil-global-set-key 'insert (kbd "M-,") 'evil-execute-in-god-state)
 
-            (evil-global-set-key 'normal (kbd "C-s") 'evil-search-forward)
-            (evil-define-key 'normal global-map (kbd "C-r") 'evil-search-backward)
-
             (evil-define-key 'normal emacs-lisp-mode-map (kbd ")") 'paredit-forward-up)
             (evil-define-key 'normal emacs-lisp-mode-map (kbd "(") 'paredit-backward-up)
 
