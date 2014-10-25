@@ -418,6 +418,14 @@
             "C-w" 'evil-window-map
             "w" 'evil-window-mru
             "ee" 'eval-and-replace
+            "S" (lambda ()
+                  (interactive)
+                  ;; save the current buffer first (if it's visiting a
+                  ;; file) to avoid a y/n prompt
+                  (if (buffer-file-name) (save-buffer))
+                  ;; save all Org buffers to avoid some more prompts
+                  (org-save-all-org-buffers)
+                  (save-some-buffers))
 
             ;; Org-mode map
             "oc" 'org-capture
