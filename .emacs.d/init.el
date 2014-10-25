@@ -215,6 +215,10 @@
 (use-package evil
   :ensure
   :config (progn
+            ;;; settings
+
+            (setq evil-cross-lines t)
+
             ;;; initial states
 
             (evil-set-initial-state 'deft-mode 'insert)
