@@ -555,10 +555,12 @@
   :ensure
   :diminish magit-auto-revert-mode
   :config (progn
-            (bind-key (kbd "M-j") 'magit-goto-next-section magit-mode-map)
-            (bind-key (kbd "M-J") 'magit-goto-next-sibling-section magit-mode-map)
-            (bind-key (kbd "M-k") 'magit-goto-previous-section magit-mode-map)
-            (bind-key (kbd "M-K") 'magit-goto-previous-sibling-section magit-mode-map)
+            (bind-key (kbd "'") 'magit-section-jump-map magit-status-mode-map)
+            (bind-key (kbd "j") 'magit-goto-next-section magit-status-mode-map)
+            (bind-key (kbd "M-j") 'magit-goto-next-sibling-section magit-status-mode-map)
+            (bind-key (kbd "k") 'magit-goto-previous-section magit-status-mode-map)
+            (bind-key (kbd "K") 'magit-discard-item magit-status-mode-map)
+            (bind-key (kbd "M-k") 'magit-goto-previous-sibling-section magit-status-mode-map)
 
             ;; restore usual magit spacebar command to M-SPC
             (bind-key (kbd "M-SPC") 'magit-show-item-or-scroll-up)
