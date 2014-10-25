@@ -372,7 +372,16 @@
                           "3" "4" "5" "6" "7" "8" "9" "0")))
               (dolist (key keys)
                 (define-key map (kbd key) 'god-mode-self-insert)))))
-(use-package evil-surround :ensure)
+(use-package evil-surround
+  :ensure
+  :config (progn
+            ;; make sure that evil-surround works when paredit is
+            ;; active (from evil-surround's readme on github)
+            (add-to-list 'evil-surround-operator-alist
+                         '(evil-paredit-change . change))
+            (add-to-list 'evil-surround-operator-alist
+                         '(evil-paredit-delete . delete))))
+
 (use-package evil-args :ensure)
 (use-package evil-matchit :ensure)
 ;; (use-package evil-jumper :ensure)
