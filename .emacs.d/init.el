@@ -416,7 +416,7 @@
             "L" 'persp-switch
             "v" 'projectile-vc
             "C-w" 'evil-window-map
-            "w" 'other-window
+            "w" 'evil-window-mru
             "ee" 'eval-and-replace
 
             ;; Org-mode map
