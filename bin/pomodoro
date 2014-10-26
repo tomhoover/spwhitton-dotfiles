@@ -1,0 +1,53 @@
+#!/bin/bash
+# POMODORO v0.1 by Case Duckworth (mahatman2): mahatman2@gmail.com
+# simplified by spw
+# A technique for Getting Things Done.
+
+# VARS for time, etc.  Must be in seconds in order to work with cvlc command line
+work_time=1500s;
+play_time=300s;
+
+# make sure you want it to run...
+if [ $# -gt 0 ] && [ $1 == "-stop" ];then
+{
+    notify-send "Pomodoro timers killed"
+    killall pomodoro;
+}
+fi
+
+# function declaration
+function work()
+{
+    notify-send "Cut the rest out.  A pomodoro begins."
+    aplay ~/lib/annex/doc/sounds/beep.wav
+    cvlc --play-and-exit --run-time=$work_time ~/lib/annex/doc/sounds/RainyMood.ogg
+}
+
+function play()
+{
+    notify-send "Short break."
+    aplay ~/lib/annex/doc/sounds/beep.wav
+    sleep $play_time;
+}
+
+# function long_break()
+# {
+#     notify-send "Long break."
+#     aplay ~/lib/annex/doc/sounds/beep.wav
+#     sleep $long_break_time;
+# }
+
+# the meat
+# while [ -z "$1" ] || [ $1 == "-start" ];do
+# {
+    work;
+    play;
+    work;
+    play;
+    work;
+    play;
+    work;
+    notify-send "That's it for now."
+    # long_break;
+# }
+# done
