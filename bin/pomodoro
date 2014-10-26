@@ -18,7 +18,7 @@ fi
 # function declaration
 function work()
 {
-    notify-send "Cut the rest out.  A pomodoro begins."
+    notify-send "Cut all else out.  A pomodoro begins."
     aplay ~/lib/annex/doc/sounds/beep.wav
     cvlc --play-and-exit --run-time=$work_time ~/lib/annex/doc/sounds/RainyMood.ogg
 }
