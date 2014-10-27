@@ -387,6 +387,7 @@ visual state bindings conflicting with god-mode"
                     (activate-mark))))
 
               (evil-define-key 'normal emacs-lisp-mode-map (kbd ")") 'paredit-forward-up))))
+
 (use-package evil-surround
   :ensure
   :config (progn
