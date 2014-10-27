@@ -231,6 +231,7 @@
             (evil-global-set-key 'emacs (kbd "C-w") 'evil-window-map)
             (evil-global-set-key 'emacs (kbd ",") 'evil-execute-in-god-state)
             (evil-global-set-key 'normal (kbd ",") 'evil-execute-in-god-state)
+            (evil-global-set-key 'visual (kbd ",") 'evil-execute-in-god-state-from-visual)
             (evil-global-set-key 'insert (kbd "M-,") 'evil-execute-in-god-state)
 
             (evil-define-key 'normal emacs-lisp-mode-map (kbd ")") 'paredit-forward-up)
@@ -370,7 +371,54 @@
                           "S" "T" "U" "V" "W" "X" "Y" "Z" "0" "1" "2"
                           "3" "4" "5" "6" "7" "8" "9" "0")))
               (dolist (key keys)
-                (define-key map (kbd key) 'god-mode-self-insert)))))
+                (define-key map (kbd key) 'god-mode-self-insert))
+
+              ;; in order to use evil-god-state from visual mode,
+              ;; we've got to exit visual state and expand the
+              ;; region by one character.  But if we do this with a
+              ;; custom command then we have to tell god-mode about
+              ;; our new command.  This redefinition does this.
+
+              (defun evil-stop-execute-in-god-state ()
+                "Switch back to previous evil state."
+                (unless (or (eq this-command #'evil-execute-in-god-state)
+                            (eq this-command #'evil-execute-in-god-state-from-visual)
+                            (eq this-command #'universal-argument)
+                            (eq this-command #'universal-argument-minus)
+                            (eq this-command #'universal-argument-more)
+                            (eq this-command #'universal-argument-other-key)
+                            (eq this-command #'digit-argument)
+                            (eq this-command #'negative-argument)
+                            (minibufferp))
+                  (remove-hook 'pre-command-hook 'evil-god-fix-last-command)
+                  (remove-hook 'post-command-hook 'evil-stop-execute-in-god-state)
+                  (when (buffer-live-p evil-execute-in-god-state-buffer)
+                    (with-current-buffer evil-execute-in-god-state-buffer
+                      (if (and (eq evil-previous-state 'visual)
+                               (not (use-region-p)))
+                          (progn
+                            (evil-change-to-previous-state)
+                            (evil-exit-visual-state))
+                        (evil-change-to-previous-state))))
+                  (setq evil-execute-in-god-state-buffer nil)))
+
+              ;; probably better as advice around
+              ;; evil-execute-in-god-state as that means we don't need
+              ;; above redefinition
+
+              (defun evil-execute-in-god-state-from-visual ()
+                (interactive)
+                (evil-exit-visual-state)
+                (if (< (point) (mark))
+                    (progn
+                      (backward-char 1)
+                      (exchange-point-and-mark))
+                  (forward-char 1))
+                (let ((activate-mark-hook nil)) ; stop visual mode from firing
+                  (activate-mark))
+                (evil-execute-in-god-state))
+
+              (evil-define-key 'normal emacs-lisp-mode-map (kbd ")") 'paredit-forward-up))))
 (use-package evil-surround
   :ensure
   :config (progn
