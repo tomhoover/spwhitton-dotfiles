@@ -3,7 +3,7 @@
 (add-to-list 'load-path "~/.emacs.d/site-lisp/")
 (require 'use-package)
 (require 'package)
-(require 'package-filter)
+
 (setq
  package-user-dir "~/local/src/elpa"
  package-archives
@@ -11,11 +11,9 @@
    ("marmalade" . "http://marmalade-repo.org/packages/")
    ("org" . "http://orgmode.org/elpa/")
    ("gnu" . "http://elpa.gnu.org/packages/"))
- package-archive-exclude-alist
- '(("melpa" org)
-   ("marmalade" org)
-   ("gnu" org)
-   ("org" org)))
+ package-pinned-packages
+ '((org-plus-contrib . "org")))
+
 (package-initialize)
 (unless package-archive-contents
   (package-refresh-contents))
