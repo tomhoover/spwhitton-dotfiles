@@ -222,7 +222,6 @@
 
             (evil-set-initial-state 'deft-mode 'insert)
             (evil-set-initial-state 'git-commit-mode 'insert)
-            (evil-set-initial-state 'message-mode 'insert)
 
             ;;; bindings
 
