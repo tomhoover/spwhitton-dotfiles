@@ -632,6 +632,12 @@ visual state bindings conflicting with god-mode"
           (add-hook 'html-mode-hook 'rainbow-mode)
           (add-hook 'css-mode-hook 'rainbow-mode)))
 
+;;; keep reindenting lisp
+
+(use-package aggressive-indent
+  :ensure
+  :commands aggressive-indent-mode)
+
 ;;; ElDoc and rainbow delimiters activation
 
 (dolist (hook '(emacs-lisp-mode-hook
@@ -644,6 +650,7 @@ visual state bindings conflicting with god-mode"
             (lambda ()
               (turn-on-eldoc-mode)
               ;; (diminish 'eldoc-mode)
+              (aggressive-indent-mode)
               (rainbow-delimiters-mode t))))
 
 ;;; boxquotes
@@ -1128,7 +1135,8 @@ With argument, do this that many times."
   (interactive)
   (spw/auto-cleanup)
   (untabify (point-min) (point-max))
-  (indent-region (point-min) (point-max))
+  (unless aggressive-indent-mode
+    (indent-region (point-min) (point-max)))
   (case major-mode
     (emacs-lisp-mode
      (spw/clean-lisp-dangling-brackets))))
