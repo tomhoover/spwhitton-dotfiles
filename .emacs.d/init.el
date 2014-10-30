@@ -236,6 +236,11 @@
             (evil-define-key 'normal emacs-lisp-mode-map (kbd ")") 'paredit-forward-up)
             (evil-define-key 'normal emacs-lisp-mode-map (kbd "(") 'paredit-backward-up)
 
+            ;; I can use the arrow keys if I need to move by char in
+            ;; Emacs state buffers.  I need to be able to scroll easily
+            (evil-global-set-key 'emacs (kbd "C-f") 'scroll-up-command)
+            (evil-global-set-key 'emacs (kbd "C-b") 'scroll-down-command)
+
             (evil-global-set-key 'insert (kbd "C-<tab>") 'yas-expand-from-trigger-key)
             (evil-global-set-key 'insert (kbd "<tab>") 'company-complete)
             (evil-define-key 'insert org-mode-map (kbd "<tab>") 'org-cycle)
