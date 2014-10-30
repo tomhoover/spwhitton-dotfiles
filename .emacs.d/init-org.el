@@ -719,7 +719,7 @@
   (let ((org-M-RET-may-split-line nil))
     (if (org-table-p)
         (call-interactively 'org-open-line)
-      (org-beginning-of-line)
+      (beginning-of-line)
       (if arg (org-insert-heading-respect-content) (org-meta-return)))
     (evil-insert-state 1)))
 
