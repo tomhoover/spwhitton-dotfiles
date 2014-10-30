@@ -373,7 +373,7 @@
                 (define-key map (kbd key) 'god-mode-self-insert))
 
               (defadvice evil-execute-in-god-state
-                (before evil-execute-in-god-state-from-visual-state activate)
+                  (before evil-execute-in-god-state-from-visual-state activate)
                 "When in visual state, get out of visual state
 and restore the selection before firing up god-mode.  This avoids
 visual state bindings conflicting with god-mode"
