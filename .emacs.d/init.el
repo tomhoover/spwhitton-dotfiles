@@ -431,6 +431,7 @@ visual state bindings conflicting with god-mode"
             "f" 'helm-find-files
             "j" 'helm-mini
             "x" 'helm-M-x
+            "r" 'helm-swoop
             "k" 'kill-buffer
             "l" 'persp-toggle
             "L" 'persp-switch
@@ -953,6 +954,29 @@ visual state bindings conflicting with god-mode"
           (use-package helm-descbinds
             :ensure
             :idle (helm-descbinds-mode))
+
+          ;; jump around current buffer, and if necessary currently
+          ;; open buffers
+          (use-package helm-swoop
+            :ensure
+            :commands (helm-swoop
+                       helm-swoop-back-to-last-point
+                       helm-multi-swoop
+                       helm-multi-swoop-all)
+            :config (progn
+                      (bind-key "M-i" 'helm-multi-swoop-all-from-helm-swoop helm-swoop-map)
+
+                      ;; it's better to swoop for the symbol at point
+                      ;; explicitly rather than automatically.  Just
+                      ;; hit "vao" to select the symbol and then call helm-swoop
+                      (setq helm-swoop-pre-input-function (lambda () nil))
+
+                      ;; make sure that we can jump back from where
+                      ;; helm swoop took us
+                      (defadvice helm-swoop (after helm-swoop-set-evil-marker activate)
+                        (evil-set-jump))
+                      (defadvice helm-multi-swoop-all (after helm-swoop-set-evil-marker activate)
+                        (evil-set-jump))))
 
           ;; redefine this Helm function to work nicely with
           ;; perspectives: just replace its code to create or switch
