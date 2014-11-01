@@ -463,6 +463,7 @@ visual state bindings conflicting with god-mode"
             "te" 'toggle-debug-on-error
             "ti" 'org-indent-mode
             "tw" 'wc-mode
+            "tc" 'centered-window-mode
 
             ;; Jabber map ('c' for 'chat')
             "cj" 'jabber-activity-switch-to
@@ -1066,6 +1067,12 @@ visual state bindings conflicting with god-mode"
 (use-package eimp
   :ensure
   :init (add-hook 'image-mode-hook 'eimp-mode))
+
+;;; alternative to my old `swhitton/centralise-current-window'
+
+(use-package centered-window-mode
+  :ensure
+  :commands centered-window-mode)
 
 ;;;; ---- functions ----
 
