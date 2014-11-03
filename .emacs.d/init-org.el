@@ -773,6 +773,11 @@
     ad-do-it))
 (ad-activate 'org-goto)
 
+(defun org-goto-insert-state ()
+  (when (string= (buffer-name) "*org-goto*")
+    (evil-insert-state)))
+(add-hook 'org-mode-hook 'org-goto-insert-state)
+
 (add-hook 'org-mode-hook '(lambda ()
                             (if window-system
                                 (org-display-inline-images))
