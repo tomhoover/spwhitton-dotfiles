@@ -438,7 +438,7 @@ visual state bindings conflicting with god-mode"
             "v" 'projectile-vc
             "C-w" 'evil-window-map
             "w" 'evil-window-mru
-            "ee" 'eval-and-replace
+            "b" 'switch-to-buffer
             "S" (lambda ()
                   (interactive)
                   ;; save the current buffer first (if it's visiting a
@@ -452,6 +452,8 @@ visual state bindings conflicting with god-mode"
             "oc" 'org-capture
             "ol" 'org-store-link
             "oa" 'org-agenda
+            "o[" 'spw/org-agenda-file-to-front
+            "o]" 'spw/org-remove-file
 
             ;; launcher map
             "gs" 'persp-eshell
@@ -484,7 +486,8 @@ visual state bindings conflicting with god-mode"
             "ee" 'eval-surrounding-sexp
             "ef" 'eval-defun
             "er" 'eval-region
-            "eb" 'eval-buffer)
+            "eb" 'eval-buffer
+            "E"  'eval-and-replace)
 
           ;; `evil-leader/in-all-states' binds in insert state, but we
           ;; want it emacs state only.  So do this with a hook
