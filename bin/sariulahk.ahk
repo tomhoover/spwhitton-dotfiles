@@ -84,3 +84,7 @@ Capslock::
 ; disable my beloved RSI-inducing shortcuts
 ^h::Return
 ^m::Return
+
+; unix keys
+^a::Send ^{Home}
+^e::Send ^{End}
