@@ -34,8 +34,8 @@ export LANG="en_GB.utf8"
 
 export BROWSER="iceweasel"
 export TERMCMD="urxvt"
-export EDITOR="emacsclient -azile -t"
-export VISUAL="emacsclient -azile -t"
+export EDITOR="emacsclient -avi -t"
+export VISUAL="emacsclient -avi -t"
 
 # settings to make BiBTeX and Org play nice together due to a really
 # annoying security change in TeXLive 2010--see
@@ -129,7 +129,7 @@ alias bassdrive="mpc add http://beezle.streams.bassdrive.com:8765/ && mpc playli
 alias radio4="mplayer \"http://wmlive-acl.bbc.co.uk/wms/bbc_ami/radio4/radio4_bb_live_eq1_sl0?BBC-UID=044be39365f98aaa88a55ca7f1aa8fc5b3569ae000708114d4dfd43698a07e8a&amp;SSO2-UID=\""
 alias ws="mplayer mms://a243.l3944038972.c39440.g.lm.akamaistream.net/D/243/39440/v0001/reflector:38972"
 
-alias zile='emacsclient -azile -t'
+alias zile='emacsclient -avi -t'
 alias screen="screen -U" # enable UTF-8
 alias tmux="tmux"
 alias ta="tmux attach"
