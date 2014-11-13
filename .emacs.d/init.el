@@ -445,7 +445,8 @@ visual state bindings conflicting with god-mode"
                   ;; file) to avoid a y/n prompt
                   (if (buffer-file-name) (save-buffer))
                   ;; save all Org buffers to avoid some more prompts
-                  (org-save-all-org-buffers)
+                  (if (featurep 'org)
+                      (org-save-all-org-buffers))
                   (save-some-buffers))
 
             ;; Org-mode map
