@@ -131,6 +131,10 @@
 
 ;;; misc display settings
 
+;; focus follow mouse
+(setq mouse-autoselect-window t
+      focus-follows-mouse t)
+
 ;; y/n rather than yes/no
 (fset 'yes-or-no-p 'y-or-n-p)
 
