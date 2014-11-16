@@ -8,7 +8,7 @@ case $1 in
         if ! pgrep emacs; then
             emacs --daemon
         fi
-        wmctrl -a emacs@`hostname -f` || emacsclient -c &        
+        wmctrl -a emacs@`hostname -f` || emacsclient -c -F "((fullscreen . maximized))" &        
         ;;
     ma)
         wmctrl -a "spw@ma" || urxvtma &
