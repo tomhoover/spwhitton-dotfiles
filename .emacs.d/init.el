@@ -833,12 +833,9 @@ visual state bindings conflicting with god-mode"
 
 ;;; dired enhancements
 
-(use-package dired-details
-  :ensure
-  :init (setq dired-recursive-deletes 'always
-              dired-recursive-copies 'always
-              dired-dwim-target t)
-  :idle (dired-details-install))
+(setq dired-recursive-deletes 'always
+      dired-recursive-copies 'always
+      dired-dwim-target t)
 
 (use-package dired-sort-map
   :init (setq dired-listing-switches "--group-directories-first -alh"))
