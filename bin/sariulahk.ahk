@@ -56,15 +56,13 @@ F12::ToggleWinMinimize("Mozilla Firefox", "Firefox")
 ; empty the Recycle Bin
 +#r::FileRecycleEmpty, C:\
 
-; swap caps lock and control, of course
-; Capslock::Control
-; Control::Capslock
+; caps lock is both control and escape
 
 ; Author: fwompner gmail com
 #InstallKeybdHook
 SetCapsLockState, alwaysoff
 Capslock::
-  SetCapsLockState, off
+  SetCapsLockState, alwaysoff
   Send {LControl Down}
   KeyWait, CapsLock
   Send {LControl Up}
@@ -72,8 +70,6 @@ Capslock::
   {
     Send {Esc}
   }
-  return
-  SetCapsLockState, off
   return
 
 ; some British keyboard layout conventions
