@@ -469,8 +469,7 @@ visual state bindings conflicting with god-mode"
             ;; toggle map
             "te" 'toggle-debug-on-error
             "ti" 'org-indent-mode
-            "tw" 'wc-mode
-            "tc" 'centered-window-mode
+            "tw" 'spw/writing-toggle
 
             ;; Jabber map ('c' for 'chat')
             "cj" 'jabber-activity-switch-to
@@ -1077,12 +1076,36 @@ visual state bindings conflicting with god-mode"
 ;;; alternative to my old `swhitton/centralise-current-window'
 
 (use-package centered-window-mode
-  :ensure
   :commands centered-window-mode)
 
 ;;;; ---- functions ----
 
-;; eval the surrounding sexp (https://stackoverflow.com/posts/2172827/revisions)
+;;; toggle some features on and off to make Emacs better at prose editing
+
+(defun spw/writing-on ()
+  (wc-mode 1)
+  (variable-pitch-mode 1)
+  (centered-window-mode 1)
+  (when (eq major-mode 'org-mode)
+    (org-indent-mode 0))
+  (add-hook 'evil-insert-state-exit-hook 'fill-paragraph nil t))
+
+(defun spw/writing-off ()
+  (wc-mode 0)
+  (variable-pitch-mode 0)
+  (centered-window-mode 0)
+  (when (eq major-mode 'org-mode)
+    ;; TODO: finesse this.  don't turn it on if it wouldn't be on by default
+    (org-indent-mode 1))
+  (remove-hook 'evil-insert-state-exit-hook 'fill-paragraph t))
+
+(defun spw/writing-toggle ()
+  (interactive)
+  (if buffer-face-mode
+      (spw/writing-off)
+    (spw/writing-on)))
+
+;;; eval the surrounding sexp (https://stackoverflow.com/posts/2172827/revisions)
 
 (defun eval-surrounding-sexp (levels)
   (interactive "p")
