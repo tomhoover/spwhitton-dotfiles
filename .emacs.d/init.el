@@ -132,7 +132,7 @@
 ;;; misc display settings
 
 ;; focus follow mouse
-(setq mouse-autoselect-window t
+(setq mouse-autoselect-window nil
       focus-follows-mouse t)
 
 ;; y/n rather than yes/no
