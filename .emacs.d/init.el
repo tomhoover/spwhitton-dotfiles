@@ -1101,9 +1101,10 @@ visual state bindings conflicting with god-mode"
 
 (defun spw/writing-toggle ()
   (interactive)
-  (if buffer-face-mode
-      (spw/writing-off)
-    (spw/writing-on)))
+  (let ((activate (if (boundp 'buffer-face-mode) buffer-face-mode)))
+    (if activate
+        (spw/writing-off)
+      (spw/writing-on))))
 
 ;;; eval the surrounding sexp (https://stackoverflow.com/posts/2172827/revisions)
 
