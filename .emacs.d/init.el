@@ -443,7 +443,7 @@ visual state bindings conflicting with god-mode"
             "C-w" 'evil-window-map
             "w" 'evil-window-mru
             "b" 'switch-to-buffer
-            "S" (lambda ()
+            "s" (lambda ()
                   (interactive)
                   ;; save the current buffer first (if it's visiting a
                   ;; file) to avoid a y/n prompt
@@ -478,14 +478,14 @@ visual state bindings conflicting with god-mode"
 
           (evil-leader/set-key-for-mode 'emacs-lisp-mode
             ;; paredit map
-            "sj" 'paredit-join-sexps
-            "ss" 'paredit-split-sexp
-            "sp" 'paredit-splice-sexp
-            "sl" 'paredit-forward-slurp-sexp
-            "sh" 'paredit-forward-barf-sexp
-            "sL" 'paredit-backward-slurp-sexp
-            "sH" 'paredit-backward-barf-sexp
-            "sk" 'paredit-kill
+            "dj" 'paredit-join-sexps
+            "ds" 'paredit-split-sexp
+            "dp" 'paredit-splice-sexp
+            "dl" 'paredit-forward-slurp-sexp
+            "dh" 'paredit-forward-barf-sexp
+            "dL" 'paredit-backward-slurp-sexp
+            "dH" 'paredit-backward-barf-sexp
+            "dk" 'paredit-kill
 
             ;; evaluation map
             "ee" 'eval-surrounding-sexp
