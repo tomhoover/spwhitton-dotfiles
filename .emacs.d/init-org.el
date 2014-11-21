@@ -778,6 +778,11 @@
     (evil-insert-state)))
 (add-hook 'org-mode-hook 'org-goto-insert-state)
 
+;; use Emacs-style fine grained undo in Org-mode buffers, because of
+;; the danger of staying in insert mode too long when typing stuff out
+(add-hook 'org-mode-hook (lambda ()
+                           (setq-local evil-want-fine-undo t)))
+
 (add-hook 'org-mode-hook '(lambda ()
                             (if window-system
                                 (org-display-inline-images))
