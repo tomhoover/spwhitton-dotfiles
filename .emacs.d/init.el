@@ -245,8 +245,8 @@
             (evil-global-set-key 'emacs (kbd "C-f") 'scroll-up-command)
             (evil-global-set-key 'emacs (kbd "C-b") 'scroll-down-command)
 
-            (evil-global-set-key 'insert (kbd "C-<tab>") 'yas-expand-from-trigger-key)
-            (evil-global-set-key 'insert (kbd "<tab>") 'company-complete)
+            ;; (evil-global-set-key 'insert (kbd "C-<tab>") 'yas-expand-from-trigger-key)
+            ;; (evil-global-set-key 'insert (kbd "<tab>") 'company-complete)
             (evil-define-key 'insert org-mode-map (kbd "<tab>") 'org-cycle)
 
             ;; escape quits
@@ -702,42 +702,51 @@ visual state bindings conflicting with god-mode"
 
 (use-package company
   :ensure
-  :commands global-company-mode
+  ;; :commands global-company-mode
   ;; :bind ("<tab>" . company-complete)
-  :idle (global-company-mode)
+  ;; :idle (global-company-mode)
   :diminish company-mode
   :config (progn
+            ;; this technique from
+            ;; https://github.com/bradleywright/emacs.d/blob/master/setup-company.el
+            (defun spw/company-complete-lambda (arg)
+              "Ignores passed in arg like a lambda and runs company-complete"
+              (company-complete))
+
+            (defun spw/company-prog-setup ()
+              "Setup company mode carefully when its needed, rather than using the brash global-company-mode"
+              (company-mode 1)
+              (setq-local evil-complete-next-func 'spw/company-complete-lambda)
+              (setq-local evil-complete-previous-func 'spw/company-complete-lambda)
+              ;; Make sure emacs does the right thing with completion command
+              ;; from https://github.com/bradleywright/emacs.d/blob/master/setup-company.el
+              (define-key (current-local-map) [remap hippie-expand] 'company-complete))
+
+            (add-hook 'prog-mode-hook 'spw/company-prog-setup)
+
             ;; I like my C-w binding so move one of company's bindings
             (define-key company-active-map "\C-w" nil)
             (define-key company-active-map "\C-j" 'company-show-location)
 
-            ;; vim-like selection
-            (define-key company-active-map "\M-j" 'company-select-next)
-            (define-key company-active-map "\M-k" 'company-select-previous)
+            ;; vim-like completion selection
+            (define-key company-active-map "\C-n" 'company-select-next)
+            (define-key company-active-map "\C-p" 'company-select-previous)
 
-            (setq company-idle-delay nil)
+            (setq company-idle-delay nil
+                  company-minimum-prefix-length 0
+                  company-echo-delay 0)
+
             (add-to-list 'company-backends 'company-capf)
             (add-to-list 'company-transformers 'company-sort-by-occurrence)
 
-            ;;; python code completion
+            ;; python code completion
 
             (use-package anaconda-mode
               :ensure
               :config (progn
                         (add-hook 'python-mode-hook 'anaconda-mode)
                         (add-to-list 'company-backends 'company-anaconda)
-                        (add-hook 'python-mode-hook 'anaconda-eldoc)))
-
-            ;; company completion in eshell buffers gums up TRAMP
-            (add-hook 'eshell-mode-hook (lambda ()
-                                          (company-mode 0)))
-
-            ;; company in Org-mode and message-mode more often
-            ;; annoying than useful
-            (add-hook 'org-mode-hook (lambda ()
-                                       (company-mode 0)))
-            (add-hook 'message-mode-hook (lambda ()
-                                           (company-mode 0)))))
+                        (add-hook 'python-mode-hook 'anaconda-eldoc)))))
 ;; C-o during company isearch narrows to stuff matching that search;
 ;; mnemonic 'occur'.  C-M-s while outside of search to do the same
 ;; thing
