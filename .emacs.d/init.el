@@ -453,6 +453,12 @@ visual state bindings conflicting with god-mode"
                       (org-save-all-org-buffers))
                   (save-some-buffers))
 
+            ;; narrowing map
+            "ns" 'org-narrow-to-subtree
+            "nr" 'narrow-to-region
+            "nf" 'narrow-to-defun
+            "nn" 'widen
+
             ;; Org-mode map
             "oc" 'org-capture
             "ol" 'org-store-link
