@@ -82,5 +82,5 @@ Capslock::
 ^m::Return
 
 ; unix keys
-^a::Send ^{Home}
-^e::Send ^{End}
+; ^a::Send ^{Home}
+; ^e::Send ^{End}
