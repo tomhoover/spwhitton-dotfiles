@@ -201,7 +201,9 @@
 
 ;;; be sure to start the server
 
-(server-start)
+(require 'server)
+(unless (server-running-p)
+  (server-start))
 
 ;;;; ---- packages ----
 
@@ -471,6 +473,11 @@ visual state bindings conflicting with god-mode"
             "gc" 'spw/manual-cleanup
             "gd" 'deft
             "gl" 'tblesson
+            "gr" (lambda ()
+                   (interactive)
+                   (projectile-persp-switch-project "~/src/dotfiles")
+                   (find-file "~/src/dotfiles/.emacs.d/init.el")
+                   (eval-buffer))
 
             ;; toggle map
             "te" 'toggle-debug-on-error
@@ -1725,7 +1732,7 @@ point reaches the beginning or end of the buffer, stop there."
 
 ;;; text mode
 
-(toggle-text-mode-auto-fill)
+(add-hook 'text-mode 'turn-on-auto-fill)
 
 ;;; dired
 
