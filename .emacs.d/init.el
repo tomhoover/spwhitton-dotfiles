@@ -1733,6 +1733,7 @@ point reaches the beginning or end of the buffer, stop there."
 ;;; text mode
 
 (add-hook 'text-mode 'turn-on-auto-fill)
+(add-hook 'text-mode 'refill-mode)
 
 ;;; dired
 
