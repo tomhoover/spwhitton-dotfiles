@@ -473,6 +473,7 @@ visual state bindings conflicting with god-mode"
             "gc" 'spw/manual-cleanup
             "gd" 'deft
             "gl" 'tblesson
+            "gk" 'kill-emacs
             "gr" (lambda ()
                    (interactive)
                    (projectile-persp-switch-project "~/src/dotfiles")
