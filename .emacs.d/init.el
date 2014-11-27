@@ -1767,6 +1767,11 @@ point reaches the beginning or end of the buffer, stop there."
 (setq calc-line-numbering nil)
 (put 'narrow-to-region 'disabled nil)
 
+;;; programming modes
+
+;; automatically insert pairs
+(add-hook 'prog-mode-hook 'electric-pair-mode)
+
 ;;; javascript
 
 ;; don't insert a newline after a semicolon
