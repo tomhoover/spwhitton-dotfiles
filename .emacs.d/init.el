@@ -1766,3 +1766,10 @@ point reaches the beginning or end of the buffer, stop there."
 ;; entries puts the number alone in the kill-ring
 (setq calc-line-numbering nil)
 (put 'narrow-to-region 'disabled nil)
+
+;;; javascript
+
+;; don't insert a newline after a semicolon
+(add-hook 'js-mode-hook (lambda ()
+                          (setq-local electric-layout-rules
+                                      (remove (quote (?\; . after)) electric-layout-rules))))
