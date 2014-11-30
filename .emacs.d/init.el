@@ -1643,7 +1643,7 @@ point reaches the beginning or end of the buffer, stop there."
 (setq next-line-add-newlines nil)
 
 ;; re-indent and add newlines automatically, sometimes
-(electric-layout-mode 1)
+;; (electric-layout-mode 1)
 (electric-indent-mode 1)
 
 ;; templates when creating new files
