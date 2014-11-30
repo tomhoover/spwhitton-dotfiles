@@ -247,9 +247,7 @@
             (evil-global-set-key 'emacs (kbd "C-f") 'scroll-up-command)
             (evil-global-set-key 'emacs (kbd "C-b") 'scroll-down-command)
 
-            ;; (evil-global-set-key 'insert (kbd "C-<tab>") 'yas-expand-from-trigger-key)
-            ;; (evil-global-set-key 'insert (kbd "<tab>") 'company-complete)
-            (evil-define-key 'insert org-mode-map (kbd "<tab>") 'org-cycle)
+            (evil-define-key 'normal org-mode-map (kbd "<tab>") 'org-cycle)
 
             ;; escape quits
             (bind-key "<escape>" 'isearch-cancel isearch-mode-map)
