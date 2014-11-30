@@ -1776,8 +1776,13 @@ point reaches the beginning or end of the buffer, stop there."
 
 ;;; programming modes
 
-;; automatically insert pairs
-(add-hook 'prog-mode-hook 'electric-pair-mode)
+;; automatically insert some pairs ...
+(electric-pair-mode 1)
+(setq electric-pair-pairs nil)
+;; ... but not in text modes (this is a hack)
+(add-hook 'text-mode-hook (lambda ()
+                            (make-local-variable 'post-self-insert-hook)
+                            (remove-hook 'post-self-insert-hook 'electric-pair-post-self-insert-function t)))
 
 ;;; javascript
 
