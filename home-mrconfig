@@ -26,11 +26,26 @@ lib =
     }
 
 # --- joeyh's code for specifying what machine we're on for repo skip
-# --- tests
+# --- tests, plus my code for detecting Git-on-Windows
 
 lib =
-    hostname="$(hostname -s)"
+    win32() {
+        if [ "$(perl -e 'print $^O')" = "msys" ]; then
+            return 0
+        else
+            return 1
+        fi
+    }
+    if win32; then
+       hostname=$(hostname)
+    else
+       hostname=$(hostname -s)
+    fi
     whoami="$(whoami)"
+    # cut off the machine name from whoami on Windows
+    if win32; then
+        whoami=${whoami##*\\}
+    fi
     on() {
         for host in $@; do
             if [ "${host%@*}" != "${host#*@}" ]; then
@@ -46,7 +61,7 @@ lib =
         return 1
     }
     mine() {
-        on swhitton@artemis || on swhitton@zephyr
+        on swhitton@artemis || on swhitton@zephyr || on swhitton@SPWHITTON
     }
 
 # --- primary dotfiles repository
@@ -146,7 +161,7 @@ skip = ! ( mine || on spw@ma )
 fixups = git-utime
 
 # automatically commit in the same way that my cron job does before pulling
-pre_update = doccheckin
+pre_update = if ! win32; then doccheckin; fi
 # ... and let me do it manually
 autoci = doccheckin
 
@@ -158,13 +173,13 @@ autoci = doccheckin
 order = 5
 checkout = git clone 'ssh://ma/~/local/git/doc.www.git' 'www'
 update = git pull "$@"
-skip = ! ( mine || on spw@ma )
+skip = ! mine || win32
 
 [doc/www/blog]
 order = 6
 checkout = git clone 'ssh://ma/~/local/git/doc.www.blog.git' 'blog'
 update = git pull "$@"
-skip = ! ( mine || on spw@ma )
+skip = ! mine || win32
 
 # --- backup to portable HDD if plugged in
 
@@ -174,7 +189,7 @@ update = :
 commit = :
 status = :
 push = for dir in /media/m3/git/*; do cd $dir; echo \> $(basename $dir):; git pull; done; sudo /root/local/bin/duply $(hostname -s)-seven backup
-skip = ! mount | grep -q "on /media/m3 type ext4"
+skip = win32 || (! mount | grep -q "on /media/m3 type ext4")
 
 # do this one last since it is pulling from the same source pushed to
 # (due to weird errors when pulling across filesystem)
