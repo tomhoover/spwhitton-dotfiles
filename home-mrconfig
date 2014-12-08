@@ -142,7 +142,6 @@ lib =
         if ! [ -l ~/.gtk-bookmarks ]; then
             # file in home directory is not a link
             if diff -q ~/src/dotfiles/.gtk-bookmarks ~/.gtk-bookmarks > /dev/null; then
-
                 rm ~/.gtk-bookmarks
             fi
         fi
