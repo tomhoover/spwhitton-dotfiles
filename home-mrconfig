@@ -130,6 +130,7 @@ fixups =
 # symlinks, rather than the whole dir.  That way Emacs junk that gets
 # dumped in ~/.emacs.d doesn't have to be put into .gitignore
 pre_stow = mkdir -p ~/.emacs.d
+pre_checkout = mkdir -p ~/.emacs.d
 
 # GTK insists on replacing the symlink to its bookmarks file with the
 # actual file even if the bookmarks in that file don't change (XFCE
@@ -148,6 +149,7 @@ lib =
     }
 pre_unstow = fix_gtk_bookmarks
 pre_restow = fix_gtk_bookmarks
+pre_update = fix_gtk_bookmarks
 
 # --- private dotfiles repository
 
