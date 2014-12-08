@@ -91,7 +91,6 @@ rebase =
         git rebase master
         git checkout artemis
         git rebase workstation
-
     # fallback elif to still do something automatic in the simplest case
     elif [ "$branch" = "$hostname" ]; then
         # determine nearest parent branch by
