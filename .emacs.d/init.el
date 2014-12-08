@@ -477,7 +477,7 @@ visual state bindings conflicting with god-mode"
                    (projectile-persp-switch-project "~/src/dotfiles")
                    (find-file "~/src/dotfiles/.emacs.d/init.el")
                    (eval-buffer))
-            "g*" 'calc-dispatch
+            "*" 'calc-dispatch
 
             ;; toggle map
             "te" 'toggle-debug-on-error
