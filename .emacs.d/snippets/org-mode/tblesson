@@ -1,5 +1,6 @@
 #+TITLE: Grade `(f-filename (f-dirname (f-dirname (f-dirname (f-this-file)))))`, Lesson `(f-filename (f-dirname (f-dirname (f-this-file))))`, Period `(f-filename (f-dirname (f-this-file)))`: $1
 #+OPTIONS: num:nil
+#+STARTUP: showall
 #+ODT_STYLES_FILE: "~/Documents/Templates/twocol.odt"
 
 * Preparation
