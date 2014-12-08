@@ -1497,24 +1497,22 @@ point reaches the beginning or end of the buffer, stop there."
 (defun persp-eshell (arg)
   "Switch to perspective's eshell or create it.  If already in the eshell, move to the last prompt and clear it, ready for input"
   (interactive "P")
-  (if (equal major-mode 'eshell-mode)
-      (progn
-        (evil-goto-line)
-        (eshell-bol)
-        (ignore-errors (kill-line))
-        (call-interactively 'evil-insert))
-    (when arg (split-window-right) (other-window 1))
-    (if (and (projectile-project-p)
-             (not (equal (persp-name persp-curr) "main")))
-        ;; we're in a project: name buffer carefully
-        (if (get-buffer (concat "*eshell* (" (persp-name persp-curr) ")"))
-            (helm-switch-to-buffer (concat "*eshell* (" (persp-name persp-curr) ")"))
-          (eshell "a")
-          (rename-buffer (concat "*eshell* (" (persp-name persp-curr) ")")))
-      ;; we're not in a project: don't
-      (if (get-buffer "*eshell*")
-          (helm-switch-to-buffer "*eshell*")
-        (call-interactively 'eshell)))))
+  (when arg (split-window-right) (other-window 1))
+  (if (and (projectile-project-p)
+           (not (equal (persp-name persp-curr) "main")))
+      ;; we're in a project: name buffer carefully
+      (if (get-buffer (concat "*eshell* (" (persp-name persp-curr) ")"))
+          (helm-switch-to-buffer (concat "*eshell* (" (persp-name persp-curr) ")"))
+        (eshell "a")
+        (rename-buffer (concat "*eshell* (" (persp-name persp-curr) ")")))
+    ;; we're not in a project: don't
+    (if (get-buffer "*eshell*")
+        (helm-switch-to-buffer "*eshell*")
+      (call-interactively 'eshell)))
+  (evil-goto-line)
+  (eshell-bol)
+  (ignore-errors (kill-line))
+  (call-interactively 'evil-insert))
 
 (defun tblesson (grade lesson period)
   "Start writing a lesson plan for a standard textbook-based lesson"
