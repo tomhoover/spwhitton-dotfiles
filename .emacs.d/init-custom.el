@@ -59,6 +59,10 @@
  '(popwin:special-display-config (quote (("*Miniedit Help*" :noselect t) (help-mode) (completion-list-mode :width 80 :position right :noselect t) (compilation-mode :noselect t) (grep-mode :dedicated nil :stick nil :tail nil) (occur-mode :noselect nil) ("*Pp Macroexpand Output*" :noselect t) ("*Shell Command Output*") ("*vc-diff*") ("*vc-change-log*") (" *undo-tree*" :width 60 :position right) ("^\\*anything.*\\*$" :regexp t) ("*slime-apropos*") ("*slime-macroexpansion*") ("*slime-description*") ("*slime-compilation*" :noselect t) ("*slime-xref*") (sldb-mode :stick t) (slime-repl-mode) (slime-connection-list-mode))))
  '(projectile-mode-line (quote (:eval (format " Pr[%s]" (projectile-project-name)))))
  '(safe-local-variable-values (quote ((indent-tabs-mode . t\,))))
+ '(safe-local-variable-values
+   (quote
+    ((eval spw/writing-toggle)
+     (indent-tabs-mode . t\,))))
  '(smart-tab-disabled-major-modes (quote (org-mode term-mode latex-mode message-mode)))
  '(smart-tab-using-hippie-expand nil)
  '(tm/backspace-delete-column t)

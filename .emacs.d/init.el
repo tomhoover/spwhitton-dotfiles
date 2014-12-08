@@ -1143,6 +1143,9 @@ visual state bindings conflicting with god-mode"
     (if activate
         (spw/writing-off)
       (spw/writing-on))))
+;; note: activate this in a whole file tree by putting
+;; e.g. `((org-mode . ((eval . (spw/writing-toggle)))))` in
+;; .dir-locals.el
 
 ;;; eval the surrounding sexp (https://stackoverflow.com/posts/2172827/revisions)
 
