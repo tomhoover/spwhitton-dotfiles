@@ -91,6 +91,16 @@ rebase =
         git rebase master
         git checkout artemis
         git rebase workstation
+
+    # fallback elif to still do something automatic in the simplest case
+    elif [ "$branch" = "$hostname" ]; then
+        # determine nearest parent branch by
+        # https://stackoverflow.com/questions/3161204/find-the-parent-branch-of-a-branch#comment35666518_17843908
+        parent="$(git show-branch -a | grep '*' | egrep -v "\[${branch}[0-9^~]*\]" | head -n1 | sed 's/.*\[\(.*\)\].*/\1/' | sed 's/[\^~].*//')"
+        if [ "$parent" = "master" ]; then
+            git checkout $branch
+            git rebase master
+        fi
     fi
 
 # skip this repository if stow is not installed, and we're not on
