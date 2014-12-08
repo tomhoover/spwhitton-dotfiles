@@ -1106,7 +1106,18 @@ visual state bindings conflicting with god-mode"
 
 ;;; toggle some features on and off to make Emacs better at prose editing
 
+(defun org-fill-buffer ()
+  (interactive)
+  (when (eq major-mode 'org-mode)
+    (when (not (string= "gpg" (f-ext (f-this-file))))
+      (save-excursion
+        (goto-char (point-min))
+        (while (not (eq (point) (point-max)))
+          (org-forward-paragraph)
+          (org-fill-paragraph))))))
+
 (defun spw/writing-on ()
+  (add-hook 'before-save-hook 'org-fill-buffer nil t)
   (wc-mode 1)
   (variable-pitch-mode 1)
   (unless (eq system-type 'windows-nt)
@@ -1116,6 +1127,7 @@ visual state bindings conflicting with god-mode"
   (add-hook 'evil-insert-state-exit-hook 'fill-paragraph nil t))
 
 (defun spw/writing-off ()
+  (remove-hook 'before-save-hook 'org-fill-buffer t)
   (wc-mode 0)
   (variable-pitch-mode 0)
   (unless (eq system-type 'windows-nt)
@@ -1212,13 +1224,6 @@ With argument, do this that many times."
          (narrow-to-region (point) (point-max))
          (fill-region (point-min) (point-max))
          (whitespace-cleanup))))
-    (org-mode
-     (when (not (string= "gpg" (f-ext (f-this-file))))
-       (save-excursion
-         (goto-char (point-min))
-         (ignore-errors
-           (while (org-forward-paragraph)
-             (org-fill-paragraph))))))
     (emacs-lisp-mode
      (delete-trailing-whitespace-except-current-line)
      (compact-blank-lines))))
