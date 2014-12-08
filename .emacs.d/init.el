@@ -1121,9 +1121,11 @@ visual state bindings conflicting with god-mode"
   (wc-mode 1)
   (variable-pitch-mode 1)
   (unless (eq system-type 'windows-nt)
-    (centered-window-mode 1))
-  (when (eq major-mode 'org-mode)
-    (org-indent-mode 0))
+    (centered-window-mode 1)
+    ;; indent mode need only be turned off if we're using centered
+    ;; window mode
+    (when (eq major-mode 'org-mode)
+      (org-indent-mode 0)))
   (add-hook 'evil-insert-state-exit-hook 'fill-paragraph nil t))
 
 (defun spw/writing-off ()
@@ -1131,10 +1133,12 @@ visual state bindings conflicting with god-mode"
   (wc-mode 0)
   (variable-pitch-mode 0)
   (unless (eq system-type 'windows-nt)
-    (centered-window-mode 0))
-  (when (eq major-mode 'org-mode)
-    ;; TODO: finesse this.  don't turn it on if it wouldn't be on by default
-    (org-indent-mode 1))
+    (centered-window-mode 0)
+    ;; indent mode need only be turned off if we're using centered
+    ;; window mode
+    (when (eq major-mode 'org-mode)
+      ;; TODO: finesse this.  don't turn it on if it wouldn't be on by default
+      (org-indent-mode 1)))
   (remove-hook 'evil-insert-state-exit-hook 'fill-paragraph t))
 
 (defun spw/writing-toggle ()
