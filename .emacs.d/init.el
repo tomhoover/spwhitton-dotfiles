@@ -891,6 +891,8 @@ visual state bindings conflicting with god-mode"
   :init (progn
           (setq persp-modestring-dividers '("" "" "|"))
           (persp-mode)
+          ;; access perspectives thorugh evil leader
+          (define-key evil-leader--default-map (kbd "q") perspective-map)
           (defun persp-toggle (arg)
             (interactive "P")
             (if arg (call-interactively 'persp-switch)
