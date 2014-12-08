@@ -122,6 +122,21 @@ fixups =
 # dumped in ~/.emacs.d doesn't have to be put into .gitignore
 pre_stow = mkdir -p ~/.emacs.d
 
+# GTK insists on replacing the symlink to its bookmarks file with the
+# actual file even if the bookmarks in that file don't change (XFCE
+# only replaces symlinks to its config files if its changed them).
+# Fix this situation in the simplest case to avoid mr restow giving an
+# error.  Don't try anything fancy if the files are different; let the
+# restow command give an error and the user fix it.
+pre_unstow =
+    if ! [ -L ~/.gtk-bookmarks ]; then
+        # file in home directory is not a link
+        if diff -q ~/src/dotfiles/.gtk-bookmarks ~/.gtk-bookmarks > /dev/null; then
+            # files are the same
+            rm ~/.gtk-bookmarks
+        fi
+    fi
+
 # --- private dotfiles repository
 
 [src/priv]
