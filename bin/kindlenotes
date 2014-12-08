@@ -1,0 +1,25 @@
+#!/bin/bash
+
+MNT=/mnt/kindle
+DEST="$HOME/lib/Dropbox/Kindle notes"
+
+kindle=$(blkid | awk -F: '/Kindle/ { print $1; exit; }')
+filename=$(date +kindle_%F_%R)
+group=$(groups | awk '{print $1}')
+sudo mkdir -p "$MNT"
+mkdir -p "$DEST"
+
+sudo umount $kindle
+sudo mount $kindle $MNT
+
+if [ -e "$DEST/$filename" ]; then
+    echo >&2 Won\'t clobber other Kindle notes
+elif sudo mv --no-clobber \
+    "$MNT/documents/My Clippings.txt" \
+    "$DEST/$filename"; then
+    sudo chown "$USER:$group" "$DEST/$filename"
+    # remove the supporting file only if the clippings were moved successfully
+    sudo rm -rf "$MNT/documents/My Clippings.sdr"
+fi
+        
+sudo umount $kindle
