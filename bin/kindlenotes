@@ -13,13 +13,15 @@ sudo umount $kindle
 sudo mount $kindle $MNT
 
 if [ -e "$DEST/$filename" ]; then
-    echo >&2 Won\'t clobber other Kindle notes
+    echo >&2 ERROR: Won\'t clobber other Kindle notes
 elif sudo mv --no-clobber \
     "$MNT/documents/My Clippings.txt" \
     "$DEST/$filename"; then
     sudo chown "$USER:$group" "$DEST/$filename"
     # remove the supporting file only if the clippings were moved successfully
     sudo rm -rf "$MNT/documents/My Clippings.sdr"
+else
+    echo >&2 ERROR: Couldn\'t move the clippings file
 fi
         
 sudo umount $kindle
