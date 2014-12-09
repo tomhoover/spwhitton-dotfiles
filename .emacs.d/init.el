@@ -898,11 +898,38 @@ visual state bindings conflicting with god-mode"
             "qr" 'persp-rename
             "qa" 'persp-add-buffer
             "qA" 'persp-set-buffer
-            "qi" 'persp-import)
+            "qi" 'persp-import
+
+            ;; my functions to save and restore a base window
+            ;; configuration ala workgroups.el
+            "qq" 'persp-basewc-restore
+            "qu" 'persp-basewc-save)	; mnemonic: update)
           (defun persp-toggle (arg)
             (interactive "P")
             (if arg (call-interactively 'persp-switch)
-              (persp-switch (persp-name persp-last))))))
+              (persp-switch (persp-name persp-last))))
+
+          ;; save and restore a base window configuration ala
+          ;; workgroups.el.  Designed to handle the perennial Emacs
+          ;; problem of Emacs totally screwing up your windows in the
+          ;; middle of your work
+          (setq persp-basewcs nil)
+          (defun persp-basewc-save ()
+            (interactive)
+            (let* ((name (persp-name persp-curr))
+		   (wc (current-window-configuration))
+		   (pair (cons name wc)))
+	      (setq persp-basewcs
+		    (remove* name persp-basewcs
+			     :test 'equal :key 'car))
+              (add-to-list 'persp-basewcs pair)))
+          (add-hook 'persp-created-hook 'persp-basewc-save)
+          (defun persp-basewc-restore ()
+            (interactive)
+            (let* ((name (persp-name persp-curr))
+                   (pair (assoc name persp-basewcs))
+                   (wc (cdr pair)))
+              (set-window-configuration wc)))))
 
 ;;; powerful completion everywhere, especially for jumping between files
 
