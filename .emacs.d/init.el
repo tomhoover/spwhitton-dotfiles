@@ -892,7 +892,13 @@ visual state bindings conflicting with god-mode"
           (setq persp-modestring-dividers '("" "" "|"))
           (persp-mode)
           ;; access perspectives thorugh evil leader
-          (define-key evil-leader--default-map (kbd "q") perspective-map)
+          (evil-leader/set-key
+            "qd" 'persp-remove-buffer
+            "qk" 'persp-kill
+            "qr" 'persp-rename
+            "qa" 'persp-add-buffer
+            "qA" 'persp-set-buffer
+            "qi" 'persp-import)
           (defun persp-toggle (arg)
             (interactive "P")
             (if arg (call-interactively 'persp-switch)
