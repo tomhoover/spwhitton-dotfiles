@@ -379,8 +379,11 @@
                           "S" "T" "U" "V" "W" "X" "Y" "Z" "0" "1" "2"
                           "3" "4" "5" "6" "7" "8" "9" "0")))
               (dolist (key keys)
-                (define-key map (kbd key) 'god-mode-self-insert))
-              (define-key god-local-mode-map (kbd ".") 'repeat))
+                (define-key map (kbd key) 'god-mode-self-insert)))
+            (define-key god-local-mode-map (kbd ",") (lambda ()
+                                                       (interactive)
+                                                       (setq last-repeatable-command evil-god-last-command)
+                                                       (repeat 1)))
             (defadvice evil-execute-in-god-state
               (before evil-execute-in-god-state-from-visual-state activate)
               "When in visual state, get out of visual state
