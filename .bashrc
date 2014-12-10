@@ -74,3 +74,8 @@ fi
 if [ -d ~/bin ] ; then
     PATH=~/bin:"${PATH}"
 fi
+
+# --- aliases
+
+alias g='git'
+alias workgit='cd ~/doc && git add . && git commit -a -m "work commit" --edit && git push origin master'
