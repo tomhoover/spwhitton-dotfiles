@@ -380,21 +380,21 @@
                           "3" "4" "5" "6" "7" "8" "9" "0")))
               (dolist (key keys)
                 (define-key map (kbd key) 'god-mode-self-insert))
-
-              (defadvice evil-execute-in-god-state
-                  (before evil-execute-in-god-state-from-visual-state activate)
-                "When in visual state, get out of visual state
+              (define-key god-local-mode-map (kbd ".") 'repeat))
+            (defadvice evil-execute-in-god-state
+              (before evil-execute-in-god-state-from-visual-state activate)
+              "When in visual state, get out of visual state
 and restore the selection before firing up god-mode.  This avoids
 visual state bindings conflicting with god-mode"
-                (when (evil-visual-state-p)
-                  (if (< (point) (mark))
-                      (exchange-point-and-mark))
-                  (forward-char 1)
-                  (evil-exit-visual-state)
-                  (let ((activate-mark-hook nil)) ; stop visual mode from firing
-                    (activate-mark))))
+              (when (evil-visual-state-p)
+                (if (< (point) (mark))
+                    (exchange-point-and-mark))
+                (forward-char 1)
+                (evil-exit-visual-state)
+                (let ((activate-mark-hook nil)) ; stop visual mode from firing
+                  (activate-mark))))
 
-              (evil-define-key 'normal emacs-lisp-mode-map (kbd ")") 'paredit-forward-up))))
+            (evil-define-key 'normal emacs-lisp-mode-map (kbd ")") 'paredit-forward-up)))
 
 (use-package evil-surround
   :ensure
