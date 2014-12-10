@@ -37,6 +37,6 @@
 
 # push strategy
 [push]
-	default = matching
+	default = current
 [magit]
 	extension = wip-save

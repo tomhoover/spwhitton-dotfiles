@@ -180,6 +180,7 @@ autoci =
 [lib/annex]
 checkout = git clone 'gcrypt::ssh://ma/~/local/git/lib.annex.git' 'annex'
 post_update = git annex merge
+fixups = git config push.default matching
 
 # this repository can't be checked out until we install
 # git-remote-gcrypt
