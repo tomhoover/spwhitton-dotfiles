@@ -265,6 +265,7 @@
 
             (evil-define-text-object evil-org-outer-subtree (count &optional beg end type)
               "An Org subtree.  Uses code from `org-mark-subtree`"
+              :type line
               (save-excursion
                 ;; get to the top of the tree
                 (org-with-limited-levels
@@ -282,6 +283,7 @@
 
             (evil-define-text-object evil-org-inner-subtree (count &optional beg end type)
               "An Org subtree, minus its header and concluding line break.  Uses code from `org-mark-subtree`"
+              :type line
               (save-excursion
                 ;; get to the top of the tree
                 (org-with-limited-levels
@@ -308,6 +310,7 @@
             (define-key evil-inner-text-objects-map "S" 'evil-org-inner-subtree)
 
             (evil-define-text-object evil-org-outer-item (count &optional beg end type)
+              :type line
               (let* ((regionp (org-region-active-p))
                      (struct (progn
                                (re-search-backward "^[[:space:]]*- ")
