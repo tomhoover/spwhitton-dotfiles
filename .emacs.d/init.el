@@ -1168,6 +1168,7 @@ visual state bindings conflicting with god-mode"
     ;; window mode
     (when (eq major-mode 'org-mode)
       (org-indent-mode 0)))
+  (if (eq system-type 'windows-nt) (swhitton/centralise-current-window nil))
   (add-hook 'evil-insert-state-exit-hook 'fill-paragraph nil t))
 
 (defun spw/writing-off ()
@@ -1181,6 +1182,7 @@ visual state bindings conflicting with god-mode"
     (when (eq major-mode 'org-mode)
       ;; TODO: finesse this.  don't turn it on if it wouldn't be on by default
       (org-indent-mode 1)))
+  (if (eq system-type 'windows-nt) (delete-other-windows))
   (remove-hook 'evil-insert-state-exit-hook 'fill-paragraph t))
 
 (defun spw/writing-toggle ()
