@@ -464,6 +464,7 @@ visual state bindings conflicting with god-mode"
             "nr" 'narrow-to-region
             "nf" 'narrow-to-defun
             "nn" 'widen
+            "nw" 'widen
 
             ;; Org-mode map
             "oc" 'org-capture
@@ -471,6 +472,8 @@ visual state bindings conflicting with god-mode"
             "oa" 'org-agenda
             "o[" 'spw/org-agenda-file-to-front
             "o]" 'spw/org-remove-file
+            "or" 'org-reveal
+            "os" 'org-kill-note-or-show-branches
 
             ;; launcher map
             "gs" 'persp-eshell
