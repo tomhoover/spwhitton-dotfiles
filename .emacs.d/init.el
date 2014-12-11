@@ -233,6 +233,9 @@
 
             (define-key evil-window-map (kbd "u") 'winner-undo)
 
+            (evil-global-set-key 'normal (kbd "s-j") 'evil-window-next)
+            (evil-global-set-key 'normal (kbd "s-k") 'evil-window-prev)
+
             (evil-global-set-key 'emacs (kbd "C-w") 'evil-window-map)
             (evil-global-set-key 'emacs (kbd ",") 'evil-execute-in-god-state)
             (evil-global-set-key 'normal (kbd ",") 'evil-execute-in-god-state)
