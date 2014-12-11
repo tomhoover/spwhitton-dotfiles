@@ -4,7 +4,7 @@ MNT=/mnt/kindle
 DEST="$HOME/lib/Dropbox/Kindle notes"
 
 kindle=$(blkid | awk -F: '/Kindle/ { print $1; exit; }')
-filename=$(date +kindle_%F_%R)
+filename=$(date +kindle_%F_%H%M.txt)
 group=$(groups | awk '{print $1}')
 sudo mkdir -p "$MNT"
 mkdir -p "$DEST"
