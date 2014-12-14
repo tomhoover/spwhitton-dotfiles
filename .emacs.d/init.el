@@ -1619,8 +1619,8 @@ point reaches the beginning or end of the buffer, stop there."
 ;; C-m and RET should reindent the current line only for languages
 ;; that don't use semantic indentation
 (bind-key "RET" 'reindent-then-newline-and-indent)
-(add-hook 'python-mode-map (lambda ()
-                             (bind-key "RET" 'newline-and-indent python-mode-map)))
+(add-hook 'python-mode-hook (lambda ()
+                              (bind-key "RET" 'newline-and-indent python-mode-map)))
 (add-hook 'haskell-mode-hook (lambda ()
                                (bind-key "RET" 'newline-and-indent haskell-mode-map)))
 
