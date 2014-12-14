@@ -1,0 +1,34 @@
+#!/usr/bin/env python
+
+import sys
+import time
+import subprocess
+from datetime import datetime, timedelta
+
+SEANUP = 'tomorrow 6am'
+
+def main():
+    battery_string = subprocess.check_output(['acpi', '-a'])
+    if 'on-line' in battery_string:
+        print '''Make sure that your battery is inserted and charged,
+unplug your AC adapter and run this program again.'''
+        sys.exit(1)
+
+    seanup = subprocess.check_output(['date', '-d', SEANUP, '+%s'])
+    when = datetime.fromtimestamp(int(seanup)) - timedelta(minutes=15)
+
+    # if midnight has passed, must subtract one day
+    now = datetime.now()
+    if now.hour < when.hour:
+        when = when - timedelta(days=1)
+
+    rtctime = int(time.mktime(when.timetuple()))
+    subprocess.call(['sudo', 'rtcwake',
+                     '-m', 'mem',
+                     '-t', rtctime])
+
+    # TODO: schedule xscreensaver lock and sending and receiving
+    #       e-mail and playing an alarm clock
+
+if __name__ == "__main__":
+    main()
