@@ -22,7 +22,7 @@ unplug your AC adapter and run this program again.'''
     if now.hour < when.hour:
         when = when - timedelta(days=1)
 
-    rtctime = int(time.mktime(when.timetuple()))
+    rtctime = str(int(time.mktime(when.timetuple())))
     subprocess.call(['sudo', 'rtcwake',
                      '-m', 'mem',
                      '-t', rtctime])
