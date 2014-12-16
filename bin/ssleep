@@ -5,7 +5,7 @@ import time
 import subprocess
 from datetime import datetime, timedelta
 
-SEANUP = 'tomorrow 6am'
+SEANUP = 'tomorrow 5:30am'
 
 def main():
     battery_string = subprocess.check_output(['acpi', '-a'])
