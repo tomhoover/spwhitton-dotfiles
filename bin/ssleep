@@ -1,34 +1,70 @@
 #!/usr/bin/env python
 
+"""Sean's alarm clock
+
+For this to work, BIOS power settings will need to be set to allow
+wakeup events to occur without AC power.
+
+"""
+
+import os
 import sys
 import time
 import subprocess
 from datetime import datetime, timedelta
 
-SEANUP = 'tomorrow 5:30am'
+SEAN_UP = 'tomorrow 5:30am'
+ALARM = '~/lib/annex/music/' \
+        'Mainstream/John Mayer/Continuum/' \
+        '01 - Waiting On The World To Change.mp3'
 
 def main():
+    """Main procedure"""
+
+    # bail if AC connected
     battery_string = subprocess.check_output(['acpi', '-a'])
     if 'on-line' in battery_string:
         print '''Make sure that your battery is inserted and charged,
 unplug your AC adapter and run this program again.'''
         sys.exit(1)
 
-    seanup = subprocess.check_output(['date', '-d', SEANUP, '+%s'])
-    when = datetime.fromtimestamp(int(seanup)) - timedelta(minutes=15)
+    # make a datetime telling us when we're to wake up
+    sean_up = subprocess.check_output(['date', '-d', SEAN_UP, '+%s'])
+    sean_up = datetime.fromtimestamp(int(sean_up))
+    computer_up = sean_up - timedelta(minutes=15)
 
     # if midnight has passed, must subtract one day
     now = datetime.now()
     if now.hour < when.hour:
         when = when - timedelta(days=1)
 
-    rtctime = str(int(time.mktime(when.timetuple())))
+    # bring network down since NetworkManager sucks at bringing
+    # it back up itself
+    subprocess.call(['sudo', 'nmcli', 'nm', 'sleep', 'true'])
+    time.sleep(3)
+
+    # go to sleep
+    rtctime = str(int(time.mktime(computer_up.timetuple())))
     subprocess.call(['sudo', 'rtcwake',
                      '-m', 'mem',
                      '-t', rtctime])
 
-    # TODO: schedule xscreensaver lock and sending and receiving
-    #       e-mail and playing an alarm clock
+    # make sure that we've woken up
+    time.sleep(5)
+
+    # bring networking back up, which takes a fair while
+    subprocess.call(['sudo', 'nmcli', 'nm', 'sleep', 'false'])
+    time.sleep(20)
+
+    # TODO: here call movemail script
+
+    # now wait until it's time to wake Sean up
+    while sean_up > datetime.today():
+        time.sleep(1)
+
+    # and play the alarm clock
+    alarm_file = os.path.expanduser(ALARM)
+    subprocess.call(['vlc', alarm_file])
 
 if __name__ == "__main__":
     main()
