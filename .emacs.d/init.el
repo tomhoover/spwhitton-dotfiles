@@ -232,6 +232,7 @@
             ;;; bindings
 
             (define-key evil-window-map (kbd "u") 'winner-undo)
+            (define-key evil-window-map (kbd ";") 'toggle-window-split)
 
             (evil-global-set-key 'normal (kbd "s-j") 'evil-window-next)
             (evil-global-set-key 'normal (kbd "s-k") 'evil-window-prev)
