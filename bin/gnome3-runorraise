@@ -15,5 +15,7 @@ case $1 in
         ;;
     term)
         wmctrl -a "Local tmux" || urxvttmux &
+        sleep 0.2
+        wmctrl -r :ACTIVE: -b add,maximized_vert,maximized_horz
         ;;
 esac
