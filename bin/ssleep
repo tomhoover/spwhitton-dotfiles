@@ -38,6 +38,9 @@ unplug your AC adapter and run this program again.'''
     if now.hour < when.hour:
         when = when - timedelta(days=1)
 
+    # sync e-mail
+    subprocess.call(['movemail'])
+
     # bring network down since NetworkManager sucks at bringing
     # it back up itself
     subprocess.call(['sudo', 'nmcli', 'nm', 'sleep', 'true'])
@@ -56,7 +59,8 @@ unplug your AC adapter and run this program again.'''
     subprocess.call(['sudo', 'nmcli', 'nm', 'sleep', 'false'])
     time.sleep(20)
 
-    # TODO: here call movemail script
+    # sync e-mail
+    subprocess.call(['movemail'])
 
     # now wait until it's time to wake Sean up
     while sean_up > datetime.today():
