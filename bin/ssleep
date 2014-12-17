@@ -35,8 +35,8 @@ unplug your AC adapter and run this program again.'''
 
     # if midnight has passed, must subtract one day
     now = datetime.now()
-    if now.hour < when.hour:
-        when = when - timedelta(days=1)
+    if now.hour < computer_up.hour:
+        computer_up = computer_up - timedelta(days=1)
 
     # sync e-mail
     subprocess.call(['movemail'])
