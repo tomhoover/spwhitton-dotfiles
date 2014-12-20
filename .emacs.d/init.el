@@ -882,6 +882,12 @@ visual state bindings conflicting with god-mode"
   :ensure
   :commands (vr/replace vr/query-replace))
 
+;;; some tiling functions
+
+(use-package tiling
+  :init (progn
+          (define-key evil-window-map (kbd "T") 'tiling-cycle)))
+
 ;;; simple concept of projects
 
 (use-package projectile
