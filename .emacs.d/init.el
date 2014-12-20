@@ -1019,7 +1019,15 @@ visual state bindings conflicting with god-mode"
                                                 helm-source-bookmarks
                                                 helm-source-dired-recent-dirs
                                                 helm-source-recentf)))
-            ad-do-it
+            ;; begin redefinition of helm-mini in order to insert
+            ;; :default argument
+            (require 'helm-files)
+            (unless helm-source-buffers-list
+              (setq helm-source-buffers-list
+                    (helm-make-source "Buffers" 'helm-source-buffers)))
+            (let ((helm-ff-transformer-show-only-basename nil))
+              (helm :default "" :sources helm-mini-default-sources :buffer "*helm mini*"))
+            ;; end redefinition of helm-mini
 
             ;; ;; once Org is loaded, can add Org headline source
             ;; (eval-after-load 'org
