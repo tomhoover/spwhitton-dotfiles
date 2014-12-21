@@ -28,8 +28,14 @@ def main():
 unplug your AC adapter and run this program again.'''
         sys.exit(1)
 
+    # check for command line input
+    if len(sys.argv) == 2:
+        sean_up_string = 'tomorrow ' + sys.argv[1]
+    else:
+        sean_up_string = SEAN_UP
+
     # make a datetime telling us when we're to wake up
-    sean_up = subprocess.check_output(['date', '-d', SEAN_UP, '+%s'])
+    sean_up = subprocess.check_output(['date', '-d', sean_up_string, '+%s'])
     sean_up = datetime.fromtimestamp(int(sean_up))
     computer_up = sean_up - timedelta(minutes=15)
 
