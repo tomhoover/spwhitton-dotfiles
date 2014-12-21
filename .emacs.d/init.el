@@ -922,7 +922,7 @@ visual state bindings conflicting with god-mode"
             ;; my functions to save and restore a base window
             ;; configuration ala workgroups.el
             "qq" 'persp-basewc-restore
-            "qu" 'persp-basewc-save)	; mnemonic: update)
+            "qu" 'persp-basewc-save)    ; mnemonic: update)
           (defun persp-toggle (arg)
             (interactive "P")
             (if arg (call-interactively 'persp-switch)
@@ -936,11 +936,11 @@ visual state bindings conflicting with god-mode"
           (defun persp-basewc-save ()
             (interactive)
             (let* ((name (persp-name persp-curr))
-		   (wc (current-window-configuration))
-		   (pair (cons name wc)))
-	      (setq persp-basewcs
-		    (remove* name persp-basewcs
-			     :test 'equal :key 'car))
+                   (wc (current-window-configuration))
+                   (pair (cons name wc)))
+              (setq persp-basewcs
+                    (remove* name persp-basewcs
+                             :test 'equal :key 'car))
               (add-to-list 'persp-basewcs pair)))
           (add-hook 'persp-created-hook 'persp-basewc-save)
           (defun persp-basewc-restore ()
