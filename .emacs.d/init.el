@@ -974,6 +974,22 @@ visual state bindings conflicting with god-mode"
 
           (helm-mode)
 
+          ;; helm-mode adds an two arguments to the end of the normal
+          ;; completing-read argument list, the first of which is
+          ;; `cands-in-buffer'.  This makes completion faster because
+          ;; if we type 'mast' to match 'master', we can then hit
+          ;; <enter> to choose master.  Without `cands-in-buffer',
+          ;; hitting enter will select 'mast' (which is intended
+          ;; (https://github.com/emacs-helm/helm/issues/376#issuecomment-30872692),
+          ;; so that helm-mode is consistent with standard Emacs
+          ;; completing-read), and to select master requires an
+          ;; additional C-n keypress which is inconvenient
+          (defadvice helm-completing-read-default-1
+            (around spw/helm-completing-read-cands-in-buffer activate)
+            (interactive)
+            (let ((cands-in-buffer t))
+              ad-do-it))
+
           ;; rebind some keys
           (bind-key "C-w" 'backward-delete-word helm-map)
           (bind-key "C-o" 'helm-select-action helm-map)
