@@ -987,7 +987,11 @@ visual state bindings conflicting with god-mode"
           (defadvice helm-completing-read-default-1
             (around spw/helm-completing-read-cands-in-buffer activate)
             (interactive)
-            (let ((cands-in-buffer t))
+            ;; unfortunately this doesn't work if require-match is
+            ;; nil, so block that case
+            (let ((require-match (if (not require-match)
+                                     'confirm require-match))
+                  (cands-in-buffer t))
               ad-do-it))
 
           ;; rebind some keys
