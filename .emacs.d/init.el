@@ -994,6 +994,9 @@ visual state bindings conflicting with god-mode"
                   (cands-in-buffer t))
               ad-do-it))
 
+          (add-to-list 'helm-completing-read-handlers-alist
+                       '(org-capture . completing-read-default))
+
           ;; rebind some keys
           (bind-key "C-w" 'backward-delete-word helm-map)
           (bind-key "C-o" 'helm-select-action helm-map)
