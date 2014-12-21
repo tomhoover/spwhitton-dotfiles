@@ -68,7 +68,8 @@ unplug your AC adapter and run this program again.'''
 
     # and play the alarm clock
     alarm_file = os.path.expanduser(ALARM)
-    subprocess.call(['amixer', 'set', 'Master', '50%'])
+    subprocess.call(['amixer', 'set', 'Master', '60%'])
+    subprocess.call(['amixer', 'set', 'Master', 'unmute'])
     subprocess.call(['vlc', alarm_file])
 
 if __name__ == "__main__":
