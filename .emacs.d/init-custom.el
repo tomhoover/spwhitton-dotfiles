@@ -68,7 +68,7 @@
  '(jabber-alert-presence-hooks nil)
  '(mairix-file-path "~/local")
  '(mairix-search-file "mairixresults")
- '(openwith-associations (quote (("\\.pdf\\'" "evince" (file)) ("\\.mp3\\'" "vlc" (file)) ("\\.\\(doc\\|docx\\|xls\\|xlsx\\)\\'" "soffice" (file)) ("\\.mkv\\'" "vlc" (file)) ("\\.avi\\'" "vlc" (file)) ("\\.mp4\\'" "vlc" (file)) ("\\.ppt\\'" "soffice" (file)) ("\\.pptx\\'" "soffice" (file)) ("\\.wmv\\'" "vlc" (file)) ("\\.flv\\'" "vlc" (file)) ("\\.hwp\\'" "hanword" (file)))))
+ '(openwith-associations (quote (("\\.pdf\\'" "evince" (file)) ("\\.\\(ogg\\|mp3\\)\\'" "vlc" (file)) ("\\.\\(doc\\|docx\\|xls\\|xlsx\\)\\'" "soffice" (file)) ("\\.mkv\\'" "vlc" (file)) ("\\.avi\\'" "vlc" (file)) ("\\.mp4\\'" "vlc" (file)) ("\\.ppt\\'" "soffice" (file)) ("\\.\\(ppt\\|pptx\\|potx\\)\\'" "soffice" (file)) ("\\.wmv\\'" "vlc" (file)) ("\\.flv\\'" "vlc" (file)) ("\\.hwp\\'" "hanword" (file)))))
  '(org-agenda-sticky t)
  '(org-agenda-time-grid
    (quote
