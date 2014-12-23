@@ -133,7 +133,7 @@
    (quote
     (:eval
      (format " Pr[%s]"
-	     (projectile-project-name)))))
+             (projectile-project-name)))))
  '(safe-local-variable-values
    (quote
     ((eval spw/writing-toggle)
