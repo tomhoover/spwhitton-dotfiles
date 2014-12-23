@@ -871,6 +871,11 @@ visual state bindings conflicting with god-mode"
       dired-recursive-copies 'always
       dired-dwim-target t)
 
+;; should be able to unzip with Z
+(eval-after-load "dired-aux"
+  '(add-to-list 'dired-compress-file-suffixes
+                '("\\.zip\\'" ".zip" "unzip")))
+
 (use-package dired-sort-map
   :init (setq dired-listing-switches "--group-directories-first -alh"))
 
