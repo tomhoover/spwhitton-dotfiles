@@ -186,6 +186,7 @@
       org-latex-pdf-process '("texi2dvi --pdf --clean --batch %f" "rm %f" "rm -rf auto")
       org-export-date-timestamp-format "%e %B %Y"
       org-html-footnotes-section "<h3>%s</h3>\n%s"
+      org-export-with-smart-quotes t
 
       org-latex-default-class "wordlike"
 
