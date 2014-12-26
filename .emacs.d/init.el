@@ -417,6 +417,7 @@ visual state bindings conflicting with god-mode"
                          '(evil-paredit-delete . delete))))
 
 (use-package evil-args :ensure)
+(use-package evil-exchange :ensure)
 (use-package evil-matchit :ensure)
 ;; (use-package evil-jumper :ensure)
 
@@ -546,6 +547,7 @@ visual state bindings conflicting with god-mode"
 (global-evil-matchit-mode t)
 (global-evil-operator-comment-mode 1)
 (global-undo-tree-mode 0)
+(evil-exchange-install)
 
 ;;; Org
 
