@@ -433,6 +433,12 @@ visual state bindings conflicting with god-mode"
 (setq evil-operator-comment-key "Q")
 (use-package evil-operator-comment)
 
+;;; sometimes better than vim text objects
+
+(use-package expand-region
+  :ensure
+  :init (setq expand-region-contract-fast-key (kbd "o")))
+
 ;; evil-leader
 
 (use-package evil-leader
@@ -454,6 +460,7 @@ visual state bindings conflicting with god-mode"
             "C-w" 'evil-window-map
             "w" 'evil-window-mru
             "b" 'switch-to-buffer
+            "i" 'er/expand-region
             "s" (lambda ()
                   (interactive)
                   ;; save the current buffer first (if it's visiting a
