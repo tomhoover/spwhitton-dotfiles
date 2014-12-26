@@ -449,6 +449,7 @@ visual state bindings conflicting with god-mode"
           (evil-leader/set-key
             ;; core map
             "<SPC>" 'evil-ace-jump-word-mode
+            "S-<SPC>" 'evil-ace-jump-char-mode
             "f" 'helm-find-files
             "j" 'spw/helm-mini
             "x" 'helm-M-x
