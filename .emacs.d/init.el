@@ -443,7 +443,7 @@ visual state bindings conflicting with god-mode"
             ;; core map
             "<SPC>" 'evil-ace-jump-word-mode
             "f" 'helm-find-files
-            "j" 'helm-mini
+            "j" 'spw/helm-mini
             "x" 'helm-M-x
             "r" 'helm-swoop
             "k" 'kill-buffer
@@ -1027,47 +1027,48 @@ visual state bindings conflicting with god-mode"
                     #'(lambda ()
                         (define-key eshell-mode-map [remap company-complete] 'helm-esh-pcomplete)))
 
-          ;; helm-mini shouldn't stop working just because we're not
-          ;; in a projectile project.  And it's way too slow to use
-          ;; from an eshell buffer that's TRAMP'd to a remote host
-          (defadvice helm-mini (around spw/helm-mini activate)
-            "Remove projectile stuff if not in a project, unless it's my massive annex"
-            (when (equal major-mode 'eshell-mode)
-              (setq helm-mini-default-sources '(helm-source-buffers-list
-                                                helm-source-bookmarks
-                                                helm-source-dired-recent-dirs
-                                                helm-source-recentf)))
-
-            (if (and (projectile-project-p)
-                     (not (equal (projectile-project-name) "annex"))
-                     (not (equal (persp-name persp-curr) "main")))
-
-                (setq helm-mini-default-sources '(helm-source-buffers-list
-                                                  helm-source-projectile-files-list
-                                                  helm-source-imenu-anywhere
-                                                  helm-source-bookmarks
-                                                  helm-source-recentf))
-              (setq helm-mini-default-sources '(helm-source-buffers-list
-                                                ;; helm-source-ido-virtual-buffers
-                                                helm-source-imenu-anywhere
-                                                helm-source-bookmarks
-                                                helm-source-dired-recent-dirs
-                                                helm-source-recentf)))
-            ;; begin redefinition of helm-mini in order to insert
-            ;; :default argument
+          ;; My helm mini: add and remove some sources depending
+          ;; on context it is launched from.  Also default to "" to
+          ;; avoid `thing-at-point'
+          (defun spw/helm-mini ()
+            (interactive)
             (require 'helm-files)
-            (unless helm-source-buffers-list
-              (setq helm-source-buffers-list
-                    (helm-make-source "Buffers" 'helm-source-buffers)))
-            (let ((helm-ff-transformer-show-only-basename nil))
-              (helm :default "" :sources helm-mini-default-sources :buffer "*helm mini*"))
-            ;; end redefinition of helm-mini
+            (let ((sources '())
+                  (excluded-projects '("annex")))
 
-            ;; ;; once Org is loaded, can add Org headline source
-            ;; (eval-after-load 'org
-            ;;   (add-to-list 'helm-mini-default-sources 'helm-source-org-headline t))
+              (add-to-ordered-list 'sources 'helm-source-buffers-list 1)
+              (add-to-ordered-list 'sources 'helm-source-imenu-anywhere 3)
+              (add-to-ordered-list 'sources 'helm-source-bookmarks 5)
+              (add-to-ordered-list 'sources 'helm-source-dired-recent-dirs 7)
+              (add-to-ordered-list 'sources 'helm-source-recentf 9)
 
-            (helm-adaptative-mode))
+              ;; Enable projectile stuff if we're in a project and not
+              ;; in its eshell buffer, since this doesn't work well
+              ;; when TRAMP'd to a remote host.  Disable it for
+              ;; certain projects and if we're in the default
+              ;; perspective.
+              (when (and (not (equal major-mode 'eshell-mode))
+                         (projectile-project-p)
+                         (not (memq (projectile-project-name) excluded-projects))
+                         (not (equal (persp-name persp-curr) "main")))
+                (add-to-ordered-list 'sources 'helm-source-projectile-files-list 4)
+                (delete 'helm-source-dired-recent-dirs sources))
+
+              ;; Org headlines source: imenu covers all open org
+              ;; buffers so better
+              ;; (when (or
+              ;;        (f-child-of? default-directory org-directory)
+              ;;        (f-same? default-directory org-directory))
+              ;;   (add-to-ordered-list 'sources 'helm-source-org-headline 1.5))
+
+              ;; begin code from original helm-mini
+              (unless helm-source-buffers-list
+                (setq helm-source-buffers-list
+                      (helm-make-source "Buffers" 'helm-source-buffers)))
+              (let ((helm-ff-transformer-show-only-basename nil))
+                (helm :default "" :sources sources :buffer "*spw helm mini*"))
+              ;; end code from original helm-mini
+              (helm-adaptive-mode)))
 
           (use-package helm-descbinds
             :ensure
