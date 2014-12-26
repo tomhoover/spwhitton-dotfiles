@@ -310,8 +310,8 @@
                               (point))))
                   (list end begin))))
 
-            (define-key evil-outer-text-objects-map "S" 'evil-org-outer-subtree)
-            (define-key evil-inner-text-objects-map "S" 'evil-org-inner-subtree)
+            (define-key evil-outer-text-objects-map "*" 'evil-org-outer-subtree)
+            (define-key evil-inner-text-objects-map "*" 'evil-org-inner-subtree)
 
             (evil-define-text-object evil-org-outer-item (count &optional beg end type)
               :type line
@@ -338,8 +338,8 @@
                     nil
                   (list begin end))))
 
-            (define-key evil-inner-text-objects-map "I" 'evil-org-inner-item)
-            (define-key evil-outer-text-objects-map "I" 'evil-org-outer-item)
+            (define-key evil-inner-text-objects-map "-" 'evil-org-inner-item)
+            (define-key evil-outer-text-objects-map "-" 'evil-org-outer-item)
 
             ;;; Advice
 
