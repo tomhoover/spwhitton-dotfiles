@@ -53,7 +53,7 @@ def count_down(total_minutes, kind):
         try:
             time.sleep(60)
         except KeyboardInterrupt:
-            print_same_line('')
+            print_same_line()
             sys.exit()
 
 def try_audible_notification(text):
@@ -72,7 +72,7 @@ def try_audible_notification(text):
         pass
     dev_null.close()
 
-def print_same_line(line):
+def print_same_line(line=''):
     """Print and then carriage return to stay on the same line"""
     # First clear to end of line: then if last print called this
     # function so cursor is at beginning of line, it'll clear out
@@ -92,7 +92,7 @@ def move_on_wait():
         try:
             char = getch()
         except KeyboardInterrupt:
-            print_same_line('')
+            print_same_line()
             sys.exit()
         if char == 'y':
             break
