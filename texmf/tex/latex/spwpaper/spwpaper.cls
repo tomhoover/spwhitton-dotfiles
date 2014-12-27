@@ -7,6 +7,9 @@
 \DeclareOption{pseudodouble}{\renewcommand{\initialdouble}{\RequirePackage[doublespacing]{setspace}\onehalfspacing}\renewcommand{\startdouble}{\doublespacing}}
 \DeclareOption{single}{\renewcommand{\initialdouble}{\RequirePackage{setspace}}\renewcommand{\startdouble}{}\renewcommand{\finishdouble}{}}
 
+\newcommand{\papersettings}{\LoadClass[12pt,a4paper]{article}\RequirePackage[a4paper,headheight=0.5in,margin=1in,nofoot]{geometry}}
+\DeclareOption{letterpaper}{\renewcommand{\papersettings}{\LoadClass[12pt,letterpaper]{article}\RequirePackage[letterpaper,headheight=0.5in,margin=1in,nofoot]{geometry}}}
+
 \newcommand{\notesandrefs}[1]{\noteshere
   \bibhere{#1}}
 \newcommand{\doendnotes}{
@@ -15,8 +18,7 @@
 
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{article}}
 \ProcessOptions
-\LoadClass[12pt,a4paper]{article}
-\RequirePackage[a4paper,headheight=0.5in,margin=1in,nofoot]{geometry}
+\papersettings
 % \RequirePackage[headings]{fullpage}
 
 \RequirePackage{amsmath}
