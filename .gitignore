@@ -12,3 +12,4 @@
 /.emacs.d/helm-adaptive-history
 /.emacs.d/projectile.cache
 /.emacs.d/server/
+/bin/spw.pyc

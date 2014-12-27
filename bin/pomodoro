@@ -2,15 +2,25 @@
 
 """Sean's pomodoro timer
 
-CC BY-SA 3.0: http://creativecommons.org/licenses/by-sa/3.0/
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or (at
+your option) any later version.
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 """
 
 import time
 import os
 import sys
-import termios
-import fcntl
-import subprocess
+import spw
 
 WORK_MINUTES = 25
 BREAK_MINUTES = 5
@@ -29,13 +39,15 @@ def main():
             # do a short break unless it's time for a long break,
             # which'll happen when we break out of the main while loop
             if pomodoros_completed < POMODOROS_BLOCK:
-                try_audible_notification(str(BREAK_MINUTES) + ' minute break')
+                spw.try_audible_notification(str(BREAK_MINUTES)
+                                             + ' minute break')
                 count_down(BREAK_MINUTES, 'rest')
-                try_audible_notification('Time to start working again')
+                spw.try_audible_notification('Time to start working again')
                 move_on_wait()
         else:
-            try_audible_notification(str(LONG_BREAK_MINUTES) + ' minute break.'
-                                     '  Go and do something else')
+            spw.try_audible_notification(str(LONG_BREAK_MINUTES)
+                                         + ' minute break.'
+                                         '  Go and do something else')
             count_down(LONG_BREAK_MINUTES, 'rest')
             pomodoros_completed = 0
             move_on_wait()
@@ -49,39 +61,12 @@ def count_down(total_minutes, kind):
         left = total_minutes - minutes
         left_string = ' minutes' if left > 1 else ' minute'
         left_string += ' of ' + kind + ' left'
-        print_same_line(str(left) + left_string)
+        spw.print_same_line(str(left) + left_string)
         try:
             time.sleep(60)
         except KeyboardInterrupt:
-            print_same_line()
+            spw.print_same_line()
             sys.exit()
-
-def try_audible_notification(text):
-    """Try to send a notification and play a sound.  Don't do anything if
-    can't."""
-    dev_null = open('/dev/null', 'w')
-    try:
-        subprocess.Popen(['/usr/bin/notify-send',
-                          '--hint=int:transient:1',
-                          text], stderr=dev_null, env=os.environ)
-        audio_file = os.path.expanduser('~/lib/annex/doc/sounds/beep.wav')
-        subprocess.call(['/usr/bin/aplay', audio_file], stderr=dev_null)
-    except OSError:
-        pass
-    except subprocess.CalledProcessError:
-        pass
-    dev_null.close()
-
-def print_same_line(line=''):
-    """Print and then carriage return to stay on the same line"""
-    # First clear to end of line: then if last print called this
-    # function so cursor is at beginning of line, it'll clear out
-    # previous printed string.  Needed in case current line is shorter
-    # than previous one
-    sys.stdout.write("\033[K")
-
-    sys.stdout.write(line + '\r')
-    sys.stdout.flush()
 
 def move_on_wait():
     """Wait for user to type y and then return."""
@@ -90,9 +75,9 @@ def move_on_wait():
     eshell = True if os.environ['TERM'] == 'vt100' else False
 
     if eshell:
-        print_same_line('Are you ready to move on?  (hit return)')
+        spw.print_same_line('Are you ready to move on?  (hit return)')
     else:
-        print_same_line('Are you ready to move on?  (y/n)')
+        spw.print_same_line('Are you ready to move on?  (y/n)')
     while True:
         try:
             if eshell:
@@ -102,40 +87,12 @@ def move_on_wait():
                 print '\n',
                 char = 'y'
             else:
-                char = getch()
+                char = spw.getch()
         except KeyboardInterrupt:
-            print_same_line()
+            spw.print_same_line()
             sys.exit()
         if char == 'y':
             break
-
-def getch():
-    """Get a single char from the keyboard.  Variable name changed,
-    otherwise from http://stackoverflow.com/a/7259460
-
-    Also see:
-    http://docs.python.org/faq/library#how-do-i-get-a-single-keypress-at-a-time"""
-    fileno = sys.stdin.fileno()
-
-    oldterm = termios.tcgetattr(fileno)
-    newattr = termios.tcgetattr(fileno)
-    newattr[3] = newattr[3] & ~termios.ICANON & ~termios.ECHO
-    termios.tcsetattr(fileno, termios.TCSANOW, newattr)
-
-    oldflags = fcntl.fcntl(fileno, fcntl.F_GETFL)
-    fcntl.fcntl(fileno, fcntl.F_SETFL, oldflags | os.O_NONBLOCK)
-
-    try:
-        while 1:
-            try:
-                the_char = sys.stdin.read(1)
-                break
-            except IOError:
-                pass
-    finally:
-        termios.tcsetattr(fileno, termios.TCSAFLUSH, oldterm)
-        fcntl.fcntl(fileno, fcntl.F_SETFL, oldflags)
-    return the_char
 
 if __name__ == "__main__":
     main()
