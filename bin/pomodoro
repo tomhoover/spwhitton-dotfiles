@@ -86,11 +86,23 @@ def print_same_line(line=''):
 def move_on_wait():
     """Wait for user to type y and then return."""
     char = ''
+    # detect The Emacs Shell
+    eshell = True if os.environ['TERM'] == 'vt100' else False
 
-    print_same_line('Are you ready to move on?  (y/n)')
+    if eshell:
+        print_same_line('Are you ready to move on?  (hit return)')
+    else:
+        print_same_line('Are you ready to move on?  (y/n)')
     while True:
         try:
-            char = getch()
+            if eshell:
+                raw_input()
+                # once it gives the enter key press, Emacs won't erase
+                # the preceding line content, so just start a new line
+                print '\n',
+                char = 'y'
+            else:
+                char = getch()
         except KeyboardInterrupt:
             print_same_line()
             sys.exit()
