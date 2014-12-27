@@ -13,8 +13,8 @@ import fcntl
 import subprocess
 
 WORK_MINUTES = 25
-REST_MINUTES = 5
-LONG_REST_MINUTES = 30
+BREAK_MINUTES = 5
+LONG_BREAK_MINUTES = 30
 POMODOROS_BLOCK = 4
 
 def main():
@@ -29,14 +29,14 @@ def main():
             # do a short break unless it's time for a long break,
             # which'll happen when we break out of the main while loop
             if pomodoros_completed < POMODOROS_BLOCK:
-                try_audible_notification(str(REST_MINUTES) + ' minute break')
-                count_down(REST_MINUTES, 'rest')
+                try_audible_notification(str(BREAK_MINUTES) + ' minute break')
+                count_down(BREAK_MINUTES, 'rest')
                 try_audible_notification('Time to start working again')
                 move_on_wait()
         else:
-            try_audible_notification(str(LONG_REST_MINUTES) + ' minute break.'
+            try_audible_notification(str(LONG_BREAK_MINUTES) + ' minute break.'
                                      '  Go and do something else')
-            count_down(LONG_REST_MINUTES, 'rest')
+            count_down(LONG_BREAK_MINUTES, 'rest')
             pomodoros_completed = 0
             move_on_wait()
 
