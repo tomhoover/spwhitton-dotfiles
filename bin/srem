@@ -89,7 +89,7 @@ def doCron(rems):
         subprocess.Popen(['/usr/bin/notify-send',
                           '--hint=int:transient:1',
                           rem], stderr = zenerr, env = os.environ)
-        subprocess.call(['/usr/bin/aplay', '/home/swhitton/lib/annex/sounds/beep.wav'])
+        subprocess.call(['/usr/bin/aplay', '/home/swhitton/lib/annex/doc/sounds/beep.wav'])
     zenerr.close()
 
 def doEmacs(rems):
