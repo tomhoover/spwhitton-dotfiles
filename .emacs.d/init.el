@@ -1166,10 +1166,6 @@ visual state bindings conflicting with god-mode"
   :ensure
   :idle (ace-link-setup-default))
 
-;;; simple pomodoro timer
-
-(use-package pomodoro)
-
 ;;; chat on Jabber
 
 (use-package jabber

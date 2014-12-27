@@ -1,53 +1,126 @@
-#!/bin/bash
-# POMODORO v0.1 by Case Duckworth (mahatman2): mahatman2@gmail.com
-# simplified by spw
-# A technique for Getting Things Done.
+#!/usr/bin/env python
 
-# VARS for time, etc.  Must be in seconds in order to work with cvlc command line
-work_time=1500s;
-play_time=300s;
+"""Sean's pomodoro timer
 
-# make sure you want it to run...
-if [ $# -gt 0 ] && [ $1 == "-stop" ];then
-{
-    notify-send "Pomodoro timers killed"
-    killall pomodoro;
-}
-fi
+CC BY-SA 3.0: http://creativecommons.org/licenses/by-sa/3.0/
+"""
 
-# function declaration
-function work()
-{
-    notify-send "Cut all else out.  A pomodoro begins."
-    aplay ~/lib/annex/doc/sounds/beep.wav
-    cvlc --play-and-exit --run-time=$work_time ~/lib/annex/doc/sounds/RainyMood.ogg
-}
+import time
+import os
+import sys
+import termios
+import fcntl
+import subprocess
 
-function play()
-{
-    notify-send "Short break."
-    aplay ~/lib/annex/doc/sounds/beep.wav
-    sleep $play_time;
-}
+WORK_MINUTES = 25
+BREAK_MINUTES = 5
+LONG_BREAK_MINUTES = 30
+POMODOROS_BLOCK = 4
 
-# function long_break()
-# {
-#     notify-send "Long break."
-#     aplay ~/lib/annex/doc/sounds/beep.wav
-#     sleep $long_break_time;
-# }
+def main():
+    """Pomodoro technique loop"""
+    pomodoros_completed = 0
 
-# the meat
-# while [ -z "$1" ] || [ $1 == "-start" ];do
-# {
-    work;
-    play;
-    work;
-    play;
-    work;
-    play;
-    work;
-    notify-send "That's it for now."
-    # long_break;
-# }
-# done
+    while True:
+        if pomodoros_completed < POMODOROS_BLOCK:
+            count_down(WORK_MINUTES, 'work')
+            pomodoros_completed = pomodoros_completed + 1
+
+            # do a short break unless it's time for a long break,
+            # which'll happen when we break out of the main while loop
+            if pomodoros_completed < POMODOROS_BLOCK:
+                try_audible_notification(str(BREAK_MINUTES) + ' minute break')
+                count_down(BREAK_MINUTES, 'rest')
+                try_audible_notification('Time to start working again')
+                move_on_wait()
+        else:
+            try_audible_notification(str(LONG_BREAK_MINUTES) + ' minute break.'
+                                     '  Go and do something else')
+            count_down(LONG_BREAK_MINUTES, 'rest')
+            pomodoros_completed = 0
+            move_on_wait()
+
+def count_down(total_minutes, kind):
+    """Count down TOTAL_MINUTES of KIND."""
+    left = 0
+    left_string = ''
+
+    for minutes in range(total_minutes):
+        left = total_minutes - minutes
+        left_string = ' minutes' if left > 1 else ' minute'
+        left_string += ' of ' + kind + ' left'
+        print_same_line(str(left) + left_string)
+        try:
+            time.sleep(60)
+        except KeyboardInterrupt:
+            print_same_line('')
+            sys.exit()
+
+def try_audible_notification(text):
+    """Try to send a notification and play a sound.  Don't do anything if
+    can't."""
+    dev_null = open('/dev/null', 'w')
+    try:
+        subprocess.Popen(['/usr/bin/notify-send',
+                          '--hint=int:transient:1',
+                          text], stderr=dev_null, env=os.environ)
+        audio_file = os.path.expanduser('~/lib/annex/doc/sounds/beep.wav')
+        subprocess.call(['/usr/bin/aplay', audio_file], stderr=dev_null)
+    except OSError:
+        pass
+    except subprocess.CalledProcessError:
+        pass
+    dev_null.close()
+
+def print_same_line(line):
+    """Print and then carriage return to stay on the same line"""
+    # First clear to end of line: then if last print called this
+    # function so cursor is at beginning of line, it'll clear out
+    # previous printed string.  Needed in case current line is shorter
+    # than previous one
+    sys.stdout.write("\033[K")
+
+    sys.stdout.write(line + '\r')
+    sys.stdout.flush()
+
+def move_on_wait():
+    """Wait for user to type y and then return."""
+    char = ''
+
+    print_same_line('Are you ready to move on?  (y/n)')
+    while True:
+        try:
+            char = getch()
+        except KeyboardInterrupt:
+            print_same_line('')
+            sys.exit()
+        if char == 'y':
+            break
+
+def getch():
+    """Get a single char from the keyboard.  Variable name changed,
+    otherwise from http://stackoverflow.com/a/7259460"""
+    fileno = sys.stdin.fileno()
+
+    oldterm = termios.tcgetattr(fileno)
+    newattr = termios.tcgetattr(fileno)
+    newattr[3] = newattr[3] & ~termios.ICANON & ~termios.ECHO
+    termios.tcsetattr(fileno, termios.TCSANOW, newattr)
+
+    oldflags = fcntl.fcntl(fileno, fcntl.F_GETFL)
+    fcntl.fcntl(fileno, fcntl.F_SETFL, oldflags | os.O_NONBLOCK)
+
+    try:
+        while 1:
+            try:
+                the_char = sys.stdin.read(1)
+                break
+            except IOError:
+                pass
+    finally:
+        termios.tcsetattr(fileno, termios.TCSAFLUSH, oldterm)
+        fcntl.fcntl(fileno, fcntl.F_SETFL, oldflags)
+    return the_char
+
+if __name__ == "__main__":
+    main()
