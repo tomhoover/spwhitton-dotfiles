@@ -491,7 +491,8 @@ visual state bindings conflicting with god-mode"
             ;; launcher map
             "gs" 'persp-eshell
             "gc" 'spw/manual-cleanup
-            "gd" 'deft
+            "gd" 'spw/dired-jump
+            "gD" 'deft
             "gl" 'tblesson
             "gk" 'kill-emacs
             "gr" (lambda ()
@@ -1591,11 +1592,14 @@ point reaches the beginning or end of the buffer, stop there."
                        "-c"
                        (shell-quote-argument exec)))
 
-(defun spw/make-and-select-small-vertical-split ()
+(defun spw/make-and-select-small-vertical-split (&optional height)
   (interactive)
-  (split-window-vertically)
-  (other-window 1)
-  (evil-resize-window 8))
+  (ad-deactivate 'split-window-below)
+  (let ((split-height (or height 8)))
+    (split-window-vertically)
+    (other-window 1)
+    (evil-resize-window split-height))
+  (ad-activate 'split-window-below))
 
 (defun persp-eshell (arg)
   "Switch to perspective's eshell or create it.  If already in the eshell, move to the last prompt and clear it, ready for input"
@@ -1627,6 +1631,14 @@ point reaches the beginning or end of the buffer, stop there."
     (eshell-bol)
     (ignore-errors (kill-line))
     (call-interactively 'evil-insert)))
+
+(defun spw/dired-jump (arg)
+  (interactive "P")
+  (if arg
+      (dired-jump)
+    (spw/make-and-select-small-vertical-split 10)
+    (let ((dired-name (buffer-file-name)))
+      (dired-jump nil dired-name))))
 
 (defun tblesson (grade lesson period)
   "Start writing a lesson plan for a standard textbook-based lesson"
