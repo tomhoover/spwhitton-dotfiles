@@ -1592,14 +1592,12 @@ point reaches the beginning or end of the buffer, stop there."
                        "-c"
                        (shell-quote-argument exec)))
 
-(defun spw/make-and-select-small-vertical-split (&optional height)
+(defun spw/small-vertical-split (&optional height)
   (interactive)
-  (ad-deactivate 'split-window-below)
   (let ((split-height (or height 8)))
     (split-window-vertically)
     (other-window 1)
-    (evil-resize-window split-height))
-  (ad-activate 'split-window-below))
+    (evil-resize-window split-height)))
 
 (defun persp-eshell (arg)
   "Switch to perspective's eshell or create it.  If already in the eshell, move to the last prompt and clear it, ready for input"
@@ -1615,7 +1613,7 @@ point reaches the beginning or end of the buffer, stop there."
     (if eshell-window
         (select-window eshell-window)
       ;; create split
-      (unless arg (spw/make-and-select-small-vertical-split))
+      (unless arg (spw/small-vertical-split))
       ;; switch to buffer
       (if in-project
           ;; we're in a project: name buffer carefully
@@ -1641,7 +1639,7 @@ point reaches the beginning or end of the buffer, stop there."
   (interactive "P")
   (if arg
       (dired-jump)
-    (spw/make-and-select-small-vertical-split 10)
+    (spw/small-vertical-split 10)
     (let ((dired-name (buffer-file-name)))
       (dired-jump nil dired-name))))
 
@@ -1709,9 +1707,9 @@ point reaches the beginning or end of the buffer, stop there."
                                (bind-key "RET" 'newline-and-indent haskell-mode-map)))
 
 ;; automatically rebalance windows
-(defadvice split-window-below (after rebalance-windows activate)
+(defadvice evil-window-split (after rebalance-windows activate)
   (balance-windows))
-(defadvice split-window-right (after rebalance-windows activate)
+(defadvice evil-window-vsplit (after rebalance-windows activate)
   (balance-windows))
 
 ;; fixup-whitespace seems to make just-one-space redundant
