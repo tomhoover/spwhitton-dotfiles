@@ -1609,7 +1609,8 @@ point reaches the beginning or end of the buffer, stop there."
          (correct-eshell-name (if in-project
                                   (concat "*eshell* (" (persp-name persp-curr) ")")
                                 "*eshell"))
-         (eshell-window (get-buffer-window correct-eshell-name)))
+         (eshell-window (get-buffer-window correct-eshell-name))
+         (cd-to default-directory))
     ;; first check if eshell already visible
     (if eshell-window
         (select-window eshell-window)
@@ -1626,10 +1627,14 @@ point reaches the beginning or end of the buffer, stop there."
         (if (get-buffer "*eshell*")
             (helm-switch-to-buffer "*eshell*")
           (call-interactively 'eshell))))
-    ;; now position the cursor
+    ;; now change current dir (if not in eshell already) and position the cursor
     (evil-goto-line)
     (eshell-bol)
     (ignore-errors (kill-line))
+    (unless (or (eq major-mode 'eshell-mode)
+                (string= default-directory cd-to))
+      (insert (concat "cd " cd-to))
+      (eshell-send-input))
     (call-interactively 'evil-insert)))
 
 (defun spw/dired-jump (arg)
