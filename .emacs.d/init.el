@@ -1591,25 +1591,42 @@ point reaches the beginning or end of the buffer, stop there."
                        "-c"
                        (shell-quote-argument exec)))
 
+(defun spw/make-and-select-small-vertical-split ()
+  (interactive)
+  (split-window-vertically)
+  (other-window 1)
+  (evil-resize-window 8))
+
 (defun persp-eshell (arg)
   "Switch to perspective's eshell or create it.  If already in the eshell, move to the last prompt and clear it, ready for input"
   (interactive "P")
-  (when arg (split-window-right) (other-window 1))
-  (if (and (projectile-project-p)
-           (not (equal (persp-name persp-curr) "main")))
-      ;; we're in a project: name buffer carefully
-      (if (get-buffer (concat "*eshell* (" (persp-name persp-curr) ")"))
-          (helm-switch-to-buffer (concat "*eshell* (" (persp-name persp-curr) ")"))
-        (eshell "a")
-        (rename-buffer (concat "*eshell* (" (persp-name persp-curr) ")")))
-    ;; we're not in a project: don't
-    (if (get-buffer "*eshell*")
-        (helm-switch-to-buffer "*eshell*")
-      (call-interactively 'eshell)))
-  (evil-goto-line)
-  (eshell-bol)
-  (ignore-errors (kill-line))
-  (call-interactively 'evil-insert))
+  (let* ((in-project (and (projectile-project-p)
+                          (not (equal (persp-name persp-curr) "main"))))
+         (correct-eshell-name (if in-project
+                                  (concat "*eshell* (" (persp-name persp-curr) ")")
+                                "*eshell"))
+         (eshell-window (get-buffer-window correct-eshell-name)))
+    ;; first check if eshell already visible
+    (if eshell-window
+        (select-window eshell-window)
+      ;; create split
+      (unless arg (spw/make-and-select-small-vertical-split))
+      ;; switch to buffer
+      (if in-project
+          ;; we're in a project: name buffer carefully
+          (if (get-buffer correct-eshell-name)
+              (helm-switch-to-buffer correct-eshell-name)
+            (eshell "a")
+            (rename-buffer correct-eshell-name))
+        ;; we're not in a project: don't
+        (if (get-buffer "*eshell*")
+            (helm-switch-to-buffer "*eshell*")
+          (call-interactively 'eshell))))
+    ;; now position the cursor
+    (evil-goto-line)
+    (eshell-bol)
+    (ignore-errors (kill-line))
+    (call-interactively 'evil-insert)))
 
 (defun tblesson (grade lesson period)
   "Start writing a lesson plan for a standard textbook-based lesson"
