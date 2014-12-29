@@ -384,6 +384,7 @@ visual state bindings conflicting with god-mode"
             "w" 'evil-window-mru
             "b" 'switch-to-buffer
             "i" 'er/expand-region
+            "n" 'narrow-or-widen-dwim
             "S" (lambda ()
                   (interactive)
                   ;; save the current buffer first (if it's visiting a
@@ -400,13 +401,6 @@ visual state bindings conflicting with god-mode"
                   (if (buffer-file-name) (save-buffer))
                   (if (featurep 'org)
                       (org-save-all-org-buffers)))
-
-            ;; narrowing map
-            "ns" 'org-narrow-to-subtree
-            "nr" 'narrow-to-region
-            "nf" 'narrow-to-defun
-            "nn" 'widen
-            "nw" 'widen
 
             ;; Org-mode map
             "oc" 'org-capture
@@ -1117,6 +1111,31 @@ visual state bindings conflicting with god-mode"
   :commands centered-window-mode)
 
 ;;;; ---- functions ----
+
+;;; Endless Parentheses narrowing dwim
+
+(defun narrow-or-widen-dwim (p)
+  "If the buffer is narrowed, it widens. Otherwise, it narrows intelligently.
+Intelligently means: region, org-src-block, org-subtree, or defun,
+whichever applies first.
+Narrowing to org-src-block actually calls `org-edit-src-code'.
+
+With prefix P, don't widen, just narrow even if buffer is already
+narrowed."
+  (interactive "P")
+  (declare (interactive-only))
+  (cond ((and (buffer-narrowed-p) (not p)) (widen))
+        ((region-active-p)
+         (narrow-to-region (region-beginning) (region-end)))
+        ((derived-mode-p 'org-mode)
+         ;; `org-edit-src-code' is not a real narrowing command.
+         ;; Remove this first conditional if you don't want it.
+         (cond ((ignore-errors (org-edit-src-code))
+                (delete-other-windows))
+               ((org-at-block-p)
+                (org-narrow-to-block))
+               (t (org-narrow-to-subtree))))
+        (t (narrow-to-defun))))
 
 ;;; toggle some features on and off to make Emacs better at prose editing
 

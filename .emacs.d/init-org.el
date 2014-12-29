@@ -1,3 +1,9 @@
+;;; init-org --- Sean's Org-mode configuration
+
+;;; Commentary:
+
+;;; Code:
+
 ;;;; ---- packages ----
 
 ;;; get Org headline completion in helm-mini
@@ -942,3 +948,10 @@
 
 (define-key evil-inner-text-objects-map "-" 'evil-org-inner-item)
 (define-key evil-outer-text-objects-map "-" 'evil-org-outer-item)
+
+;;; get out of editing a source block
+
+(add-hook 'org-src-mode-map (lambda () (evil-local-set-key 'normal (kbd "Z Z") 'org-edit-src-exit)))
+
+(provide 'init-org)
+;;; init-org.el ends here
