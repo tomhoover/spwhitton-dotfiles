@@ -232,7 +232,7 @@
   :config (progn
             ;;; settings
 
-            (setq evil-cross-lines t)
+            (setq evil-cross-lines nil)
 
             ;;; initial states
 
