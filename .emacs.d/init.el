@@ -384,7 +384,7 @@ visual state bindings conflicting with god-mode"
             "w" 'evil-window-mru
             "b" 'switch-to-buffer
             "i" 'er/expand-region
-            "s" (lambda ()
+            "S" (lambda ()
                   (interactive)
                   ;; save the current buffer first (if it's visiting a
                   ;; file) to avoid a y/n prompt
@@ -393,6 +393,13 @@ visual state bindings conflicting with god-mode"
                   (if (featurep 'org)
                       (org-save-all-org-buffers))
                   (save-some-buffers))
+            "s" (lambda ()
+                  (interactive)
+                  ;; same as above but don't try to save all buffers
+                  ;; as y/n prompts annoying
+                  (if (buffer-file-name) (save-buffer))
+                  (if (featurep 'org)
+                      (org-save-all-org-buffers)))
 
             ;; narrowing map
             "ns" 'org-narrow-to-subtree
