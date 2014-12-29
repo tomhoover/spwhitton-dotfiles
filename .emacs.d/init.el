@@ -1,3 +1,9 @@
+;;; init --- Sean's Emacs configuration
+
+;;; Commentary:
+
+;;; Code:
+
 ;;;; ---- package management ----
 
 (add-to-list 'load-path "~/.emacs.d/site-lisp/")
@@ -1774,3 +1780,6 @@ point reaches the beginning or end of the buffer, stop there."
 (add-hook 'js-mode-hook (lambda ()
                           (setq-local electric-layout-rules
                                       (remove (quote (?\; . after)) electric-layout-rules))))
+
+(provide 'init)
+;;; init.el ends here
