@@ -150,8 +150,8 @@
 ;; don't prompt to create scratch buffers
 (setq confirm-nonexistent-file-or-buffer nil)
 
-;; initial frame width
-(if window-system (set-frame-width (selected-frame) 80))
+;; initial frame width -- commented out in favour of maximising
+;; (if window-system (set-frame-width (selected-frame) 80))
 
 ;; soft word wrapping for easier editing of long lines
 (setq-default visual-line-mode t
