@@ -707,6 +707,83 @@
 
 ;;;; ---- functions ----
 
+;;; text objects
+
+;; TODO: make the following work well with counts i.e. selecting more than one subtree or list item
+
+;; TODO: item text objects should not include subitems
+
+(evil-define-text-object evil-org-outer-subtree (count &optional beg end type)
+  "An Org subtree.  Uses code from `org-mark-subtree`"
+  :type line
+  (save-excursion
+    ;; get to the top of the tree
+    (org-with-limited-levels
+     (cond ((org-at-heading-p) (beginning-of-line))
+           ((org-before-first-heading-p) (user-error "Not in a subtree"))
+           (t (outline-previous-visible-heading 1))))
+
+    (decf count)
+    (when count (while (and (> count 0) (org-up-heading-safe)) (decf count)))
+
+    ;; extract the beginning and end of the tree
+    (let ((element (org-element-at-point)))
+      (list (org-element-property :end element)
+            (org-element-property :begin element)))))
+
+(evil-define-text-object evil-org-inner-subtree (count &optional beg end type)
+  "An Org subtree, minus its header and concluding line break.  Uses code from `org-mark-subtree`"
+  :type line
+  (save-excursion
+    ;; get to the top of the tree
+    (org-with-limited-levels
+     (cond ((org-at-heading-p) (beginning-of-line))
+           ((org-before-first-heading-p) (user-error "Not in a subtree"))
+           (t (outline-previous-visible-heading 1))))
+
+    (decf count)
+    (when count (while (and (> count 0) (org-up-heading-safe)) (decf count)))
+
+    ;; extract the beginning and end of the tree
+    (let* ((element (org-element-at-point))
+           (begin (save-excursion
+                    (goto-char (org-element-property :begin element))
+                    (next-line)
+                    (point)))
+           (end (save-excursion
+                  (goto-char (org-element-property :end element))
+                  (backward-char 1)
+                  (point))))
+      (list end begin))))
+
+(define-key evil-outer-text-objects-map "*" 'evil-org-outer-subtree)
+(define-key evil-inner-text-objects-map "*" 'evil-org-inner-subtree)
+
+(evil-define-text-object evil-org-outer-item (count &optional beg end type)
+  :type line
+  (let* ((regionp (org-region-active-p))
+         (struct (progn
+                   (re-search-backward "^[[:space:]]*- ")
+                   (org-list-struct)))
+         (begin (org-list-get-item-begin))
+         (end (org-list-get-item-end (point-at-bol) struct)))
+    (if (or (not begin) (not end))
+        nil
+      (list begin end))))
+
+(evil-define-text-object evil-org-inner-item (count &optional beg end type)
+  (let* ((regionp (org-region-active-p))
+         (struct (progn
+                   (re-search-backward "^[[:space:]]*- ")
+                   (org-list-struct)))
+         (begin (progn (goto-char (org-list-get-item-begin))
+                       (forward-char 2)
+                       (point)))
+         (end (org-list-get-item-end-before-blank (point-at-bol) struct)))
+    (if (or (not begin) (not end))
+        nil
+      (list begin end))))
+
 (defun evil-org-meta-return (arg)
   (interactive "P")
   (let ((org-M-RET-may-split-line nil))
@@ -727,6 +804,9 @@
 
 (evil-define-key 'normal org-mode-map "go" 'evil-org-meta-return)
 (evil-define-key 'normal org-mode-map "gO" 'evil-org-backwards-meta-return)
+
+(add-hook 'org-mode-hook (lambda ()
+                           (setq-local evil-cross-lines t)))
 
 ;;; the default C-c [ and C-c ] expand the directory ~/doc/org in the
 ;;; org-agenda-files variable using the local path,
@@ -758,6 +838,12 @@
               (beginning-of-line)
               (kill-line 1)
               (save-buffer)))))))
+
+;; make Evil respect Org line prefixes when inserting at
+;; the beginning of the line
+(defadvice evil-insert-line (after spw/evil-org-bol activate)
+  (if (eq major-mode 'org-mode)
+      (call-interactively 'org-beginning-of-line)))
 
 ;;;; ---- hooks and keys ----
 
@@ -815,6 +901,8 @@
   (evil-define-key state org-mode-map (kbd "^") 'org-beginning-of-line)
   (evil-define-key state org-mode-map (kbd "$") 'org-end-of-line))
 
+(evil-define-key 'normal org-mode-map (kbd "<tab>") 'org-cycle)
+
 (bind-key "J" 'org-agenda-goto-date org-agenda-mode-map)
 (bind-key "j" 'evil-next-line org-agenda-mode-map)
 (bind-key "k" 'evil-previous-line org-agenda-mode-map)
@@ -849,3 +937,8 @@
   (push '(?~ . ("~" . "~")) evil-surround-pairs-alist))
 
 (add-hook 'org-mode-hook 'evil-surround-org-pairs)
+
+;;; text object bindings
+
+(define-key evil-inner-text-objects-map "-" 'evil-org-inner-item)
+(define-key evil-outer-text-objects-map "-" 'evil-org-outer-item)

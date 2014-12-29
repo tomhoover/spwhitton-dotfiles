@@ -166,6 +166,10 @@
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 (if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
 
+;;; winner mode: undo window configuration changes
+
+(winner-mode 1)
+
 ;;; cursor settings
 
 (setq x-stretch-cursor t)
@@ -237,8 +241,6 @@
             (evil-global-set-key 'normal (kbd "s-j") 'evil-window-next)
             (evil-global-set-key 'normal (kbd "s-k") 'evil-window-prev)
 
-            (evil-global-set-key 'emacs (kbd "C-w") 'evil-window-map)
-            (evil-global-set-key 'emacs (kbd ",") 'evil-execute-in-god-state)
             (evil-global-set-key 'normal (kbd ",") 'evil-execute-in-god-state)
             (evil-global-set-key 'visual (kbd ",") 'evil-execute-in-god-state)
             (evil-global-set-key 'insert (kbd "M-,") 'evil-execute-in-god-state)
@@ -250,8 +252,8 @@
             ;; Emacs state buffers.  I need to be able to scroll easily
             (evil-global-set-key 'emacs (kbd "C-f") 'scroll-up-command)
             (evil-global-set-key 'emacs (kbd "C-b") 'scroll-down-command)
-
-            (evil-define-key 'normal org-mode-map (kbd "<tab>") 'org-cycle)
+            (evil-global-set-key 'emacs (kbd "C-w") 'evil-window-map)
+            (evil-global-set-key 'emacs (kbd ",") 'evil-execute-in-god-state)
 
             ;; escape quits
             (bind-key "<escape>" 'isearch-cancel isearch-mode-map)
@@ -261,86 +263,6 @@
             (define-key minibuffer-local-must-match-map (kbd "ESC") 'abort-recursive-edit)
             (define-key minibuffer-local-isearch-map (kbd "ESC") 'abort-recursive-edit)
 
-            ;;; text objects
-
-            ;; TODO: make the following work well with counts i.e. selecting more than one subtree or list item
-
-            ;; TODO: item text objects should not include subitems
-
-            (evil-define-text-object evil-org-outer-subtree (count &optional beg end type)
-              "An Org subtree.  Uses code from `org-mark-subtree`"
-              :type line
-              (save-excursion
-                ;; get to the top of the tree
-                (org-with-limited-levels
-                 (cond ((org-at-heading-p) (beginning-of-line))
-                       ((org-before-first-heading-p) (user-error "Not in a subtree"))
-                       (t (outline-previous-visible-heading 1))))
-
-                (decf count)
-                (when count (while (and (> count 0) (org-up-heading-safe)) (decf count)))
-
-                ;; extract the beginning and end of the tree
-                (let ((element (org-element-at-point)))
-                  (list (org-element-property :end element)
-                        (org-element-property :begin element)))))
-
-            (evil-define-text-object evil-org-inner-subtree (count &optional beg end type)
-              "An Org subtree, minus its header and concluding line break.  Uses code from `org-mark-subtree`"
-              :type line
-              (save-excursion
-                ;; get to the top of the tree
-                (org-with-limited-levels
-                 (cond ((org-at-heading-p) (beginning-of-line))
-                       ((org-before-first-heading-p) (user-error "Not in a subtree"))
-                       (t (outline-previous-visible-heading 1))))
-
-                (decf count)
-                (when count (while (and (> count 0) (org-up-heading-safe)) (decf count)))
-
-                ;; extract the beginning and end of the tree
-                (let* ((element (org-element-at-point))
-                       (begin (save-excursion
-                                (goto-char (org-element-property :begin element))
-                                (next-line)
-                                (point)))
-                       (end (save-excursion
-                              (goto-char (org-element-property :end element))
-                              (backward-char 1)
-                              (point))))
-                  (list end begin))))
-
-            (define-key evil-outer-text-objects-map "*" 'evil-org-outer-subtree)
-            (define-key evil-inner-text-objects-map "*" 'evil-org-inner-subtree)
-
-            (evil-define-text-object evil-org-outer-item (count &optional beg end type)
-              :type line
-              (let* ((regionp (org-region-active-p))
-                     (struct (progn
-                               (re-search-backward "^[[:space:]]*- ")
-                               (org-list-struct)))
-                     (begin (org-list-get-item-begin))
-                     (end (org-list-get-item-end (point-at-bol) struct)))
-                (if (or (not begin) (not end))
-                    nil
-                  (list begin end))))
-
-            (evil-define-text-object evil-org-inner-item (count &optional beg end type)
-              (let* ((regionp (org-region-active-p))
-                     (struct (progn
-                               (re-search-backward "^[[:space:]]*- ")
-                               (org-list-struct)))
-                     (begin (progn (goto-char (org-list-get-item-begin))
-                                   (forward-char 2)
-                                   (point)))
-                     (end (org-list-get-item-end-before-blank (point-at-bol) struct)))
-                (if (or (not begin) (not end))
-                    nil
-                  (list begin end))))
-
-            (define-key evil-inner-text-objects-map "-" 'evil-org-inner-item)
-            (define-key evil-outer-text-objects-map "-" 'evil-org-outer-item)
-
             ;;; Advice
 
             ;; make Evil respect the eshell prompt
@@ -349,13 +271,7 @@
                   (call-interactively 'eshell-bol)))
             (defadvice evil-first-non-blank (after spw/evil-eshell-bol activate)
               (if (eq major-mode 'eshell-mode)
-                  (call-interactively 'eshell-bol)))
-
-            ;; make Evil respect Org line prefixes when inserting at
-            ;; the beginning of the line
-            (defadvice evil-insert-line (after spw/evil-org-bol activate)
-              (if (eq major-mode 'org-mode)
-                  (call-interactively 'org-beginning-of-line)))))
+                  (call-interactively 'eshell-bol)))))
 
 ;; evil support packages
 
@@ -392,7 +308,7 @@
                                                        (setq last-repeatable-command evil-god-last-command)
                                                        (repeat 1)))
             (defadvice evil-execute-in-god-state
-              (before evil-execute-in-god-state-from-visual-state activate)
+                (before evil-execute-in-god-state-from-visual-state activate)
               "When in visual state, get out of visual state
 and restore the selection before firing up god-mode.  This avoids
 visual state bindings conflicting with god-mode"
@@ -402,9 +318,7 @@ visual state bindings conflicting with god-mode"
                 (forward-char 1)
                 (evil-exit-visual-state)
                 (let ((activate-mark-hook nil)) ; stop visual mode from firing
-                  (activate-mark))))
-
-            (evil-define-key 'normal emacs-lisp-mode-map (kbd ")") 'paredit-forward-up)))
+                  (activate-mark))))))
 
 (use-package evil-surround
   :ensure
@@ -425,10 +339,11 @@ visual state bindings conflicting with god-mode"
   :ensure
   :commands paredit-mode
   :init (progn
+          (use-package evil-paredit :ensure)
+
           (add-hook 'emacs-lisp-mode-hook #'enable-paredit-mode)
           (add-hook 'emacs-lisp-mode-hook #'evil-paredit-mode)))
 
-(use-package evil-paredit :ensure)
 (use-package evil-indent-textobject :ensure)
 (setq evil-operator-comment-key "Q")
 (use-package evil-operator-comment)
@@ -437,6 +352,7 @@ visual state bindings conflicting with god-mode"
 
 (use-package expand-region
   :ensure
+  :commands er/expand-region
   :init (setq expand-region-contract-fast-key (kbd "o")))
 
 ;; evil-leader
@@ -654,10 +570,6 @@ visual state bindings conflicting with god-mode"
               :diminish magit-wip-save-mode
               :config (global-magit-wip-save-mode 1))))
 
-;;; winner mode: undo window configuration changes
-
-(winner-mode 1)
-
 ;;; pointback mode: make sure that point is back where I left it when
 ;;; switching between buffers where at least one buffer is displayed
 ;;; in more than one window
@@ -769,6 +681,8 @@ visual state bindings conflicting with god-mode"
             (define-key company-active-map "\C-n" 'company-select-next)
             (define-key company-active-map "\C-p" 'company-select-previous)
 
+            ;;; settings
+
             (setq company-idle-delay nil
                   company-minimum-prefix-length 0
                   company-echo-delay 0)
@@ -776,7 +690,7 @@ visual state bindings conflicting with god-mode"
             (add-to-list 'company-backends 'company-capf)
             (add-to-list 'company-transformers 'company-sort-by-occurrence)
 
-            ;; python code completion
+            ;;; python code completion
 
             (use-package anaconda-mode
               :ensure
@@ -810,16 +724,14 @@ visual state bindings conflicting with god-mode"
 (use-package deft
   :ensure
   :commands deft
-  :init (progn
-          (setq deft-extension "org"
-                deft-text-mode 'org-mode
-                deft-directory "~/doc/org/"
-                deft-use-filename-as-title nil
-                deft-auto-save-interval 20.0
-                deft-incremental-search nil
-
-                ;; don't just strip the leading hash but the whole #+TITLE:
-                deft-strip-title-regexp "\\(?:\\#\\+TITLE\\: \\|\\#\\+FILETAGS\\: \\|^%+\\|^[#* ]+\\|-\\*-[[:alpha:]]+-\\*-\\|#+$\\)"))
+  :init (setq deft-extension "org"
+              deft-text-mode 'org-mode
+              deft-directory "~/doc/org/"
+              deft-use-filename-as-title nil
+              deft-auto-save-interval 20.0
+              deft-incremental-search nil
+              ;; don't just strip the leading hash but the whole #+TITLE:
+              deft-strip-title-regexp "\\(?:\\#\\+TITLE\\: \\|\\#\\+FILETAGS\\: \\|^%+\\|^[#* ]+\\|-\\*-[[:alpha:]]+-\\*-\\|#+$\\)")
   :config (progn
             (bind-key "C-w" 'deft-filter-decrement-word deft-mode-map)
             ;; (bind-key "C-h" 'deft-filter-decrement deft-mode-map)
@@ -892,17 +804,11 @@ visual state bindings conflicting with god-mode"
 
 (use-package git-annex :ensure)
 
-;;; loads of visual help for working with Emacs regexps
-
-(use-package visual-regexp
-  :ensure
-  :commands (vr/replace vr/query-replace))
-
 ;;; some tiling functions
 
 (use-package tiling
-  :init (progn
-          (define-key evil-window-map (kbd "T") 'tiling-cycle)))
+  :commands tiling-cycle
+  :init (define-key evil-window-map (kbd "T") 'tiling-cycle))
 
 ;;; simple concept of projects
 
@@ -914,7 +820,7 @@ visual state bindings conflicting with god-mode"
   :config (progn
             (setq projectile-switch-project-action 'projectile-dired
                   projectile-completion-system 'helm)
-            ;; access projectile thorugh evil leader
+            ;; access projectile through evil leader
             (define-key evil-leader--default-map (kbd "p") projectile-command-map)
             (diminish 'projectile-mode)))
 
@@ -939,6 +845,7 @@ visual state bindings conflicting with god-mode"
             ;; configuration ala workgroups.el
             "qq" 'persp-basewc-restore
             "qu" 'persp-basewc-save)    ; mnemonic: update)
+
           (defun persp-toggle (arg)
             (interactive "P")
             (if arg (call-interactively 'persp-switch)
@@ -1145,21 +1052,19 @@ visual state bindings conflicting with god-mode"
 ;;; close old buffers once per day
 
 (use-package midnight
-  :init (progn
-          (midnight-delay-set 'midnight-delay "3am")))
+  :init (midnight-delay-set 'midnight-delay "3am"))
 
 ;;; make indentation in python nice and visible
 
 (use-package highlight-indentation
   :ensure
-  :init (progn
-          (add-hook 'python-mode-hook 'highlight-indentation-current-column-mode)))
+  :init (add-hook 'python-mode-hook 'highlight-indentation-current-column-mode))
 
 ;;; jump around what's visible
 
 (use-package ace-jump-mode
   :ensure
-  :commands ace-jump-mode)
+  :commands (evil-ace-jump-char-mode evil-ace-jump-word-mode ace-jump-mode))
 
 ;;; use ace-jump-mode to move between links in help file
 
@@ -1193,7 +1098,7 @@ visual state bindings conflicting with god-mode"
   :ensure
   :init (add-hook 'image-mode-hook 'eimp-mode))
 
-;;; alternative to my old `swhitton/centralise-current-window'
+;;; alternative to my old `spw/centralise-window'
 
 (use-package centered-window-mode
   :commands centered-window-mode)
@@ -1222,7 +1127,7 @@ visual state bindings conflicting with god-mode"
     ;; window mode
     (when (eq major-mode 'org-mode)
       (org-indent-mode 0)))
-  (if (eq system-type 'windows-nt) (swhitton/centralise-current-window nil))
+  (if (eq system-type 'windows-nt) (spw/centralise-window nil))
   (add-hook 'evil-insert-state-exit-hook 'fill-paragraph nil t))
 
 (defun spw/writing-off ()
@@ -1259,7 +1164,7 @@ visual state bindings conflicting with god-mode"
       (up-list (abs levels))
       (eval-last-sexp nil))))
 
-;; backwards and forward deletions of words
+;;; backwards and forward deletions of words
 
 (defun delete-word (arg)
   "Delete characters forward until encountering the end of a word.
@@ -1368,7 +1273,7 @@ With argument, do this that many times."
 
 ;;; centralise window for easier viewing
 
-(defun swhitton/centralise-current-window (arg)
+(defun spw/centralise-window (arg)
   "Make editing window 95 cols wide and centre it in the frame
 for easier reading and writing"
   (interactive "P")
@@ -1414,33 +1319,9 @@ for easier reading and writing"
           (select-window first-win)
           (if this-win-2nd (other-window 1))))))
 
-;;; swap/rotate windows
+;;; join up setqs when editing Emacs config
 
-(defun rotate-windows ()
-  "Rotate your windows"
-  (interactive)
-  (cond ((not (> (count-windows)1))
-         (message "You can't rotate a single window!"))
-        (t
-         (setq i 1)
-         (setq numWindows (count-windows))
-         (while  (< i numWindows)
-           (let* (
-                  (w1 (elt (window-list) i))
-                  (w2 (elt (window-list) (+ (% i numWindows) 1)))
-
-                  (b1 (window-buffer w1))
-                  (b2 (window-buffer w2))
-
-                  (s1 (window-start w1))
-                  (s2 (window-start w2)))
-             (set-window-buffer w1  b2)
-             (set-window-buffer w2 b1)
-             (set-window-start w1 s2)
-             (set-window-start w2 s1)
-             (setq i (1+ i)))))))
-
-(defun join-setqs ()
+(defun spw/join-setqs ()
   "Interactively join a series of setq forms into a single definition"
   (interactive)
   (open-line 1)
@@ -1459,6 +1340,8 @@ for easier reading and writing"
   (beginning-of-line)
   (mark-sexp)
   (indent-region (region-beginning) (region-end)))
+
+;;; better way to move to the beginning of the line
 
 (defun smarter-move-beginning-of-line (arg)
   "Move point back to indentation of beginning of line.
@@ -1483,6 +1366,8 @@ point reaches the beginning or end of the buffer, stop there."
     (when (= orig-point (point))
       (move-beginning-of-line 1))))
 
+;;; tidy up troublesome unicode
+
 ;; from http://blog.gleitzman.com/post/35416335505/hunting-for-unicode-in-emacs
 (defun unicode-hunt ()
   "Tidy up a buffer by replacing all special Unicode characters
@@ -1502,47 +1387,7 @@ point reaches the beginning or end of the buffer, stop there."
             (goto-char (point-min))
             (replace-regexp key value)))))
 
-;;; functions from magnars's emacs config
-
-(defun current-quotes-char ()
-  (nth 3 (syntax-ppss)))
-
-(defalias 'point-is-in-string-p 'current-quotes-char)
-
-(defun transpose-params ()
-  "Presumes that params are in the form (p, p, p) or {p, p, p} or [p, p, p]"
-  (interactive)
-  (let* ((end-of-first (cond
-                        ((looking-at ", ") (point))
-                        ((and (looking-back ",") (looking-at " ")) (- (point) 1))
-                        ((looking-back ", ") (- (point) 2))
-                        (t (error "Place point between params to transpose."))))
-         (start-of-first (save-excursion
-                           (goto-char end-of-first)
-                           (move-backward-out-of-param)
-                           (point)))
-         (start-of-last (+ end-of-first 2))
-         (end-of-last (save-excursion
-                        (goto-char start-of-last)
-                        (move-forward-out-of-param)
-                        (point))))
-    (transpose-regions start-of-first end-of-first start-of-last end-of-last)))
-
-(defun move-forward-out-of-param ()
-  (while (not (looking-at ")\\|, \\| ?}\\| ?\\]"))
-    (cond
-     ((point-is-in-string-p) (move-point-forward-out-of-string))
-     ((looking-at "(\\|{\\|\\[") (forward-list))
-     (t (forward-char)))))
-
-(defun move-backward-out-of-param ()
-  (while (not (looking-back "(\\|, \\|{ ?\\|\\[ ?"))
-    (cond
-     ((point-is-in-string-p) (move-point-backward-out-of-string))
-     ((looking-back ")\\|}\\|\\]") (backward-list))
-     (t (backward-char)))))
-
-;; from Emacs Prelude/Redux author
+;;; from Emacs Prelude/Redux author
 
 (defun eval-and-replace ()
   "Replace the preceding sexp with its value."
@@ -1554,7 +1399,7 @@ point reaches the beginning or end of the buffer, stop there."
     (error (message "Invalid expression")
            (insert (current-kill 0)))))
 
-;; from magnars
+;;; from magnars
 
 (defun new-line-dwim ()
   (interactive)
@@ -1580,17 +1425,7 @@ point reaches the beginning or end of the buffer, stop there."
     (indent-for-tab-command)
     (evil-insert 1)))
 
-(defun terminal-emulator (arg exec)
-  (interactive "P\nsexec: ")
-  (async-start-process "term" "/usr/bin/urxvt" 'ignore
-                       "++iso14755"
-                       "++iso14755_52"
-                       "-title"
-                       (shell-quote-argument exec)
-                       "-e"
-                       "/bin/sh"
-                       "-c"
-                       (shell-quote-argument exec)))
+;;; my functions for a very useful eshell
 
 (defun spw/small-vertical-split (&optional height)
   (interactive)
@@ -1643,6 +1478,8 @@ point reaches the beginning or end of the buffer, stop there."
     (let ((dired-name (buffer-file-name)))
       (dired-jump nil dired-name))))
 
+;;; Sariul functions
+
 (defun tblesson (grade lesson period)
   "Start writing a lesson plan for a standard textbook-based lesson"
   (interactive "sGrade: \nsGrade %s, lesson: \nsGrade %s, lesson %s, period: ")
@@ -1691,7 +1528,7 @@ point reaches the beginning or end of the buffer, stop there."
 (bind-key "S-<menu>" 'my-toggle-lang-env)
 (bind-key "S-<Multi_key>" 'my-toggle-lang-env) ; need this on Apple keyboard
 
-(bind-key "C-c c" 'swhitton/centralise-current-window)
+(bind-key "C-c c" 'spw/centralise-window)
 (bind-key "C-c S" 'toggle-window-split)
 (bind-key "C-c R" 'rotate-windows)
 (bind-key "C-c u" 'unicode-hunt)
@@ -1850,7 +1687,7 @@ point reaches the beginning or end of the buffer, stop there."
   :mode ("/mutt-.*$" . message-mode)
   :init (add-hook 'message-mode-hook 'message-goto-body))
 
-(defun djcb-snip (b e summ)
+(defun djcb/snip (b e summ)
   "remove selected lines, and replace it with [snip:summary (n lines)]"
   (interactive "r\nsSummary:")
   (let ((n (count-lines b e)))
@@ -1864,7 +1701,10 @@ point reaches the beginning or end of the buffer, stop there."
 (add-hook 'message-mode-hook (lambda ()
                                (auto-fill-mode)
                                (footnote-mode)
-                               (define-key message-mode-map (kbd "C-c C-s") 'djcb-snip)
+                               (evil-leader/set-key-for-mode 'message-mode
+                                 ;; overrides eshell binding which I
+                                 ;; don't need when accessing from mutt
+                                 "gs" 'djcb/snip)
                                (message-goto-body)
                                ;; (orgstruct++-mode) ; must go last for some reason
                                ))
