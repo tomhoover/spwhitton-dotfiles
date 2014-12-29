@@ -183,7 +183,7 @@
 (if (fboundp 'blink-cursor-mode) (blink-cursor-mode 0)) ; turns off blink-cursor-mode if it ended up on
 
 ;; get the mouse out of the way
-(mouse-avoidance-mode 'banish)
+(mouse-avoidance-mode 'exile)
 
 ;;; zenburn
 
