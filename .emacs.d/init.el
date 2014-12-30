@@ -251,8 +251,18 @@
             (evil-global-set-key 'visual (kbd ",") 'evil-execute-in-god-state)
             (evil-global-set-key 'insert (kbd "M-,") 'evil-execute-in-god-state)
 
+            ;; for editing lisp, something like paredit
+
             (evil-define-key 'normal emacs-lisp-mode-map (kbd ")") 'paredit-forward-up)
             (evil-define-key 'normal emacs-lisp-mode-map (kbd "(") 'paredit-backward-up)
+
+            ;; these two are better outside of evil leader map because
+            ;; often want to type them more than once
+            (evil-define-key 'normal emacs-lisp-mode-map (kbd "H") 'paredit-forward-barf-sexp)
+            (evil-define-key 'normal emacs-lisp-mode-map (kbd "L") 'paredit-forward-slurp-sexp)
+
+            ;; something I often find myself wanting to do
+            (evil-define-key 'normal emacs-lisp-mode-map (kbd "o") 'spw/evil-lisp-open-below)
 
             ;; I can use the arrow keys if I need to move by char in
             ;; Emacs state buffers.  I need to be able to scroll easily
@@ -439,10 +449,8 @@ visual state bindings conflicting with god-mode"
             "dj" 'paredit-join-sexps
             "ds" 'paredit-split-sexp
             "dp" 'paredit-splice-sexp
-            "dl" 'paredit-forward-slurp-sexp
-            "dh" 'paredit-forward-barf-sexp
-            "dL" 'paredit-backward-slurp-sexp
-            "dH" 'paredit-backward-barf-sexp
+            "dl" 'paredit-backward-slurp-sexp
+            "dh" 'paredit-backward-barf-sexp
             "dk" 'paredit-kill
 
             ;; evaluation map
@@ -1111,6 +1119,19 @@ visual state bindings conflicting with god-mode"
   :commands centered-window-mode)
 
 ;;;; ---- functions ----
+
+;;; useful open below in lisp: a new line for writing a new sexp at
+;;; the same depth as the one you're in
+
+(defun spw/evil-lisp-open-below ()
+  (interactive)
+  ;; don't do it if we're in a comment, or the only thing before us on
+  ;; this line is blank space
+  (if (or (evil-in-comment-p)
+          (looking-back "^[:blank:]*"))
+      (call-interactively 'evil-open-below)
+    (paredit-forward-up)
+    (new-line-dwim)))
 
 ;;; Endless Parentheses narrowing dwim
 
