@@ -1128,6 +1128,25 @@ visual state bindings conflicting with god-mode"
 (use-package centered-window-mode
   :commands centered-window-mode)
 
+;;; IRC client, for when I need it
+
+(use-package rcirc
+  :config (progn
+            ;; basic settings
+            (setq rcirc-default-nick "seanw"
+                  rcirc-default-user-name user-login-name
+                  rcirc-default-full-name user-full-name)
+
+            ;; networks and channels
+            (setq rcirc-server-alist nil)
+            (add-to-list 'rcirc-server-alist
+                         '("chat.freenode.net" :port 6697 :encryption tls
+                           :channels ("#freenode-social")))
+
+            ;; authentication data
+            (when (f-exists? "~/.emacs.d/init-rcirc.el")
+              (load-file "~/.emacs.d/init-rcirc.el"))))
+
 ;;;; ---- functions ----
 
 ;;; useful open below in lisp: a new line for writing a new sexp at
