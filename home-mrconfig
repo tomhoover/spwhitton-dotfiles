@@ -167,7 +167,7 @@ skip = ! which git-remote-gcrypt >/dev/null 2>/dev/null
 
 # convenience automatic permission setting and checking in of
 # frequently changed files
-fixups = chmod 600 .passwddb.pet .s3ql/authinfo2
+fixups = chmod 600 .passwddb.pet .s3ql/authinfo2; git config gcrypt.publish-participants true
 pre_update =
            git add .passwddb.pet .labbook.gpg
            git commit -a -m "auto passwddb and labbook commit on $(hostname -s)" || true
@@ -180,7 +180,7 @@ autoci =
 [lib/annex]
 checkout = git clone 'gcrypt::ssh://ma/~/local/git/lib.annex.git' 'annex'
 post_update = git annex merge
-fixups = git config push.default matching
+fixups = git config push.default matching; git config gcrypt.publish-participants true
 
 # this repository can't be checked out until we install
 # git-remote-gcrypt
