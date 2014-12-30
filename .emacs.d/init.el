@@ -287,7 +287,11 @@
                   (call-interactively 'eshell-bol)))
             (defadvice evil-first-non-blank (after spw/evil-eshell-bol activate)
               (if (eq major-mode 'eshell-mode)
-                  (call-interactively 'eshell-bol)))))
+                  (call-interactively 'eshell-bol)))
+            (defadvice evil-ret (around spw/evil-eshell-ret activate)
+              (if (eq major-mode 'eshell-mode)
+                  (call-interactively 'eshell-send-input)
+                ad-do-it))))
 
 ;; evil support packages
 
