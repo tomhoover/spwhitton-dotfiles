@@ -1130,7 +1130,9 @@ visual state bindings conflicting with god-mode"
 (defun spw/evil-lisp-open-below ()
   (interactive)
   ;; don't do it if we're in a comment, or the only thing before us on
-  ;; this line is blank space
+  ;; this line is blank space, and if we're right at the beginning of
+  ;; an sexp move forward one first
+  (if (looking-at "(") (forward-char 1))
   (if (or (evil-in-comment-p)
           (looking-back "^[:blank:]*"))
       (call-interactively 'evil-open-below)
