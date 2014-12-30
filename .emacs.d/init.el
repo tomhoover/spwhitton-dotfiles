@@ -464,6 +464,12 @@ visual state bindings conflicting with god-mode"
             "eb" 'eval-buffer
             "E"  'eval-and-replace)
 
+          ;; access to writable dired
+          (evil-leader/set-key-for-mode 'dired-mode "gw" (lambda ()
+                                                           (interactive)
+                                                           (wdired-change-to-wdired-mode)
+                                                           (evil-force-normal-state)))
+
           ;; `evil-leader/in-all-states' binds in insert state, but we
           ;; want it emacs state only.  So do this with a hook
           (setq evil-leader/in-all-states nil)
