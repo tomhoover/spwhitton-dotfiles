@@ -237,6 +237,7 @@
 ;;;; ---- agenda and refile ----
 
 (defadvice org-agenda (before persp-org-agenda activate)
+  "Switch perspective project before compiling the agenda."
   (projectile-persp-switch-project "~/doc"))
 
 (setq org-agenda-custom-commands
