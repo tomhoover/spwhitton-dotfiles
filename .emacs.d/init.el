@@ -1338,6 +1338,23 @@ point reaches the beginning or end of the buffer, stop there."
 ;; insert mode headers
 (bind-key "C-c i h" 'add-file-local-variable-prop-line)
 
+;;; bind all up into the C-c keymap
+
+(defmacro spw/C-c-bind (key bindee)
+  "Bind BINDEE to C-c KEY with `bind-key' macro.  BINDEE may be a
+command or another keymap."
+  `(if (keymapp ,bindee)
+       (bind-key (concat "C-c " ,key) ,bindee)
+     (bind-key (concat "C-c " ,key) bindee)))
+(dolist (pair '(
+                ("p" . projectile-command-map)
+                ("j" . spw/helm-mini)
+                ("v" . projectile-vc)
+                ))
+  (let ((key (car pair))
+        (bindee (cdr pair)))
+    (spw/C-c-bind key bindee)))
+
 ;;; abbreviations
 
 (setq abbrev-file-name "~/doc/emacs-abbrevs")
