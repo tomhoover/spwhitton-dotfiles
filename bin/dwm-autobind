@@ -1,7 +1,6 @@
 #!/bin/sh
 
 setxkbmap -option ctrl:nocaps
-~/local/bin/xcape -e 'Control_L=Escape'
 setxkbmap -option "compose:ralt"
 setxkbmap -layout gb
 xbindkeys
