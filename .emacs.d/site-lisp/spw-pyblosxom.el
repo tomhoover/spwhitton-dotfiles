@@ -130,9 +130,9 @@ With prefix argument ARG, thumbnail it."
   "Helper functions for my Org-mode-managed Pyblosxom blog."
   :lighter " spwPb"
   :keymap (let ((map (make-sparse-keymap)))
-            (define-key map (kbd (concat evil-leader/leader "PP")) 'spw-pyblosxom-publish)
-            (define-key map (kbd (concat evil-leader/leader "Pi")) 'spw-pyblosxom-insert-image)
-            (define-key map (kbd (concat evil-leader/leader "Pl")) 'spw-pyblosxom-insert-page-link)
+            (define-key map (kbd "C-c B B") 'spw-pyblosxom-publish)
+            (define-key map (kbd "C-c B i") 'spw-pyblosxom-insert-image)
+            (define-key map (kbd "C-c B l") 'spw-pyblosxom-insert-page-link)
             map))
 
 ;;;###autoload
