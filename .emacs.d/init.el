@@ -368,7 +368,7 @@
 
             ;; I like my C-w binding so move one of company's bindings
             (define-key company-active-map "\C-w" nil)
-            (define-key company-active-map "\C-j" 'company-show-location)
+            (bind-key "M-o" 'company-show-location company-active-map)
 
             ;;; settings
 
@@ -589,7 +589,7 @@
                        '(org-capture . completing-read-default))
 
           ;; rebind some keys
-          (bind-key "C-w" 'backward-delete-word helm-map)
+          (bind-key "C-w" 'spw/backward-delete-word helm-map)
           (bind-key "C-o" 'helm-select-action helm-map)
           (bind-key "M-i" 'helm-next-source helm-map)
 
@@ -748,10 +748,9 @@
   :ensure
   :init (add-hook 'image-mode-hook 'eimp-mode))
 
-;;; alternative to my old `spw/centralise-window'
+;;; alternative to my old `spw/centre-window'
 
-(use-package centered-window-mode
-  :commands centered-window-mode)
+(use-package centered-window-mode :commands centered-window-mode)
 
 ;;; IRC client, for when I need it
 
@@ -799,18 +798,8 @@ narrowed."
 
 ;;; toggle some features on and off to make Emacs better at prose editing
 
-(defun org-fill-buffer ()
-  (interactive)
-  (when (eq major-mode 'org-mode)
-    (when (not (string= "gpg" (f-ext (f-this-file))))
-      (save-excursion
-        (goto-char (point-min))
-        (while (not (eq (point) (point-max)))
-          (org-forward-paragraph)
-          (org-fill-paragraph))))))
-
 (defun spw/writing-on ()
-  ;; (add-hook 'before-save-hook 'org-fill-buffer nil t)
+  "Activate my prose writing features."
   (wc-mode 1)
   (variable-pitch-mode 1)
   (unless (eq system-type 'windows-nt)
@@ -819,12 +808,10 @@ narrowed."
     ;; window mode
     (when (eq major-mode 'org-mode)
       (org-indent-mode 0)))
-  (if (eq system-type 'windows-nt) (spw/centralise-window nil))
-  ;; (add-hook 'evil-insert-state-exit-hook 'fill-paragraph nil t)
-  )
+  (if (eq system-type 'windows-nt) (spw/centre-window nil)))
 
 (defun spw/writing-off ()
-  ;; (remove-hook 'before-save-hook 'org-fill-buffer t)
+  "Deactivate my prose writing features."
   (wc-mode 0)
   (variable-pitch-mode 0)
   (unless (eq system-type 'windows-nt)
@@ -834,11 +821,10 @@ narrowed."
     (when (eq major-mode 'org-mode)
       ;; TODO: finesse this.  don't turn it on if it wouldn't be on by default
       (org-indent-mode 1)))
-  (if (eq system-type 'windows-nt) (delete-other-windows))
-  ;; (remove-hook 'evil-insert-state-exit-hook 'fill-paragraph t)
-  )
+  (if (eq system-type 'windows-nt) (delete-other-windows)))
 
 (defun spw/writing-toggle ()
+  "Toggle on and off my prose writing features."
   (interactive)
   (let ((activate (if (boundp 'buffer-face-mode) buffer-face-mode)))
     (if activate
@@ -848,9 +834,10 @@ narrowed."
 ;; e.g. `((org-mode . ((eval . (spw/writing-toggle)))))` in
 ;; .dir-locals.el
 
-;;; eval the surrounding sexp (https://stackoverflow.com/posts/2172827/revisions)
+(defun spw/eval-surrounding-sexp (levels)
+  "Go up LEVELS sexps from point and eval.
 
-(defun eval-surrounding-sexp (levels)
+Originally from http://stackoverflow.com/a/2172827"
   (interactive "p")
   (save-excursion
     (if (looking-at "(")
@@ -860,27 +847,27 @@ narrowed."
 
 ;;; backwards and forward deletions of words
 
-(defun delete-word (arg)
-  "Delete characters forward until encountering the end of a word.
-With argument, do this that many times."
+(defun spw/delete-word (arg)
+  "Delete ARG characters forward until encountering the end of a word."
   (interactive "p")
   (delete-region (point) (progn (forward-word arg) (point))))
 
-(defun backward-delete-word (arg)
-  "Delete characters backward until encountering the end of a word.
-With argument, do this that many times."
+(defun spw/backward-delete-word (arg)
+  "Delete characters ARG backward until encountering the end of a word."
   (interactive "p")
-  (delete-word (- arg)))
+  (spw/delete-word (- arg)))
 
-(bind-key "C-w" 'backward-delete-word)
+(bind-key "C-w" 'spw/backward-delete-word)
 (bind-key "C-x C-k" 'kill-region)
-(global-set-key "\M-d" 'delete-word)
+(global-set-key "\M-d" 'spw/delete-word)
 (bind-key "C-x C-m" 'execute-extended-command)
 
 ;;; my buffer save cleanup functions
 
-;; http://stackoverflow.com/questions/3533703/emacs-delete-trailing-whitespace-except-current-line
-(defun delete-trailing-whitespace-except-current-line ()
+(defun spw/delete-trailing-whitespace-except-current-line ()
+  "Delete trailing whitespace on all lines except the current one.
+
+Originally from <http://stackoverflow.com/a/3533815>."
   (interactive)
   (let ((begin (line-beginning-position))
         (end (line-end-position)))
@@ -894,7 +881,8 @@ With argument, do this that many times."
           (narrow-to-region (1+ end) (point-max))
           (delete-trailing-whitespace))))))
 
-(defun compact-blank-lines ()
+(defun spw/compact-blank-lines ()
+  "Replace multiple empty blank lines in the buffer with single blank lines."
   (interactive)
   (save-excursion
     (goto-char (point-min))
@@ -902,7 +890,7 @@ With argument, do this that many times."
       (replace-match "\n\n"))))
 
 (defun spw/clean-lisp-dangling-brackets ()
-  "Clean up dangling brackets"
+  "Clean up dangling brackets."
   (interactive)
   (save-excursion
     (goto-char (point-min))
@@ -915,14 +903,15 @@ With argument, do this that many times."
           (delete-indentation))))))
 
 (defun spw/auto-cleanup ()
+  "Unoffensive automatic cleanups."
   (interactive)
   (case major-mode
     (haskell-mode
-     (delete-trailing-whitespace-except-current-line)
-     (compact-blank-lines))
+     (spw/delete-trailing-whitespace-except-current-line)
+     (spw/compact-blank-lines))
     (python-mode
-     (delete-trailing-whitespace-except-current-line)
-     (compact-blank-lines))
+     (spw/delete-trailing-whitespace-except-current-line)
+     (spw/compact-blank-lines))
     (message-mode
      (save-excursion
        (message-goto-body)
@@ -931,10 +920,14 @@ With argument, do this that many times."
          ;; (fill-region (point-min) (point-max))
          (whitespace-cleanup))))
     (emacs-lisp-mode
-     (delete-trailing-whitespace-except-current-line)
-     (compact-blank-lines))))
+     (spw/delete-trailing-whitespace-except-current-line)
+     (spw/compact-blank-lines))))
 
 (defun spw/manual-cleanup ()
+  "Clean up a buffer depending on major mode.
+
+Sufficiently aggressive clean-ups that should not be called
+automatically."
   (interactive)
   (spw/auto-cleanup)
   (untabify (point-min) (point-max))
@@ -948,49 +941,44 @@ With argument, do this that many times."
 
 ;;; Typing Hangul
 
-(defun my-korean-setup ()
-  "Set up my Korean environment."
-  (if (equal current-language-environment "Korean")
-      (set-input-method "korean-hangul")))
+(defun spw/input-method-setup ()
+  "Set up or tear down hangeul input method."
+  (cond ((equal current-language-environment "English")
+         (set-input-method nil))
+        ((equal current-language-environment "Korean")
+         (set-input-method "korean-hangul"))))
+(add-hook 'set-language-environment-hook 'spw/input-method-setup)
 
-(defun my-english-setup ()
-  "Set up my English environment."
-  (if (equal current-language-environment "English")
-      (set-input-method nil)))
-
-(add-hook 'set-language-environment-hook 'my-korean-setup)
-(add-hook 'set-language-environment-hook 'my-english-setup)
-
-(defun my-toggle-lang-env ()
+(defun spw/toggle-language-environment ()
+  "Toggle typing hangeul."
   (interactive)
   (set-language-environment
    (if (equal current-language-environment "English")
        "Korean" "English")))
 
-;;; centralise window for easier viewing
+(bind-key "S-SPC" 'spw/toggle-language-environment)
 
-(defun spw/centralise-window (arg)
-  "Make editing window 95 cols wide and centre it in the frame
-for easier reading and writing"
+(defun spw/centre-window (arg)
+  "Make editing window 95 cols wide and centre it in the frame.
+
+With argument ARG, also bound it on the right."
   (interactive "P")
   (delete-other-windows)
   (split-window-horizontally)
-  (if arg
-      (split-window-horizontally))
+  (if arg (split-window-horizontally))
   (shrink-window-horizontally (- (window-width) (/ (- (frame-width) 97) 2)))
   (switch-to-buffer "*blank*")
   (toggle-read-only 1)
   (setq mode-line-format nil)
   (other-window 1)
-  (if arg (progn
-            (shrink-window-horizontally (- (window-width) 95))
-            (other-window 1)
-            (switch-to-buffer "*blank*")
-            (other-window -1))))
+  (when arg
+    (shrink-window-horizontally (- (window-width) 95))
+    (other-window 1)
+    (switch-to-buffer "*blank*")
+    (other-window -1)))
 
-;;; toggle orientation of a two window split
-
-(defun toggle-window-split ()
+(defun spw/toggle-window-split ()
+  "Toggle the orientation of a two-window split."
   (interactive)
   (if (= (count-windows) 2)
       (let* ((this-win-buffer (window-buffer))
@@ -1018,7 +1006,7 @@ for easier reading and writing"
 ;;; join up setqs when editing Emacs config
 
 (defun spw/join-setqs ()
-  "Interactively join a series of setq forms into a single definition"
+  "Interactively join a series of setq forms into a single definition."
   (interactive)
   (open-line 1)
   (insert "(setq)")
@@ -1064,10 +1052,10 @@ point reaches the beginning or end of the buffer, stop there."
 
 ;;; tidy up troublesome unicode
 
-;; from http://blog.gleitzman.com/post/35416335505/hunting-for-unicode-in-emacs
 (defun unicode-hunt ()
-  "Tidy up a buffer by replacing all special Unicode characters
-   (smart quotes, etc.) with their more sane cousins"
+  "Destroy some special Unicode characters like smart quotes.
+
+Originally from <http://blog.gleitzman.com/post/35416335505/hunting-for-unicode-in-emacs>."
   (interactive)
   (let ((unicode-map '(("[\u2018\|\u2019\|\u201A\|\uFFFD]" . "'")
                        ("[\u201c\|\u201d\|\u201e]" . "\"")
@@ -1095,9 +1083,8 @@ point reaches the beginning or end of the buffer, stop there."
     (error (message "Invalid expression")
            (insert (current-kill 0)))))
 
-;;; from magnars
-
-(defun new-line-dwim ()
+(defun magnars/new-line-dwim ()
+  "Smart way to open lines below.  Originally by magnars."
   (interactive)
   (let* ((break-open-pair (or (and (looking-back "{" 1) (looking-at "}"))
                               (and (looking-back ">" 1) (looking-at "<"))
@@ -1118,22 +1105,51 @@ point reaches the beginning or end of the buffer, stop there."
         (save-excursion
           (newline)
           (indent-for-tab-command))))
-    (indent-for-tab-command)
-    ;; (evil-insert 1)
-    ))
+    (indent-for-tab-command)))
 
 ;;; my functions for a very useful eshell
 
+(defun evil/resize-window (new-size &optional horizontal)
+  "Set the current window's with or height to NEW-SIZE.
+
+With optional argument HORIZONTAL, change the horizontal size instead.
+
+Originally from evil's `evil-window.el'."
+  (let ((wincfg (current-window-configuration))
+        (nwins (length (window-list)))
+        (count (if horizontal
+                   (- new-size (window-width))
+                 (- new-size (window-height)))))
+    (catch 'done
+      (save-window-excursion
+        (while (not (zerop count))
+          (if (> count 0)
+              (progn
+                (enlarge-window 1 horizontal)
+                (setq count (1- count)))
+            (progn
+              (shrink-window 1 horizontal)
+              (setq count (1+ count))))
+          (if (= nwins (length (window-list)))
+              (setq wincfg (current-window-configuration))
+            (throw 'done t)))))
+    (set-window-configuration wincfg)))
+
 (defun spw/small-vertical-split (&optional height)
+  "Make a HEIGHT-lines vertical split.  HEIGHT defaults to 8."
   (interactive)
   (let ((split-height (or height 8)))
     (split-window-vertically)
     (other-window 1)
-    ;; (evil-resize-window split-height)
-    ))
+    (evil/resize-window split-height)))
 
 (defun persp-eshell (arg)
-  "Switch to perspective's eshell or create it.  If already in the eshell, move to the last prompt and clear it, ready for input"
+  "Switch to perspective's eshell or create it.
+
+If already in the eshell, move to the last prompt and clear it,
+ready for input.
+
+With arg ARG, put shell in current window."
   (interactive "P")
   (let* ((in-project (and (projectile-project-p)
                           (not (equal (persp-name persp-curr) "main"))))
@@ -1168,6 +1184,7 @@ point reaches the beginning or end of the buffer, stop there."
       (eshell-send-input))))
 
 (defun spw/dired-jump (arg)
+  "Call `dired-jump'.  Unless ARG, in a small vertical split."
   (interactive "P")
   (if arg
       (dired-jump)
@@ -1178,7 +1195,7 @@ point reaches the beginning or end of the buffer, stop there."
 ;;; Sariul functions
 
 (defun tblesson (grade lesson period)
-  "Start writing a lesson plan for a standard textbook-based lesson"
+  "Start a textbook-based lesson plan for grade GRADE, lesson LESSON, period PERIOD."
   (interactive "sGrade: \nsGrade %s, lesson: \nsGrade %s, lesson %s, period: ")
   (projectile-persp-switch-project "~/Documents/Teaching")
   (let* ((parent (f-join "~/Documents/Teaching" grade lesson))
@@ -1195,41 +1212,17 @@ point reaches the beginning or end of the buffer, stop there."
 
 ;;;; ---- personal settings ----
 
-;;; show parens
-
-(setq show-paren-delay 0)
-(show-paren-mode 1)
-
 ;;; no tabs please
 
 (setq-default indent-tabs-mode nil)
 
 ;;; key bindings
 
-;; I almost never want to quit and if I do there is Alt-F4
-(global-set-key (kbd "C-x C-c") 'delete-frame)
+;; I don't want to quit often
+(bind-key "C-x C-c" 'delete-frame)
 
-;; vim navigation
-;; (global-set-key (kbd "M-j") 'next-line)
-;; (global-set-key (kbd "M-k") 'previous-line)
-
-;; my function to fix my published blog
-(bind-key "C-c x p" (lambda () (interactive) (swhitton/pyblosxom-fixups)))
-
-;; sometimes need to forcefully access the system clipboard,
-;; especially on Windows
-(bind-key "C-c x C-y" 'clipboard-yank)
-(bind-key "C-c x M-w" 'clipboard-kill-ring-save)
-(bind-key "C-c x C-x C-k" 'clipboard-kill-region)
-
-(bind-key "S-<menu>" 'my-toggle-lang-env)
-(bind-key "S-<Multi_key>" 'my-toggle-lang-env) ; need this on Apple keyboard
-
-(bind-key "C-c c" 'spw/centralise-window)
-(bind-key "C-c S" 'toggle-window-split)
-(bind-key "C-c R" 'rotate-windows)
-(bind-key "C-c u" 'unicode-hunt)
-(bind-key "M-RET" 'new-line-dwim)
+;; opening new lines below
+(bind-key "M-RET" 'magnars/new-line-dwim)
 
 ;; C-m and RET should reindent the current line only for languages
 ;; that don't use semantic indentation
@@ -1254,8 +1247,9 @@ point reaches the beginning or end of the buffer, stop there."
 ;;; bind all up into the C-c keymap
 
 (defmacro spw/C-c-bind (key bindee)
-  "Bind BINDEE to C-c KEY with `bind-key' macro.  BINDEE may be a
-command or another keymap, but whatever it is, it should not be quoted."
+  "Bind BINDEE to C-c KEY with `bind-key' macro.
+
+BINDEE may be a command or another keymap, but whatever it is, it should not be quoted."
   `(if (keymapp ,bindee)
        (bind-key (concat "C-c " ,key) ,bindee)
      (bind-key (concat "C-c " ,key) bindee)))
@@ -1263,7 +1257,8 @@ command or another keymap, but whatever it is, it should not be quoted."
                 ("p" . projectile-command-map)
                 ("j" . spw/helm-mini)
                 ("v" . projectile-vc)
-                ("n" . mwf/narrow-or-widen-dwim)))
+                ("n" . mwf/narrow-or-widen-dwim)
+                ("gk" . kill-emacs)))
   (let ((key (car pair))
         (bindee (cdr pair)))
     (spw/C-c-bind key bindee)))
@@ -1305,8 +1300,9 @@ command or another keymap, but whatever it is, it should not be quoted."
 ;;; miscellaneous personal settings
 
 ;; isearch should leave you at the beginning of the match
-(add-hook 'isearch-mode-end-hook 'my-goto-match-beginning)
-(defun my-goto-match-beginning ()
+(add-hook 'isearch-mode-end-hook 'spw/isearch-match-beginning)
+(defun spw/isearch-match-beginning ()
+  "Move point to beginning of isearch match."
   (when isearch-other-end
     (when isearch-forward (goto-char isearch-other-end))))
 
@@ -1338,12 +1334,12 @@ command or another keymap, but whatever it is, it should not be quoted."
 (auto-insert-mode 1)
 
 ;; disable for python mode where it makes a mess
-(defun electric-indent-ignore-python (char)
-  "Ignore electric indentation for python-mode"
+(defun electric-indent-ignore-python ()
+  "Ignore electric indentation for `python-mode'."
   (if (equal major-mode 'python-mode)
       `no-indent'
     nil))
-(add-hook 'electric-indent-functions 'electric-indent-ignore-python)
+;(add-hook 'electric-indent-functions 'electric-indent-ignore-python)
 
 ;; browser
 (setq browse-url-generic-program "iceweasel"
@@ -1382,11 +1378,11 @@ command or another keymap, but whatever it is, it should not be quoted."
 
 ;;; auto fill comments in modes with a reliable comment syntax
 
-(defun turn-on-comment-filling ()
+(defun spw/turn-on-comment-filling ()
+  "Turn on filling comments."
   (setq-local comment-auto-fill-only-comments t)
   (auto-fill-mode 1))
-
-(add-hook 'emacs-lisp-mode-hook 'turn-on-comment-filling)
+(add-hook 'emacs-lisp-mode-hook 'spw/turn-on-comment-filling)
 
 ;;; mail mode for mutt
 
@@ -1395,7 +1391,7 @@ command or another keymap, but whatever it is, it should not be quoted."
   :init (add-hook 'message-mode-hook 'message-goto-body))
 
 (defun djcb/snip (b e summ)
-  "remove selected lines, and replace it with [snip:summary (n lines)]"
+  "Replace region B to E with SUMM like this: [snip:summary (n lines)]."
   (interactive "r\nsSummary:")
   (let ((n (count-lines b e)))
     (delete-region b e)
@@ -1408,13 +1404,7 @@ command or another keymap, but whatever it is, it should not be quoted."
 (add-hook 'message-mode-hook (lambda ()
                                (auto-fill-mode)
                                (footnote-mode)
-			       ;; (evil-leader/set-key-for-mode 'message-mode
-                               ;;   ;; overrides eshell binding which I
-                               ;;   ;; don't need when accessing from mutt
-                               ;;   "gs" 'djcb/snip)
-                               (message-goto-body)
-                               ;; (orgstruct++-mode) ; must go last for some reason
-                               ))
+                               (message-goto-body)))
 
 ;;; IELM
 
