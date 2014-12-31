@@ -158,6 +158,27 @@
   :bind ("M-i" . er/expand-region)
   :init (setq expand-region-contract-fast-key (kbd "o")))
 
+(use-package smartparens
+  :ensure
+  :idle (progn
+          (dolist (hook '(emacs-lisp-mode-hook
+                          lisp-mode-hook
+                          lisp-interaction-mode-hook
+                          ielm-mode-hook
+                          scheme-mode-hook
+                          inferior-scheme-mode-hook
+                          python-mode-hook))
+            (add-hook hook
+                      (lambda ()
+                        (smartparens-strict-mode))))
+          (show-smartparens-global-mode))
+  :config (progn
+            (require 'smartparens-config)
+            (setq sp-navigate-consider-symbols t)
+            (sp-use-smartparens-bindings)
+            (bind-key "C-w" 'sp-backward-kill-word emacs-lisp-mode-map)
+            (bind-key "C-k" 'sp-kill-hybrid-sexp emacs-lisp-mode-map)))
+
 ;;; Org
 
 (use-package org
