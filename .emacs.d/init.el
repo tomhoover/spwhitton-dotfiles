@@ -631,7 +631,7 @@
           ;; completing-read), and to select master requires an
           ;; additional C-n keypress which is inconvenient
           (defadvice helm-completing-read-default-1
-              (around spw/helm-completing-read-cands-in-buffer activate)
+	    (around spw/helm-completing-read-cands-in-buffer activate)
             (interactive)
             ;; unfortunately this doesn't work if require-match is
             ;; nil, so block that case
