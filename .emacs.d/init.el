@@ -501,7 +501,12 @@
          ("C-c L" . persp-switch))
   :init (progn
           (setq persp-modestring-dividers '("" "" "|"))
-          (persp-mode)
+
+          ;; activate persp mode, but don't activate it if it's
+          ;; already active cos this removes all existing perspectives
+          ;; which is annoying
+          (unless persp-mode
+            (persp-mode))
 
           (defun persp-toggle (arg)
             (interactive "P")
