@@ -1422,16 +1422,12 @@ BINDEE may be a command or another keymap, but whatever it is, it should not be 
 
 (setq TeX-auto-save t
       TeX-parse-self t
-      ;; reftex-plug-into-AUCTeX t
       LaTeX-indent-level 4
       LaTeX-item-indent -2
       TeX-newline-function 'reindent-then-newline-and-indent)
 
 (add-hook 'LaTeX-mode-hook 'turn-on-auto-fill)
-(add-hook 'LaTeX-mode-hook (lambda () (define-key LaTeX-mode-map [backtab] 'LaTeX-indent-line)))
 (add-hook 'LaTeX-mode-hook 'TeX-PDF-mode)
-(add-hook 'LaTeX-mode-hook 'flyspell-mode)
-;; (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
 
 (setq TeX-output-view-style
       (quote
