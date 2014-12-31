@@ -458,8 +458,11 @@
 
 (use-package ebib
   :ensure
-  :init (setq ebib-preload-bib-files '("~/doc/spw.bib"))
-  :commands ebib)
+  :bind ("C-c g e" . ebib)
+  :init (progn
+          (defadvice ebib (before spw/persp-ebib activate)
+            (persp-switch "ebib"))
+          (setq ebib-preload-bib-files '("~/doc/spw.bib"))))
 
 ;;; dired enhancements
 
@@ -494,6 +497,8 @@
 (use-package perspective
   :ensure
   :commands (persp-toggle persp-switch)
+  :bind (("C-c l" . persp-toggle)
+         ("C-c L" . persp-switch))
   :init (progn
           (setq persp-modestring-dividers '("" "" "|"))
           (persp-mode)
@@ -1233,12 +1238,14 @@ BINDEE may be a command or another keymap, but whatever it is, it should not be 
   `(if (keymapp ,bindee)
        (bind-key (concat "C-c " ,key) ,bindee)
      (bind-key (concat "C-c " ,key) bindee)))
-(dolist (pair '(
-                ("p" . projectile-command-map)
+(dolist (pair '(("p" . projectile-command-map)
                 ("j" . spw/helm-mini)
                 ("v" . projectile-vc)
                 ("n" . mwf/narrow-or-widen-dwim)
-                ("gk" . kill-emacs)))
+                ("gk" . kill-emacs)
+                ("s" . spw/persp-eshell)
+                ("d" . spw/dired-jump)
+                ("ih" . add-file-local-variable-prop-line)))
   (let ((key (car pair))
         (bindee (cdr pair)))
     (spw/C-c-bind key bindee)))
