@@ -1309,7 +1309,6 @@ point reaches the beginning or end of the buffer, stop there."
 (bind-key "C-c S" 'toggle-window-split)
 (bind-key "C-c R" 'rotate-windows)
 (bind-key "C-c u" 'unicode-hunt)
-(bind-key "M-o" 'new-line-dwim)
 (bind-key "M-RET" 'new-line-dwim)
 
 ;; C-m and RET should reindent the current line only for languages
