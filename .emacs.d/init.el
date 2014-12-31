@@ -550,9 +550,9 @@
 
 ;;; some tiling functions
 
-(use-package tiling
-  :commands tiling-cycle
-  :init (define-key evil-window-map (kbd "T") 'tiling-cycle))
+;; (use-package tiling
+;;   :commands tiling-cycle
+;;   :init (define-key evil-window-map (kbd "T") 'tiling-cycle))
 
 ;;; simple concept of projects
 
