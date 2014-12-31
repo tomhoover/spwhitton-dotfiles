@@ -158,6 +158,8 @@
   :bind ("M-i" . er/expand-region)
   :init (setq expand-region-contract-fast-key (kbd "o")))
 
+;;; keep parentheses under control
+
 (use-package smartparens
   :ensure
   :idle (progn
