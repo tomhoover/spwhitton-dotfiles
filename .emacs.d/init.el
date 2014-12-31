@@ -572,8 +572,7 @@
           (bind-key "C-w" 'backward-delete-word helm-map)
           (bind-key "C-o" 'helm-select-action helm-map)
           (bind-key "M-i" 'helm-next-source helm-map)
-          (bind-key "<escape>" 'helm-keyboard-quit helm-map)
-          (bind-key "<escape>" 'helm-keyboard-quit helm-comp-read-map)
+
           (defun helm-choose-last ()
             (interactive)
             (helm-end-of-buffer)
