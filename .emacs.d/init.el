@@ -1380,7 +1380,12 @@ BINDEE may be a command or another keymap, but whatever it is, it should not be 
 
 (use-package message
   :mode ("/mutt-.*$" . message-mode)
-  :init (add-hook 'message-mode-hook 'message-goto-body))
+  :init (progn
+          (setq mail-header-separator "")
+          (add-hook 'message-mode-hook (lambda ()
+                                         (auto-fill-mode)
+                                         (footnote-mode)
+                                         (message-goto-body)))))
 
 (defun djcb/snip (b e summ)
   "Replace region B to E with SUMM like this: [snip:summary (n lines)]."
@@ -1391,12 +1396,6 @@ BINDEE may be a command or another keymap, but whatever it is, it should not be 
                     (if (= 0 (length summ)) "" (concat ": " summ))
                     n
                     (if (= 1 n) "" "s")))))
-
-(setq mail-header-separator "")
-(add-hook 'message-mode-hook (lambda ()
-                               (auto-fill-mode)
-                               (footnote-mode)
-                               (message-goto-body)))
 
 ;;; IELM
 
