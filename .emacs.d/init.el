@@ -751,14 +751,6 @@
   :diminish yas-minor-mode
   :idle (yas-global-mode))
 
-;;; eshell's plan9-style smart shell
-
-(use-package em-smart
-  :init (progn
-          (setq eshell-where-to-jump 'begin
-                eshell-review-quick-commands nil
-                eshell-smart-space-goes-to-end t)))
-
 ;;; htmlize for Org HTML export/publishing
 
 (use-package htmlize :ensure)
