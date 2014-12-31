@@ -112,15 +112,16 @@
 
 ;;; zenburn
 
-(use-package zenburn-theme :ensure)
-(load-theme 'zenburn)
+(use-package zenburn-theme
+  :ensure
+  :init (load-theme 'zenburn))
 
 ;;; sexy mode line
 
 (use-package smart-mode-line
   :ensure
   :init (progn
-          (use-package powerline :ensure) ; dependency
+          (use-package powerline :ensure)
           (use-package smart-mode-line-powerline-theme :ensure)
           (sml/setup)
           (sml/apply-theme 'powerline)
@@ -189,9 +190,8 @@
 ;; use-package add them a few seconds after Emacs starts
 
 (use-package saveplace
-  :init (progn
-          (setq-default save-place t)
-          (setq save-place-file "~/.emacs.d/saveplace"))
+  :init (setq-default save-place t
+                      save-place-file "~/.emacs.d/saveplace")
   :idle (progn
           (add-hook 'find-file-hook 'save-place-find-file-hook t)
           (add-hook 'kill-emacs-hook 'save-place-kill-emacs-hook)
@@ -235,7 +235,7 @@
               (save-window-excursion
                 (magit-with-refresh
                  (shell-command "git --no-pager commit --amend --reuse-message=HEAD"))))
-            (define-key magit-status-mode-map (kbd "C-c C-a") 'magit-just-amend)
+            (bind-key "C-c C-a" 'magit-just-amend magit-status-mode-map)
 
             (use-package magit-annex :ensure)
 
@@ -755,10 +755,8 @@
 
 ;;;; ---- functions ----
 
-;;; Endless Parentheses narrowing dwim
-
-(defun narrow-or-widen-dwim (p)
-  "If the buffer is narrowed, it widens. Otherwise, it narrows intelligently.
+(defun mwf/narrow-or-widen-dwim (p)
+  "If the buffer is narrowed, it widens.  Otherwise, it narrows intelligently.
 Intelligently means: region, org-src-block, org-subtree, or defun,
 whichever applies first.
 Narrowing to org-src-block actually calls `org-edit-src-code'.
@@ -1238,7 +1236,7 @@ point reaches the beginning or end of the buffer, stop there."
 
 (defmacro spw/C-c-bind (key bindee)
   "Bind BINDEE to C-c KEY with `bind-key' macro.  BINDEE may be a
-command or another keymap."
+command or another keymap, but whatever it is, it should not be quoted."
   `(if (keymapp ,bindee)
        (bind-key (concat "C-c " ,key) ,bindee)
      (bind-key (concat "C-c " ,key) bindee)))
@@ -1246,7 +1244,7 @@ command or another keymap."
                 ("p" . projectile-command-map)
                 ("j" . spw/helm-mini)
                 ("v" . projectile-vc)
-                ))
+                ("n" . mwf/narrow-or-widen-dwim)))
   (let ((key (car pair))
         (bindee (cdr pair)))
     (spw/C-c-bind key bindee)))
