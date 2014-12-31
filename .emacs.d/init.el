@@ -31,7 +31,7 @@
 ;;; customisation -- must be loaded early so that zenburn theme is
 ;;; considered safe
 
-(setq custom-file "~/.emacs.d/init-custom.el")
+(defconst custom-file "~/.emacs.d/init-custom.el")
 (load custom-file 'noerror)
 
 ;;; From the tmux FAQ: should allow some modified keys to pass through
