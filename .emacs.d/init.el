@@ -225,279 +225,12 @@
 
 (use-package f :ensure) (use-package s :ensure)
 
-;;; the zen of vim from my youth
-
-(use-package evil
-  :ensure
-  :config (progn
-            ;;; settings
-
-            (setq evil-cross-lines nil)
-
-            ;;; initial states
-
-            (evil-set-initial-state 'deft-mode 'insert)
-            (evil-set-initial-state 'git-commit-mode 'insert)
-
-            ;;; bindings
-
-            (define-key evil-window-map (kbd "u") 'winner-undo)
-            (define-key evil-window-map (kbd ";") 'toggle-window-split)
-
-            (evil-global-set-key 'normal (kbd "s-j") 'evil-window-next)
-            (evil-global-set-key 'normal (kbd "s-k") 'evil-window-prev)
-
-            (evil-global-set-key 'normal (kbd ",") 'evil-execute-in-god-state)
-            (evil-global-set-key 'visual (kbd ",") 'evil-execute-in-god-state)
-            (evil-global-set-key 'insert (kbd "M-,") 'evil-execute-in-god-state)
-
-            ;; for editing lisp, something like paredit
-
-            (evil-define-key 'normal emacs-lisp-mode-map (kbd ")") 'paredit-forward-up)
-            (evil-define-key 'normal emacs-lisp-mode-map (kbd "(") 'paredit-backward-up)
-
-            ;; these two are better outside of evil leader map because
-            ;; often want to type them more than once
-            (evil-define-key 'normal emacs-lisp-mode-map (kbd "H") 'paredit-forward-barf-sexp)
-            (evil-define-key 'normal emacs-lisp-mode-map (kbd "L") 'paredit-forward-slurp-sexp)
-
-            ;; something I often find myself wanting to do
-            (evil-define-key 'normal emacs-lisp-mode-map (kbd "o") 'spw/evil-lisp-open-below)
-
-            ;; I can use the arrow keys if I need to move by char in
-            ;; Emacs state buffers.  I need to be able to scroll easily
-            (evil-global-set-key 'emacs (kbd "C-f") 'scroll-up-command)
-            (evil-global-set-key 'emacs (kbd "C-b") 'scroll-down-command)
-            (evil-global-set-key 'emacs (kbd "C-w") 'evil-window-map)
-            (evil-global-set-key 'emacs (kbd ",") 'evil-execute-in-god-state)
-
-            ;; escape quits
-            (bind-key "<escape>" 'isearch-cancel isearch-mode-map)
-            (define-key minibuffer-local-map (kbd "ESC") 'abort-recursive-edit)
-            (define-key minibuffer-local-ns-map (kbd "ESC") 'abort-recursive-edit)
-            (define-key minibuffer-local-completion-map (kbd "ESC") 'abort-recursive-edit)
-            (define-key minibuffer-local-must-match-map (kbd "ESC") 'abort-recursive-edit)
-            (define-key minibuffer-local-isearch-map (kbd "ESC") 'abort-recursive-edit)
-
-            ;;; Advice
-
-            ;; make Evil respect the eshell prompt
-            (defadvice evil-insert-line (after spw/evil-eshell-bol activate)
-              (if (eq major-mode 'eshell-mode)
-                  (call-interactively 'eshell-bol)))
-            (defadvice evil-first-non-blank (after spw/evil-eshell-bol activate)
-              (if (eq major-mode 'eshell-mode)
-                  (call-interactively 'eshell-bol)))
-            (defadvice evil-ret (around spw/evil-eshell-ret activate)
-              (if (eq major-mode 'eshell-mode)
-                  (call-interactively 'eshell-send-input)
-                ad-do-it))))
-
-;; evil support packages
-
-(use-package evil-god-state :ensure
-  :config (progn
-            (evil-global-set-key 'god (kbd "ESC") 'evil-god-state-bail)
-            (add-hook 'evil-god-start-hook (lambda () (diminish 'god-local-mode)))
-            (add-hook 'evil-god-stop-hook (lambda () (diminish-undo 'god-local-mode)))
-
-            ;; god-mode doesn't work well in special-mode buffers such as
-            ;; the Org agenda.  These buffers bind functions
-            ;; other than `self-insert-command` to letter and number
-            ;; keys, and god-local-mode intercepts key presses by
-            ;; remapping `self-insert-command` to its own function.
-            ;; So it fails to get a grip in special-mode buffers.
-
-            ;; This is okay when one isn't using Evil
-            ;; because in such modes bindings aren't generally
-            ;; prefixed with C- and M-: there's little reason to use god-mode.
-
-            ;; However, I want to use evil-god-state from the Emacs
-            ;; state in Org agenda buffers.  So manually remap all the keys.
-            (let ((map god-local-mode-map)
-                  (keys '("a" "b" "c" "d" "e" "f" "g" "h" "i" "j" "k"
-                          "l" "m" "n" "o" "p" "q" "r" "s" "t" "u" "v"
-                          "w" "x" "y" "z" "A" "B" "C" "D" "E" "F" "G"
-                          "H" "I" "J" "K" "L" "M" "N" "O" "P" "Q" "R"
-                          "S" "T" "U" "V" "W" "X" "Y" "Z" "0" "1" "2"
-                          "3" "4" "5" "6" "7" "8" "9" "0")))
-              (dolist (key keys)
-                (define-key map (kbd key) 'god-mode-self-insert)))
-            (define-key god-local-mode-map (kbd ",") (lambda ()
-                                                       (interactive)
-                                                       (setq last-repeatable-command evil-god-last-command)
-                                                       (repeat 1)))
-            (defadvice evil-execute-in-god-state
-                (before evil-execute-in-god-state-from-visual-state activate)
-              "When in visual state, get out of visual state
-and restore the selection before firing up god-mode.  This avoids
-visual state bindings conflicting with god-mode"
-              (when (evil-visual-state-p)
-                (if (< (point) (mark))
-                    (exchange-point-and-mark))
-                (forward-char 1)
-                (evil-exit-visual-state)
-                (let ((activate-mark-hook nil)) ; stop visual mode from firing
-                  (activate-mark))))))
-
-(use-package evil-surround
-  :ensure
-  :config (progn
-            ;; make sure that evil-surround works when paredit is
-            ;; active (from evil-surround's readme on github)
-            (add-to-list 'evil-surround-operator-alist
-                         '(evil-paredit-change . change))
-            (add-to-list 'evil-surround-operator-alist
-                         '(evil-paredit-delete . delete))))
-
-(use-package evil-args :ensure)
-(use-package evil-exchange :ensure)
-(use-package evil-matchit :ensure)
-;; (use-package evil-jumper :ensure)
-
-(use-package paredit
-  :ensure
-  :commands paredit-mode
-  :init (progn
-          (use-package evil-paredit :ensure)
-
-          (add-hook 'emacs-lisp-mode-hook #'enable-paredit-mode)
-          (add-hook 'emacs-lisp-mode-hook #'evil-paredit-mode)))
-
-(use-package evil-indent-textobject :ensure)
-(setq evil-operator-comment-key "Q")
-(use-package evil-operator-comment)
-
-;;; sometimes better than vim text objects
+;;; instead of vim text objects
 
 (use-package expand-region
   :ensure
-  :commands er/expand-region
+  :bind ("M-i" . er/expand-region)
   :init (setq expand-region-contract-fast-key (kbd "o")))
-
-;; evil-leader
-
-(use-package evil-leader
-  :ensure
-  :init (progn
-          ;; leader binding
-          (evil-leader/set-leader "<SPC>")
-          (evil-leader/set-key
-            ;; core map
-            "<SPC>" 'evil-ace-jump-word-mode
-            "S-<SPC>" 'evil-ace-jump-char-mode
-            "f" 'helm-find-files
-            "j" 'spw/helm-mini
-            "x" 'helm-M-x
-            "r" 'helm-swoop
-            "k" 'kill-buffer
-            "l" 'persp-toggle
-            "L" 'persp-switch
-            "v" 'projectile-vc
-            "C-w" 'evil-window-map
-            "w" 'evil-window-mru
-            "b" 'switch-to-buffer
-            "i" 'er/expand-region
-            "n" 'narrow-or-widen-dwim
-            "S" (lambda ()
-                  (interactive)
-                  ;; save the current buffer first (if it's visiting a
-                  ;; file) to avoid a y/n prompt
-                  (if (buffer-file-name) (save-buffer))
-                  ;; save all Org buffers to avoid some more prompts
-                  (if (featurep 'org)
-                      (org-save-all-org-buffers))
-                  (save-some-buffers))
-            "s" (lambda ()
-                  (interactive)
-                  ;; same as above but don't try to save all buffers
-                  ;; as y/n prompts annoying
-                  (if (buffer-file-name) (save-buffer))
-                  (if (featurep 'org)
-                      (org-save-all-org-buffers)))
-
-            ;; Org-mode map
-            "oc" 'org-capture
-            "ol" 'org-store-link
-            "oa" 'org-agenda
-            "o[" 'spw/org-agenda-file-to-front
-            "o]" 'spw/org-remove-file
-            "or" 'org-reveal
-            "os" 'org-kill-note-or-show-branches
-
-            ;; launcher map
-            "gs" 'persp-eshell
-            "gc" 'spw/manual-cleanup
-            "gd" 'spw/dired-jump
-            "gD" 'deft
-            "gl" 'tblesson
-            "gk" 'kill-emacs
-            "gr" (lambda ()
-                   (interactive)
-                   (projectile-persp-switch-project "~/src/dotfiles")
-                   (find-file "~/src/dotfiles/.emacs.d/init.el")
-                   (eval-buffer))
-            "*" 'calc-dispatch
-
-            ;; toggle map
-            "te" 'toggle-debug-on-error
-            "ti" 'org-indent-mode
-            "tw" 'spw/writing-toggle
-
-            ;; Jabber map ('c' for 'chat')
-            "cj" 'jabber-activity-switch-to
-            "cc" 'jabber-chat-with)
-
-          (evil-leader/set-key-for-mode 'emacs-lisp-mode
-            ;; paredit map
-            "dj" 'paredit-join-sexps
-            "ds" 'paredit-split-sexp
-            "dp" 'paredit-splice-sexp
-            "dl" 'paredit-backward-slurp-sexp
-            "dh" 'paredit-backward-barf-sexp
-            "dk" 'paredit-kill
-
-            ;; evaluation map
-            "ee" 'eval-surrounding-sexp
-            "ef" 'eval-defun
-            "er" 'eval-region
-            "eb" 'eval-buffer
-            "E"  'eval-and-replace)
-
-          ;; access to writable dired
-          (evil-leader/set-key-for-mode 'dired-mode "gw" (lambda ()
-                                                           (interactive)
-                                                           (wdired-change-to-wdired-mode)
-                                                           (evil-force-normal-state)))
-
-          ;; `evil-leader/in-all-states' binds in insert state, but we
-          ;; want it emacs state only.  So do this with a hook
-          (setq evil-leader/in-all-states nil)
-          (setq evil-leader/non-normal-prefix "")
-          (defun evil-leader/add-to-emacs-state ()
-            (let* ((prefixed (read-kbd-macro (concat evil-leader/non-normal-prefix evil-leader/leader)))
-                   (no-prefix (read-kbd-macro evil-leader/leader))
-                   (mode-map (cdr (assoc major-mode evil-leader--mode-maps)))
-                   (map (or mode-map evil-leader--default-map)))
-              (if evil-leader-mode
-                  (progn
-                    (evil-normalize-keymaps)
-                    (define-key evil-emacs-state-local-map prefixed map)
-                    ;; (define-key evil-emacs-state-local-map (kbd "<escape> <escape>") 'keyboard-quit)
-                    ))))))
-
-;; fire up Evil and associated packages
-
-(global-evil-leader-mode 1)
-(add-hook 'evil-local-mode-hook 'evil-leader/add-to-emacs-state)
-(remove-hook 'evil-local-mode-hook 'evil-turn-on-undo-tree-mode)
-(evil-mode)
-;; (require 'evil-jumper)
-(global-evil-surround-mode t)
-(global-evil-matchit-mode t)
-(global-evil-operator-comment-mode 1)
-(global-undo-tree-mode 0)
-(evil-exchange-install)
 
 ;;; Org
 
@@ -571,16 +304,6 @@ visual state bindings conflicting with god-mode"
   :ensure
   :diminish magit-auto-revert-mode
   :config (progn
-            (bind-key (kbd "'") 'magit-section-jump-map magit-status-mode-map)
-            (bind-key (kbd "j") 'magit-goto-next-section magit-status-mode-map)
-            (bind-key (kbd "M-j") 'magit-goto-next-sibling-section magit-status-mode-map)
-            (bind-key (kbd "k") 'magit-goto-previous-section magit-status-mode-map)
-            (bind-key (kbd "K") 'magit-discard-item magit-status-mode-map)
-            (bind-key (kbd "M-k") 'magit-goto-previous-sibling-section magit-status-mode-map)
-
-            ;; restore usual magit spacebar command to M-SPC
-            (bind-key (kbd "M-SPC") 'magit-show-item-or-scroll-up)
-
             ;; C-c C-a to amend without any prompt
             (defun magit-just-amend ()
               (interactive)
@@ -660,7 +383,7 @@ visual state bindings conflicting with god-mode"
              boxquote-describe-key
              boxquote-shell-command
              boxquote-where-is
-             boxquote-text
+	     boxquote-text
              boxquote-narrow-to-boxquote
              boxquote-narrow-to-boxquote-content
              boxquote-kill
@@ -701,10 +424,6 @@ visual state bindings conflicting with god-mode"
             ;; I like my C-w binding so move one of company's bindings
             (define-key company-active-map "\C-w" nil)
             (define-key company-active-map "\C-j" 'company-show-location)
-
-            ;; vim-like completion selection
-            (define-key company-active-map "\C-n" 'company-select-next)
-            (define-key company-active-map "\C-p" 'company-select-previous)
 
             ;;; settings
 
@@ -857,19 +576,6 @@ visual state bindings conflicting with god-mode"
   :init (progn
           (setq persp-modestring-dividers '("" "" "|"))
           (persp-mode)
-          ;; access perspectives thorugh evil leader
-          (evil-leader/set-key
-            "qd" 'persp-remove-buffer
-            "qk" 'persp-kill
-            "qr" 'persp-rename
-            "qa" 'persp-add-buffer
-            "qA" 'persp-set-buffer
-            "qi" 'persp-import
-
-            ;; my functions to save and restore a base window
-            ;; configuration ala workgroups.el
-            "qq" 'persp-basewc-restore
-            "qu" 'persp-basewc-save)    ; mnemonic: update)
 
           (defun persp-toggle (arg)
             (interactive "P")
@@ -951,8 +657,6 @@ visual state bindings conflicting with god-mode"
           (bind-key "M-i" 'helm-next-source helm-map)
           (bind-key "<escape>" 'helm-keyboard-quit helm-map)
           (bind-key "<escape>" 'helm-keyboard-quit helm-comp-read-map)
-          (bind-key "M-j" 'helm-next-line helm-map)
-          (bind-key "M-k" 'helm-previous-line helm-map)
           (defun helm-choose-last ()
             (interactive)
             (helm-end-of-buffer)
@@ -1089,7 +793,7 @@ visual state bindings conflicting with god-mode"
 
 (use-package ace-jump-mode
   :ensure
-  :commands (evil-ace-jump-char-mode evil-ace-jump-word-mode ace-jump-mode))
+  :bind ("M-o" . ace-jump-mode))
 
 ;;; use ace-jump-mode to move between links in help file
 
@@ -1149,21 +853,6 @@ visual state bindings conflicting with god-mode"
 
 ;;;; ---- functions ----
 
-;;; useful open below in lisp: a new line for writing a new sexp at
-;;; the same depth as the one you're in
-
-(defun spw/evil-lisp-open-below ()
-  (interactive)
-  ;; don't do it if we're in a comment, or the only thing before us on
-  ;; this line is blank space, and if we're right at the beginning of
-  ;; an sexp move forward one first
-  (if (looking-at "(") (forward-char 1))
-  (if (or (evil-in-comment-p)
-          (looking-back "^[:blank:]*"))
-      (call-interactively 'evil-open-below)
-    (paredit-forward-up)
-    (new-line-dwim)))
-
 ;;; Endless Parentheses narrowing dwim
 
 (defun narrow-or-widen-dwim (p)
@@ -1212,7 +901,8 @@ narrowed."
     (when (eq major-mode 'org-mode)
       (org-indent-mode 0)))
   (if (eq system-type 'windows-nt) (spw/centralise-window nil))
-  (add-hook 'evil-insert-state-exit-hook 'fill-paragraph nil t))
+  ;; (add-hook 'evil-insert-state-exit-hook 'fill-paragraph nil t)
+  )
 
 (defun spw/writing-off ()
   ;; (remove-hook 'before-save-hook 'org-fill-buffer t)
@@ -1226,7 +916,8 @@ narrowed."
       ;; TODO: finesse this.  don't turn it on if it wouldn't be on by default
       (org-indent-mode 1)))
   (if (eq system-type 'windows-nt) (delete-other-windows))
-  (remove-hook 'evil-insert-state-exit-hook 'fill-paragraph t))
+  ;; (remove-hook 'evil-insert-state-exit-hook 'fill-paragraph t)
+  )
 
 (defun spw/writing-toggle ()
   (interactive)
@@ -1262,7 +953,8 @@ With argument, do this that many times."
   (interactive "p")
   (delete-word (- arg)))
 
-(global-set-key "\C-w" 'backward-delete-word)
+(bind-key "C-w" 'backward-delete-word)
+(bind-key "C-x C-k" 'kill-region)
 (global-set-key "\M-d" 'delete-word)
 
 ;;; my buffer save cleanup functions
@@ -1507,7 +1199,8 @@ point reaches the beginning or end of the buffer, stop there."
           (newline)
           (indent-for-tab-command))))
     (indent-for-tab-command)
-    (evil-insert 1)))
+    ;; (evil-insert 1)
+    ))
 
 ;;; my functions for a very useful eshell
 
@@ -1597,8 +1290,8 @@ point reaches the beginning or end of the buffer, stop there."
 (global-set-key (kbd "C-x C-c") 'delete-frame)
 
 ;; vim navigation
-(global-set-key (kbd "M-j") 'next-line)
-(global-set-key (kbd "M-k") 'previous-line)
+;; (global-set-key (kbd "M-j") 'next-line)
+;; (global-set-key (kbd "M-k") 'previous-line)
 
 ;; my function to fix my published blog
 (bind-key "C-c x p" (lambda () (interactive) (swhitton/pyblosxom-fixups)))
@@ -1785,10 +1478,10 @@ point reaches the beginning or end of the buffer, stop there."
 (add-hook 'message-mode-hook (lambda ()
                                (auto-fill-mode)
                                (footnote-mode)
-                               (evil-leader/set-key-for-mode 'message-mode
-                                 ;; overrides eshell binding which I
-                                 ;; don't need when accessing from mutt
-                                 "gs" 'djcb/snip)
+			       ;; (evil-leader/set-key-for-mode 'message-mode
+                               ;;   ;; overrides eshell binding which I
+                               ;;   ;; don't need when accessing from mutt
+                               ;;   "gs" 'djcb/snip)
                                (message-goto-body)
                                ;; (orgstruct++-mode) ; must go last for some reason
                                ))
