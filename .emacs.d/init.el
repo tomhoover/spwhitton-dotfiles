@@ -558,8 +558,6 @@
   :config (progn
             (setq projectile-switch-project-action 'projectile-dired
                   projectile-completion-system 'helm)
-            ;; access projectile through evil leader
-            (define-key evil-leader--default-map (kbd "p") projectile-command-map)
             (diminish 'projectile-mode)))
 
 (use-package persp-projectile :ensure)
@@ -729,14 +727,7 @@
                       ;; it's better to swoop for the symbol at point
                       ;; explicitly rather than automatically.  Just
                       ;; hit "vao" to select the symbol and then call helm-swoop
-                      (setq helm-swoop-pre-input-function (lambda () nil))
-
-                      ;; make sure that we can jump back from where
-                      ;; helm swoop took us
-                      (defadvice helm-swoop (after helm-swoop-set-evil-marker activate)
-                        (evil-set-jump))
-                      (defadvice helm-multi-swoop-all (after helm-swoop-set-evil-marker activate)
-                        (evil-set-jump))))
+                      (setq helm-swoop-pre-input-function (lambda () nil))))
 
           ;; redefine this Helm function to work nicely with
           ;; perspectives: just replace its code to create or switch
@@ -1203,7 +1194,8 @@ point reaches the beginning or end of the buffer, stop there."
   (let ((split-height (or height 8)))
     (split-window-vertically)
     (other-window 1)
-    (evil-resize-window split-height)))
+    ;; (evil-resize-window split-height)
+    ))
 
 (defun persp-eshell (arg)
   "Switch to perspective's eshell or create it.  If already in the eshell, move to the last prompt and clear it, ready for input"
@@ -1232,14 +1224,13 @@ point reaches the beginning or end of the buffer, stop there."
             (helm-switch-to-buffer "*eshell*")
           (call-interactively 'eshell))))
     ;; now change current dir (if not in eshell already) and position the cursor
-    (evil-goto-line)
+    (end-of-buffer)
     (eshell-bol)
     (ignore-errors (kill-line))
     (unless (or (eq major-mode 'eshell-mode)
                 (string= default-directory cd-to))
       (insert (concat "cd " cd-to))
-      (eshell-send-input))
-    (call-interactively 'evil-insert)))
+      (eshell-send-input))))
 
 (defun spw/dired-jump (arg)
   (interactive "P")
