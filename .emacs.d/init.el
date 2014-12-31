@@ -1320,12 +1320,6 @@ point reaches the beginning or end of the buffer, stop there."
 (add-hook 'haskell-mode-hook (lambda ()
                                (bind-key "RET" 'newline-and-indent haskell-mode-map)))
 
-;; automatically rebalance windows
-(defadvice evil-window-split (after rebalance-windows activate)
-  (balance-windows))
-(defadvice evil-window-vsplit (after rebalance-windows activate)
-  (balance-windows))
-
 ;; fixup-whitespace seems to make just-one-space redundant
 (bind-key "M-SPC" 'fixup-whitespace)
 
