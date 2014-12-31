@@ -185,12 +185,9 @@
   :ensure org-plus-contrib
   :mode (("\\.org" . org-mode)
          ("\\.org_archive" . org-mode))
-  :commands (org-capture
-             org-store-link
-             org-agenda)
-  ;; :bind (("C-M-c" . org-capture)
-  ;;        ("C-c l" . org-store-link)
-  ;;        ("C-c a" . org-agenda))
+  :bind (("C-c o c" . org-capture)
+         ("C-c o l" . org-store-link)
+         ("C-c o a" . org-agenda))
   :diminish org-indent-mode
   :config (load "~/.emacs.d/init-org.el"))
 
