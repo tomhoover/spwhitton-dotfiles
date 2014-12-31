@@ -437,25 +437,9 @@
 (use-package python-info :ensure)
 (use-package pydoc-info :ensure)
 
-;;; fix binding in python-mode
-
-;; (use-package python
-;;   :config (define-key python-mode-map (kbd "C-h") 'python-indent-dedent-line-backspace))
-
 ;;; flycheck
 
 (use-package flycheck :ensure :idle (global-flycheck-mode))
-
-;;; edit minibuffer in a proper buffer
-
-;; (use-package miniedit
-;;   :ensure
-;;   :commands miniedit
-;;   :init (progn
-;;           (define-key minibuffer-local-map "\M-\C-e" 'miniedit)
-;;           (define-key minibuffer-local-ns-map "\M-\C-e" 'miniedit)
-;;           (define-key minibuffer-local-completion-map "\M-\C-e" 'miniedit)
-;;           (define-key minibuffer-local-must-match-map "\M-\C-e" 'miniedit)))
 
 ;;; TRAMP
 
@@ -684,7 +668,7 @@
                                  (insert
                                   (format "cd '%s'" helm-ff-default-directory))
                                  (eshell-send-input))))
-              (persp-eshell)
+              (spw/persp-eshell)
               (unless (get-buffer-process (current-buffer))
                 (funcall cd-eshell))))))
 
@@ -1025,9 +1009,7 @@ With argument ARG, also bound it on the right."
   (mark-sexp)
   (indent-region (region-beginning) (region-end)))
 
-;;; better way to move to the beginning of the line
-
-(defun smarter-move-beginning-of-line (arg)
+(defun magnars/smarter-move-beginning-of-line (arg)
   "Move point back to indentation of beginning of line.
 
 Move point to the first non-whitespace character on this line.
@@ -1052,7 +1034,7 @@ point reaches the beginning or end of the buffer, stop there."
 
 ;;; tidy up troublesome unicode
 
-(defun unicode-hunt ()
+(defun gleitzman/unicode-hunt ()
   "Destroy some special Unicode characters like smart quotes.
 
 Originally from <http://blog.gleitzman.com/post/35416335505/hunting-for-unicode-in-emacs>."
@@ -1071,9 +1053,7 @@ Originally from <http://blog.gleitzman.com/post/35416335505/hunting-for-unicode-
             (goto-char (point-min))
             (replace-regexp key value)))))
 
-;;; from Emacs Prelude/Redux author
-
-(defun eval-and-replace ()
+(defun prelude/eval-and-replace ()
   "Replace the preceding sexp with its value."
   (interactive)
   (backward-kill-sexp)
@@ -1143,7 +1123,7 @@ Originally from evil's `evil-window.el'."
     (other-window 1)
     (evil/resize-window split-height)))
 
-(defun persp-eshell (arg)
+(defun spw/persp-eshell (arg)
   "Switch to perspective's eshell or create it.
 
 If already in the eshell, move to the last prompt and clear it,
@@ -1218,7 +1198,7 @@ With arg ARG, put shell in current window."
 
 ;;; key bindings
 
-;; I don't want to quit often
+;; I don't often want to quit
 (bind-key "C-x C-c" 'delete-frame)
 
 ;; opening new lines below
@@ -1235,14 +1215,14 @@ With arg ARG, put shell in current window."
 ;; fixup-whitespace seems to make just-one-space redundant
 (bind-key "M-SPC" 'fixup-whitespace)
 
+;; never want to send any e-mail
 (unbind-key "C-x m")
+
+;; fallback expanding
 (bind-key "M-/" 'hippie-expand)
 
-;; remap C-a to `smarter-move-beginning-of-line'
-(bind-key "C-a" 'smarter-move-beginning-of-line)
-
-;; insert mode headers
-(bind-key "C-c i h" 'add-file-local-variable-prop-line)
+;; remap C-a to `magnars/smarter-move-beginning-of-line'
+(bind-key "C-a" 'magnars/smarter-move-beginning-of-line)
 
 ;;; bind all up into the C-c keymap
 
