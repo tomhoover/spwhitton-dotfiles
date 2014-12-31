@@ -18,11 +18,3 @@
 
 "sonata --toggle"
   Shift + F9
-
-# banned
-  
-# "/bin/false"
-#   Control + h
-
-"/bin/false"
-  Control + m
