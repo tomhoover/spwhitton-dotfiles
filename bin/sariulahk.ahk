@@ -56,31 +56,12 @@ F12::ToggleWinMinimize("Mozilla Firefox", "Firefox")
 ; empty the Recycle Bin
 +#r::FileRecycleEmpty, C:\
 
-; caps lock is both control and escape
+; for Emacs
 
-; Author: fwompner gmail com
-#InstallKeybdHook
-SetCapsLockState, alwaysoff
-Capslock::
-  SetCapsLockState, alwaysoff
-  Send {LControl Down}
-  KeyWait, CapsLock
-  Send {LControl Up}
-  if ( A_PriorKey = "CapsLock" )
-  {
-    Send {Esc}
-  }
-  return
+Capslock::Ctrl
+Ctrl:Capslock
 
 ; some British keyboard layout conventions
 
 @::"
 "::@
-
-; disable my beloved RSI-inducing shortcuts
-^h::Return
-^m::Return
-
-; unix keys
-; ^a::Send ^{Home}
-; ^e::Send ^{End}
