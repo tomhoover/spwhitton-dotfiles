@@ -6,7 +6,7 @@
 
 ;;;; ---- package management ----
 
-(add-to-list 'load-path "~/.emacs.d/site-lisp/")
+(add-to-list 'load-path (concat user-emacs-directory "site-lisp"))
 (require 'use-package)
 (require 'package)
 
@@ -31,12 +31,12 @@
 ;;; customisation -- must be loaded early so that zenburn theme is
 ;;; considered safe
 
-(defconst custom-file "~/.emacs.d/init-custom.el")
-(load custom-file 'noerror)
+(defconst user-custom-file (concat user-emacs-directory "init-custom.el"))
+(load user-custom-file 'noerror)
 
 ;;; load terminal fixes
 
-(load-file "init-term.el")
+(load-file (concat user-emacs-directory "init-term.el"))
 
 ;;; put backups and autosaves in /tmp
 
