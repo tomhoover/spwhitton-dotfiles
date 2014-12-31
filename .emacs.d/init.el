@@ -362,7 +362,8 @@
               (setq-local evil-complete-previous-func 'spw/company-complete-lambda)
               ;; Make sure emacs does the right thing with completion command
               ;; from https://github.com/bradleywright/emacs.d/blob/master/setup-company.el
-              (define-key (current-local-map) [remap hippie-expand] 'company-complete))
+              (define-key (current-local-map) [remap hippie-expand] 'company-complete)
+              (define-key (current-local-map) (kbd "TAB") 'company-complete))
 
             (add-hook 'prog-mode-hook 'spw/company-prog-setup)
 
