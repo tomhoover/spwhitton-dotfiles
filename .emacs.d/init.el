@@ -941,6 +941,7 @@ With argument, do this that many times."
 (bind-key "C-w" 'backward-delete-word)
 (bind-key "C-x C-k" 'kill-region)
 (global-set-key "\M-d" 'delete-word)
+(bind-key "C-x C-m" 'execute-extended-command)
 
 ;;; my buffer save cleanup functions
 
