@@ -1401,6 +1401,11 @@ BINDEE may be a command or another keymap, but whatever it is, it should not be 
 (setq-default dired-omit-mode t)
 (setq dired-omit-files "^\\...+$")
 
+;; dired omit mode mapping conflicts with my ace jump mode
+;; binding
+(define-key dired-mode-map (kbd "M-o") 'nil)
+(bind-key "C-c g o" 'dired-omit-mode dired-mode-map)
+
 ;;; LaTeX
 
 (setq TeX-auto-save t
