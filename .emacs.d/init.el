@@ -1133,9 +1133,6 @@ Originally from evil's `evil-window.el'."
 (defun spw/persp-eshell (arg)
   "Switch to perspective's eshell or create it.
 
-If already in the eshell, move to the last prompt and clear it,
-ready for input.
-
 With arg ARG, put shell in current window."
   (interactive "P")
   (let* ((in-project (and (projectile-project-p)
@@ -1161,12 +1158,11 @@ With arg ARG, put shell in current window."
         (if (get-buffer "*eshell*")
             (helm-switch-to-buffer "*eshell*")
           (call-interactively 'eshell))))
-    ;; now change current dir (if not in eshell already) and position the cursor
+    ;; now change current dir and position the cursor
     (end-of-buffer)
     (eshell-bol)
     (ignore-errors (kill-line))
-    (unless (or (eq major-mode 'eshell-mode)
-                (string= default-directory cd-to))
+    (unless (string= default-directory cd-to)
       (insert (concat "cd " cd-to))
       (eshell-send-input))))
 
