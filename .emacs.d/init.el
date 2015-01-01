@@ -851,7 +851,7 @@ Originally from http://stackoverflow.com/a/2172827"
 (bind-key "C-w" 'spw/backward-delete-word)
 (bind-key "C-x C-k" 'kill-region)
 (global-set-key "\M-d" 'spw/delete-word)
-(bind-key "C-x C-m" 'execute-extended-command)
+(bind-key "C-x C-m" 'helm-M-x)
 
 ;;; my buffer save cleanup functions
 
