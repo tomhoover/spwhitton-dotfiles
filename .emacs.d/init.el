@@ -756,6 +756,12 @@
             (when (f-exists? "~/.emacs.d/init-rcirc.el")
               (load-file "~/.emacs.d/init-rcirc.el"))))
 
+;;; zap-up-to-char is at least as useful as zap-to-char, so load it
+;;; out of misc.el.  Don't need M-m binding as have smarter C-a
+
+(use-package misc
+  :bind ("M-m" . zap-up-to-char))
+
 ;;;; ---- functions ----
 
 (defun mwf/narrow-or-widen-dwim (p)
