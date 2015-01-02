@@ -96,7 +96,7 @@ key.setViewKey(['C-c', 'k'], function (ev, arg){
 
 // ========================= Special key settings ========================== //
 
-key.quitKey              = "ESC";
+key.quitKey              = "C-g";
 key.helpKey              = "<f1>";
 key.escapeKey            = "C-q";
 key.macroStartKey        = "<f3>";
