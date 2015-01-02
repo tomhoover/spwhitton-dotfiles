@@ -1533,7 +1533,9 @@ ARG, PRED ignored."
     (org-save-all-org-buffers)
     (advice-add 'save-some-buffers :before #'spw/save-org-buffers-first)))
 
-(advice-add 'save-some-buffers :before #'spw/save-org-buffers-first)
+;; no `advice-add' on Emcas 24.3 on ma
+(if (fboundp 'advice-add)
+    (advice-add 'save-some-buffers :before #'spw/save-org-buffers-first))
 
 ;;;; ---- modes configuration ----
 
