@@ -158,11 +158,16 @@
   :bind ("M-i" . er/expand-region)
   :init (setq expand-region-contract-fast-key (kbd "o")))
 
-;;; keep parentheses under control
+;;; keep parentheses under control: modern replacement for the mighty paredit
 
 (use-package smartparens
   :ensure
-  :commands (smartparens-strict-mode)
+  :bind (("M-J" . sp-join-sexp)
+
+         ;; for when I use Emacs via PuTTY
+         ("M-<right>" . sp-forward-slurp-sexp)
+         ("M-<left>" . sp-forward-barf-sexp))
+  :commands (smartparens-strict-mode show-smartparens-global-mode)
   :init (dolist (hook '(emacs-lisp-mode-hook
                         lisp-mode-hook
                         lisp-interaction-mode-hook
@@ -173,13 +178,92 @@
           (add-hook hook
                     (lambda ()
                       (smartparens-strict-mode))))
-  :idle (show-smartparens-global-mode)
+  :idle (progn
+          (show-smartparens-global-mode)
+
+          ;; non-strict mode the default, and strict mode in some
+          ;; programming language major modes
+          ;; (smartparens-global-mode)
+          )
   :config (progn
             (require 'smartparens-config)
             (setq sp-navigate-consider-symbols t)
             (sp-use-smartparens-bindings)
             (bind-key "C-w" 'sp-backward-kill-word emacs-lisp-mode-map)
-            (bind-key "C-k" 'sp-kill-hybrid-sexp emacs-lisp-mode-map)))
+            (bind-key "C-k" 'sp-kill-hybrid-sexp emacs-lisp-mode-map)
+
+            ;; override smartparens binding for C-k outside of lisp,
+            ;; since sp-kill-hybrid-sexp isn't very smart in comint
+            ;; and I like using C-u C-k
+            ;; (define-key smartparens-strict-mode-map [remap kill-line] 'kill-line)
+            ;; (bind-key "C-k" 'sp-kill-hybrid-sexp
+            ;; emacs-lisp-mode-map)
+
+            (defadvice sp-backward-kill-word (after sp-backward-kill-word-fix-punctuation activate)
+                ;; when killing the first word of a sentence, leave the
+                ;; two spaces after the previous sentence's terminal
+                ;; period
+                (save-excursion
+                  (backward-char 2)
+                  (if (and
+                       (or
+                        (looking-at "\\. ")
+                        (looking-at   "! ")
+                        (looking-at "\\? "))
+                       (not (looking-back "^[1-9]+")))
+                      (progn
+                        (forward-char 1)
+                        (insert " ")))))
+
+              ;; fix cursor position after M-d at the beginning of a line
+              (defadvice sp-kill-word (after sp-kill-word-beg-of-line-fix activate)
+                (if (looking-back "^[[:space:]]")
+                    (backward-char 1)))
+
+              (defadvice sp-backward-delete-char (around sp-backward-delete-char-remove-indentation activate)
+                ;; when after whitespace at the beginning of a line or
+                ;; an Org bullet or heading, delete it all
+                (if (and
+                     ;; do it if we're not at the beginning of the line,
+                     ;; and there's whitespace: if we're at the
+                     ;; beginning of the line we should always delete
+                     (not (equal (point) (line-beginning-position)))
+                     (or
+                      (looking-back "^[[:space:]]+")
+                      (looking-back "^[[:space:]]*- ")
+                      (looking-back "^[*]+ ")))
+                    (kill-line 0)
+                  ;; if not after whitespace at the beginning of the
+                  ;; line, just call as usual
+                  ad-do-it))
+
+              (defadvice sp-backward-kill-word (around sp-backward-delete-word-remove-indentation activate)
+                ;; when after whitespace at the beginning of a line or
+                ;; an Org bullet or heading, delete it all.  This is
+                ;; more intuitive when C-w is one's main way to delete
+                ;; stuff
+                (if (and
+                     ;; do it if we're not at the beginning of the line,
+                     ;; and there's whitespace: if we're at the
+                     ;; beginning of the line we should always delete
+                     (not (equal (point) (line-beginning-position)))
+                     (or
+                      (looking-back "^[[:space:]]+")
+                      (looking-back "^[[:space:]]*- ")
+                      (looking-back "^[*]+ ")))
+                    (kill-line 0)
+                  ;; if not after whitespace at the beginning of the
+                  ;; line, just call as usual
+                  ad-do-it))
+
+              ;; define some additional pairings for Org-mode
+              (sp-local-pair 'org-mode "=" "=") ; verbatim
+              ;; (sp-local-pair 'org-mode "*" "*")
+              ;; (sp-local-pair 'org-mode "/" "/")
+              (sp-local-pair 'org-mode "~" "~") ; code
+              ;; (sp-local-pair 'org-mode "+" "+")
+              ;; (sp-local-pair 'org-mode "_" "_")
+            ))
 
 ;;; Org
 
