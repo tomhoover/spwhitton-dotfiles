@@ -1048,6 +1048,8 @@ automatically."
 (bind-key "S-<menu>" 'my-toggle-lang-env)
 ;; and for Apple keyboard
 (bind-key "S-<Multi_key>" 'my-toggle-lang-env)
+;; kill the one korea-utils.el seems to be setting
+(global-unset-key (kbd "S-SPC"))
 
 (defun spw/centre-window (arg)
   "Make editing window 95 cols wide and centre it in the frame.
