@@ -530,6 +530,7 @@
 
 (use-package helm
   :ensure
+  :bind ("C-x C-f" . helm-find-files)
   :diminish helm-mode
   :init (progn
           (require 'helm-config)
