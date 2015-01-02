@@ -768,7 +768,7 @@
 
 ;; make Emacs regexps easier
 
-(use-package visual-regexp)
+(use-package visual-regexp :ensure)
 
 ;;;; ---- functions ----
 
