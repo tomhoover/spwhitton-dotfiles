@@ -646,7 +646,7 @@
           ;; jump around current buffer, and if necessary currently
           ;; open buffers
           (use-package helm-swoop
-            :ensure
+            :disabled t
             :commands (helm-swoop
                        helm-swoop-back-to-last-point
                        helm-multi-swoop
