@@ -765,6 +765,10 @@
 (use-package misc
   :bind ("M-m" . zap-up-to-char))
 
+;; make Emacs regexps easier
+
+(use-package visual-regexp)
+
 ;;;; ---- functions ----
 
 (defun mwf/narrow-or-widen-dwim (p)
