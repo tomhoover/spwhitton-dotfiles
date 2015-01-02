@@ -532,7 +532,8 @@
 
 (use-package helm
   :ensure
-  :bind ("C-x C-f" . helm-find-files)
+  :bind (("C-x C-f" . helm-find-files)
+         ("M-s o" . helm-occur))
   :diminish helm-mode
   :init (progn
           (require 'helm-config)
