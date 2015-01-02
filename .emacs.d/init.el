@@ -1045,7 +1045,9 @@ automatically."
    (if (equal current-language-environment "English")
        "Korean" "English")))
 
-(bind-key "S-SPC" 'spw/toggle-language-environment)
+(bind-key "S-<menu>" 'my-toggle-lang-env)
+;; and for Apple keyboard
+(bind-key "S-<Multi_key>" 'my-toggle-lang-env)
 
 (defun spw/centre-window (arg)
   "Make editing window 95 cols wide and centre it in the frame.
