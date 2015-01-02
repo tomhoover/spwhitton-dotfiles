@@ -770,6 +770,12 @@
 
 (use-package visual-regexp :ensure)
 
+;; toggle quotes for when I fail to follow the style guidelines
+
+(use-package toggle-quotes
+  :ensure
+  :bind ("C-c t '" . toggle-quotes))
+
 ;;;; ---- functions ----
 
 (defun mwf/narrow-or-widen-dwim (p)
