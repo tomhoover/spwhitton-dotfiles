@@ -1030,7 +1030,7 @@ With argument ARG, also bound it on the right."
   (mark-sexp)
   (indent-region (region-beginning) (region-end)))
 
-(defun magnars/smarter-move-beginning-of-line (arg)
+(defun magnars/move-beginning-of-line-dwim (arg)
   "Move point back to indentation of beginning of line.
 
 Move point to the first non-whitespace character on this line.
@@ -1052,6 +1052,35 @@ point reaches the beginning or end of the buffer, stop there."
     (back-to-indentation)
     (when (= orig-point (point))
       (move-beginning-of-line 1))))
+
+(defun magnars/copy-to-end-of-line ()
+  "Save from point to end of line to keyring."
+  (interactive)
+  (kill-ring-save (point)
+                  (line-end-position))
+  (message "Copied to end of line"))
+(defun magnars/copy-whole-lines (arg)
+  "Copy ARG lines to the kill ring."
+  (interactive "p")
+  (kill-ring-save (line-beginning-position)
+                  (line-beginning-position (+ 1 arg)))
+  (message "%d line%s copied" arg (if (= 1 arg) "" "s")))
+(defun magnars/copy-line (arg)
+  "Copy to end of line.
+
+If ARG, just copy that many lines."
+  (interactive "P")
+  (if (null arg)
+      (magnars/copy-to-end-of-line)
+    (magnars/copy-whole-lines (prefix-numeric-value arg))))
+(defun magnars/kill-ring-save-dwim (arg)
+  "If region active, save it.  Otherwise, save to end of line.
+
+If ARG and region inactive, save that many lines."
+  (interactive "P")
+  (if (region-active-p)
+      (kill-ring-save (region-beginning) (region-end))
+    (magnars/copy-line arg)))
 
 ;;; tidy up troublesome unicode
 
@@ -1238,8 +1267,9 @@ With arg ARG, put shell in current window."
 ;; fallback expanding
 (bind-key "M-/" 'hippie-expand)
 
-;; remap C-a to `magnars/smarter-move-beginning-of-line'
-(bind-key "C-a" 'magnars/smarter-move-beginning-of-line)
+;; smart versions of C-a, M-w from magnars
+(bind-key "C-a" 'magnars/move-beginning-of-line-dwim)
+(bind-key "M-w" 'magnars/kill-ring-save-dwim)
 
 ;;; bind all up into the C-c keymap
 
