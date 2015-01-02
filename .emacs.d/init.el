@@ -891,26 +891,32 @@ narrowed."
   "Activate my prose writing features."
   (wc-mode 1)
   (variable-pitch-mode 1)
-  (unless (eq system-type 'windows-nt)
+  (unless (or (eq system-type 'windows-nt)
+              (not (fboundp 'set-fringe-mode)))
     (centered-window-mode 1)
     ;; indent mode need only be turned off if we're using centered
     ;; window mode
     (when (eq major-mode 'org-mode)
       (org-indent-mode 0)))
-  (if (eq system-type 'windows-nt) (spw/centre-window nil)))
+  (if (or (eq system-type 'windows-nt)
+          (not (fboundp 'set-fringe-mode)))
+      (spw/centre-window nil)))
 
 (defun spw/writing-off ()
   "Deactivate my prose writing features."
   (wc-mode 0)
   (variable-pitch-mode 0)
-  (unless (eq system-type 'windows-nt)
+  (unless (or (eq system-type 'windows-nt)
+              (not (fboundp 'set-fringe-mode)))
     (centered-window-mode 0)
     ;; indent mode need only be turned off if we're using centered
     ;; window mode
     (when (eq major-mode 'org-mode)
       ;; TODO: finesse this.  don't turn it on if it wouldn't be on by default
       (org-indent-mode 1)))
-  (if (eq system-type 'windows-nt) (delete-other-windows)))
+  (if (or (eq system-type 'windows-nt)
+          (not (fboundp 'set-fringe-mode)))
+      (delete-other-windows)))
 
 (defun spw/writing-toggle ()
   "Toggle on and off my prose writing features."
