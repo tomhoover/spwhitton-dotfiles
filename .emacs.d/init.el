@@ -1360,6 +1360,21 @@ BINDEE may be a command or another keymap, but whatever it is, it should not be 
 
 (ansi-color-for-comint-mode-on)
 
+;;; avoid some prompts when saving all buffers
+
+(defun spw/save-org-buffers-first (&optional arg pred)
+  "Save all Org buffers without prompting.
+
+ARG, PRED ignored."
+  (when (featurep 'org)
+    ;; gotta remove ourselves since `org-save-all-org-buffers' calls
+    ;; `save-some-buffers'
+    (advice-remove 'save-some-buffers #'spw/save-org-buffers-first)
+    (org-save-all-org-buffers)
+    (advice-add 'save-some-buffers :before #'spw/save-org-buffers-first)))
+
+(advice-add 'save-some-buffers :before #'spw/save-org-buffers-first)
+
 ;;;; ---- modes configuration ----
 
 ;;; auto fill comments in modes with a reliable comment syntax
