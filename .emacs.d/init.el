@@ -189,7 +189,9 @@
          ("\\.org_archive" . org-mode))
   :bind (("C-c o c" . org-capture)
          ("C-c o l" . org-store-link)
-         ("C-c o a" . org-agenda))
+         ("C-c o a" . org-agenda)
+         ("C-c o [" . spw/org-agenda-file-to-front)
+         ("C-c o ]" . spw/org-remove-file))
   :diminish org-indent-mode
   :config (load "~/.emacs.d/init-org.el"))
 
@@ -403,7 +405,7 @@
 
 (use-package deft
   :ensure
-  :commands deft
+  :bind ("C-c g d" . deft)
   :init (setq deft-extension "org"
               deft-text-mode 'org-mode
               deft-directory "~/doc/org/"
@@ -1178,7 +1180,7 @@ With arg ARG, put shell in current window."
 
 ;;; Sariul functions
 
-(defun tblesson (grade lesson period)
+(defun spw/tblesson (grade lesson period)
   "Start a textbook-based lesson plan for grade GRADE, lesson LESSON, period PERIOD."
   (interactive "sGrade: \nsGrade %s, lesson: \nsGrade %s, lesson %s, period: ")
   (projectile-persp-switch-project "~/Documents/Teaching")
@@ -1241,10 +1243,33 @@ BINDEE may be a command or another keymap, but whatever it is, it should not be 
                 ("j" . spw/helm-mini)
                 ("v" . projectile-vc)
                 ("n" . mwf/narrow-or-widen-dwim)
-                ("gk" . kill-emacs)
                 ("s" . spw/persp-eshell)
                 ("d" . spw/dired-jump)
-                ("ih" . add-file-local-variable-prop-line)))
+
+                ;; launcher map
+                ("g k" . kill-emacs)
+                ("g c" . spw/manual-cleanup)
+                ("g l" . spw/tblesson)
+                ("g r" . (lambda ()
+                           (interactive)
+                           (projectile-persp-switch-project "~/src/dotfiles")
+                           (find-file "~/src/dotfiles/.emacs.d/init.el")
+                           (eval-buffer)))
+
+                ;; toggle map
+                ("t e" . toggle-debug-on-error)
+                ("t i" . org-indent-mode)
+                ("t w" . spw/writing-toggle)
+
+                ;; insertion map
+                ("i h" . add-file-local-variable-prop-line)
+
+                ;; evaluation map
+                ("e e" . spw/eval-surrounding-sexp)
+                ("e f" . eval-defun)
+                ("e r" . eval-region)
+                ("e b" . eval-buffer)
+                ("E" . prelude/eval-and-replace)))
   (let ((key (car pair))
         (bindee (cdr pair)))
     (spw/C-c-bind key bindee)))
