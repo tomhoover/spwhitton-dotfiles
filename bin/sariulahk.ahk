@@ -59,7 +59,7 @@ F12::ToggleWinMinimize("Mozilla Firefox", "Firefox")
 ; for Emacs
 
 Capslock::Ctrl
-Ctrl:Capslock
+LCtrl::Capslock
 
 ; some British keyboard layout conventions
 
