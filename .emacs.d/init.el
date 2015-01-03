@@ -31,8 +31,8 @@
 ;;; customisation -- must be loaded early so that zenburn theme is
 ;;; considered safe
 
-(defconst user-custom-file (concat user-emacs-directory "init-custom.el"))
-(load user-custom-file 'noerror)
+(defconst custom-file (concat user-emacs-directory "init-custom.el"))
+(load custom-file 'noerror)
 
 ;;; load terminal fixes
 
