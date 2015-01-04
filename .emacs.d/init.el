@@ -799,9 +799,20 @@
 
 (use-package jabber
   :ensure
-  :config (when (f-exists? "~/.emacs.d/init-jabber.el")
-            (load-file "~/.emacs.d/init-jabber.el")
-            (jabber-connect-all)))
+  :config (progn (when (f-exists? "~/.emacs.d/init-jabber.el")
+                   (load-file "~/.emacs.d/init-jabber.el")
+                   (jabber-connect-all))
+                 (defun spw/persp-jabber ()
+                   (interactive)
+                   (persp-switch "xmpp"))
+                 ;; TODO: when have Emacs 24.4 everywhere, switch this
+                 ;; to nadvice.el macros
+                 (defadvice jabber-activity-switch-to (before spw/persp-jabber activate)
+                   (spw/persp-jabber))
+                 (defadvice jabber-switch-to-roster-buffer (before spw/persp-jabber activate)
+                   (spw/persp-jabber))
+                 (defadvice jabber-chat-with (before spw/persp-jabber activate)
+                   (spw/persp-jabber))))
 
 ;;; make dired copy and move asynchronously
 
