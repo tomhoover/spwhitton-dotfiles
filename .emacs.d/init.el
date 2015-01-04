@@ -1051,9 +1051,9 @@ automatically."
    (if (equal current-language-environment "English")
        "Korean" "English")))
 
-(bind-key "S-<menu>" 'my-toggle-lang-env)
+(bind-key "S-<menu>" 'spw/toggle-language-environment)
 ;; and for Apple keyboard
-(bind-key "S-<Multi_key>" 'my-toggle-lang-env)
+(bind-key "S-<Multi_key>" 'spw/toggle-language-environment)
 ;; kill the one korea-utils.el seems to be setting
 (global-unset-key (kbd "S-SPC"))
 
