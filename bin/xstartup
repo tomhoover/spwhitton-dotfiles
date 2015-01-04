@@ -1,0 +1,6 @@
+#!/bin/bash
+
+# stuff to start in XFCE or GNOME3
+
+/home/swhitton/bin/dwm-autobind
+/usr/bin/gtk-redshift -l 53.57:1.5 -t 6500:3700
