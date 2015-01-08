@@ -175,6 +175,15 @@ autoci =
         git add .passwddb.pet .labbook.gpg
         git commit -a -m "auto passwddb and labbook commit on $(hostname -s)" || true
 
+# --- hosts configuration
+
+[src/propellor]
+checkout = git clone http://spw.sdf.org/git/propellor.git propellor --branch spwconf
+post_checkout = cd propellor && git remote add -f upstream https://github.com/joeyh/propellor.git
+post_update = git fetch upstream
+fixups = ln -sf ~/src/propellor ~/.propellor
+skip = ! mine || win32
+
 # --- primary git annex
 
 [lib/annex]
