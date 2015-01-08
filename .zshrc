@@ -112,6 +112,10 @@ if [[ -n "${PATH/*$HOME\/local\/bin:*}" ]] ; then
     export PATH="$HOME/local/bin:$PATH"
 fi
 
+if [[ -n "${PATH/*$HOME\/.cabal\/bin:*}" ]] ; then
+    export PATH="$HOME/.cabal/bin:$PATH"
+fi
+
 # set some pager options
 
 if [[ -f /usr/bin/less ]] ; then

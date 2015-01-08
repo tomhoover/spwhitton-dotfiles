@@ -10,3 +10,4 @@ export VISUAL=emacsclient
 addpath /usr/sbin >/dev/null
 addpath /sbin >/dev/null
 addpath /home/swhitton/local/bin >/dev/null
+addpath /home/swhitton/.cabal/bin >/dev/null
