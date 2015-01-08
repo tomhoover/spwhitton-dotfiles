@@ -43,6 +43,7 @@
 (setq org-alphabetical-lists t
       org-startup-indented 1
       org-indent-indentation-per-level 4
+      org-adapt-indentation nil
       org-directory "~/doc/org"
 
       org-tag-alist '((:startgroup)
