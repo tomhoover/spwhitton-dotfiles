@@ -169,11 +169,11 @@ skip = ! which git-remote-gcrypt >/dev/null 2>/dev/null
 # frequently changed files
 fixups = chmod 600 .passwddb.pet .s3ql/authinfo2; git config gcrypt.publish-participants true
 pre_update =
-           git add .passwddb.pet .labbook.gpg
-           git commit -a -m "auto passwddb and labbook commit on $(hostname -s)" || true
+        git add .passwddb.pet .labbook.gpg
+        git commit -a -m "auto passwddb and labbook commit on $(hostname -s)" || true
 autoci =
-       git add .passwddb.pet .labbook.gpg
-       git commit -a -m "auto passwddb and labbook commit on $(hostname -s)" || true
+        git add .passwddb.pet .labbook.gpg
+        git commit -a -m "auto passwddb and labbook commit on $(hostname -s)" || true
 
 # --- primary git annex
 
