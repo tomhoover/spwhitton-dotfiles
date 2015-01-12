@@ -86,11 +86,6 @@ rebase =
     if [ "$branch" = "win32" ]; then
         git checkout win32
         git rebase master
-    elif [ "$branch" = "artemis" ]; then
-        git checkout workstation
-        git rebase master
-        git checkout artemis
-        git rebase workstation
     # fallback elif to still do something automatic in the simplest case
     elif [ "$branch" = "$hostname" ]; then
         # determine nearest parent branch by
@@ -121,10 +116,12 @@ fixups =
         ln -sf ~/src/dotfiles/.stow-global-ignore ~
         mkdir -p ~/.mutt-tmp
     fi
-    # we don't want git doing any automated merges of master.  mr is
-    # configured not to do this (see redefinition of git_update at top
-    # of this file) but I often run git pull in this repo myself
+    # we don't want git doing any automated merges of master, or other
+    # intermediate branches.  mr is configured not to do this (see
+    # redefinition of git_update at top of this file) but I often run
+    # git pull in this repo myself
     git config branch.master.rebase true
+    git config branch.autosetuprebase always
 
 # create ~/.emacs.d/ before stowing so that the files inside are
 # symlinks, rather than the whole dir.  That way Emacs junk that gets
