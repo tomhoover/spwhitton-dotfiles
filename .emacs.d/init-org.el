@@ -258,7 +258,7 @@
          ((org-agenda-start-with-log-mode nil)
           (org-agenda-start-with-follow-mode nil)
           ;; (org-agenda-tag-filter-preset '("-Sariul"))
-          ))
+          ) ("/ma:html/day/index.html"))
         ("w" "Weekly agenda"
          ((agenda "week" ((org-agenda-ndays 7)))))
         ("#" "Review view"
