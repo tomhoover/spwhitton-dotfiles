@@ -174,7 +174,8 @@
                         ielm-mode-hook
                         scheme-mode-hook
                         inferior-scheme-mode-hook
-                        python-mode-hook))
+                        python-mode-hook
+                        haskell-mode-hook))
           (add-hook hook
                     (lambda ()
                       (smartparens-strict-mode))))
