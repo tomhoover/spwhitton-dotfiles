@@ -635,7 +635,8 @@
                 helm-split-window-in-side-p t
                 helm-ff-search-library-in-sexp t
                 helm-ff-file-name-history-use-recentf t
-                helm-ff-newfile-prompt-p nil)
+                helm-ff-newfile-prompt-p nil
+                helm-tramp-verbose 3)
 
           (helm-mode)
 
