@@ -201,69 +201,69 @@
             ;; emacs-lisp-mode-map)
 
             (defadvice sp-backward-kill-word (after sp-backward-kill-word-fix-punctuation activate)
-                ;; when killing the first word of a sentence, leave the
-                ;; two spaces after the previous sentence's terminal
-                ;; period
-                (save-excursion
-                  (backward-char 2)
-                  (if (and
-                       (or
-                        (looking-at "\\. ")
-                        (looking-at   "! ")
-                        (looking-at "\\? "))
-                       (not (looking-back "^[1-9]+")))
-                      (progn
-                        (forward-char 1)
-                        (insert " ")))))
-
-              ;; fix cursor position after M-d at the beginning of a line
-              (defadvice sp-kill-word (after sp-kill-word-beg-of-line-fix activate)
-                (if (looking-back "^[[:space:]]")
-                    (backward-char 1)))
-
-              (defadvice sp-backward-delete-char (around sp-backward-delete-char-remove-indentation activate)
-                ;; when after whitespace at the beginning of a line or
-                ;; an Org bullet or heading, delete it all
+              ;; when killing the first word of a sentence, leave the
+              ;; two spaces after the previous sentence's terminal
+              ;; period
+              (save-excursion
+                (backward-char 2)
                 (if (and
-                     ;; do it if we're not at the beginning of the line,
-                     ;; and there's whitespace: if we're at the
-                     ;; beginning of the line we should always delete
-                     (not (equal (point) (line-beginning-position)))
                      (or
-                      (looking-back "^[[:space:]]+")
-                      (looking-back "^[[:space:]]*- ")
-                      (looking-back "^[*]+ ")))
-                    (kill-line 0)
-                  ;; if not after whitespace at the beginning of the
-                  ;; line, just call as usual
-                  ad-do-it))
+                      (looking-at "\\. ")
+                      (looking-at   "! ")
+                      (looking-at "\\? "))
+                     (not (looking-back "^[1-9]+")))
+                    (progn
+                      (forward-char 1)
+                      (insert " ")))))
 
-              (defadvice sp-backward-kill-word (around sp-backward-delete-word-remove-indentation activate)
-                ;; when after whitespace at the beginning of a line or
-                ;; an Org bullet or heading, delete it all.  This is
-                ;; more intuitive when C-w is one's main way to delete
-                ;; stuff
-                (if (and
-                     ;; do it if we're not at the beginning of the line,
-                     ;; and there's whitespace: if we're at the
-                     ;; beginning of the line we should always delete
-                     (not (equal (point) (line-beginning-position)))
-                     (or
-                      (looking-back "^[[:space:]]+")
-                      (looking-back "^[[:space:]]*- ")
-                      (looking-back "^[*]+ ")))
-                    (kill-line 0)
-                  ;; if not after whitespace at the beginning of the
-                  ;; line, just call as usual
-                  ad-do-it))
+            ;; fix cursor position after M-d at the beginning of a line
+            (defadvice sp-kill-word (after sp-kill-word-beg-of-line-fix activate)
+              (if (looking-back "^[[:space:]]")
+                  (backward-char 1)))
 
-              ;; define some additional pairings for Org-mode
-              (sp-local-pair 'org-mode "=" "=") ; verbatim
-              ;; (sp-local-pair 'org-mode "*" "*")
-              ;; (sp-local-pair 'org-mode "/" "/")
-              (sp-local-pair 'org-mode "~" "~") ; code
-              ;; (sp-local-pair 'org-mode "+" "+")
-              ;; (sp-local-pair 'org-mode "_" "_")
+            (defadvice sp-backward-delete-char (around sp-backward-delete-char-remove-indentation activate)
+              ;; when after whitespace at the beginning of a line or
+              ;; an Org bullet or heading, delete it all
+              (if (and
+                   ;; do it if we're not at the beginning of the line,
+                   ;; and there's whitespace: if we're at the
+                   ;; beginning of the line we should always delete
+                   (not (equal (point) (line-beginning-position)))
+                   (or
+                    (looking-back "^[[:space:]]+")
+                    (looking-back "^[[:space:]]*- ")
+                    (looking-back "^[*]+ ")))
+                  (kill-line 0)
+                ;; if not after whitespace at the beginning of the
+                ;; line, just call as usual
+                ad-do-it))
+
+            (defadvice sp-backward-kill-word (around sp-backward-delete-word-remove-indentation activate)
+              ;; when after whitespace at the beginning of a line or
+              ;; an Org bullet or heading, delete it all.  This is
+              ;; more intuitive when C-w is one's main way to delete
+              ;; stuff
+              (if (and
+                   ;; do it if we're not at the beginning of the line,
+                   ;; and there's whitespace: if we're at the
+                   ;; beginning of the line we should always delete
+                   (not (equal (point) (line-beginning-position)))
+                   (or
+                    (looking-back "^[[:space:]]+")
+                    (looking-back "^[[:space:]]*- ")
+                    (looking-back "^[*]+ ")))
+                  (kill-line 0)
+                ;; if not after whitespace at the beginning of the
+                ;; line, just call as usual
+                ad-do-it))
+
+            ;; define some additional pairings for Org-mode
+            (sp-local-pair 'org-mode "=" "=") ; verbatim
+            ;; (sp-local-pair 'org-mode "*" "*")
+            ;; (sp-local-pair 'org-mode "/" "/")
+            (sp-local-pair 'org-mode "~" "~") ; code
+            ;; (sp-local-pair 'org-mode "+" "+")
+            ;; (sp-local-pair 'org-mode "_" "_")
             ))
 
 ;;; Org
