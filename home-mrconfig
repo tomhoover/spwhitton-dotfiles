@@ -163,7 +163,7 @@ checkout = git clone gcrypt::ssh://ma/~/local/git/priv.git priv
 
 # this repository can't be checked out until we install
 # git-remote-gcrypt
-skip = ! which git-remote-gcrypt >/dev/null 2>/dev/null
+skip = ! which git-remote-gcrypt >/dev/null 2>/dev/null || ! mine
 
 # convenience automatic permission setting and checking in of
 # frequently changed files
@@ -195,7 +195,7 @@ fixups = git config push.default matching; git config gcrypt.publish-participant
 
 # this repository can't be checked out until we install
 # git-remote-gcrypt
-skip = ! which git-remote-gcrypt >/dev/null 2>/dev/null
+skip = ! which git-remote-gcrypt >/dev/null 2>/dev/null || ! mine
 
 # --- source code repositories registered to their own mr config file,
 # --- and create my standard home directory subdirectories
