@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# backs up git repositories to m3 portable drive, excluding git annex
+
+if ! mount | grep -q "on /media/m3 type ext4"; then
+    echo "m3 drive not mounted"
+else
+    for dir in /media/m3/git/*; do
+        cd $dir
+        echo \> $(basename $dir):
+        git pull
+    done
+    sudo /root/local/bin/duply $(hostname -s)-seven backup
+fi
