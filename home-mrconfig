@@ -14,6 +14,8 @@ git_update = git pull --ff-only "$@"
 include =
     if [ -e ~/lib/mr/stow ]; then
         cat ~/lib/mr/stow
+    elif [ -e ~/src/dotfiles/lib/mr/stow ]; then
+        cat ~/src/dotfiles/lib/mr/stow
     elif [ -e ~/local/lib/stow ]; then
         cat ~/local/lib/stow
     fi
