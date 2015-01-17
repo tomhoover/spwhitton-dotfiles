@@ -116,7 +116,7 @@ fixups =
     if ! win32; then
         ln -sf ~/src/dotfiles/home-mrconfig ~/.mrconfig
         ln -sf ~/src/dotfiles/.stow-global-ignore ~
-        mkdir -p ~/.mutt-tmp
+        mkdir -p ~/local/mutt
     fi
     # we don't want git doing any automated merges of master, or other
     # intermediate branches.  mr is configured not to do this (see

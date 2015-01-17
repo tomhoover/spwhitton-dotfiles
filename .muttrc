@@ -33,7 +33,7 @@ set pager_context = 1
 set reply_to = ask-yes
 set recall = ask-yes
 #set pager_stop
-set tmpdir="~/.mutt-tmp"
+set tmpdir="~/local/mutt"
 set resolve = yes
 set noconfirmappend
 set abort_unmodified = yes
