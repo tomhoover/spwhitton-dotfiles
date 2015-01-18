@@ -1,0 +1,12 @@
+#!/bin/bash
+
+cd ~/lib/annex/big/audio/Podcasts
+
+# Add as much metadata as we can manage
+git config annex.genmetadata true
+
+# Add to the annex using addurl, but don't download any content.
+# Preferred content groupwanted expression for client group should
+# ensure that nothing gets downloaded automatically.  Use ga get when
+# I want an episode
+xargs git-annex importfeed --fast < feeds
