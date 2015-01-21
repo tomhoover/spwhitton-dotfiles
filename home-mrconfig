@@ -196,17 +196,31 @@ skip = ! mine || win32
 # --- primary git annex
 
 [lib/annex]
-checkout = git clone 'gcrypt::ssh://ma/~/local/git/lib.annex.git' 'annex'
-post_update = git annex merge
-fixups = git config push.default matching; git config gcrypt.publish-participants true
+# It's best to get a copy of this repo from e.g. my laptop.  The
+# gcrypt repo can then be activated as a special remote.  This makes
+# more sense because the gcrypt repo on the metaarray is a transitive
+# repo rather than an authoritative upstream as the other repositories
+# on ma are.  The checkout command is specified here only in order
+# that `mr status` works.
+checkout = git clone gcrypt::ssh://ma/~/local/annex annex
+post_checkout = git remote rm origin
+
+update = git annex sync ma
+fixups =
+    git config push.default matching
+    git config gcrypt.publish-participants true
+    git config annex.startupscan false
+    git config annex.autocommit false
+    # You don't want the below line to run in a repo that hasn't yet
+    # been `git annex init && git annex describe`'d!
+    git annex numcopies 2
 
 # copy everything to other places
 upload = git annex sync --content ma
 backup = git annex sync --content m3
 
-# this repository can't be checked out until we install
-# git-remote-gcrypt
-skip = (! gcrypt) || lazy
+# manual checkouts only
+skip = lazy
 
 # --- source code repositories registered to their own mr config file
 
