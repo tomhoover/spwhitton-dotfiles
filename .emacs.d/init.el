@@ -1394,6 +1394,11 @@ BINDEE may be a command or another keymap, but whatever it is, it should not be 
                 ("s" . spw/persp-eshell)
                 ("d" . spw/dired-jump)
 
+                ;; perspectives map
+                ("q" . persp-mode-map)
+                ("q u" . persp-basewc-save)
+                ("q q" . persp-basewc-restore)
+
                 ;; launcher map
                 ("g k" . kill-emacs)
                 ("g c" . spw/manual-cleanup)
