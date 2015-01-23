@@ -211,9 +211,6 @@ fixups =
     git config gcrypt.publish-participants true
     git config annex.startupscan false
     git config annex.autocommit false
-    # You don't want the below line to run in a repo that hasn't yet
-    # been `git annex init && git annex describe`'d!
-    git annex numcopies 2
 
 # copy everything to other places
 upload = git annex sync --content ma
