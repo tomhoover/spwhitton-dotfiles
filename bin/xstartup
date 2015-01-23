@@ -4,3 +4,4 @@
 
 /home/swhitton/bin/dwm-autobind
 /usr/bin/gtk-redshift -l 53.57:1.5 -t 6500:3700
+/usr/bin/emacs --daemon
