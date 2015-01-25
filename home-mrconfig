@@ -215,7 +215,10 @@ skip = ! mine || win32
 checkout = git clone gcrypt::ssh://ma/~/local/annex annex
 post_checkout = git remote rm origin
 
-update = git annex sync ma
+# update = git annex sync ma
+# push = git annex sync ma
+update = :
+push = :
 fixups =
     git config push.default matching
     git config gcrypt.publish-participants true
