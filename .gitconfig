@@ -38,5 +38,3 @@
 # push strategy
 [push]
 	default = current
-[magit]
-	extension = wip-save
