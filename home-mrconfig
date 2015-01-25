@@ -210,11 +210,12 @@ skip = ! mine || win32
 # gcrypt repo can then be activated as a special remote.  This makes
 # more sense because the gcrypt repo on the metaarray is a transitive
 # repo rather than an authoritative upstream as the other repositories
-# on ma are.  The checkout command is specified here only in order
-# that `mr status` works.
-checkout = git clone gcrypt::ssh://ma/~/local/annex annex
+# on ma are.
+checkout = :
 post_checkout = git remote rm origin
 
+# basic commands
+status = git annex status --fast
 # update = git annex sync ma
 # push = git annex sync ma
 update = :
