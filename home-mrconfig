@@ -141,6 +141,10 @@ fixups =
     # git pull in this repo myself
     git config branch.master.rebase true
     git config branch.autosetuprebase always
+    # update crontab
+    if ! win32; then
+        loadcron
+    fi
 
 # create ~/.emacs.d/ before stowing so that the files inside are
 # symlinks, rather than the whole dir.  That way Emacs junk that gets
