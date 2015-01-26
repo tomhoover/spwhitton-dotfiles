@@ -148,9 +148,10 @@ fixups =
 
 # create ~/.emacs.d/ before stowing so that the files inside are
 # symlinks, rather than the whole dir.  That way Emacs junk that gets
-# dumped in ~/.emacs.d doesn't have to be put into .gitignore
-pre_stow = mkdir -p ~/.emacs.d
-pre_checkout = mkdir -p ~/.emacs.d
+# dumped in ~/.emacs.d doesn't have to be put into .gitignore.
+# Similarly the XDG autostart folder.
+pre_stow = mkdir -p ~/.emacs.d ~/.config/autostart
+pre_checkout = mkdir -p ~/.emacs.d  ~/.config/autostart
 
 # GTK insists on replacing the symlink to its bookmarks file with the
 # actual file even if the bookmarks in that file don't change (XFCE
