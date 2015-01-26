@@ -863,15 +863,22 @@
 (use-package misc
   :bind ("M-m" . zap-up-to-char))
 
-;; make Emacs regexps easier
+;;; make Emacs regexps easier
 
 (use-package visual-regexp :ensure)
 
-;; toggle quotes for when I fail to follow the style guidelines
+;;; toggle quotes for when I fail to follow the style guidelines
 
 (use-package toggle-quotes
   :ensure
   :bind ("C-c t '" . toggle-quotes))
+
+;;; have M-w and C-xC-k work on the whole line when region is inactive
+
+(use-package whole-line-or-region
+  :ensure
+  :diminish whole-line-or-region-mode
+  :idle (whole-line-or-region-mode 1))
 
 ;;;; ---- functions ----
 
