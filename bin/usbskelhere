@@ -1,0 +1,10 @@
+#!/bin/sh
+
+while true; do
+    read -p "This might overwrite stuff in $(pwd).  Is that okay? " yn
+    case $yn in
+        [Yy]* ) cp -RLf ~/lib/annex/big/skel/usb/* .; break;;
+        [Nn]* ) exit;;
+        * ) echo "Please answer yes or no.";;
+    esac
+done
