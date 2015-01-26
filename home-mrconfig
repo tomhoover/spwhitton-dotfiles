@@ -6,9 +6,8 @@
 git_gc = git gc "$@"
 jobs = 5
 
-# two actions to be used only on my git annex repo
-git_upload = :
-git_backup = :
+# action to be used only on my git annex repo
+git_sync = :
 
 # In general, I don't want merge commits to be made en masse by mr
 git_update = git pull --ff-only "$@"
@@ -216,10 +215,8 @@ post_checkout = git remote rm origin
 
 # basic commands
 status = git annex status --fast
-# update = git annex sync ma
-# push = git annex sync ma
-update = :
-push = :
+update = git annex sync ma
+push = git annex sync ma
 fixups =
     git config push.default matching
     git config gcrypt.publish-participants true
@@ -227,8 +224,12 @@ fixups =
     git config annex.autocommit false
 
 # copy everything to other places
-upload = git annex sync --content ma
-backup = git annex sync --content m3
+sync =
+    if [ -d /media/m3/annex/.git/annex ]; then
+        git annex sync --content ma m3
+    else
+        git annex sync --content ma
+    fi
 
 # manual checkouts only
 skip = lazy
