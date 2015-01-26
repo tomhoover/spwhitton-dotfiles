@@ -1402,7 +1402,17 @@ BINDEE may be a command or another keymap, but whatever it is, it should not be 
                 ("d" . spw/dired-jump)
 
                 ;; perspectives map
-                ("q" . persp-mode-map)
+                ("q s" . persp-switch)
+                ("q k" . persp-remove-buffer)
+                ("q c" . persp-kill)
+                ("q r" . persp-rename)
+                ("q a" . persp-add-buffer)
+                ("q A" . persp-set-buffer)
+                ("q i" . persp-import)
+                ("q n" . persp-next)
+                ("q <right>" . persp-next)
+                ("q p" . persp-prev)
+                ("q <left>" . persp-prev)
                 ("q u" . persp-basewc-save)
                 ("q q" . persp-basewc-restore)
 
