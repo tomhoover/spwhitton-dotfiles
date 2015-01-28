@@ -1668,6 +1668,7 @@ ARG, PRED ignored."
   (add-hook 'haskell-mode-hook 'interactive-haskell-mode))
 (add-hook 'haskell-mode-hook 'haskell-indent-mode)
 (add-hook 'haskell-mode-hook 'eldoc-mode)
+(add-hook 'haskell-mode-hook 'capitalized-words-mode)
 
 (provide 'init)
 ;;; init.el ends here
