@@ -199,9 +199,9 @@ autoci =
 # --- hosts configuration
 
 [src/propellor]
-checkout = git clone http://spw.sdf.org/git/propellor.git propellor --branch spwconf
+checkout = git clone git://github.com/spwhitton/propellor.git propellor --branch spwconf
 post_checkout =
-        cd propellor && git remote add -f upstream https://github.com/joeyh/propellor.git
+        cd propellor && git remote add -f upstream git://github.com/joeyh/propellor.git
         cd && cabal update && cabal install propellor
 post_update = git fetch upstream
 fixups = ln -sf ~/src/propellor ~/.propellor
