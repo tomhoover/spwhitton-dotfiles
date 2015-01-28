@@ -441,8 +441,10 @@
             (defun spw/company-prog-setup ()
               "Setup company mode carefully when its needed, rather than using the brash global-company-mode"
               (company-mode 1)
-              (define-key (current-local-map) (kbd "TAB") 'company-complete))
+              (define-key (current-local-map) (kbd "M-/") 'company-complete)
+              )
             (add-hook 'prog-mode-hook 'spw/company-prog-setup)
+            ;; alternative approach: https://github.com/company-mode/company-mode/issues/94#issuecomment-40884387
 
             ;; I like my C-w binding so move one of company's bindings
             (define-key company-active-map "\C-w" nil)
