@@ -1662,5 +1662,11 @@ ARG, PRED ignored."
                           (setq-local electric-layout-rules
                                       (remove (quote (?\; . after)) electric-layout-rules))))
 
+;;; Haskell
+
+(add-hook 'haskell-mode-hook 'interactive-haskell-mode)
+(add-hook 'haskell-mode-hook 'haskell-indent-mode)
+(add-hook 'haskell-mode-hook 'eldoc-mode)
+
 (provide 'init)
 ;;; init.el ends here
