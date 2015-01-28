@@ -26,6 +26,9 @@
 # my personal repositories cloned via HTTP must be pushed via SSH
 [url "ssh://ma/~/local/git/"]
      pushInsteadOf = http://spw.sdf.org/git/
+[url "git@github.com:"]
+    pushInsteadOf = https://github.com/
+    pushInsteadOf = git://github.com/
 
 # turn colour on in as many places as possible
 [color]

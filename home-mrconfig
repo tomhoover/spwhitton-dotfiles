@@ -91,7 +91,7 @@ lib =
         MR_NAME=dotfiles
 
 stowable = true
-checkout = git clone http://spw.sdf.org/git/dotfiles.git dotfiles
+checkout = git clone git://github.com/spwhitton/dotfiles.git dotfiles
 update =
     # always make a go of updating master
     branch="$(git rev-parse --abbrev-ref HEAD)"
