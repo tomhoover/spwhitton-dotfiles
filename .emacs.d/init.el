@@ -1366,13 +1366,10 @@ With arg ARG, put shell in current window."
 ;; opening new lines below
 (bind-key "M-RET" 'magnars/new-line-dwim)
 
-;; C-m and RET should reindent the current line only for languages
-;; that don't use semantic indentation
-(bind-key "RET" 'reindent-then-newline-and-indent)
-(add-hook 'python-mode-hook (lambda ()
-                              (bind-key "RET" 'newline-and-indent python-mode-map)))
-(add-hook 'haskell-mode-hook (lambda ()
-                               (bind-key "RET" 'newline-and-indent haskell-mode-map)))
+;; `reindent-then-newline-and-indent' tends to get things wrong more
+;; often than it gets things right with my typing habits.  I hit <TAB>
+;; a lot.
+(bind-key "RET" 'newline-and-indent)
 
 ;; fixup-whitespace seems to make just-one-space redundant
 (bind-key "M-SPC" 'fixup-whitespace)
