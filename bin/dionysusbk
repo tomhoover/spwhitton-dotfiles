@@ -1,12 +1,13 @@
 #!/bin/bash
 
+DIONYSUS="/media/usb0"
+DEST="$HOME/lib/annex/old/androidbk"
+
 # check we can go ahead setup the temporary directory
 
-DIONYSUS="/media/XXX"
-
 if ! [ -d "$DIONYSUS/DCIM" ]; then
-    echo "$0: phone microsd doesn't look to be mounted"
-    # exit 1
+    echo "$(basename $0): phone microsd doesn't look to be mounted"
+    exit 1
 fi
 
 cd $(TMPDIR=~/tmp mktemp -d)
@@ -15,27 +16,36 @@ mkdir temp-tar
 # backup photos
 
 mkdir incoming-photos
-rsync -Pavc $DIONYSUS/DCIM/ incoming-photos
-rm -r $DIONYSUS/DCIM/*
+if rsync -qavc $DIONYSUS/DCIM/ incoming-photos; then
+    rm -r $DIONYSUS/DCIM/*
+fi
+
+mkdir incoming-img
+if rsync -qavc $DIONYSUS/Pictures/ incoming-img; then
+    rm -r $DIONYSUS/Pictures
+fi
 
 # backup Kakao
 
-rsync -Pavc $DIONYSUS/KakaoTalk/Chats/ temp-tar
-rm -r $DIONYSUS/KakaoTalk/Chats/*
+if rsync -qavc $DIONYSUS/Chats/ temp-tar; then
+    rm -r $DIONYSUS/Chats
+fi
 
 # backup contacts CSV file
 
-rsync -Pavc $DIONYSUS/spwhitton-*.csv temp-tar
-rm $DIONYSUS/spwhitton-*.csv
+if rsync -qavc $DIONYSUS/Backup.Contacts.*.csv temp-tar; then
+    rm $DIONYSUS/Backup.Contacts.*.csv
+fi
 
 # tar it all up
 cd temp-tar
-tar cf $(date +../dionysus_%F.tar) *
+tar cf $DEST/$(date +dionysus_%F.tar) *
 cd ..
 
 # conclusion: output instructions for backup procedure
 
-echo "Done in $(pwd)."
-echo "Go there and open up the tar file and check everything is there."
-echo "Then move the tar file into annex, check through and move photos,"
-echo "into annex and nuke $(pwd)/temp-tar and Dropbox photos."
+echo "Done in $(pwd).  Now see backup procedure notes in Emacs."
+
+# echo "Go there and open up the tar file and check everything is there."
+# echo "Then move the tar file into annex, check through and move photos,"
+# echo "into annex and nuke $(pwd)/temp-tar and Dropbox photos."
