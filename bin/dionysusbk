@@ -1,0 +1,41 @@
+#!/bin/bash
+
+# check we can go ahead setup the temporary directory
+
+DIONYSUS="/media/XXX"
+
+if ! [ -d "$DIONYSUS/DCIM" ]; then
+    echo "$0: phone microsd doesn't look to be mounted"
+    # exit 1
+fi
+
+cd $(TMPDIR=~/tmp mktemp -d)
+mkdir temp-tar
+
+# backup photos
+
+mkdir incoming-photos
+rsync -Pavc $DIONYSUS/DCIM/ incoming-photos
+rm -r $DIONYSUS/DCIM/*
+
+# backup Kakao
+
+rsync -Pavc $DIONYSUS/KakaoTalk/Chats/ temp-tar
+rm -r $DIONYSUS/KakaoTalk/Chats/*
+
+# backup contacts CSV file
+
+rsync -Pavc $DIONYSUS/spwhitton-*.csv temp-tar
+rm $DIONYSUS/spwhitton-*.csv
+
+# tar it all up
+cd temp-tar
+tar cf $(date +../dionysus_%F.tar) *
+cd ..
+
+# conclusion: output instructions for backup procedure
+
+echo "Done in $(pwd)."
+echo "Go there and open up the tar file and check everything is there."
+echo "Then move the tar file into annex, check through and move photos,"
+echo "into annex and nuke $(pwd)/temp-tar and Dropbox photos."
