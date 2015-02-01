@@ -1666,7 +1666,7 @@ ARG, PRED ignored."
 
 (when (fboundp 'interactive-haskell-mode)
   (add-hook 'haskell-mode-hook 'interactive-haskell-mode))
-(add-hook 'haskell-mode-hook 'haskell-indent-mode)
+(add-hook 'haskell-mode-hook 'haskell-indentation-mode)
 (add-hook 'haskell-mode-hook 'eldoc-mode)
 (add-hook 'haskell-mode-hook 'capitalized-words-mode)
 
