@@ -882,6 +882,20 @@
   :diminish whole-line-or-region-mode
   :idle (whole-line-or-region-mode 1))
 
+;;; Haskell
+
+(use-package haskell-mode
+  :ensure
+  :init (progn
+          (when (fboundp 'interactive-haskell-mode)
+            (add-hook 'haskell-mode-hook 'interactive-haskell-mode))
+          (add-hook 'haskell-mode-hook 'turn-on-haskell-doc)
+          (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
+          (add-hook 'haskell-mode-hook 'capitalized-words-mode)
+          (use-package hi2
+            :ensure
+            :init (add-hook 'haskell-mode-hook 'turn-on-hi2))))
+
 ;;;; ---- functions ----
 
 (defun mwf/narrow-or-widen-dwim (p)
@@ -1658,14 +1672,6 @@ ARG, PRED ignored."
 (add-hook 'js-mode-hook (lambda ()
                           (setq-local electric-layout-rules
                                       (remove (quote (?\; . after)) electric-layout-rules))))
-
-;;; Haskell
-
-(when (fboundp 'interactive-haskell-mode)
-  (add-hook 'haskell-mode-hook 'interactive-haskell-mode))
-(add-hook 'haskell-mode-hook 'haskell-indentation-mode)
-(add-hook 'haskell-mode-hook 'eldoc-mode)
-(add-hook 'haskell-mode-hook 'capitalized-words-mode)
 
 (provide 'init)
 ;;; init.el ends here
