@@ -91,6 +91,21 @@ key.setViewKey(['C-c', 'k'], function (ev, arg){
     process.runAsync(args, args.length);
 }, 'Send to Kindle and add to Org reading list');
 
+key.setViewKey(['C-c', 'v'], function (ev, arg){
+    Components.utils.import("resource://gre/modules/FileUtils.jsm");
+
+    // http://stackoverflow.com/questions/10215643/how-to-execute-a-windows-command-from-firefox-addon
+    var env = Components.classes["@mozilla.org/process/environment;1"]
+        .getService(Components.interfaces.nsIEnvironment);
+    var shell = new FileUtils.File("/bin/bash");
+    var args = ["-c", "yt ".concat(getCurrentURL())];
+
+    var process = Components.classes["@mozilla.org/process/util;1"]
+        .createInstance(Components.interfaces.nsIProcess);
+    process.init(shell);
+    process.runAsync(args, args.length);
+}, 'Send flash video stream to VLC');
+
 //}}%PRESERVE%
 // ========================================================================= //
 

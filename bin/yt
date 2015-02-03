@@ -1,0 +1,3 @@
+#!/bin/sh
+
+quvi "$1" --exec "vlc %u"
