@@ -28,27 +28,25 @@ getProcs args
   | otherwise = usageDie "invalid arguments"
   where argc = length args
 
--- parseEmacsOutput :: String -> [Reminder]
--- parseEmacsOutput = foldl' parseLine [] . drop 2 . lines
---   where apptRegexp = " ([0-9]{1,2}):([0-9][0-9])[-]{0,1}[0-9:]{0,5}[.]* (.*)$"
---         remindersAt = [60, 15, 0] :: [Int]
---         parseLine rems line
---           | length appt /= 0 = let hours = read $ appt !! 1
---                                    mins  = read $ appt !! 2
---                                    text  = appt !! 3
---                                in (Reminder hours mins text):rems
---           | otherwise        = rems
---           where appt = line =~ apptRegexp :: [String]
-
 parseEmacsOutput :: String -> [Reminder]
 parseEmacsOutput = foldl' parseLine [] . drop 2 . lines
   where apptRegexp = " ([0-9]{1,2}):([0-9][0-9])[-]{0,1}[0-9:]{0,5}[.]* (.*)$"
-        parseLine rems line = let lineMatch = line =~ apptRegexp :: [[String]]
-                                  hour:mins:text:[] = drop 1 . concat $ lineMatch
-                                  hour' = read hour
-                                  mins' = read mins
-                                  (text',_,_) = text =~ "[ ]{2,}:.*:*$" :: (String,String,String)
-                              in rems ++ [Reminder hour' mins' text']
+        snipRegexp = "[ ]{2,}:.*:*$"
+
+        parseLine rems line
+          | lineMatch = rems ++ staggeredReminders hour' min' text'
+          | otherwise = rems
+          where lineMatch = line =~ apptRegexp :: Bool
+                lineMatchStrings = line =~ apptRegexp :: [[String]]
+                hour:min:text:[] = drop 1 . concat $ lineMatchStrings
+
+                hour' = read hour
+                min' = read min
+                (text',_,_) = text =~ snipRegexp :: (String,String,String)
+
+staggeredReminders :: Int -> Int -> String -> [Reminder]
+staggeredReminders hour min text = foldr step [] [0, 15, 60]
+  where step diff rems = undefined
 
 sampleEmacs :: String
 sampleEmacs = "Sean's diary for today\nWednesday   4 February 2015\n  Appt:       17:00...... Dummy event 1                                  :APPT::\n  Appt:       18:00...... Dummy event 2                                  :APPT::"
