@@ -521,7 +521,11 @@
 
 ;;; flycheck
 
-(use-package flycheck :ensure :idle (global-flycheck-mode))
+(use-package flycheck
+  :ensure
+  :idle (global-flycheck-mode)
+  ;; disable flymake; having both running at the same time is annoying
+  :init (setq flymake-allowed-file-name-masks nil))
 
 ;;; TRAMP
 
