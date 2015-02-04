@@ -24,7 +24,9 @@ main = do
 
 getProcs :: [String] -> [IO ()]
 getProcs args
-  | argc == 1 && head args == "cron" = [undefined]
+  | 1 == 1 = [do
+      emacsOutput <- getEmacsOutput
+      print $ parseEmacsOutput emacsOutput]
   | otherwise = usageDie "invalid arguments"
   where argc = length args
 
@@ -34,22 +36,26 @@ parseEmacsOutput = foldl' parseLine [] . drop 2 . lines
         snipRegexp = "[ ]{2,}:.*:*$"
 
         parseLine rems line
-          | lineMatch = rems ++ staggeredReminders hour' min' text'
+          | lineMatch = rems ++ staggeredReminders hour' mins' text'
           | otherwise = rems
           where lineMatch = line =~ apptRegexp :: Bool
                 lineMatchStrings = line =~ apptRegexp :: [[String]]
-                hour:min:text:[] = drop 1 . concat $ lineMatchStrings
+                hour:mins:text:[] = drop 1 . concat $ lineMatchStrings
 
                 hour' = read hour
-                min' = read min
+                mins' = read mins
                 (text',_,_) = text =~ snipRegexp :: (String,String,String)
 
 staggeredReminders :: Int -> Int -> String -> [Reminder]
-staggeredReminders hour min text = foldr step [] [0, 15, 60]
-  where step diff rems = undefined
-
-sampleEmacs :: String
-sampleEmacs = "Sean's diary for today\nWednesday   4 February 2015\n  Appt:       17:00...... Dummy event 1                                  :APPT::\n  Appt:       18:00...... Dummy event 2                                  :APPT::"
+staggeredReminders hour mins text = foldl' step [] [60, 15, 0]
+  where step rems diff = let hour'
+                               | diff > mins = hour - 1
+                               | otherwise = hour
+                             -- could do with addition mod 60
+                             mins'
+                               | mins >= diff = mins - diff
+                               | otherwise = 60 + (mins - diff)
+                         in rems ++ [Reminder hour' mins' text]
 
 getEmacsOutput :: IO String
 getEmacsOutput = do
@@ -62,6 +68,7 @@ getEmacsOutput = do
 -- plumbing function definitions
 
 runProcs :: [IO ()] -> IO ()
+runProcs [] = return ()
 runProcs (x:xs) = do
   x
   runProcs xs
