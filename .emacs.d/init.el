@@ -785,7 +785,9 @@
 
 (use-package highlight-indentation
   :ensure
-  :init (add-hook 'python-mode-hook 'highlight-indentation-current-column-mode))
+  :init (progn
+          (add-hook 'python-mode-hook 'highlight-indentation-current-column-mode)
+          (add-hook 'haskell-mode-hook 'highlight-indentation-current-column-mode)))
 
 ;;; jump around what's visible
 
