@@ -141,6 +141,8 @@
 (unless (server-running-p)
   (server-start))
 
+
+
 ;;;; ---- packages ----
 
 ;;; clean up the mode line
@@ -898,6 +900,8 @@
             :ensure
             :init (add-hook 'haskell-mode-hook 'turn-on-hi2))))
 
+
+
 ;;;; ---- functions ----
 
 (defun mwf/narrow-or-widen-dwim (p)
@@ -1368,6 +1372,8 @@ With arg ARG, put shell in current window."
       (if evil-mode (evil-append-line 1))
       (yas-expand))))
 
+
+
 ;;;; ---- personal settings ----
 
 ;;; no tabs please
@@ -1586,6 +1592,8 @@ ARG, PRED ignored."
 ;; no `advice-add' on Emcas 24.3 on ma
 (if (fboundp 'advice-add)
     (advice-add 'save-some-buffers :before #'spw/save-org-buffers-first))
+
+
 
 ;;;; ---- modes configuration ----
 
