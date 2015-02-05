@@ -1695,5 +1695,42 @@ ARG, PRED ignored."
                           (setq-local electric-layout-rules
                                       (remove (quote (?\; . after)) electric-layout-rules))))
 
+;;; eshell prompt
+
+;; from the Emacs Wiki [[EshellPrompt]]
+(defun fish-path (path max-len)
+  "Maybe trim PATH down to MAX-LEN (sans slashes).
+
+Replaces parent directories with their initial characters."
+  (let* ((components (split-string (abbreviate-file-name path) "/"))
+         (len (+ (1- (length components))
+                 (reduce '+ components :key 'length)))
+         (str ""))
+    (while (and (> len max-len)
+                (cdr components))
+      (setq str (concat str
+                        (cond ((= 0 (length (car components))) "/")
+                              ((= 1 (length (car components)))
+                               (concat (car components) "/"))
+                              (t
+                               (if (string= "."
+                                            (string (elt (car components) 0)))
+                                   (concat (substring (car components) 0 2)
+                                           "/")
+                                 (string (elt (car components) 0) ?/)))))
+            len (- len (1- (length (car components))))
+            components (cdr components)))
+    (concat str (reduce (lambda (a b) (concat a "/" b)) components))))
+
+(setq eshell-prompt-function
+      (lambda nil
+        (concat
+         (propertize (car (split-string (system-name) "\\.")) 'face `(:foreground "#DFAF8F"))
+         " "
+         (propertize (fish-path (eshell/pwd) 40) 'face `(:foreground "#60b48a"))
+         (propertize " $" 'face `(:foreground "#506070"))
+         " ")))
+(setq eshell-highlight-prompt nil)
+
 (provide 'init)
 ;;; init.el ends here
