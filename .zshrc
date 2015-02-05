@@ -1,81 +1,37 @@
-# BEGIN LOCAL
+# Credits for much of the following config file: tomaw,
+# <slarti@gentoo.org>, <spider@gentoo.org>, <ciaranm@gentoo.org>
 
-export MAILDIR="$HOME/Maildir/"
+# --- personal settings
 
-# allow zenity to be called from cron
-
-# per http://promberger.info/linux/2009/01/02/running-x-apps-like-zenity-from-crontab-solving-cannot-open-display-problem/
-if pgrep Xorg >/dev/null; then
-    xhost local:${USER} > /dev/null
-fi
-# per http://superuser.com/questions/111771/using-either-notify-send-or-zenity-in-cron
-echo $DBUS_SESSION_BUS_ADDRESS > ~/.tmp-dbus-addr
-
-# useful for running stuff compiled in home dir
-
+export MAILDIR="$HOME/.offlinemail/"
 export LD_RUN_PATH=$HOME/local/lib/
 export LD_LIBRARY_PATH=$HOME/local/lib/
-
 export GTK_IM_MODULE=xim
 export QT_IM_MODULE=xim
-
-GPG_TTY=$(tty)
-export GPG_TTY
-
-# # use gksudo rather than sudo if we're in an xterm
-# if ! [[ -z "$DISPLAY" ]]; then
-#     alias sudo=gksudo
-# fi
-
+export GPG_TTY=$(tty)
 export LC_ALL="en_GB.utf8"
 export LANG="en_GB.utf8"
-
-# my choices of browser, editor etc.
-
 export BROWSER="iceweasel"
 export TERMCMD="urxvt"
-export EDITOR="emacsclient -avi -t"
-export VISUAL="emacsclient -avi -t"
-
-# settings to make BiBTeX and Org play nice together due to a really
-# annoying security change in TeXLive 2010--see
-# http://lists.gnu.org/archive/html/emacs-orgmode/2011-04/msg00845.html
-BIBINPUTS=/home/swhitton/doc:$BIBINPUTS
-export BIBINPUTS
-
-# show what you need to type to continue the completion, from
-# http://www.reddit.com/r/commandline/comments/kbeoe/you_can_make_readline_and_bash_much_more_user/c2lhq9e
-highlights='${PREFIX:+=(#bi)($PREFIX:t)(?)*==31=1;32}':${(s.:.)LS_COLORS}}
-highlights2='=(#bi) #([0-9]#) #([^ ]#) #([^ ]#) ##*($PREFIX)*==1;31=1;35=1;33=1;32=}'
-zstyle -e ':completion:*' list-colors 'if [[ $words[1] != kill && $words[1] != strace ]]; then reply=( "'$highlights'" ); else reply=( "'$highlights2'" ); fi'
-unset highlights
-
-# share history between instances
-setopt share_history
-setopt append_history
-
-# TRAMP and zsh don't play nice together by default
-if [[ "$TERM" == "dumb" ]]
-then
-  unsetopt zle
-  unsetopt prompt_cr
-  unsetopt prompt_subst
-  unfunction precmd
-  unfunction preexec
-  PS1='$ '
+export EDITOR="emacsclient -t"
+export VISUAL="emacsclient -t"
+export ALTERNATE_EDITOR="mg"
+if [[ -f /usr/bin/less ]] ; then
+    export PAGER=less
+    export LESS="--ignore-case --long-prompt"
+fi
+if ! [[ "$TERM" == "dumb" ]]; then
+    autoload -U colors; colors
+    export PS1="%{$fg[${1:-yellow}]%}%m %{$fg[${1:-green}]%}%~ %{$fg[${1:-blue}]%}%#%{$reset_color%} "
 fi
 
-# kill the evil C-s, C-q keys
-setopt noflowcontrol
+# --- terminals
 
-# Things from dev.gentoo.org/~ciaranm/configs/bashrc -- thanks Ciaran!
+# From dev.gentoo.org/~ciaranm/configs/bashrc
 if [[ "${TERM}" == "rxvt-unicode" ]] ; then
     export TERMTYPE="256"
 elif [[ "${TERM}" != "dumb" ]] ; then
     export TERMTYPE="16"
-else
-    export TERMTYPE=""
-    export NOCOLOR="true"
 fi
 
 if [[ "${TERM}" == "rxvt-unicode" ]] && \
@@ -84,81 +40,62 @@ if [[ "${TERM}" == "rxvt-unicode" ]] && \
     export TERM=rxvt
 fi
 
-# Additions to $PATH
+# set window title
 
-if [[ -n "${PATH/*\/usr\/local\/bin:*}" ]] ; then
-    export PATH="/usr/local/bin:$PATH"
-fi
+precmd() {
+    #    [[ -t 1 ]] || return
+    case $TERM in
+        *xterm*|rxvt*) print -Pn "]2;%n@%m:%~\a"
+            ;;
+        # screen*) print -Pn "\"%n@%m:%~\134"
+        # ;;
+    esac
+}
 
+# --- $PATH
 
-if [[ -n "${PATH/*/usr/pkg/bin:*}" ]] ; then
-    export PATH=/usr/pkg/bin:$PATH
-fi
+if [[ -n "${PATH/*\/usr\/local\/bin:*}" ]] ; then export PATH="/usr/local/bin:$PATH"; fi
 
-if [[ -n "${PATH/*\/sbin:*}" ]] ; then
-    export PATH="/sbin:$PATH"
-fi
+if [[ -n "${PATH/*/usr/pkg/bin:*}" ]] ; then export PATH="/usr/pkg/bin:$PATH"; fi
 
-if [[ -n "${PATH/*\/usr\/sbin:*}" ]] ; then
-    export PATH="/usr/sbin:$PATH"
-fi
+if [[ -n "${PATH/*\/sbin:*}" ]] ; then export PATH="/sbin:$PATH"; fi
 
-if [[ -n "${PATH/*$HOME\/bin:*}" ]] ; then
-    export PATH="$HOME/bin:$PATH"
-fi
+if [[ -n "${PATH/*\/usr\/sbin:*}" ]] ; then export PATH="/usr/sbin:$PATH"; fi
 
+if [[ -n "${PATH/*$HOME\/bin:*}" ]] ; then export PATH="$HOME/bin:$PATH"; fi
 
-if [[ -n "${PATH/*$HOME\/local\/bin:*}" ]] ; then
-    export PATH="$HOME/local/bin:$PATH"
-fi
+if [[ -n "${PATH/*$HOME\/local\/bin:*}" ]] ; then export PATH="$HOME/local/bin:$PATH"; fi
 
-if [[ -n "${PATH/*$HOME\/.cabal\/bin:*}" ]] ; then
-    export PATH="$HOME/.cabal/bin:$PATH"
-fi
+if [[ -n "${PATH/*$HOME\/.cabal\/bin:*}" ]] ; then export PATH="$HOME/.cabal/bin:$PATH"; fi
 
-# set some pager options
-
-if [[ -f /usr/bin/less ]] ; then
-    export PAGER=less
-    export LESS="--ignore-case --long-prompt"
-fi
-alias page=$PAGER
-
-# Aliases
+# --- aliases
 
 alias ls="ls -F --color=always"
 alias ll="ls -al"
+alias g="git"
+alias ga="git annex"
+alias pg="ps auxxxxxxxxxxxxxxxxxxx | grep"
 
 alias bassdrive="mpc add http://beezle.streams.bassdrive.com:8765/ && mpc playlist | wc -l | xargs mpc play"
 alias radio4="mplayer \"http://wmlive-acl.bbc.co.uk/wms/bbc_ami/radio4/radio4_bb_live_eq1_sl0?BBC-UID=044be39365f98aaa88a55ca7f1aa8fc5b3569ae000708114d4dfd43698a07e8a&amp;SSO2-UID=\""
 alias ws="mplayer mms://a243.l3944038972.c39440.g.lm.akamaistream.net/D/243/39440/v0001/reflector:38972"
 
-alias zile='emacsclient -avi -t'
 alias screen="screen -U" # enable UTF-8
 alias tmux="tmux"
-alias ta="tmux attach"
-alias g="git"
-alias ga="git annex"
 alias rax="screen -URaAx"
-
-alias blogdates="rdate.py-dir ~/html/blog/entries"
+alias ta="tmux attach"
 alias rt="screen -t rtorrent dtach -a $HOME/local/rt/session/dtach.socket"
 
+alias blogdates="rdate.py-dir ~/html/blog/entries"
 alias httpdir="sudo python -m SimpleHTTPServer 80"
 alias sdfvpn="sshuttle -r ma 0/0 --dns --auto-hosts --python /usr/pkg/bin/python2.7"
 alias athvpn="sshuttle -r athena 0/0 --dns"
 alias calup="emacs -batch -l /home/swhitton/.emacs.d/init.el -eval \"(org-batch-store-agenda-views)\""
 alias dotex="texi2dvi --pdf --clean --batch"
 alias whitenoise="cvlc --quiet --loop ~/lib/annex/doc/sounds/R*.ogg"
-alias mrup="cd;mount.s3ql --authfile ~/.s3ql/authinfo2 s3://gitcrypt /s3ql/gitcrypt;mr -j5 up;umount.s3ql /s3ql/gitcrypt"
-alias mrpush="cd;mount.s3ql --authfile ~/.s3ql/authinfo2 s3://gitcrypt /s3ql/gitcrypt;mr -j5 push;umount.s3ql /s3ql/gitcrypt"
-alias mruppush="cd;mount.s3ql --authfile ~/.s3ql/authinfo2 s3://gitcrypt /s3ql/gitcrypt;mr -j5 up;mr -j5 push;umount.s3ql /s3ql/gitcrypt"
 alias myip="dig +short myip.opendns.com @resolver1.opendns.com"
 
-# END LOCAL
-
-# Credits for the following fantastic config file: tomaw,
-# <slarti@gentoo.org>, <spider@gentoo.org>, <ciaranm@gentoo.org>
+# --- load zsh features
 
 # Change word boundary characters. Nabbed from
 # http://zshwiki.org/KeyBindings.
@@ -193,48 +130,9 @@ autoload -U compinit; compinit
 # run-help on it :)
 autoload -U zmv
 
-# Command line calculator written in zsh, with a complete history
-# mechanism and other shell features.
-autoload -U zcalc
-
-# Like xargs, but instead of reading lines of arguments from standard input,
-# it takes them from the command line. This is possible/useful because,
-# especially with recursive glob operators, zsh often can construct a command
-# line for a shell function that is longer than can be accepted by an external
-# command. This is what's often referred to as the "shitty Linux exec limit" ;)
-# The limitation is on the number of characters or arguments.
-#
-# slarti@pohl % echo {1..30000}
-# zsh: argument list too long: /bin/echo
-# zsh: exit 127   /bin/echo {1..30000}
-autoload -U zargs
-
-# Yes, we are as bloated as emacs
-#autoload -U tetris
-#zle -N tetris
-#bindkey "^Xt" tetris
-
-# Makes it easy to type URLs as command line arguments. As you type, the
-# input character is analyzed and, if it may need quoting, the current
-# word is checked for a URI scheme. If one is found and the current word
-# is not already quoted, a blackslash is inserted before the input
-# character.
+# automatically escape URLs
 autoload -U url-quote-magic
 zle -N self-insert url-quote-magic
-
-# zed is a tiny command-line editor in pure ZSH; no other shell could do
-# this.  zed itself is simple as anything, but it's killer feature for
-# me is that it can edit functions on the go with zed -f <funcname> (or
-# fned <funcname>. This is useful for me when I'm using and defining
-# functions interactively, for example, when I'm working through the
-# Portage tree in CVS. It allows me to edit a function on the fly,
-# without having to call the last definition back up from the history
-# and re-edit that in ZLE. It also indents the function, even if it was
-# defined on all one line in the line editor, making it easy as anything
-# to edit.
-#
-# ^X^W to save, ^C to abort.
-autoload -U zed
 
 # Incremental completion of a word. After starting this, a list of
 # completion choices can be shown after every character you type, which
@@ -248,9 +146,9 @@ bindkey "^Xi" incremental-complete-word
 # This function allows you type a file pattern, and see the results of
 # the expansion at each step.  When you hit return, they will be
 # inserted into the command line.
-#autoload -U insert-files
-#zle -N insert-files
-#bindkey "^Xf" insert-files
+autoload -U insert-files
+zle -N insert-files
+bindkey "^Xf" insert-files
 
 # This set of functions implements a sort of magic history searching.
 # After predict-on, typing characters causes the editor to look backward
@@ -265,69 +163,6 @@ zle -N predict-on
 zle -N predict-off
 bindkey "^X^Z" predict-on
 bindkey "^Z" predict-off
-
-# run-help is a help finder, bound in ZLE to M-h.  It doesn't need to be
-# autoloaded to work - the non-autoloaded version just looks up a man
-# page for the command under the cursor, then when that process is
-# finished it pulls your old command line back up from the buffer stack.
-# However, with the autoloaded function and:
-#
-# mkdir ~/zsh-help; cd ~/zsh-help MANPAGER="less" man zshbuiltins | \
-# colcrt | perl /usr/share/zsh/4.2.1/Util/helpfiles
-#
-# It'll work for zsh builtins too. By the way, I've assumed some things
-# in that command. ~/zsh-help can be wherever you like, MANPAGER needs
-# to be any standard pager (less, pg, more, just not the MANPAGER I have
-# defined in this file), colcrt can be col -bx, and the path to
-# helpfiles may be different for you (Util may not even be installed
-# with your distribution; fair enough, make install doesn't install it.
-# Dig up a source tarball and everything's in there).
-
-# Define our helpdir unalias run-help
-HELPDIR=~/zsh-help
-# We need to get rid of the old run-help (NOTE: if you source ~/.zshrc
-# this will through up a warning about the alias not existing for
-# unaliasing. The solution is to form an if construct, with the
-# condition that run-help is aliased. I do not know how to do this.
-#unalias run-help
-# Load the new one
-#autoload -U run-help
-
-# Colours
-autoload -U colors; colors
-
-# git prompt stuff from http://sebastiancelis.com/2009/11/16/zsh-prompt-git-users/
-
-# Initialize colors.
-autoload -U colors
-colors
-
-# Allow for functions in the prompt.
-setopt PROMPT_SUBST
-
-# Autoload zsh functions.
-fpath=(~/.zsh/functions $fpath)
-autoload -U ~/.zsh/functions/*(:t)
-
-# Enable auto-execution of functions.
-typeset -ga preexec_functions
-typeset -ga precmd_functions
-typeset -ga chpwd_functions
-
-# # Append git functions needed for prompt.
-# preexec_functions+='preexec_update_git_vars'
-# precmd_functions+='precmd_update_git_vars'
-# chpwd_functions+='chpwd_update_git_vars'
-
-source ~/.zsh/96-vcs_info-cdpath.zsh
-zstyle ':vcs_info:*' debug true
-
-if [ "$USER" = 'root' ]
-then
-    PROMPT="%{$fg[${1:-yellow}]%}%1~%{$fg_bold[${1:-red}]%} #%{$reset_color%} "
-else
-    PROMPT=$'%{${fg[green]}%}%1~$(prompt_git_info)%{$fg_bold[${1:-blue}]%} $%{$reset_color%} '
-fi
 
 # _gnu_generic is a completion widget that parses the --help output of
 # commands for options. df and feh work fine with it, however options
@@ -383,35 +218,7 @@ fi
 bindkey '\e[5~' up-history # PageUp
 bindkey '\e[6~' down-history # PageDown
 
-# This function sets the window tile to user@host:/workingdir before each
-# prompt. If you're using screen, it sets the window title (works
-# wonderfully for hardstatus lines :)
-precmd() {
-#    [[ -t 1 ]] || return
-    case $TERM in
-        *xterm*|rxvt*) print -Pn "]2;%n@%m:%~\a"
-;;
-        # screen*) print -Pn "\"%n@%m:%~\134"
-        # ;;
-esac
-}
-
-# # This sets the window title to the last run command.
-# preexec() {
-# #    [[ -t 1 ]] || return
-#     case $TERM in
-#         *xterm*|rxvt*)
-# print -Pn "]2;$1\a"
-# ;;
-#         #screen*)
-#         #print -Pn "\"$1\134"
-#         #;;
-# esac
-# }
-
-echo1() {
-    echo "$1"
-}
+# --- completion
 
 # Pretty menu!
 zstyle ':completion:*' menu select=1
@@ -435,17 +242,17 @@ zstyle ':completion:*' squeeze-slashes 'yes'
 zstyle ':completion::complete:*' '\'
 
 # Use menuselection for pid completion
-        zstyle ':completion:*:*:kill:*' menu yes select
-        zstyle ':completion:*:kill:*' force-list always
+zstyle ':completion:*:*:kill:*' menu yes select
+zstyle ':completion:*:kill:*' force-list always
 
 #  tag-order 'globbed-files directories' all-files
-        zstyle ':completion::complete:*:tar:directories' file-patterns '*~.*(-/)'
+zstyle ':completion::complete:*:tar:directories' file-patterns '*~.*(-/)'
 
 # Don't complete backup files as executables
 zstyle ':completion:*:complete:-command-::commands' ignored-patterns '*\~'
 
-# Don't complete non-.tex LaTeX files with vi
-zstyle ':completion:*:*:vi:*:*files' ignored-patterns '*?.aux' '*?.log' '*?.pdf' '*?.toc' '*?.bak' '*?.fdb_latexmk'
+# Don't complete non-.tex LaTeX files with mg
+zstyle ':completion:*:*:mg:*:*files' ignored-patterns '*?.aux' '*?.log' '*?.pdf' '*?.toc' '*?.bak' '*?.fdb_latexmk'
 
 # Separate matches into groups
 zstyle ':completion:*:matches' group 'yes'
@@ -496,97 +303,125 @@ zstyle ':completion:*' completer _complete _match _approximate
 zstyle ':completion:*:match:*' original only
 zstyle ':completion:*:approximate:*' max-errors 1 numeric
 
-# http://zshwiki.org/home/zle/bindkeys
-bindkey -M viins '^r' history-incremental-search-backward
-bindkey -M vicmd '^r' history-incremental-search-backward
+# --- zsh options
 
-# Options
-                setopt                  \
-                    NO_all_export               \
-                    always_last_prompt  \
-                    always_to_end       \
-                    append_history      \
-                    auto_cd             \
-                    auto_list           \
-                    auto_menu           \
-                    auto_name_dirs      \
-                    auto_param_keys     \
-                    auto_param_slash    \
-                    auto_pushd          \
-                    auto_remove_slash   \
-                    NO_auto_resume              \
-                    bad_pattern         \
-                    bang_hist           \
-                    NO_beep                     \
-                    brace_ccl           \
-                    correct_all         \
-                    NO_bsd_echo         \
-                    NO_cdable_vars              \
-                    NO_chase_links              \
-                    clobber             \
-                    complete_aliases    \
-                    complete_in_word    \
-                    correct             \
-                    correct_all         \
-                    csh_junkie_history  \
-                    NO_csh_junkie_loops \
-                    NO_csh_junkie_quotes        \
-                    NO_csh_null_glob    \
-                    equals              \
-                    extended_glob       \
-                    extended_history    \
-                    function_argzero    \
-                    glob                        \
-                    NO_glob_assign              \
-                    glob_complete       \
-                    NO_glob_dots                \
-                    NO_glob_subst               \
-                    NO_hash_cmds                \
-                    NO_hash_dirs                \
-                    hash_list_all       \
-                    hist_allow_clobber  \
-                    hist_beep           \
-                    hist_ignore_dups    \
-                    hist_ignore_space   \
-                    NO_hist_no_store    \
-                    hist_verify         \
-                    NO_hup                      \
-                    NO_ignore_braces    \
-                    NO_ignore_eof               \
-                    interactive_comments        \
-                    inc_append_history  \
-                    NO_list_ambiguous   \
-                    NO_list_beep                \
-                    list_types          \
-                    long_list_jobs      \
-                    magic_equal_subst   \
-                    NO_mail_warning             \
-                    NO_mark_dirs                \
-                    NO_menu_complete    \
-                    multios             \
-                    nomatch             \
-                    notify              \
-                    NO_null_glob                \
-                    numeric_glob_sort   \
-                    NO_overstrike               \
-                    path_dirs           \
-                    posix_builtins      \
-                    NO_print_exit_value         \
-                    NO_prompt_cr                \
-                    prompt_subst                \
-                    pushd_ignore_dups   \
-                    NO_pushd_minus              \
-                    pushd_silent                \
-                    pushd_to_home       \
-                    rc_expand_param     \
-                    NO_rc_quotes                \
-                    NO_rm_star_silent   \
-                    NO_sh_file_expansion        \
-                    sh_option_letters   \
-                    short_loops         \
-                    NO_sh_word_split    \
-                    NO_single_line_zle  \
-                    NO_sun_keyboard_hack        \
-                    NO_verbose          \
-                    zle
+setopt                   \
+    NO_all_export        \
+    always_last_prompt   \
+    always_to_end        \
+    append_history       \
+    share_history        \
+    auto_cd              \
+    auto_list            \
+    auto_menu            \
+    auto_name_dirs       \
+    auto_param_keys      \
+    auto_param_slash     \
+    auto_pushd           \
+    auto_remove_slash    \
+    NO_auto_resume       \
+    bad_pattern          \
+    bang_hist            \
+    NO_beep              \
+    brace_ccl            \
+    NO_bsd_echo          \
+    NO_cdable_vars       \
+    NO_chase_links       \
+    clobber              \
+    complete_aliases     \
+    complete_in_word     \
+    NO_correct           \
+    NO_correct_all       \
+    csh_junkie_history   \
+    NO_csh_junkie_loops  \
+    NO_csh_junkie_quotes \
+    NO_csh_null_glob     \
+    equals               \
+    extended_glob        \
+    extended_history     \
+    function_argzero     \
+    glob                 \
+    NO_glob_assign       \
+    glob_complete        \
+    NO_glob_dots         \
+    NO_glob_subst        \
+    NO_hash_cmds         \
+    NO_hash_dirs         \
+    hash_list_all        \
+    hist_allow_clobber   \
+    hist_beep            \
+    hist_ignore_dups     \
+    hist_ignore_space    \
+    NO_hist_no_store     \
+    hist_verify          \
+    NO_hup               \
+    NO_ignore_braces     \
+    NO_ignore_eof        \
+    interactive_comments \
+    inc_append_history   \
+    NO_list_ambiguous    \
+    NO_list_beep         \
+    list_types           \
+    long_list_jobs       \
+    magic_equal_subst    \
+    NO_mail_warning      \
+    NO_mark_dirs         \
+    NO_menu_complete     \
+    multios              \
+    nomatch              \
+    notify               \
+    noflowcontrol        \
+    NO_null_glob         \
+    numeric_glob_sort    \
+    NO_overstrike        \
+    path_dirs            \
+    posix_builtins       \
+    NO_print_exit_value  \
+    NO_prompt_cr         \
+    prompt_subst         \
+    pushd_ignore_dups    \
+    NO_pushd_minus       \
+    pushd_silent         \
+    pushd_to_home        \
+    rc_expand_param      \
+    NO_rc_quotes         \
+    NO_rm_star_silent    \
+    NO_sh_file_expansion \
+    sh_option_letters    \
+    short_loops          \
+    NO_sh_word_split     \
+    NO_single_line_zle   \
+    NO_sun_keyboard_hack \
+    NO_verbose           \
+    zle
 
+# --- compatibility
+
+# allow zenity to be called from cron
+
+# per http://promberger.info/linux/2009/01/02/running-x-apps-like-zenity-from-crontab-solving-cannot-open-display-problem/
+if pgrep Xorg >/dev/null; then
+    xhost local:${USER} > /dev/null
+fi
+# per http://superuser.com/questions/111771/using-either-notify-send-or-zenity-in-cron
+echo $DBUS_SESSION_BUS_ADDRESS > ~/.tmp-dbus-addr
+
+# Make BiBTeX and Org play nice together due to security change in
+# TeXLive 2010.  See
+# http://lists.gnu.org/archive/html/emacs-orgmode/2011-04/msg00845.html
+
+export BIBINPUTS="$HOME/doc:$BIBINPUTS"
+
+# If we're on a weak terminal (probably non-interactive) such as
+# TRAMP, kill off a bunch of the cool stuff we just set-up.
+                
+if [[ "$TERM" == "dumb" ]]; then
+    unsetopt zle
+    unsetopt prompt_cr
+    unsetopt prompt_subst
+    unfunction precmd
+    unfunction preexec
+    export TERMTYPE=""
+    export NOCOLOR="true"
+    PS1='$ '
+fi

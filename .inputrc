@@ -1,10 +1,11 @@
 $include /etc/inputrc
 
-# http://www.jukie.net/~bart/blog/20040326082602
-# https://github.com/cldwalker/dotfiles/blob/master/.inputrc
+# --- bindings
 
 "\C-x\C-r": re-read-init-file
 "\C-x\C-a": universal-argument
+
+# --- settings
 
 set editing-mode emacs
 set keymap emacs
@@ -16,21 +17,6 @@ set completion-ignore-case on
 set show-all-if-ambiguous on
 set show-all-if-unmodified on
 set completion-query-items 120
-
 set page-completions off
 set print-completions-horizontally on
-
-# some useful settings from http://www.reddit.com/r/commandline/comments/kbeoe/you_can_make_readline_and_bash_much_more_user/
-
-# one or more of the following break TRAMP inexplicably
-
-#set completion-ignore-case on
-#set completion-prefix-display-length 2
-#Control-j: menu-complete
-#Control-k: menu-complete-backward
-#set show-all-if-ambiguous on
-#set show-all-if-unmodified on
-#set completion-map-case on
-
 set bell-style none
-set show-all-if-ambiguous on
