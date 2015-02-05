@@ -900,6 +900,14 @@
             :ensure
             :init (add-hook 'haskell-mode-hook 'turn-on-hi2))))
 
+(use-package hydra
+  :ensure
+  :init (progn
+          (defhydra hydra-windows (global-map "C-x" :color red)
+            "windows"
+            ("o" other-window "next" :color red)
+            ("O" (lambda () (interactive) (other-window -1)) "previous" :color red))))
+
 
 
 ;;;; ---- functions ----
