@@ -68,6 +68,8 @@ if [[ -n "${PATH/*$HOME\/local\/bin:*}" ]] ; then export PATH="$HOME/local/bin:$
 
 if [[ -n "${PATH/*$HOME\/.cabal\/bin:*}" ]] ; then export PATH="$HOME/.cabal/bin:$PATH"; fi
 
+if [[ -n "${PATH/*\/meta\/s\/spw\/local\/src\/git-annex.linux:*}" ]]; then export PATH="/meta/s/spw/local/src/git-annex.linux:$PATH"; fi
+
 # --- aliases
 
 alias ls="ls -F --color=always"
