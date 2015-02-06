@@ -1545,7 +1545,7 @@ BINDEE may be a command or another keymap, but whatever it is, it should not be 
 (electric-indent-mode 1)
 
 ;; templates when creating new files
-(auto-insert-mode 1)
+;; (auto-insert-mode 1)
 
 ;; disable for python mode where it makes a mess
 (defun electric-indent-ignore-python ()
