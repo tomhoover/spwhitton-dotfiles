@@ -593,7 +593,8 @@
                                         :publishing-function org-html-publish-to-html
                                         :auto-sitemap t
                                         :sitemap-filename "index.html"
-                                        :html-head "<link rel=\"stylesheet\" title=\"Worg\" href=\"/inc/worg.css\" type=\"text/css\"><link rel=\"alternate stylesheet\" title=\"Zenburn\" href=\"/inc/worg-zenburn.css\" type=\"text/css\">"
+                                        :sitemap-title "Sean's ~/doc"
+                                        :html-head "<link rel=\"stylesheet\" title=\"Worg\" href=\"/inc/worg.css\" type=\"text/css\"><link rel=\"alternate stylesheet\" title=\"Zenburn\" href=\"/inc/worg-zenburn.css\" type=\"text/css\"><link rel=\"SHORTCUT ICON\" href=\"/inc/org-mode-unicorn.ico\" type=\"image/x-icon\" />"
                                         :html-preamble "<script type=\"text/javascript\">
     document.addEventListener('DOMContentLoaded',function() {
         document.getElementById(\"table-of-contents\").onclick = function() {
@@ -602,7 +603,7 @@
         }
     });
 </script>
-<p><a href=\"/wiki\">Personal wiki index</a> &middot; <a href=\"/wiki/agenda.html\">Daily agenda view</a> &middot; <a href=\"/wiki/cal.html\">Diary agenda view</a></p>"
+<p><a href=\"/wiki\">Personal wiki index</a> &middot; <a href=\"/wiki/agenda.html\">Daily agenda view</a> &middot; <a href=\"/wiki/cal.html\">Three month diary</a></p>"
                                         :html-head-include-default-style nil
                                         :table-of-contents t))))
       (org-publish-project "spw-wiki"))))
