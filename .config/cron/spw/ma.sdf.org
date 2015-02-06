@@ -1,0 +1,13 @@
+# -*- mode: conf -*-
+
+*/15 * * * * chronic doccheckin
+
+23 23 * * * chronic spwwiki
+0 18 * * * duply-do
+0 19 * * * archivemail-ma
+0 3 * * * planetnewspipe
+
+@reboot emacs --daemon
+
+#0 11 * * * /meta/s/spw/bin/diaryreminder
+#0 * * * * /usr/pkg/bin/getmail -qr shef
