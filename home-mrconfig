@@ -277,10 +277,10 @@ autoci = doccheckin
 order = 5
 checkout = git clone 'ssh://ma/~/local/git/doc.www.git' 'www'
 update = git pull "$@"
-skip = ! mine || win32
+skip = ! ( mine || on spw@ma ) || win32
 
 [doc/www/blog]
 order = 6
 checkout = git clone 'ssh://ma/~/local/git/doc.www.blog.git' 'blog'
 update = git pull "$@"
-skip = ! mine || win32
+skip = ! ( mine || on spw@ma ) || win32
