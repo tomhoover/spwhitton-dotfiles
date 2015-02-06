@@ -508,7 +508,12 @@
             ;; (bind-key "C-h" 'deft-filter-decrement deft-mode-map)
 
             (defadvice deft (before persp-deft activate)
-              (projectile-persp-switch-project "~/doc"))))
+              (projectile-persp-switch-project "~/doc"))
+
+            (defadvice deft-new-file (after insert-org-TITLE activate)
+              (save-excursion
+                (goto-char (point-min))
+                (insert "#+TITLE: ")))))
 
 ;;; allow lisp to interact with python
 
