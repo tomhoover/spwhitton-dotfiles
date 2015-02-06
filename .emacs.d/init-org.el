@@ -594,7 +594,10 @@
                                         :auto-sitemap t
                                         :sitemap-filename "index.html"
                                         :sitemap-title "Sean's ~/doc"
-                                        :html-head "<link rel=\"stylesheet\" title=\"Worg\" href=\"/inc/worg.css\" type=\"text/css\"><link rel=\"alternate stylesheet\" title=\"Zenburn\" href=\"/inc/worg-zenburn.css\" type=\"text/css\"><link rel=\"SHORTCUT ICON\" href=\"/inc/org-mode-unicorn.ico\" type=\"image/x-icon\" />"
+                                        :html-head "<link rel=\"stylesheet\" title=\"Worg\" href=\"/inc/worg.css\" type=\"text/css\">
+<link rel=\"alternate stylesheet\" title=\"Zenburn\" href=\"/inc/worg-zenburn.css\" type=\"text/css\">
+<link rel=\"icon\" href=\"/inc/org-mode-unicorn.ico\" type=\"image/vnd.microsoft.icon\" />
+<link rel=\"SHORTCUT ICON\" href=\"https://spw.sdf.org/inc/org-mode-unicorn.ico\" type=\"image/vnd.microsoft.icon\" />"
                                         :html-preamble "<script type=\"text/javascript\">
     document.addEventListener('DOMContentLoaded',function() {
         document.getElementById(\"table-of-contents\").onclick = function() {
