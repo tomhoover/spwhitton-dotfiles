@@ -578,6 +578,35 @@
                :publishing-directory "~/tmp"
                :completion-function spw/cleanup-org-pdfs))
 
+(defun spw/export-org-wiki ()
+  (interactive)
+  (if (not (string= "ma.sdf.org" (system-name)))
+      (message "not gonna do this unless on the MetaArray")
+    (let ((org-export-htmlize-output-type 'css)
+          (org-export-with-toc t)
+          (org-export-in-background t)
+          (org-publish-project-alist '(("spw-wiki"
+                                        :base-directory "~/doc/org"
+                                        :base-extension "org"
+                                        :recursive nil
+                                        :publishing-directory "/meta/www/s/spw/wiki"
+                                        :publishing-function org-html-publish-to-html
+                                        :auto-sitemap t
+                                        :sitemap-filename "index.html"
+                                        :html-head "<link rel=\"stylesheet\" title=\"Worg\" href=\"/inc/worg.css\" type=\"text/css\"><link rel=\"alternate stylesheet\" title=\"Zenburn\" href=\"/inc/worg-zenburn.css\" type=\"text/css\">"
+                                        :html-preamble "<script type=\"text/javascript\">
+    document.addEventListener('DOMContentLoaded',function() {
+        document.getElementById(\"table-of-contents\").onclick = function() {
+            var elem = document.getElementById(\"text-table-of-contents\");
+            elem.style.display = elem.style.display == \"block\" ? \"none\" : \"block\";
+        }
+    });
+</script>
+<p><a href=\"/wiki\">Personal wiki index</a> &middot; <a href=\"/wiki/agenda.html\">Daily agenda view</a> &middot; <a href=\"/wiki/cal.html\">Diary agenda view</a></p>"
+                                        :html-head-include-default-style nil
+                                        :table-of-contents t))))
+      (org-publish-project "spw-wiki"))))
+
 (defun spw/cleanup-org-pdfs ()
   (interactive)
   (dolist (file (f-glob "~/doc/org/*.pdf"))
