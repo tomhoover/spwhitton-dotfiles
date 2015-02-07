@@ -2,4 +2,4 @@
 
 cd /meta/s/spw/local/src/venus
 /usr/pkg/bin/python2.7 ./planet.py /meta/s/spw/doc/conf/planet.ini
-/usr/bin/python /meta/s/spw/local/src/newspipe/newspipe.py -i /meta/s/spw/doc/conf/newspipe.ini >/dev/null 2>/dev/null
+/usr/bin/python /meta/s/spw/local/src/newspipe/newspipe.py -i /meta/s/spw/doc/conf/newspipe.ini

@@ -4,8 +4,8 @@
 
 23 23 * * * chronic spwwiki
 0 18 * * * duply-do
-0 19 * * * archivemail-ma
-0 3 * * * planetnewspipe
+0 19 * * * chronic archivemail-ma
+0 3 * * * chronic planetnewspipe
 
 @reboot emacs --daemon
 

@@ -5,7 +5,7 @@
 # that it may be safely archived into the annex
 suffix=$(date +-%b-%Y | sed 's/\(.*\)/\L\1/')
 
-/meta/s/spw/bin/archivemail --q --days=31 --no-compress -s $suffix /meta/s/spw/mail/archive
-/meta/s/spw/bin/archivemail -q --days=31 --no-compress -s $suffix /meta/s/spw/mail/oldlists
-/meta/s/spw/bin/archivemail -q --days=31 --no-compress -s $suffix /meta/s/spw/mail/sent
-/meta/s/spw/bin/archivemail -q --days=4 --no-compress --preserve-unread -a /meta/s/spw/mail/archive /meta/mail/spw
+/meta/s/spw/bin/archivemail --days=31 --no-compress -s $suffix /meta/s/spw/mail/archive
+/meta/s/spw/bin/archivemail --days=31 --no-compress -s $suffix /meta/s/spw/mail/oldlists
+/meta/s/spw/bin/archivemail --days=31 --no-compress -s $suffix /meta/s/spw/mail/sent
+/meta/s/spw/bin/archivemail --days=4  --no-compress --preserve-unread -a /meta/s/spw/mail/archive /meta/mail/spw
