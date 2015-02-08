@@ -1,5 +1,0 @@
-#!/bin/sh
-
-urxvt ++iso14755 ++iso14755_52 -title "zsh" -e /bin/sh -c 'tmux attach' &
-# sleep 0.5
-# wmctrl -r :ACTIVE: -b add,maximized_vert,maximized_horz
