@@ -1,13 +1,13 @@
-"gnome3-runorraise emacs"
+"xlaunch emacs"
   F9
 
-"gnome3-runorraise term"
+"xlaunch term"
   F10
 
-"gnome3-runorraise www"
+"xlaunch www"
   F12
 
-"gnome3-runorraise ma"
+"xlaunch ma"
   Shift + F11
 
 "xmousetidy"
