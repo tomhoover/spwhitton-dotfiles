@@ -1,7 +1,29 @@
-#!/bin/bash
+#!/bin/sh
+. $HOME/.shenv
 
 # stuff to start in XFCE or GNOME3
 
-/home/swhitton/bin/dwm-autobind
-/usr/bin/gtk-redshift -l 53.57:1.5 -t 6500:3700
-/usr/bin/emacs --daemon
+# ---- keyboard settings
+
+setxkbmap -option ctrl:nocaps
+setxkbmap -option "compose:ralt"
+setxkbmap -layout gb
+xbindkeys
+
+# settings for Apple USB keyboard
+if lsusb | grep -q "Aluminum Keyboard"; then
+    echo 2 | sudo tee /sys/module/hid_apple/parameters/fnmode > /dev/null
+    xmodmap $HOME/.Xmodmap-Apple
+    xset r rate 300
+    sleep 2
+    pkill zenity
+fi
+
+# ---- other stuff to launch
+
+gtk-redshift -l 53.57:1.5 -t 6500:3700
+
+# better if this is started below the desktop environment, unlike on a
+# host which I just SSH to on which it's started with a @reboot line
+# in crontab
+emacs --daemon
