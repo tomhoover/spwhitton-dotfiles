@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 cd $HOME/doc
 if git pull --ff-only; then     # otherwise, chronic will e-mail the failed git to me
     cd $HOME
