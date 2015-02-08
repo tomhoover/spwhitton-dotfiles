@@ -1,5 +1,5 @@
 alias ll ls -al
-alias vi find-file $1
+alias mg find-file $1
 alias g git $*
 alias d dired $1
 alias ga git annex $*

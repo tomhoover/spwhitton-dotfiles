@@ -64,6 +64,7 @@ alias calup="emacs -batch -l /home/swhitton/.emacs.d/init.el -eval \"(org-batch-
 alias dotex="texi2dvi --pdf --clean --batch"
 alias whitenoise="cvlc --quiet --loop ~/lib/annex/doc/sounds/R*.ogg"
 alias myip="dig +short myip.opendns.com @resolver1.opendns.com"
+alias mg=$EDITOR
 
 # --- load zsh features
 
