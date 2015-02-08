@@ -3,23 +3,9 @@
 
 # --- personal settings
 
-export MAILDIR="$HOME/.offlinemail/"
-export LD_RUN_PATH=$HOME/local/lib/
-export LD_LIBRARY_PATH=$HOME/local/lib/
-export GTK_IM_MODULE=xim
-export QT_IM_MODULE=xim
+source ~/.shenv
 export GPG_TTY=$(tty)
-export LC_ALL="en_GB.utf8"
-export LANG="en_GB.utf8"
-export BROWSER="iceweasel"
-export TERMCMD="urxvt"
-export EDITOR="emacsclient -t"
-export VISUAL="emacsclient -t"
-export ALTERNATE_EDITOR="mg"
-if [[ -f /usr/bin/less ]] ; then
-    export PAGER=less
-    export LESS="--ignore-case --long-prompt"
-fi
+
 if ! [[ "$TERM" == "dumb" ]]; then
     autoload -U colors; colors
     export PS1="%{$fg[${1:-yellow}]%}%m %{$fg[${1:-green}]%}%~ %{$fg[${1:-blue}]%}%#%{$reset_color%} "
@@ -51,24 +37,6 @@ precmd() {
         # ;;
     esac
 }
-
-# --- $PATH
-
-if [[ -n "${PATH/*\/usr\/local\/bin:*}" ]] ; then export PATH="/usr/local/bin:$PATH"; fi
-
-if [[ -n "${PATH/*/usr/pkg/bin:*}" ]] ; then export PATH="/usr/pkg/bin:$PATH"; fi
-
-if [[ -n "${PATH/*\/sbin:*}" ]] ; then export PATH="/sbin:$PATH"; fi
-
-if [[ -n "${PATH/*\/usr\/sbin:*}" ]] ; then export PATH="/usr/sbin:$PATH"; fi
-
-if [[ -n "${PATH/*$HOME\/bin:*}" ]] ; then export PATH="$HOME/bin:$PATH"; fi
-
-if [[ -n "${PATH/*$HOME\/local\/bin:*}" ]] ; then export PATH="$HOME/local/bin:$PATH"; fi
-
-if [[ -n "${PATH/*$HOME\/.cabal\/bin:*}" ]] ; then export PATH="$HOME/.cabal/bin:$PATH"; fi
-
-if [[ -n "${PATH/*\/meta\/s\/spw\/local\/src\/git-annex.linux:*}" ]]; then export PATH="/meta/s/spw/local/src/git-annex.linux:$PATH"; fi
 
 # --- aliases
 

@@ -1,0 +1,107 @@
+#!/bin/sh
+
+# Environment variables for X and all text-mode shells: both bash and
+# zsh and scripts run by cron source this.  So POSIX only.
+
+# ---- choose editor depending on what's available
+
+emacsclient=$(which emacsclient)
+mg=$(which mg)
+# best case: emacsclient and mg available
+if [ -x "$emacsclient" -a -x "$mg" ]; then
+    EDITOR="emacsclient -amg -t"
+    ALTERNATE_EDITOR="mg"
+else
+    # only emacsclient, so change alternate editor
+    if [ -x "$emacsclient" ]; then
+        EDITOR="emacsclient -avi -t"
+        ALTERNATE_EDITOR="vi"
+    else
+        # no emacsclient, so see if we can fall back to mg
+        if [ -x "$mg" ]; then
+            EDITOR="mg"
+            ALTERNATE_EDITOR="vi"
+        # worse case: assume vi is available
+        else
+            EDITOR="vi"
+        fi
+    fi
+fi
+unset emacsclient
+unset mg
+export EDITOR
+VISUAL=$EDITOR
+export VISUAL
+
+# ---- set $PATH
+
+# this function prepends $addition to $PATH iff $addition isn't
+# already in $PATH and $addition is a directory
+maybe_add_to_path ()
+{
+    if ! echo $PATH | grep -q "$addition"; then
+        if [ -d "$addition" ]; then
+            PATH="$addition:$PATH"
+        fi
+    fi
+}
+
+addition="/sbin";                                 maybe_add_to_path
+addition="/usr/sbin";                             maybe_add_to_path
+addition="/usr/local/bin";                        maybe_add_to_path
+addition="/usr/pkg/bin";                          maybe_add_to_path
+addition="$HOME/bin";                             maybe_add_to_path
+addition="$HOME/local/bin";                       maybe_add_to_path
+addition="$HOME/.cabal/bin";                      maybe_add_to_path
+addition="/meta/s/spw/local/src/git-annex.linux"; maybe_add_to_path
+
+unset addition
+export PATH
+
+# ---- set language (snippet from joeyh's home-etc.git repo)
+
+case " $(echo $(locale -a)) " in
+    *\ en_GB.utf8\ *) LANG=en_GB.utf8 ;;
+    *\ en_GB.UTF-8\ *) LANG=en_GB.UTF-8 ;;
+    *\ C.UTF-8\ *) LANG=C.UTF-8 ;;
+    *\ C.utf8\ *) LANG=C.utf8 ;;
+    *) unset LANG ;;
+esac
+
+LC_ALL=$LANG
+export LC_ALL
+export LANG
+
+# ---- further preferences
+
+GIT_PAGER=
+export GIT_PAGER
+GIT_MERGE_AUTOEDIT=no
+export GIT_MERGE_AUTOEDIT
+GPG_KEY_ID=3B6D411B
+export GPG_KEY_ID
+MAILDIR="$HOME/.offlinemail/"
+export MAILDIR
+LD_RUN_PATH="$HOME/local/lib/"
+export LD_RUN_PATH
+LD_LIBRARY_PATH="$HOME/local/lib/"
+export LD_LIBRARY_PATH
+GTK_IM_MODULE=xim
+export GTK_IM_MODULE
+QT_IM_MODULE=xim
+export QT_IM_MODULE
+BROWSER="iceweasel"
+export BROWSER
+TERMCMD="urxvt"
+export TERMCMD
+
+# ---- set pager
+
+lessf=$(which less)
+if [ -x "$lessf" ]; then
+    PAGER=less
+    export PAGER
+    LESS="--ignore-case --long-prompt"
+    export LESS
+fi
+unset lessf

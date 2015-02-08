@@ -1,9 +1,7 @@
 # --- preferences
-export EDITOR="emacsclient -t"
-export VISUAL="emacsclient -t"
-export ALTERNATE_EDITOR="mg"
-export EDITOR=mg
-export VISUAL=mg
+
+# load standard environment variables
+. $HOME/.shenv
 
 # don't put duplicate lines in the history. See bash(1) for more options
 export HISTCONTROL=ignoredups
@@ -59,16 +57,6 @@ else
     PS1='\h \w \$ '
 fi
 unset use_color safe_term match_lhs
-
-# --- $PATH
-
-if [ -d ~/local/bin ] ; then
-    PATH=~/local/bin:"${PATH}"
-fi
-
-if [ -d ~/bin ] ; then
-    PATH=~/bin:"${PATH}"
-fi
 
 # --- aliases
 
