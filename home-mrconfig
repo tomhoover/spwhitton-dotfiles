@@ -250,6 +250,7 @@ commit = :
 autoci = :
 rebase = :
 chain = true
+sync = :
 
 # --- my personal documents, website and blog.  Override my global
 # --- update command back to the myrepos default so that git
