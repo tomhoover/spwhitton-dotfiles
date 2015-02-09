@@ -1,9 +1,10 @@
-#!/bin/sh
+#!/bin/bash
+. $HOME/.shenv
 
 while true; do
     read -p "This might overwrite stuff in $(pwd).  Is that okay? " yn
     case $yn in
-        [Yy]* ) mkdir -p doc; cp -RLf ~/lib/annex/big/skel/usb/* .; break;;
+        [Yy]* ) usbhostkeys; mkdir -p doc; cp -RLf ~/lib/annex/big/skel/usb/* .; break;;
         [Nn]* ) exit;;
         * ) echo "Please answer yes or no.";;
     esac
