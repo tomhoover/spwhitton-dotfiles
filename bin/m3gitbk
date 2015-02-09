@@ -1,0 +1,54 @@
+#!/bin/bash
+. $HOME/.shenv
+. $HOME/lib/tputfs.sh
+
+set -e
+
+HDD=/media/m3
+DEST=${HDD}/git
+
+if ! mount | grep -q "/media/m3"; then
+    echo "m3gitbk: USB HDD not mounted" >&2
+    exit 1
+fi
+
+# function to backup a repo: first arg is ssh path to repo, second arg
+# is where to put it
+gitbk ()
+{
+    local long=$1
+    local short=$(basename $long)
+    local dest=$2
+    if [ -e "$dest/$short" ]; then
+        cd $dest/$short
+        git fetch origin "+refs/heads/*:refs/heads/*" --prune
+    else
+        mkdir -p $dest
+        cd $dest
+        git clone --mirror $long $short
+    fi
+}
+
+# Stage 1 : Backup repos hosted on ma
+
+# TODO: don't use ls here (see http://mywiki.wooledge.org/ParsingLs)
+
+repos=$(ssh ma ls \$HOME/local/git)
+for repo in $repos; do
+    status processing $repo from ma
+    gitbk ma:local/git/$repo $DEST/ma
+done
+
+# Stage 2 : Backup some repos hosted on github (the ones I care about).
+
+# TODO: consider using joeyh's github-backup program
+
+status processing dotfiles.git from github
+gitbk git@github.com:spwhitton/dotfiles.git $DEST/github
+status processing propellor.git from github
+gitbk git@github.com:spwhitton/propellor.git $DEST/github
+
+# Stage 3 : Backup other repos ad hoc
+
+status processing blog comments
+gitbk ma:html/blog/comments $DEST/other
