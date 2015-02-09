@@ -145,6 +145,10 @@ fixups =
     if ! win32; then
         loadcron
     fi
+    if win32; then
+        cd ~/src/dotfiles/bin
+	cmd "/C win32setup.bat"
+    fi
 
 # create ~/.emacs.d/ before stowing so that the files inside are
 # symlinks, rather than the whole dir being a symlink.  That way Emacs
