@@ -2,7 +2,7 @@
 
 wget -q --tries=10 --timeout=20 --spider http://google.com
 if [[ $? -eq 0 ]]; then
-    $HOME/bin/msmtpQ -r
+    postqueue -f
     killall offlineimap 2>/dev/null && sleep 5 || true
     killall -9 offlineimap 2>/dev/null || true
     offlineimap -u Quiet
