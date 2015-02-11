@@ -3,7 +3,7 @@
 */15 * * * * chronic doccheckin
 
 23 23 * * * chronic spwwiki
-0 18 * * * duply-do
+0 18 * * * duply-run
 0 19 * * * chronic archivemail-ma
 0 3 * * * chronic planetnewspipe
 
