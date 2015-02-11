@@ -12,6 +12,29 @@ git_sync = :
 # In general, I don't want merge commits to be made en masse by mr
 git_update = git pull --ff-only "$@"
 
+# --- Adam Spiers' plugin for managing dotfile symlinks with mr
+
+include =
+    if [ -e ~/lib/mr/stow ]; then
+        cat ~/lib/mr/stow
+    # If the stow mr library gets included on Windows then we'll get errors on
+    # e.g. mr update because mr'll try to call stow but it's not installed.
+    # This second if clause will find the library on Windows, so check for
+    # that.  We can't do this with my win32 command because inside include= is
+    # a subshell that can't access stuff defined in mr config lib= directives.
+    elif [ -e ~/src/dotfiles/lib/mr/stow -a ! "$(perl -e 'print $^O')" = "msys" ]; then
+        cat ~/src/dotfiles/lib/mr/stow
+    elif [ -e ~/local/lib/stow ]; then
+        cat ~/local/lib/stow
+    fi
+lib =
+    # reimplement kitenet-mr stow library function which relies on mr
+    # "-r" parameter which is only present in aspiers' outdated fork
+    is_stowable () {
+            [ -z "$MR_DISABLE_STOW" ] &&
+            ( mr stowable >/dev/null 2>&1 )
+    }
+
 # --- joeyh's code for specifying what machine we're on for repo skip
 # --- tests, plus my code for detecting Git-on-Windows
 
@@ -52,28 +75,6 @@ lib =
     }
     gcrypt() {
         which git-remote-gcrypt >/dev/null 2>/dev/null
-    }
-
-# --- Adam Spiers' plugin for managing dotfile symlinks with mr
-
-include =
-    if [ -e ~/lib/mr/stow ]; then
-        cat ~/lib/mr/stow
-    # If the stow mr library gets included on Windows then we'll get errors on
-    # e.g. mr update because mr'll try to call stow but it's not installed.
-    # This second if clause will find the library on Windows, so check for
-    # that.
-    elif [ -e ~/src/dotfiles/lib/mr/stow ] && ! win32; then
-        cat ~/src/dotfiles/lib/mr/stow
-    elif [ -e ~/local/lib/stow ]; then
-        cat ~/local/lib/stow
-    fi
-lib =
-    # reimplement kitenet-mr stow library function which relies on mr
-    # "-r" parameter which is only present in aspiers' outdated fork
-    is_stowable () {
-            [ -z "$MR_DISABLE_STOW" ] &&
-            ( mr stowable >/dev/null 2>&1 )
     }
 
 # --- A function for enabling Emacs mode for calling `git wip' on file
