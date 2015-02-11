@@ -170,10 +170,12 @@ pre_checkout = mkdir -p ~/.emacs.d  ~/.config/autostart ~/.ssh ~/lib
 # restow command give an error and the user fix it.
 lib =
     fix_gtk_bookmarks () {
-        if ! [ -L ~/.gtk-bookmarks ]; then
-            # file in home directory is not a link
-            if diff -q ~/src/dotfiles/.gtk-bookmarks ~/.gtk-bookmarks > /dev/null; then
-                rm ~/.gtk-bookmarks
+        if ! win32; then
+            if ! [ -L ~/.gtk-bookmarks ]; then
+                # file in home directory is not a link
+                if diff -q ~/src/dotfiles/.gtk-bookmarks ~/.gtk-bookmarks > /dev/null; then
+                    rm ~/.gtk-bookmarks
+                fi
             fi
         fi
     }
