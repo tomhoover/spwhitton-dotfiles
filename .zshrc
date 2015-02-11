@@ -65,7 +65,8 @@ alias dotex="texi2dvi --pdf --clean --batch"
 alias whitenoise="cvlc --quiet --loop ~/lib/annex/doc/sounds/R*.ogg"
 alias myip="dig +short myip.opendns.com @resolver1.opendns.com"
 alias mg=$EDITOR
-alias local-propellor="propellor `hostname --fqdn`"
+# spin propellor locally
+alias locspin="propellor `hostname --fqdn`"
 
 # --- load zsh features
 
