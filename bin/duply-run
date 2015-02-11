@@ -1,0 +1,28 @@
+#!/bin/bash
+. $HOME/.shenv
+
+set -e
+
+ulimit -n 1024
+
+case "$(hostname -f)" in
+    "ma.sdf.org")
+        cd $HOME/src/dotfiles
+        if ! [ "$(git rev-parse --abbrev-ref HEAD)" = "ma" ]; then
+            echo "duply-run: cannot proceed: wrong dotfiles branch checked out" >&2
+            echo "duply-run: checkout the \`ma' branch" >&2
+            exit 1
+        fi
+        cd $HOME
+        duply ma-spw-home backup
+        duply ma-spw-mail backup
+        duply ma-spw-www backup
+        ;;
+    "artemis.silentflame.com")
+        cd $HOME
+        # force execution with duply in my dotfiles repo, not apt
+        # package version installed system-wide (though $PATH from
+        # .shenv should get this right anyway)
+        $HOME/bin/duply artemis-root backup_purge --force
+        ;;
+esac
