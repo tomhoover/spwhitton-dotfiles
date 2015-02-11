@@ -59,6 +59,10 @@ lib =
 include =
     if [ -e ~/lib/mr/stow ]; then
         cat ~/lib/mr/stow
+    # If the stow mr library gets included on Windows then we'll get errors on
+    # e.g. mr update because mr'll try to call stow but it's not installed.
+    # This second if clause will find the library on Windows, so check for
+    # that.
     elif [ -e ~/src/dotfiles/lib/mr/stow ] && ! win32; then
         cat ~/src/dotfiles/lib/mr/stow
     elif [ -e ~/local/lib/stow ]; then
