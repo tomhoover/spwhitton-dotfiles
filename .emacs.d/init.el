@@ -942,7 +942,13 @@
 (use-package symon
   :ensure
   :idle (symon-mode)
-  :init (setq symon-sparkline-type 'symon-sparkline-type-bounded))
+  :init (setq symon-sparkline-type 'symon-sparkline-type-plain
+              symon-sparkline-thickness 1
+              symon-sparkline-width 88
+              ;; following lines should mean that graph represents
+              ;; past minute
+              symon-refresh-rate 3
+              symon-history-size 20))
 
 
 
