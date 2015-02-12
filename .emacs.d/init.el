@@ -939,6 +939,11 @@
             ("o" other-window "next" :color red)
             ("O" (lambda () (interactive) (other-window -1)) "previous" :color red))))
 
+(use-package symon
+  :ensure
+  :idle (symon-mode)
+  :init (setq symon-sparkline-type 'symon-sparkline-type-bounded))
+
 
 
 ;;;; ---- functions ----
