@@ -158,7 +158,29 @@
 (use-package expand-region
   :ensure
   :bind ("M-i" . er/expand-region)
-  :init (setq expand-region-contract-fast-key (kbd "o")))
+  :init (progn
+          (setq expand-region-contract-fast-key (kbd "o"))
+          ;; fill out the region to the beginning and ends of the
+          ;; lines at either end of it when we're not using
+          ;; expand-region but we've activated the mark (but only do
+          ;; this once)
+          (defadvice er/expand-region (around fill-out-region activate)
+            (if (or (not (region-active-p))
+                    (eq last-command 'er/expand-region))
+                ad-do-it
+              (if (< (point) (mark))
+                  (let ((beg (point)))
+                    (goto-char (mark))
+                    (end-of-line)
+                    (push-mark)
+                    (goto-char beg)
+                    (beginning-of-line))
+                (let ((end (point)))
+                  (goto-char (mark))
+                  (beginning-of-line)
+                  (push-mark)
+                  (goto-char end)
+                  (end-of-line)))))))
 
 ;;; keep parentheses under control: modern replacement for the mighty paredit
 
