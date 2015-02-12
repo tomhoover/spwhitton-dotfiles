@@ -544,7 +544,7 @@
 ;;; Get Python documentation as info files
 
 (use-package python-info :ensure)
-(use-package pydoc-info :ensure)
+;;(use-package pydoc-info :ensure)
 
 ;;; flycheck
 
