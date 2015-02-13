@@ -1422,6 +1422,14 @@ With arg ARG, put shell in current window."
       (if evil-mode (evil-append-line 1))
       (yas-expand))))
 
+(defun spw/persp-clone (new-name)
+  "Clone current perspective with the name NEW-NAME."
+  (interactive "sNew name: \n")
+  (make-persp
+    :name new-name
+    :buffers (persp-buffers persp-curr)
+    :window-configuration (current-window-configuration)))
+
 
 
 ;;;; ---- personal settings ----
@@ -1486,6 +1494,7 @@ BINDEE may be a command or another keymap, but whatever it is, it should not be 
                 ("q <left>" . persp-prev)
                 ("q u" . persp-basewc-save)
                 ("q q" . persp-basewc-restore)
+                ("q C" . spw/persp-clone)
 
                 ;; launcher map
                 ("g k" . kill-emacs)
