@@ -939,17 +939,6 @@
             ("o" other-window "next" :color red)
             ("O" (lambda () (interactive) (other-window -1)) "previous" :color red))))
 
-(use-package symon
-  :ensure
-  :idle (symon-mode)
-  :init (setq symon-sparkline-type 'symon-sparkline-type-plain
-              symon-sparkline-thickness 1
-              symon-sparkline-width 88
-              ;; following lines should mean that graph represents
-              ;; past minute
-              symon-refresh-rate 3
-              symon-history-size 20))
-
 
 
 ;;;; ---- functions ----
