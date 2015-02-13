@@ -624,7 +624,7 @@
           (defun persp-toggle (arg)
             (interactive "P")
             (if arg (call-interactively 'persp-switch)
-              (persp-switch (persp-name persp-last))))
+              (persp-switch (persp-find-some))))
 
           ;; save and restore a base window configuration ala
           ;; workgroups.el.  Designed to handle the perennial Emacs
