@@ -12,6 +12,6 @@ copy /y src\dotfiles\.bashrc .bashrc
 copy /y src\dotfiles\.shenv .shenv
 
 REM ---- END   WORK
-ECHO.
-ECHO That should be everything set-up.
+REM ECHO.
+REM ECHO That should be everything set-up.
 REM pause
