@@ -934,11 +934,18 @@
 (use-package hydra
   :ensure
   :init (progn
+          (defun spw/maybe-delete-other-windows ()
+            (interactive)
+            (if (= (count-windows) 1)
+                (call-interactively 'winner-undo)
+              (call-interactively 'delete-other-windows)))
           (defhydra hydra-windows (global-map "C-x" :color red)
             "windows"
             ("o" other-window "next" :color red)
             ("O" (lambda () (interactive) (other-window -1)) "previous" :color red)
             ("R" spw/toggle-window-split "toggle" :color red)
+            ("0" delete-window "del" :color red)
+            ("1" spw/maybe-delete-other-windows "max" :color red)
             ("2" split-window-below "horiz" :color red)
             ("3" split-window-right "vert" :color red))))
 
