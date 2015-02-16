@@ -411,6 +411,9 @@
         ("s" "For the future" entry (file "~/doc/org/refile.org")
          "* SOMEDAY %^{Title}
 %?")
+        ("f" "For the near future" entry (file "~/doc/org/refile.org")
+         "* SOONDAY %^{Title}
+%?")
         ;; ("d" "Diary" entry (file+datetree+prompt "~/doc/misc/daily.org") ; produces "invalid time specification" atm :(
         ("d" "Diary entry" entry (file+datetree "~/.labbook.gpg")
          "* %^{Title}
