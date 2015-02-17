@@ -247,6 +247,12 @@ key.setGlobalKey(['C-c', 'C-c', 'C-c'], function (ev) {
     command.clearConsole();
 }, 'Clear Javascript console', true);
 
+key.setViewKey(['C-c', 'j'], function (ev, arg){
+
+    ext.exec("tanything", arg);
+
+}, 'view all tabs', true)
+
 key.setViewKey(['C-x', 'b'], function (ev, arg){
 
     ext.exec("tanything", arg);
