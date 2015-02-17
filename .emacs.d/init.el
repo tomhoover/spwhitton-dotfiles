@@ -673,7 +673,7 @@
                 helm-ff-newfile-prompt-p nil
                 helm-tramp-verbose 3)
 
-          (helm-mode)
+          (helm-mode 1)
 
           ;; helm-mode adds an two arguments to the end of the normal
           ;; completing-read argument list, the first of which is
