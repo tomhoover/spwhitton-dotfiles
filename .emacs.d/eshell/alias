@@ -7,7 +7,7 @@ alias blank sleep 1;xset dpms force off
 alias docs cd ~/doc;mr autoci;git pull;git push
 alias annex-to-ma cd ~/lib/annex;ga copy -t metaarray --auto --fast
 alias git-rebase-host-branch git rebase master;git checkout ${hostname};git rebase master
-alias git-push-host-branch git push origin master;git push -f origin ${hostname}
+alias git-push-host-branch git push origin master +${hostname}
 alias workgit cd ~/doc;git add org/*.org;git commit -a -e -m "work commit";git push
 alias sonatarc cd ~/src/dotfiles;git checkout .config/sonata/sonatarc;cd -
 
