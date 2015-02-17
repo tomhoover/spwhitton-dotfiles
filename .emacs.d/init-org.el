@@ -211,6 +211,12 @@
       (quote
        ("~/doc/spw.bib")))
 
+;; Org setting bookmarks that I never use makes for git merge
+;; conflicts that I don't need to spend time resolving.  Eventually I
+;; plan to write a git merge driver to do it for me but until then,
+;; just don't set the bookmarks.
+(setq org-bookmark-names-plist nil)
+
 ;;; add all my notes files to Org text search (e.g. C-c a /)
 
 ;; first clear out the (agenda-archives) from such searches; I only
