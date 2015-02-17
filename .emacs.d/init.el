@@ -935,11 +935,13 @@
 (use-package hydra
   :ensure
   :init (progn
+          (setq hydra-windows-config nil)
           (defun spw/maybe-delete-other-windows ()
             (interactive)
             (if (= (count-windows) 1)
-                (call-interactively 'winner-undo)
-              (call-interactively 'delete-other-windows)))
+                (set-window-configuration hydra-windows-config)
+              (setq hydra-windows-config (current-window-configuration))
+              (delete-other-windows)))
           (defhydra hydra-windows (global-map "C-x" :color red)
             "windows"
             ("o" other-window "next" :color red)
