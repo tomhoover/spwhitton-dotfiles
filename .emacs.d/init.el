@@ -663,8 +663,8 @@
           (use-package helm-dired-recent-dirs :ensure)
           (use-package imenu-anywhere :ensure)
 
-          ;; new fuzzy matching and other settings
-          (setq helm-buffers-fuzzy-matching t
+          ;; no fuzzy matching and other settings
+          (setq helm-buffers-fuzzy-matching nil
                 helm-time-zone-home-location "Seoul"
                 helm-quick-update t
                 helm-split-window-in-side-p t
@@ -686,7 +686,7 @@
           ;; completing-read), and to select master requires an
           ;; additional C-n keypress which is inconvenient
           (defadvice helm-completing-read-default-1
-            (around spw/helm-completing-read-cands-in-buffer activate)
+              (around spw/helm-completing-read-cands-in-buffer activate)
             (interactive)
             ;; unfortunately this doesn't work if require-match is
             ;; nil, so block that case
