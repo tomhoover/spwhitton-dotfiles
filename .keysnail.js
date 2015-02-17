@@ -151,7 +151,7 @@ hook.setHook('KeyBoardQuit', function (aEvent) {
 
 // ============================= Key bindings ============================== //
 
-key.setGlobalKey('C-M-r', function (ev) {
+key.setGlobalKey(['C-c', 'r'], function (ev) {
     userscript.reload();
 }, 'Reload the initialization file', true);
 
