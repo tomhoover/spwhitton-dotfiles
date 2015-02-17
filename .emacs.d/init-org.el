@@ -802,7 +802,8 @@
                             (if window-system
                                 (org-display-inline-images))
                             (turn-on-auto-fill)
-                            (org-mode-reftex-setup)))
+                            (org-mode-reftex-setup)
+                            (smartparens-mode)))
 
 (add-hook 'org-agenda-mode-hook '(lambda ()
                                    ;; always hilight the current agenda line

@@ -191,7 +191,7 @@
          ;; for when I use Emacs via PuTTY
          ("M-<right>" . sp-forward-slurp-sexp)
          ("M-<left>" . sp-forward-barf-sexp))
-  :commands (smartparens-strict-mode show-smartparens-global-mode)
+  :commands (smartparens-strict-mode smartparens-mode show-smartparens-global-mode)
   :init (dolist (hook '(emacs-lisp-mode-hook
                         lisp-mode-hook
                         lisp-interaction-mode-hook
