@@ -1431,7 +1431,8 @@ With arg ARG, put shell in current window."
   (make-persp
     :name new-name
     :buffers (persp-buffers persp-curr)
-    :window-configuration (current-window-configuration)))
+    :window-configuration (current-window-configuration))
+  (persp-switch new-name))
 
 
 
