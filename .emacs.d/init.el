@@ -216,6 +216,7 @@
             (sp-use-smartparens-bindings)
             (bind-key "C-w" 'sp-backward-kill-word emacs-lisp-mode-map)
             (bind-key "C-k" 'sp-kill-hybrid-sexp emacs-lisp-mode-map)
+            (bind-key "M-<up>" 'sp-raise-sexp smartparens-mode-map)
 
             ;; override smartparens binding for C-k outside of lisp,
             ;; since sp-kill-hybrid-sexp isn't very smart in comint
