@@ -1380,12 +1380,12 @@ With arg ARG, put shell in current window."
       (if in-project
           ;; we're in a project: name buffer carefully
           (if (get-buffer correct-eshell-name)
-              (helm-switch-to-buffer correct-eshell-name)
+              (switch-to-buffer correct-eshell-name)
             (eshell "a")
             (rename-buffer correct-eshell-name))
         ;; we're not in a project: don't
         (if (get-buffer "*eshell*")
-            (helm-switch-to-buffer "*eshell*")
+            (switch-to-buffer "*eshell*")
           (call-interactively 'eshell))))
     ;; now change current dir and position the cursor
     (end-of-buffer)
