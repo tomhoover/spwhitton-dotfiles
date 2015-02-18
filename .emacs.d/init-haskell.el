@@ -54,10 +54,14 @@
                 haskell-process-arg-ghci "-ferror-spans")
                (add-hook 'haskell-mode-hook 'spw/haskell-mode-hook)))
 
-;;; try to kill off flymake since init.el is starting flycheck
+;;; Try to kill off flymake since init.el is starting flycheck.  Also
+;;; remove a call to `ghc-init' since we're not using ghc-mod.
 
 (with-eval-after-load "haskell-mode"
-  (setq flymake-allowed-file-name-masks nil))
+  (setq flymake-allowed-file-name-masks nil)
+  (remove-hook 'haskell-mode-hook (lambda ()
+                                    (ghc-init)
+                                    (flymake-mode))))
 
 ;;; startup hook
 
