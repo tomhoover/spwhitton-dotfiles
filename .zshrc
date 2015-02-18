@@ -11,6 +11,16 @@ if ! [[ "$TERM" == "dumb" ]]; then
     export PS1="%{$fg[${1:-yellow}]%}%m %{$fg[${1:-green}]%}%~ %{$fg[${1:-blue}]%}%#%{$reset_color%} "
 fi
 
+# ---- Halcyon Haskell platform
+
+export HALCYON_BASE=$HOME/local
+
+# only set up environment if we previously installed the platform (see
+# comproc.org)
+if [ -d "$HALCYON_BASE/app" ]; then
+    source <( HALCYON_NO_SELF_UPDATE=1 $HOME/local/app/halcyon/halcyon paths )
+fi
+
 # --- terminals
 
 # From dev.gentoo.org/~ciaranm/configs/bashrc
