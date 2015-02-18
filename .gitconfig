@@ -26,9 +26,14 @@
 # my personal repositories cloned via HTTP must be pushed via SSH
 [url "ssh://ma/~/local/git/"]
      pushInsteadOf = http://spw.sdf.org/git/
+# github pulling and pushing should be correct however I refer to the
+# repo when cloning
 [url "git@github.com:"]
     pushInsteadOf = https://github.com/
     pushInsteadOf = git://github.com/
+    pushInsteadOf = github:
+[url "git://github.com/"]
+    insteadOf = github:
 
 # turn colour on in as many places as possible
 [color]
