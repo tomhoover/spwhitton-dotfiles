@@ -5,6 +5,7 @@ _region_*
 feh_*_filelist
 *auto
 *ltxpng
+flycheck_*
 
 # now ignoring LaTeX junk because I'm not going to check it in anymore
 *.aux
