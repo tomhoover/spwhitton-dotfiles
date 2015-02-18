@@ -1125,7 +1125,9 @@ automatically."
   (interactive)
   (spw/auto-cleanup)
   (untabify (point-min) (point-max))
-  (unless aggressive-indent-mode
+  (unless (or (not (fboundp 'aggressive-indent-mode))
+              (eq major-mode 'haskell-mode)
+              aggressive-indent-mode)
     (indent-region (point-min) (point-max)))
   (case major-mode
     (emacs-lisp-mode
