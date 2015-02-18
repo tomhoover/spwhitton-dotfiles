@@ -55,8 +55,8 @@
                (add-hook 'haskell-mode-hook 'spw/haskell-mode-hook)))
 
 ;; try to kill off flymake since init.el is starting flycheck
-;; (eval-after-load "haskell-mode"
-;;   (setq flymake-allowed-file-name-masks nil))
+(with-eval-after-load "haskell-mode"
+  (setq flymake-allowed-file-name-masks nil))
 
 (defun spw/haskell-mode-hook ()
   "Haskell mode startup stuff."
