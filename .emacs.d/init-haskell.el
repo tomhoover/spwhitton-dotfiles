@@ -99,14 +99,21 @@
   :init (progn (setq hindent-style "johan-tibell")
                (add-hook 'haskell-mode-hook #'hindent-mode)))
 
-;;; hi2 for indentation
+;;; hi2^Wshm for indentation
 
 (use-package hi2
+  :disabled t
   :ensure
   :diminish hi2-mode
   :init (progn (setq hi2-layout-offset 4
                      hi2-left-offset 4)
                (add-hook 'haskell-mode-hook 'turn-on-hi2)))
+
+(use-package shm
+  :ensure
+  :init (progn (setq shm-indent-spaces 4)
+               (set-face-background 'shm-current-face "#4F4F4F")
+               (add-hook 'haskell-mode-hook 'structured-haskell-mode)))
 
 (provide 'init-haskell)
 ;;; init-haskell.el ends here

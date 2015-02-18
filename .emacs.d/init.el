@@ -203,7 +203,8 @@
                         scheme-mode-hook
                         inferior-scheme-mode-hook
                         python-mode-hook
-                        haskell-mode-hook))
+                        ;; haskell-mode-hook
+                        ))
           (add-hook hook
                     (lambda ()
                       (smartparens-strict-mode))))
@@ -830,7 +831,8 @@
   :ensure
   :init (progn
           (add-hook 'python-mode-hook 'highlight-indentation-current-column-mode)
-          (add-hook 'haskell-mode-hook 'highlight-indentation-current-column-mode)))
+          ;; (add-hook 'haskell-mode-hook 'highlight-indentation-current-column-mode)
+          ))
 
 ;;; jump around what's visible
 
