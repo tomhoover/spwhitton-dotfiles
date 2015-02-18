@@ -947,6 +947,14 @@
             ("2" split-window-below "horiz" :color red)
             ("3" split-window-right "vert" :color red))))
 
+;;; aligning rule for Haskell adapted from Haskell mode wiki
+
+(use-package align
+  :init (add-to-list 'align-rules-list
+                     '(haskell-defns
+                       (regexp . "\\(\\s-+\\)\\(::\\|∷\\|=\\)\\s-+")
+                       (modes quote (haskell-mode literate-haskell-mode)))))
+
 
 
 ;;;; ---- functions ----
