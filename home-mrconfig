@@ -212,14 +212,29 @@ autoci =
 
 [src/propellor]
 checkout = git clone git://github.com/spwhitton/propellor.git propellor --branch spwconf
+
+# Get a sandbox going and get the dependencies of propellor installed
+# in that sandbox, so that propellor can build itself during a spin.
+# Then install propellor globally if we need to.  This is the
+# propellor we will call when we type `propellor --spin x.y.z', which
+# will go into the sandbox we just made and build and deploy.
 post_checkout =
-        cd propellor && git remote add -f upstream git://github.com/joeyh/propellor.git
-        cd && cabal update && cabal install propellor
+    cd propellor
+    git remote add -f upstream git://github.com/joeyh/propellor.git
+    cabal sandbox init
+    cabal install --only-dependencies
+    if ! which propellor > /dev/null; then
+        cd && halcyon install propellor
+    fi
 post_update = git fetch upstream
 # check that the link isn't already in place before making the link
 # because otherwise we get an infinite loop of links that breaks propellor
 fixups = if ! [ -L ~/.propellor ]; then ln -sf ~/src/propellor ~/.propellor; fi
-skip = ! mine || win32
+
+# Skip if we're on Windows (where there's no hope, let's be honest
+# here), or I haven't got halcyon up and running yet (see comproc.org
+# for how to do that).
+skip = ! [ -d "$HOME/local/app/halcyon" ] || win32
 
 # --- primary git annex
 
