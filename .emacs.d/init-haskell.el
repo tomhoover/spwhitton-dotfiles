@@ -80,7 +80,9 @@
 
 (use-package hi2
   :ensure
-  :init (add-hook 'haskell-mode-hook 'turn-on-hi2))
+  :init (progn (setq hi2-layout-offset 4
+                     hi2-left-offset 4)
+               (add-hook 'haskell-mode-hook 'turn-on-hi2)))
 
 (provide 'init-haskell)
 ;;; init-haskell.el ends here
