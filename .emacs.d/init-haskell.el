@@ -54,15 +54,18 @@
                 haskell-process-arg-ghci "-ferror-spans")
                (add-hook 'haskell-mode-hook 'spw/haskell-mode-hook)))
 
-;; try to kill off flymake since init.el is starting flycheck
+;;; try to kill off flymake since init.el is starting flycheck
+
 (with-eval-after-load "haskell-mode"
   (setq flymake-allowed-file-name-masks nil))
+
+;;; startup hook
 
 (defun spw/haskell-mode-hook ()
   "Haskell mode startup stuff."
   (interactive)
 
-  ;; basic minor modes
+  ;;; basic minor modes
 
   (turn-on-haskell-doc)
   (capitalized-words-mode)
@@ -80,7 +83,8 @@
   (define-key interactive-haskell-mode-map (kbd "C-?") 'haskell-mode-find-uses)
   (define-key interactive-haskell-mode-map (kbd "C-c C-t") 'haskell-mode-show-type-at)
 
-  ;; make sure haskell-flycheck checker being used?
+  ;;; make sure haskell-flycheck checker being used?
+
   (when (fboundp 'flycheck-disable-checker)
     (flycheck-disable-checker 'haskell-ghc)))
 
