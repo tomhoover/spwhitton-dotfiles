@@ -286,7 +286,7 @@
             (sp-local-pair 'org-mode "=" "=") ; verbatim
             ;; (sp-local-pair 'org-mode "*" "*")
             ;; (sp-local-pair 'org-mode "/" "/")
-            (sp-local-pair 'org-mode "~" "~") ; code
+            ;; (sp-local-pair 'org-mode "~" "~") ; code
             ;; (sp-local-pair 'org-mode "+" "+")
             ;; (sp-local-pair 'org-mode "_" "_")
             ))
