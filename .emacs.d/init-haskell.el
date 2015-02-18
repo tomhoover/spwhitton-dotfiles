@@ -42,17 +42,19 @@
 (require 'bind-key)
 (require 'haskell-flycheck)
 
-;;; kill flymake setup done by haskell-mode
-
-(eval-after-load "haskell-mode"
-  (setq flymake-allowed-file-name-masks
-        (delete '("\\.l?hs\\'" haskell-flymake-init) flymake-allowed-file-name-masks)))
-
 ;;; haskell mode does most of our work
 
 (use-package haskell-mode
   :ensure
-  :init (add-hook 'haskell-mode-hook 'spw/haskell-mode-hook))
+  :mode (("\\.hs\\'" . haskell-mode)
+         ("\\.cabal\\'" . haskell-cabal-mode)
+         ("\\.hcr\\'" . haskell-core-mode))
+  :init (progn (setq haskell-process-args-cabal-repl
+                     '("--ghc-option=-ferror-spans" "--with-ghc=ghci-ng")
+                     haskell-process-path-ghci "ghci-ng"
+                     haskell-process-arg-ghci "-ferror-spans"
+                     )
+               (add-hook 'haskell-mode-hook 'spw/haskell-mode-hook)))
 
 (defun spw/haskell-mode-hook ()
   "Haskell mode startup stuff."
@@ -60,7 +62,14 @@
   (turn-on-haskell-doc)
   (capitalized-words-mode)
   (interactive-haskell-mode)
-  (flycheck-disable-checker 'haskell-ghc))
+
+  ;; unfortunately haskell-mode tries to fire up flymake
+  (flymake-mode 0)
+
+  ;; make sure haskell-flycheck checker being used?
+  (when (fboundp 'flycheck-disable-checker)
+    (flycheck-disable-checker 'haskell-ghc))
+  )
 
 ;;; hindent for reformatting code
 
