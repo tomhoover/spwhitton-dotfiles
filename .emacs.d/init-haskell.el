@@ -5,7 +5,6 @@
 ;; There are a lot of choices to make in setting up Emacs for writing
 ;; Haskell.  In this file, choices made that I think are the most
 ;; current best practices:
-;;
 
 ;; - flycheck over flymake
 ;; - ghci-ng over ghc-mod
