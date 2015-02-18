@@ -13,6 +13,11 @@ fi
 
 # ---- Halcyon Haskell platform
 
+# bashmenot can't detect my platform because uname -m returns i686
+# when bashmenot expects it to return x86-64.  So, temporarily, use my
+# fork of bashmenot.
+export BASHMENOT_URL=https://github.com/spwhitton/bashmenot
+
 export HALCYON_BASE=$HOME/local
 
 # only set up environment if we previously installed the platform (see
