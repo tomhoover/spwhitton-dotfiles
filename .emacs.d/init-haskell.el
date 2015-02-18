@@ -52,23 +52,33 @@
                 ;; '("--ghc-option=-ferror-spans" "--with-ghc=ghci-ng")
                 haskell-process-path-ghci "ghci-ng"
                 haskell-process-arg-ghci "-ferror-spans")
-               (add-hook 'haskell-mode-hook 'spw/haskell-mode-hook)
+               (add-hook 'haskell-mode-hook 'spw/haskell-mode-hook)))
 
-               ;; suggested bindings from Chris Done
-               (define-key interactive-haskell-mode-map (kbd "M-.") 'haskell-mode-goto-loc)
-               (define-key interactive-haskell-mode-map (kbd "C-?") 'haskell-mode-find-uses)
-               (define-key interactive-haskell-mode-map (kbd "C-c C-t") 'haskell-mode-show-type-at)
-               (setq flymake-allowed-file-name-masks nil))
-  :config (setq flymake-allowed-file-name-masks nil))
+;; try to kill off flymake since init.el is starting flycheck
+;; (eval-after-load "haskell-mode"
+;;   (setq flymake-allowed-file-name-masks nil))
 
 (defun spw/haskell-mode-hook ()
   "Haskell mode startup stuff."
   (interactive)
+
+  ;; basic minor modes
+
   (turn-on-haskell-doc)
   (capitalized-words-mode)
   (diminish 'capitalized-words-mode)
   (interactive-haskell-mode)
   (diminish 'interactive-haskell-mode)
+  (flymake-mode 0)
+
+  ;; suggested bindings from Chris Done
+
+  ;; should be moved into use-package declaration above (requires some
+  ;; care)
+
+  (define-key interactive-haskell-mode-map (kbd "M-.") 'haskell-mode-goto-loc)
+  (define-key interactive-haskell-mode-map (kbd "C-?") 'haskell-mode-find-uses)
+  (define-key interactive-haskell-mode-map (kbd "C-c C-t") 'haskell-mode-show-type-at)
 
   ;; make sure haskell-flycheck checker being used?
   (when (fboundp 'flycheck-disable-checker)
