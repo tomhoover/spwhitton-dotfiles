@@ -1440,6 +1440,15 @@ With arg ARG, put shell in current window."
     :window-configuration (current-window-configuration))
   (persp-switch new-name))
 
+(defun spw/align-dwim ()
+  "Align, if region inactive first mark paragraph."
+  (interactive)
+  (if (region-active-p)
+      (call-interactively 'align)
+    (save-excursion
+      (mark-paragraph)
+      (call-interactively 'align))))
+
 
 
 ;;;; ---- personal settings ----
@@ -1489,11 +1498,7 @@ BINDEE may be a command or another keymap, but whatever it is, it should not be 
                 ("n" . mwf/narrow-or-widen-dwim)
                 ("s" . spw/persp-eshell)
                 ("d" . spw/dired-jump)
-                ("a" . (lambda ()
-                         (interactive)
-                         (save-excursion
-                           (mark-paragraph)
-                           (call-interactively 'align))))
+                ("a" . spw/align-dwim)
 
                 ;; perspectives map
                 ("q s" . persp-switch)
