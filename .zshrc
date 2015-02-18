@@ -15,8 +15,9 @@ fi
 
 # bashmenot can't detect my platform because uname -m returns i686
 # when bashmenot expects it to return x86-64.  So, temporarily, use my
-# fork of bashmenot.
+# forks of bashmenot and halcyon.  Hope to pull request.
 export BASHMENOT_URL=https://github.com/spwhitton/bashmenot
+export HALCYON_URL=https://github.com/spwhitton/halcyon
 
 export HALCYON_BASE=$HOME/local
 
