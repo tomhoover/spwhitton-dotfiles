@@ -49,5 +49,21 @@
   (setq flymake-allowed-file-name-masks
         (delete '("\\.l?hs\\'" haskell-flymake-init) flymake-allowed-file-name-masks)))
 
+;;; haskell mode does most of our work
+
+(use-package haskell-mode
+  :ensure)
+
+;;; hindent for reformatting code
+
+(use-package hindent
+  :ensure)
+
+;;; hi2 for indentation
+
+(use-package hi2
+  :ensure
+  :init (add-hook 'haskell-mode-hook 'turn-on-hi2))
+
 (provide 'init-haskell)
 ;;; init-haskell.el ends here
