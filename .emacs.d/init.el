@@ -1487,6 +1487,7 @@ BINDEE may be a command or another keymap, but whatever it is, it should not be 
                 ("n" . mwf/narrow-or-widen-dwim)
                 ("s" . spw/persp-eshell)
                 ("d" . spw/dired-jump)
+                ("a" . align)
 
                 ;; perspectives map
                 ("q s" . persp-switch)
