@@ -8,7 +8,8 @@
 ;;
 
 ;; - flycheck over flymake
-;; - ghc-ng over ghc-mod
+;; - ghci-ng over ghc-mod
+;; - Chris Done's haskell-flycheck instead of flycheck-haskell
 
 ;; and choices made out of personal taste:
 
@@ -20,8 +21,19 @@
 
 ;; https://www.reddit.com/r/haskell/comments/2uspan/modern_emacs_haskellmode/
 ;; http://blog.hoersten.co/post/110096363794/modern-emacs-haskell-mode
+;; https://github.com/LukeHoersten/emacs.d/blob/master/elisp/haskell-init.el (updates since his blog post)
+
 ;; https://github.com/chrisdone/emacs-haskell-config
 ;; https://github.com/serras/emacs-haskell-tutorial/blob/master/tutorial.md
+;; http://robots.thoughtbot.com/building-haskell-projects-with-halcyon
+
+;;; Installation (see ~/doc/org/comproc.org):
+
+;; Needs (use-package flycheck) in init.el.
+
+;; Needs cabal install haskell-docs.
+
+;; Needs manual install of ghci-ng: https://github.com/chrisdone/ghci-ng
 
 ;;; Old config for WIP:
 
