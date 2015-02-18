@@ -305,6 +305,10 @@
   :diminish org-indent-mode
   :config (load "~/.emacs.d/init-org.el"))
 
+;;; Haskell
+
+(load "~/.emacs.d/init-haskell.el")
+
 ;;; keep pop up windows under control
 
 (use-package popwin
@@ -918,20 +922,6 @@
   :ensure
   :diminish whole-line-or-region-mode
   :idle (whole-line-or-region-mode 1))
-
-;;; Haskell
-
-(use-package haskell-mode
-  :ensure
-  :init (progn
-          (when (fboundp 'interactive-haskell-mode)
-            (add-hook 'haskell-mode-hook 'interactive-haskell-mode))
-          (add-hook 'haskell-mode-hook 'turn-on-haskell-doc)
-          (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
-          (add-hook 'haskell-mode-hook 'capitalized-words-mode)
-          (use-package hi2
-            :ensure
-            :init (add-hook 'haskell-mode-hook 'turn-on-hi2))))
 
 (use-package hydra
   :ensure
