@@ -35,25 +35,12 @@
 
 ;; Needs manual install of ghci-ng: https://github.com/chrisdone/ghci-ng
 
-;;; Old config for WIP:
-
-;; (use-package haskell-mode
-;;   :ensure
-;;   :init (progn
-;;           (when (fboundp 'interactive-haskell-mode)
-;;             (add-hook 'haskell-mode-hook 'interactive-haskell-mode))
-;;           (add-hook 'haskell-mode-hook 'turn-on-haskell-doc)
-;;           (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
-;;           (add-hook 'haskell-mode-hook 'capitalized-words-mode)
-;;           (use-package hi2
-;;             :ensure
-;;             :init (add-hook 'haskell-mode-hook 'turn-on-hi2))))
-
 ;;; Code:
 
 (require 'flymake)
 (require 'use-package)
 (require 'bind-key)
+(require 'haskell-flycheck)
 
 ;;; kill flymake setup done by haskell-mode
 
@@ -64,7 +51,16 @@
 ;;; haskell mode does most of our work
 
 (use-package haskell-mode
-  :ensure)
+  :ensure
+  :init (add-hook 'haskell-mode-hook 'spw/haskell-mode-hook))
+
+(defun spw/haskell-mode-hook ()
+  "Haskell mode startup stuff."
+  (interactive)
+  (turn-on-haskell-doc)
+  (capitalized-words-mode)
+  (interactive-haskell-mode)
+  (flycheck-disable-checker 'haskell-ghc))
 
 ;;; hindent for reformatting code
 
