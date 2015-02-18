@@ -31,7 +31,7 @@
 
 ;; Needs (use-package flycheck) in init.el.
 
-;; Needs cabal install haskell-docs.
+;; Needs cabal install haskell-docs hindent.
 
 ;; Needs manual install of ghci-ng: https://github.com/chrisdone/ghci-ng
 
