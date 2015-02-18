@@ -1119,7 +1119,9 @@ automatically."
     (indent-region (point-min) (point-max)))
   (case major-mode
     (emacs-lisp-mode
-     (spw/clean-lisp-dangling-brackets))))
+     (spw/clean-lisp-dangling-brackets))
+    (haskell-mode
+     (haskell-mode-stylish-buffer))))
 
 (add-hook 'before-save-hook 'spw/auto-cleanup)
 

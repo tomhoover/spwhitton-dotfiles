@@ -10,10 +10,10 @@
 ;; - ghci-ng over ghc-mod
 ;; - Chris Done's haskell-flycheck instead of flycheck-haskell
 
-;; and choices made out of personal taste:
+;; and choices made out of personal taste/what I could make work:
 
 ;; - hi2 indentation style
-;; - hindent over stylish-haskell
+;; - stylish-haskell over hindent
 ;; - company over AC
 
 ;;; Sources/links:
@@ -30,7 +30,7 @@
 
 ;; Needs (use-package flycheck) in init.el.
 
-;; Needs cabal install haskell-docs hindent.
+;; Needs cabal install haskell-docs stylish-haskell.
 
 ;; Needs manual install of ghci-ng: https://github.com/chrisdone/ghci-ng
 
@@ -86,7 +86,10 @@
 
 ;;; hindent for reformatting code
 
+;; can't make this work so using stylish-haskell instead
+
 (use-package hindent
+  :disabled t
   :ensure
   :diminish hindent-mode
   :init (progn (setq hindent-style "johan-tibell")
