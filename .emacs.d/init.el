@@ -34,6 +34,10 @@
 (defconst custom-file (concat user-emacs-directory "init-custom.el"))
 (load custom-file 'noerror)
 
+;; when I try do elisp experimentation I use IELM so make scratch
+;; buffer a little more co-operative
+(setq initial-major-mode 'text-mode)
+
 ;;; load terminal fixes
 
 (load-file (concat user-emacs-directory "init-term.el"))
