@@ -48,21 +48,27 @@
   :mode (("\\.hs\\'" . haskell-mode)
          ("\\.cabal\\'" . haskell-cabal-mode)
          ("\\.hcr\\'" . haskell-core-mode))
-  :init (progn (setq haskell-process-args-cabal-repl
-                     '("--ghc-option=-ferror-spans" "--with-ghc=ghci-ng")
-                     haskell-process-path-ghci "ghci-ng"
-                     haskell-process-arg-ghci "-ferror-spans")
-               (add-hook 'haskell-mode-hook 'spw/haskell-mode-hook)))
+  :init (progn (setq ;; haskell-process-args-cabal-repl
+                ;; '("--ghc-option=-ferror-spans" "--with-ghc=ghci-ng")
+                haskell-process-path-ghci "ghci-ng"
+                haskell-process-arg-ghci "-ferror-spans")
+               (add-hook 'haskell-mode-hook 'spw/haskell-mode-hook)
+
+               ;; suggested bindings from Chris Done
+               (define-key interactive-haskell-mode-map (kbd "M-.") 'haskell-mode-goto-loc)
+               (define-key interactive-haskell-mode-map (kbd "C-?") 'haskell-mode-find-uses)
+               (define-key interactive-haskell-mode-map (kbd "C-c C-t") 'haskell-mode-show-type-at)
+               (setq flymake-allowed-file-name-masks nil))
+  :config (setq flymake-allowed-file-name-masks nil))
 
 (defun spw/haskell-mode-hook ()
   "Haskell mode startup stuff."
   (interactive)
   (turn-on-haskell-doc)
   (capitalized-words-mode)
+  (diminish 'capitalized-words-mode)
   (interactive-haskell-mode)
-
-  ;; unfortunately haskell-mode tries to fire up flymake
-  (flymake-mode 0)
+  (diminish 'interactive-haskell-mode)
 
   ;; make sure haskell-flycheck checker being used?
   (when (fboundp 'flycheck-disable-checker)
@@ -71,12 +77,16 @@
 ;;; hindent for reformatting code
 
 (use-package hindent
-  :ensure)
+  :ensure
+  :diminish hindent-mode
+  :init (progn (setq hindent-style "johan-tibell")
+               (add-hook 'haskell-mode-hook #'hindent-mode)))
 
 ;;; hi2 for indentation
 
 (use-package hi2
   :ensure
+  :diminish hi2-mode
   :init (progn (setq hi2-layout-offset 4
                      hi2-left-offset 4)
                (add-hook 'haskell-mode-hook 'turn-on-hi2)))
