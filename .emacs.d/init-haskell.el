@@ -52,8 +52,7 @@
   :init (progn (setq haskell-process-args-cabal-repl
                      '("--ghc-option=-ferror-spans" "--with-ghc=ghci-ng")
                      haskell-process-path-ghci "ghci-ng"
-                     haskell-process-arg-ghci "-ferror-spans"
-                     )
+                     haskell-process-arg-ghci "-ferror-spans")
                (add-hook 'haskell-mode-hook 'spw/haskell-mode-hook)))
 
 (defun spw/haskell-mode-hook ()
@@ -68,8 +67,7 @@
 
   ;; make sure haskell-flycheck checker being used?
   (when (fboundp 'flycheck-disable-checker)
-    (flycheck-disable-checker 'haskell-ghc))
-  )
+    (flycheck-disable-checker 'haskell-ghc)))
 
 ;;; hindent for reformatting code
 
