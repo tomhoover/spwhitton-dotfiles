@@ -502,6 +502,7 @@
             ;;; python code completion
 
             (use-package anaconda-mode
+              :disabled t
               :ensure
               :config (progn
                         (add-hook 'python-mode-hook 'anaconda-mode)
