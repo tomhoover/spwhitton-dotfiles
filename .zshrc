@@ -11,16 +11,6 @@ if ! [[ "$TERM" == "dumb" ]]; then
     export PS1="%{$fg[${1:-yellow}]%}%m %{$fg[${1:-green}]%}%~ %{$fg[${1:-blue}]%}%#%{$reset_color%} "
 fi
 
-# ---- Halcyon Haskell platform
-
-# bashmenot can't detect my platform because uname -m returns i686
-# when bashmenot expects it to return x86-64.  So, temporarily, use my
-# forks of bashmenot and halcyon.  Hope to pull request.
-export BASHMENOT_URL=https://github.com/spwhitton/bashmenot
-export HALCYON_URL=https://github.com/spwhitton/halcyon
-
-source ~/bin/halcyonenv.sh
-
 # --- terminals
 
 # From dev.gentoo.org/~ciaranm/configs/bashrc

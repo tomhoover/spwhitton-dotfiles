@@ -3,16 +3,12 @@
 ;;; Commentary:
 
 ;; There are a lot of choices to make in setting up Emacs for writing
-;; Haskell.  In this file, choices made that I think are the most
-;; current best practices:
+;; Haskell.  In this file, choices made that I think are a good
+;; balance of current best practices and being conservative:
 
 ;; - flycheck over flymake
-;; - ghci-ng over ghc-mod
-;; - Chris Done's haskell-flycheck instead of flycheck-haskell
-
-;; and choices made out of personal taste/what I could make work:
-
-;; - hi2 indentation style
+;; - ghc-mod over ghci-ng
+;; - structured haskell mode for indentation
 ;; - stylish-haskell over hindent
 ;; - company over AC
 
@@ -26,13 +22,13 @@
 ;; https://github.com/serras/emacs-haskell-tutorial/blob/master/tutorial.md
 ;; http://robots.thoughtbot.com/building-haskell-projects-with-halcyon
 
-;;; Installation (see ~/doc/org/comproc.org):
+;;; Installation:
 
 ;; Needs (use-package flycheck) in init.el.
 
-;; Needs cabal install haskell-docs stylish-haskell.
+;; For the required haskell packages, see ~/doc/org/comproc.org
 
-;; Needs manual install of ghci-ng: https://github.com/chrisdone/ghci-ng
+;; Needs cabal install haskell-docs stylish-haskell.
 
 ;;; Code:
 
@@ -48,10 +44,11 @@
   :mode (("\\.hs\\'" . haskell-mode)
          ("\\.cabal\\'" . haskell-cabal-mode)
          ("\\.hcr\\'" . haskell-core-mode))
-  :init (progn (setq ;; haskell-process-args-cabal-repl
-                ;; '("--ghc-option=-ferror-spans" "--with-ghc=ghci-ng")
-                haskell-process-path-ghci "ghci-ng"
-                haskell-process-arg-ghci "-ferror-spans")
+  :init (progn ;; (setq ;; haskell-process-args-cabal-repl
+               ;;  ;; '("--ghc-option=-ferror-spans" "--with-ghc=ghci-ng")
+               ;;  ;; haskell-process-path-ghci "ghci-ng"
+               ;;  ;; haskell-process-arg-ghci "-ferror-spans"
+               ;;  )
                (add-hook 'haskell-mode-hook 'spw/haskell-mode-hook)))
 
 ;;; Try to kill off flymake since init.el is starting flycheck.  Also
@@ -117,7 +114,10 @@
   :ensure
   :init (progn (setq shm-indent-spaces 4)
                (set-face-background 'shm-current-face "#4F4F4F")
-               (add-hook 'haskell-mode-hook 'structured-haskell-mode)))
+               (add-hook 'haskell-mode-hook 'structured-haskell-mode))
+  :config (progn
+            (bind-key "C-w" 'spw/backward-delete-word shm-map)
+            (bind-key "C-x C-k" 'shm/kill-region shm-map)))
 
 (provide 'init-haskell)
 ;;; init-haskell.el ends here

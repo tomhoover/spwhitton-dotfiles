@@ -1,14 +1,6 @@
-#!/bin/bash
+#!/bin/sh
 . $HOME/.shenv
 
-# ---- prep
-
-# Emacs needs a bunch of environment variables set for its Haskell
-# setup to work
-
-. $HOME/bin/halcyonenv.sh
-
-# ---- do our work
 case $1 in
     www)
         wmctrl -a Iceweasel || iceweasel &
