@@ -16,7 +16,7 @@
 
 ;; Needs (use-package flycheck) in init.el.
 
-;; For the required haskell packages, see ~/doc/org/comproc.org
+;; Needs exes from Hackage: structured-haskell-mode, ghc-mod
 
 ;;; Code:
 
@@ -40,7 +40,8 @@
                (add-hook 'haskell-mode-hook 'spw/haskell-mode-hook)))
 
 ;;; Try to kill off flymake since init.el is starting flycheck.  Also
-;;; remove a call to `ghc-init' since we're not using ghc-mod.
+;;; remove a call to flymake-mode (add the call to `ghc-init' back in
+;;; later).
 
 (with-eval-after-load "haskell-mode"
   (setq flymake-allowed-file-name-masks nil)
@@ -106,6 +107,10 @@
   :config (progn
             (bind-key "C-w" 'spw/backward-delete-word shm-map)
             (bind-key "C-x C-k" 'shm/kill-region shm-map)))
+
+(use-package ghc
+  :ensure
+  :init (add-hook 'haskell-mode-hook 'ghc-init))
 
 (provide 'init-haskell)
 ;;; init-haskell.el ends here
