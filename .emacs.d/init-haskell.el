@@ -12,23 +12,11 @@
 ;; - stylish-haskell over hindent
 ;; - company over AC
 
-;;; Sources/links:
-
-;; https://www.reddit.com/r/haskell/comments/2uspan/modern_emacs_haskellmode/
-;; http://blog.hoersten.co/post/110096363794/modern-emacs-haskell-mode
-;; https://github.com/LukeHoersten/emacs.d/blob/master/elisp/haskell-init.el (updates since his blog post)
-
-;; https://github.com/chrisdone/emacs-haskell-config
-;; https://github.com/serras/emacs-haskell-tutorial/blob/master/tutorial.md
-;; http://robots.thoughtbot.com/building-haskell-projects-with-halcyon
-
 ;;; Installation:
 
 ;; Needs (use-package flycheck) in init.el.
 
 ;; For the required haskell packages, see ~/doc/org/comproc.org
-
-;; Needs cabal install haskell-docs stylish-haskell.
 
 ;;; Code:
 
