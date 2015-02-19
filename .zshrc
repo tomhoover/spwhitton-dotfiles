@@ -62,7 +62,7 @@ alias g="git"
 alias ga="git annex"
 alias pg="ps auxxxxxxxxxxxxxxxxxxx | grep"
 
-alias fixmpd="sudo invoke-rc.d mpd restart"
+alias fixmpd="sudo invoke-rc.d mpd restart; pkill sonata"
 alias radio4="mplayer \"http://wmlive-acl.bbc.co.uk/wms/bbc_ami/radio4/radio4_bb_live_eq1_sl0?BBC-UID=044be39365f98aaa88a55ca7f1aa8fc5b3569ae000708114d4dfd43698a07e8a&amp;SSO2-UID=\""
 alias ws="mplayer mms://a243.l3944038972.c39440.g.lm.akamaistream.net/D/243/39440/v0001/reflector:38972"
 
