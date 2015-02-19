@@ -19,13 +19,7 @@ fi
 export BASHMENOT_URL=https://github.com/spwhitton/bashmenot
 export HALCYON_URL=https://github.com/spwhitton/halcyon
 
-export HALCYON_BASE=$HOME/local/app
-
-# only set up environment if we previously installed the platform (see
-# comproc.org)
-if [ -d "$HALCYON_BASE/halcyon" ]; then
-    source <( HALCYON_NO_SELF_UPDATE=1 $HOME/local/app/halcyon/halcyon paths )
-fi
+source ~/bin/halcyonenv.sh
 
 # --- terminals
 

@@ -6,11 +6,7 @@
 # Emacs needs a bunch of environment variables set for its Haskell
 # setup to work
 
-export HALCYON_BASE=$HOME/local/app
-if [ -d "$HALCYON_BASE/halcyon" ]; then
-    source <( HALCYON_NO_SELF_UPDATE=1 $HOME/local/app/halcyon/halcyon paths )
-fi
-
+. $HOME/bin/halcyonenv.sh
 
 # ---- do our work
 case $1 in
