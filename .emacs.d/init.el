@@ -357,6 +357,12 @@
   :commands openwith-mode
   :idle (openwith-mode t))
 
+;; thanks to openwith, the warning for large files can be at a much
+;; larger threshold as the chances of hitting it are low (this is
+;; about 100MB)
+
+(setq large-file-warning-threshold 100000000)
+
 ;;; doc-view
 
 (use-package doc-view
