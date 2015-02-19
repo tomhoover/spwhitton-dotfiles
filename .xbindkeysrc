@@ -1,3 +1,5 @@
+keystate_numlock = enable
+
 "xlaunch emacs"
   F9
 
