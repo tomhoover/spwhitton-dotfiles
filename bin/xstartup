@@ -27,3 +27,5 @@ gtk-redshift -l 53.57:1.5 -t 6500:3700 &
 # host which I just SSH to on which it's started with a @reboot line
 # in crontab
 emacs --daemon
+
+xlaunch-all
