@@ -9,52 +9,16 @@ extra-prog-path: /home/swhitton/.cabal/bin
 build-summary: /home/swhitton/.cabal/logs/build.log
 remote-build-reporting: anonymous
 jobs: $ncpus
-library-profiling: True
+
+-- The following line is suggested by
+-- <http://www.vex.net/~trebla/haskell/cabal-cabal.xhtml>.
+-- Unfortunately a lot of Debian ghc-* and libghc-* packages don't
+-- have profiling information and you have to install the -prof
+-- version.  This is too much to do for now.  Maybe I'll kick myself
+-- later when I want profiling.
+
+-- library-profiling: True
+
 documentation: True
 haddock
   hyperlink-source: True
-
--- from http://www.vex.net/~trebla/haskell/haskell-platform.xhtml#correction
-constraint: Cabal installed
-constraint: GLUT installed
-constraint: HTTP installed
-constraint: HUnit installed
-constraint: OpenGL installed
-constraint: QuickCheck installed
-constraint: array installed
-constraint: binary installed
-constraint: bytestring installed
-constraint: cgi installed
-constraint: containers installed
-constraint: deepseq installed
-constraint: directory installed
-constraint: extensible-exceptions installed
-constraint: fgl installed
-constraint: filepath installed
-constraint: haskell-src installed
-constraint: haskell2010 installed
-constraint: haskell98 installed
-constraint: hoopl installed
-constraint: hpc installed
-constraint: html installed
-constraint: mtl installed
-constraint: network installed
-constraint: old-locale installed
-constraint: old-time installed
-constraint: parallel installed
-constraint: parsec installed
-constraint: pretty installed
-constraint: process installed
-constraint: random installed
-constraint: regex-base installed
-constraint: regex-compat installed
-constraint: regex-posix installed
-constraint: stm installed
-constraint: syb installed
-constraint: template-haskell installed
-constraint: text installed
-constraint: time installed
-constraint: transformers installed
-constraint: unix installed
-constraint: xhtml installed
-constraint: zlib installed
