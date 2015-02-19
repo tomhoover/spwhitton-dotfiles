@@ -1,7 +1,14 @@
-#!/bin/sh
+#!/bin/bash
 . $HOME/.shenv
 
 # stuff to start in XFCE or GNOME3
+
+# ---- prep
+
+# Emacs needs a bunch of environment variables set for its Haskell
+# setup to work
+
+. $HOME/bin/halcyonenv.sh
 
 # ---- keyboard settings
 
