@@ -156,11 +156,12 @@ fixups =
 	cmd "/C win32setup.bat"
     fi
 
-# create ~/.emacs.d/ before stowing so that the files inside are
-# symlinks, rather than the whole dir being a symlink.  That way Emacs
-# junk that gets dumped in ~/.emacs.d doesn't have to be put into
-# .gitignore.  Similarly the XDG autostart folder, .ssh and lib and more
-pre_stow = mkdir -p ~/.emacs.d ~/.config/autostart ~/.ssh ~/lib ~/.cabal
+# Empty out /etc/skel junk, and create ~/.emacs.d/ before stowing so
+# that the files inside are symlinks, rather than the whole dir being
+# a symlink.  That way Emacs junk that gets dumped in ~/.emacs.d
+# doesn't have to be put into .gitignore.  Similarly the XDG autostart
+# folder, .ssh and lib and more
+pre_stow = $HOME/bin/unskel; mkdir -p ~/.emacs.d ~/.config/autostart ~/.ssh ~/lib ~/.cabal
 pre_checkout = mkdir -p ~/.emacs.d  ~/.config/autostart ~/.ssh ~/lib ~/.cabal
 
 # GTK insists on replacing the symlink to its bookmarks file with the
