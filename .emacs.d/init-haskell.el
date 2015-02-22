@@ -34,7 +34,8 @@
          ("\\.hcr\\'" . haskell-core-mode))
   :init (progn
           ;; Wrap up interactive shell in nix and cabal reply.  Might
-          ;; be set in directory variables instead.
+          ;; be set in directory variables instead.  Or might get set
+          ;; conditionally, if shell.nix file exists.
           (setq haskell-process-type 'cabal-repl)
           (setq haskell-process-wrapper-function
                 (lambda (argv) (append (list \"nix-shell\" \"-I\" \".\" \"--command\" )
