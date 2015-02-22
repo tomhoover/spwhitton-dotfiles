@@ -16,7 +16,7 @@
 
 ;; Needs (use-package flycheck) in init.el.
 
-;; Needs exes from Hackage: structured-haskell-mode, ghc-mod
+;; Needs exes from Hackage: structured-haskell-mode, ghc-mod, stylish-haskell
 
 ;;; Code:
 
@@ -32,12 +32,16 @@
   :mode (("\\.hs\\'" . haskell-mode)
          ("\\.cabal\\'" . haskell-cabal-mode)
          ("\\.hcr\\'" . haskell-core-mode))
-  :init (progn ;; (setq ;; haskell-process-args-cabal-repl
-               ;;  ;; '("--ghc-option=-ferror-spans" "--with-ghc=ghci-ng")
-               ;;  ;; haskell-process-path-ghci "ghci-ng"
-               ;;  ;; haskell-process-arg-ghci "-ferror-spans"
-               ;;  )
-               (add-hook 'haskell-mode-hook 'spw/haskell-mode-hook)))
+  :init (progn
+          ;; Wrap up interactive shell in nix and cabal reply.  Might
+          ;; be set in directory variables instead.
+          (setq haskell-process-type 'cabal-repl)
+          (setq haskell-process-wrapper-function
+                (lambda (argv) (append (list \"nix-shell\" \"-I\" \".\" \"--command\" )
+                                       (list (mapconcat 'identity argv \" \")))))
+
+          ;; Start up all my usual minor modes and bindings.
+          (add-hook 'haskell-mode-hook 'spw/haskell-mode-hook)))
 
 ;;; Try to kill off flymake since init.el is starting flycheck.  Also
 ;;; remove a call to flymake-mode (add the call to `ghc-init' back in
@@ -69,9 +73,9 @@
   ;; should be moved into use-package declaration above (requires some
   ;; care)
 
-  (define-key interactive-haskell-mode-map (kbd "M-.") 'haskell-mode-goto-loc)
-  (define-key interactive-haskell-mode-map (kbd "C-?") 'haskell-mode-find-uses)
-  (define-key interactive-haskell-mode-map (kbd "C-c C-t") 'haskell-mode-show-type-at)
+  ;; (define-key interactive-haskell-mode-map (kbd "M-.") 'haskell-mode-goto-loc)
+  ;; (define-key interactive-haskell-mode-map (kbd "C-?") 'haskell-mode-find-uses)
+  ;; (define-key interactive-haskell-mode-map (kbd "C-c C-t") 'haskell-mode-show-type-at)
 
   ;;; make sure haskell-flycheck checker being used?
 
