@@ -38,8 +38,8 @@
           ;; conditionally, if shell.nix file exists.
           (setq haskell-process-type 'cabal-repl)
           (setq haskell-process-wrapper-function
-                (lambda (argv) (append (list \"nix-shell\" \"-I\" \".\" \"--command\" )
-                                       (list (mapconcat 'identity argv \" \")))))
+                (lambda (argv) (append (list "nix-shell" "-I" "." "--command" )
+                                       (list (mapconcat 'identity argv " ")))))
 
           ;; Start up all my usual minor modes and bindings.
           (add-hook 'haskell-mode-hook 'spw/haskell-mode-hook)))
