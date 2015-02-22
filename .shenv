@@ -63,6 +63,12 @@ done
 unset addition
 export PATH
 
+# ---- package management by Nix: add to $PATH once more
+
+if [ -e "/etc/profile.d/nix.sh" ]; then
+    . /etc/profile.d/nix.sh
+fi
+
 # ---- set language (snippet from joeyh's home-etc.git repo)
 
 case " $(echo $(locale -a)) " in
