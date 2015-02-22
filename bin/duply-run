@@ -14,11 +14,11 @@ case "$(hostname -f)" in
             exit 1
         fi
         cd $HOME
-        echo -n "\n>>> running home dir backup\n\n"
+        printf "\n>>> running home dir backup\n\n"
         duply ma-spw-home backup
-        echo -n "\n>>> running mail spool backup\n\n"
+        printf "\n>>> running mail spool backup\n\n"
         duply ma-spw-mail backup
-        echo -n "\n>>> running web dir backup\n\n"
+        printf "\n>>> running web dir backup\n\n"
         duply ma-spw-www backup
         ;;
     "artemis.silentflame.com")
