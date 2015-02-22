@@ -65,8 +65,11 @@ export PATH
 
 # ---- package management by Nix: add to $PATH once more
 
-if [ -e "/etc/profile.d/nix.sh" ]; then
-    . /etc/profile.d/nix.sh
+# crude heuristic to determine if it's already been added
+if ! echo $PATH | grep -q "$HOME/.nix-profile/bin"; then
+    if [ -e "/etc/profile.d/nix.sh" ]; then
+        . /etc/profile.d/nix.sh
+    fi
 fi
 
 # ---- set language (snippet from joeyh's home-etc.git repo)
