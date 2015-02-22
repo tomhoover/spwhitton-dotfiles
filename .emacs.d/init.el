@@ -176,6 +176,7 @@
                   (let ((beg (point)))
                     (goto-char (mark))
                     (end-of-line)
+                    (forward-char 1)
                     (push-mark)
                     (goto-char beg)
                     (beginning-of-line))
@@ -184,7 +185,8 @@
                   (beginning-of-line)
                   (push-mark)
                   (goto-char end)
-                  (end-of-line)))))))
+                  (end-of-line)
+                  (forward-char 1)))))))
 
 ;;; keep parentheses under control: modern replacement for the mighty paredit
 
