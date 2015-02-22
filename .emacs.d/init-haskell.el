@@ -50,7 +50,8 @@
 
 ;; Needs emacs 24.4 for with-eval-after-load
 
-(when (fboundp 'when-eval-after-load)
+(when (and (=  emacs-major-version 24)
+           (>= emacs-minor-version 4))
   (with-eval-after-load "haskell-mode"
     (setq flymake-allowed-file-name-masks nil)
     (remove-hook 'haskell-mode-hook (lambda ()
