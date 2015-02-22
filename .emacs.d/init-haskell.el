@@ -47,11 +47,14 @@
 ;;; remove a call to flymake-mode (add the call to `ghc-init' back in
 ;;; later).
 
-(with-eval-after-load "haskell-mode"
-  (setq flymake-allowed-file-name-masks nil)
-  (remove-hook 'haskell-mode-hook (lambda ()
-                                    (ghc-init)
-                                    (flymake-mode))))
+;; Needs emacs 24.4 for with-eval-after-load
+
+(when (fboundp 'when-eval-after-load)
+  (with-eval-after-load "haskell-mode"
+    (setq flymake-allowed-file-name-masks nil)
+    (remove-hook 'haskell-mode-hook (lambda ()
+                                      (ghc-init)
+                                      (flymake-mode)))))
 
 ;;; startup hook
 
