@@ -20,7 +20,7 @@
 
 ;;; Code:
 
-(require 'flymake)
+(require 'flycheck)
 (require 'use-package)
 (require 'bind-key)
 (require 'haskell-flycheck)
