@@ -8,6 +8,7 @@ feh_*_filelist
 flycheck_*
 .cabal-sandbox/*
 cabal.sandbox.config
+shell.nix
 
 # now ignoring LaTeX junk because I'm not going to check it in anymore
 *.aux
