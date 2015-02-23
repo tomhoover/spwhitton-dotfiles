@@ -10,6 +10,8 @@ copy /y src\dotfiles\home-mrconfig .mrconfig
 copy /y src\dotfiles\.gitconfig .gitconfig
 copy /y src\dotfiles\.bashrc .bashrc
 copy /y src\dotfiles\.shenv .shenv
+mkdir %APPDATA%\cabal
+copy /y src\dotfiles\.cabal\config %APPDATA%\cabal\config
 
 REM ---- END   WORK
 REM ECHO.
