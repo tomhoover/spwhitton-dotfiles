@@ -77,6 +77,8 @@
   (company-mode 0)
   (bind-key "M-/" 'dabbrev-expand interactive-haskell-mode-map)
 
+  (bind-key "C-c C-b" 'haskell-interactive-bring interactive-haskell-mode-map)
+
   ;; suggested bindings from Chris Done
 
   ;; should be moved into use-package declaration above (requires some
