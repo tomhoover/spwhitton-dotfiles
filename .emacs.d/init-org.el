@@ -41,6 +41,24 @@
           (add-hook 'org-mode-hook 'hl-sentence-mode)
           (set-face-background 'hl-sentence-face "#4F4F4F")))
 
+;;; graphical calendar
+
+(use-package calfw
+  :ensure
+  :init (load-library "calfw-org"))
+
+(defun spw/org-calfw ()
+  (interactive)
+  (let ((org-deadline-warning-days 0)
+        (org-agenda-files (list "~/doc/org/diary.org")))
+    (save-window-excursion
+      (cfw:open-org-calendar)
+      (switch-to-buffer "*cfw-calendar*")
+      (call-interactively 'htmlize-buffer)
+      (write-file "~/tmp/calendar.html"))))
+
+
+
 ;;;; ---- preferences ----
 
 ;; custom doesn't actually set all the faces it should, so we'll do
