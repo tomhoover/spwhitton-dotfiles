@@ -73,6 +73,10 @@
   (diminish 'interactive-haskell-mode)
   (flymake-mode 0)
 
+  ;; until we get ghc-mod working, use dabbrev
+  (company-mode 0)
+  (bind-key "M-/" 'dabbrev-expand interactive-haskell-mode-map)
+
   ;; suggested bindings from Chris Done
 
   ;; should be moved into use-package declaration above (requires some
@@ -117,9 +121,21 @@
             (bind-key "C-w" 'spw/backward-delete-word shm-map)
             (bind-key "C-x C-k" 'shm/kill-region shm-map)))
 
+;;; ghc-mod doesn't work with cabal 1.22 and ghc 7.8.4 atm
+
 (use-package ghc
+  :disabled t
   :ensure
-  :init (add-hook 'haskell-mode-hook 'ghc-init))
+  :init (progn
+          (add-hook 'haskell-mode-hook 'ghc-init)
+
+          ;; completion
+
+          (use-package company-ghc
+            :ensure
+            :config (progn
+                      (add-to-list 'company-backends '(company-ghc :with company-dabbrev-code))
+                      (setq company-ghc-show-info t)))))
 
 (provide 'init-haskell)
 ;;; init-haskell.el ends here
