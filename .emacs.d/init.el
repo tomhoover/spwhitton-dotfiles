@@ -961,10 +961,19 @@
 ;;; aligning rule for Haskell adapted from Haskell mode wiki
 
 (use-package align
-  :init (add-to-list 'align-rules-list
-                     '(haskell-defns
-                       (regexp . "\\(\\s-+\\)\\(::\\|∷\\|=\\)\\s-+")
-                       (modes quote (haskell-mode literate-haskell-mode)))))
+  :init (progn
+          (add-to-list 'align-rules-list
+                       '(haskell-defns
+                         (regexp . "\\(\\s-+\\)\\(::\\|∷\\|=\\)\\s-+")
+                         (modes quote (haskell-mode literate-haskell-mode))))
+          (add-to-list 'align-rules-list
+                       '(haskell-arrows
+                         (regexp . "\\(\\s-+\\)\\(->\\|→\\)\\s-+")
+                         (modes quote (haskell-mode literate-haskell-mode))))
+          (add-to-list 'align-rules-list
+                       '(haskell-left-arrows
+                         (regexp . "\\(\\s-+\\)\\(<-\\|←\\)\\s-+")
+                         (modes quote (haskell-mode literate-haskell-mode))))))
 
 ;;; edit .nix files
 
