@@ -1459,7 +1459,8 @@ With arg ARG, put shell in current window."
   "Align, if region inactive first mark paragraph."
   (interactive)
   (if (region-active-p)
-      (call-interactively 'align)
+      (let ((align-region-separate 'entire))
+        (call-interactively 'align))
     (save-excursion
       (mark-paragraph)
       (call-interactively 'align))))
