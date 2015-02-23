@@ -966,6 +966,10 @@
                        (regexp . "\\(\\s-+\\)\\(::\\|∷\\|=\\)\\s-+")
                        (modes quote (haskell-mode literate-haskell-mode)))))
 
+;;; edit .nix files
+
+(use-package nix-mode :ensure)
+
 
 
 ;;;; ---- functions ----
