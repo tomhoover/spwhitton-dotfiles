@@ -32,6 +32,15 @@
   :bind ("C-c m" . org-mairix-el-insert-link)
   :commands (org-mairix-el-insert-link org-mairix-el-link org-mairix-el-open))
 
+;;; highlight current sentence
+
+(use-package hl-sentence
+  :ensure
+  :commands hl-sentence-mode
+  :init (progn
+          (add-hook 'org-mode-hook 'hl-sentence-mode)
+          (set-face-background 'hl-sentence-face "#4F4F4F")))
+
 ;;;; ---- preferences ----
 
 ;; custom doesn't actually set all the faces it should, so we'll do
