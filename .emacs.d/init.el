@@ -966,10 +966,14 @@
                        '(haskell-defns
                          (regexp . "\\(\\s-+\\)\\(::\\|∷\\|=\\)\\s-+")
                          (modes quote (haskell-mode literate-haskell-mode))))
+          ;; TODO: this lines ->s in a case with the -> of the type
+          ;; signature which it shouldn't.  sophisticate the regexp to
+          ;; exclude those lines
           (add-to-list 'align-rules-list
                        '(haskell-arrows
                          (regexp . "\\(\\s-+\\)\\(->\\|→\\)\\s-+")
                          (modes quote (haskell-mode literate-haskell-mode))))
+
           (add-to-list 'align-rules-list
                        '(haskell-left-arrows
                          (regexp . "\\(\\s-+\\)\\(<-\\|←\\)\\s-+")
