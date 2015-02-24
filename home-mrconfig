@@ -270,6 +270,33 @@ sync =
 # manual checkouts only
 skip = lazy
 
+# --- git annex for use with rtorrent
+
+[lib/rt]
+checkout = :
+post_checkout = git remote rm origin
+status = git annex status --fast
+update = git annex sync ma
+push = git annex sync ma
+fixups =
+    git config push.default matching
+    git config gcrypt.publish-participants true
+    git config annex.startupscan false
+    git config annex.autocommit false
+    if [ -d "$(hostname -s)" ]; then
+        mkdir -p $HOME/local/rt
+        cd $HOME/local/rt
+        touch .duplicity-ignore
+        mkdir -p session incomplete
+        if ! [ -e "complete" ]; then
+            ln -s $HOME/lib/rt/complete complete
+        fi
+        if ! [ -e "watch" ]; then
+            ln -s $HOME/lib/rt/$(hostname -s) watch
+        fi
+    fi
+skip = lazy
+
 # --- source code repositories registered to their own mr config file
 
 [src]
