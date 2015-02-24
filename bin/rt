@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# start rtorrent under dtach if it's not running
+
+if ! pgrep -u $LOGNAME rtorrent >/dev/null; then
+    rm -f $HOME/local/rt/session/dtach.socket
+    TERM=xterm /usr/bin/nice -n 19 /usr/bin/dtach -n $HOME/local/rt/session/dtach.socket /usr/bin/rtorrent
+fi
+
+# if we're not at a dumb terminal (so this script can be shoved in a
+# crontab), try to attach what we (maybe) just made
+
+if [ -t 1 ]; then
+    dtach -a $HOME/local/rt/session/dtach.socket
+fi

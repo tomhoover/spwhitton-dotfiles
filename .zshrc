@@ -54,7 +54,6 @@ alias screen="screen -U" # enable UTF-8
 alias tmux="tmux"
 alias rax="screen -URaAx"
 alias ta="tmux attach"
-alias rt="screen -t rtorrent dtach -a $HOME/local/rt/session/dtach.socket"
 
 alias blogdates="rdate.py-dir ~/html/blog/entries"
 alias httpdir="sudo python -m SimpleHTTPServer 80"

@@ -3,3 +3,5 @@
 
 */15 * * * * chronic doccheckin
 */10 * * * * chronic offlineimap
+
+@reboot rt
