@@ -1,3 +1,17 @@
 This is Sean Whitton's dotfiles.  I try to make it clear when stuff
 was written by me, and when it was taken from elsewhere.  Stuff I've
 written is GPL v3 or any later versions published by the FSF.
+
+The master branch should work on most hosts, and host-specific
+configurations for host `host.domain' live in the branch `host'.  All
+such host branches have master as their parent and are rebased onto
+master: the only exception is some branches based on `win32' for
+specific Windows hosts.
+
+This restriction is to make usage less complex, even if it results in
+some patches being duplicated between multiple host branches (that
+aren't suitable for master).  My dotfiles are too important for the
+repository to require time-consuming, complex rebase operations.  In
+particular, the restriction allows for the `mr update' and `mr rebase'
+commands to be simple scripts that almost always do exactly what's
+needed.
