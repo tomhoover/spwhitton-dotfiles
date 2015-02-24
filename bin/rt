@@ -1,6 +1,13 @@
 #!/bin/bash
 . $HOME/.shenv
 
+# first check that there exist the dirs we need
+
+if [ ! -e "$HOME/local/rt/watch" -o ! -d "$HOME/local/rt/session" -o ! -d "$HOME/local/rt/incomplete" -o ! -e "$HOME/local/rt/complete" ]; then
+    echo "I was asked to start rtorrent, but one of the dirs in ~/local/rt is missing" >&2
+    exit 1
+fi
+
 # start rtorrent under dtach if it's not running
 
 if ! pgrep -u $LOGNAME rtorrent >/dev/null; then
