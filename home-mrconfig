@@ -280,6 +280,7 @@ post_checkout = git remote rm origin
 status = git annex status --fast
 update = git annex sync ma
 push = git annex sync ma
+autoci = git annex add . && git commit -m "auto commit on $(hostname -s)"
 fixups =
     git config push.default matching
     git config gcrypt.publish-participants true
