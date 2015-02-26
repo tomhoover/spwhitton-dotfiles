@@ -1461,7 +1461,7 @@ With arg ARG, put shell in current window."
     (when (and (not (f-exists? name))
                (not read-only))
       (insert "tblesson")
-      (if evil-mode (evil-append-line 1))
+      ;; (if evil-mode (evil-append-line 1))
       (yas-expand))))
 
 (defun spw/textbook (grade lesson)
