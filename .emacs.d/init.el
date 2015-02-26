@@ -952,7 +952,7 @@
             "windows"
             ("o" other-window "next" :color red)
             ("O" (lambda () (interactive) (other-window -1)) "previous" :color red)
-            ("R" spw/toggle-window-split "toggle" :color red)
+            ("S" spw/toggle-window-split "toggle" :color red)
             ("0" delete-window "del" :color red)
             ("1" spw/maybe-delete-other-windows "max" :color red)
             ("2" split-window-below "horiz" :color red)
