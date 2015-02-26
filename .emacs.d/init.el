@@ -1577,6 +1577,11 @@ BINDEE may be a command or another keymap, but whatever it is, it should not be 
                            (find-file "~/src/dotfiles/.emacs.d/init.el")
                            (eval-buffer)))
 
+                ;; Sariul launcher map
+                ("S l" . spw/tblesson)
+                ("S S" . spw/auto-textbook)
+                ("S t" . spw/textbook)
+
                 ;; toggle map
                 ("t e" . toggle-debug-on-error)
                 ("t i" . org-indent-mode)
