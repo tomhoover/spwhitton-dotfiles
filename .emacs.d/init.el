@@ -659,7 +659,12 @@
                     (remove* name persp-basewcs
                              :test 'equal :key 'car))
               (add-to-list 'persp-basewcs pair)))
+          ;; Save when opening a perspective.
           (add-hook 'persp-created-hook 'persp-basewc-save)
+          ;; Also do a save of the basewc after
+          ;; `projectile-persp-switch-project' (I never use
+          ;; `projectile-switch-project' directly) switches to dired
+          ;; as this is a more sensible initial basewc to go back to.
           (add-hook 'projectile-switch-project-hook 'persp-basewc-save)
           (defun persp-basewc-restore ()
             (interactive)
