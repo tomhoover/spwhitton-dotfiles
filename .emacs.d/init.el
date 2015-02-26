@@ -1450,7 +1450,7 @@ With arg ARG, put shell in current window."
     (if (not read-only)
         (projectile-persp-switch-project teaching)
       (persp-switch "Teaching")
-      (dired "s:/"))
+      (dired teaching))
     (when (and (not (f-exists? name))
                (not read-only))
       (f-mkdir parent)
