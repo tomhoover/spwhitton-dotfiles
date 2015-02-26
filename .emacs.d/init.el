@@ -1455,6 +1455,32 @@ With arg ARG, put shell in current window."
       (if evil-mode (evil-append-line 1))
       (yas-expand))))
 
+(defun spw/textbook (grade lesson)
+  "Open the textbook's accompanying CD for grade GRADE and lesson LESSON."
+  (interactive "sGrade: \nsGrade %s, lesson: ")
+  (let* ((g (string-to-number grade))
+         (l (string-to-number lesson))
+         (cd (if (and (<= g 4) (<= l 7))                "1"
+               (if (and (<= g 4) (> l 7))               "2"
+                 (if (and (>= g 5) (<= l 5))            "1"
+                   (if (and (>= g 5) (> l 5) (<= l 10)) "2"
+                     (if (and (>= g 5) (> l 10))        "3"))))))
+         (circle (if (= g 3) "①" "②"))
+         (path (if (<= g 4)
+                   (concat "C:\\e-Book\\start\\초등영어\\3~4학년군 영어 "
+                           circle " 지도서_CD " cd "\\start.exe")
+                 (concat "D:\\Textbook CDs\\Grade "
+                         grade "\\CD" cd "\\start.exe"))))
+    (call-process path nil 0)))
+
+(defun spw/auto-textbook ()
+  "Call `spw/textbook', guessing appropriate arguments from current directory."
+  (interactive)
+  (let* ((path (split-string default-directory "/"))
+         (grade (car (last path 4)))
+         (lesson (car (last path 3))))
+    (spw/textbook grade lesson)))
+
 (defun spw/persp-clone (new-name)
   "Clone current perspective with the name NEW-NAME."
   (interactive "sNew name: \n")
