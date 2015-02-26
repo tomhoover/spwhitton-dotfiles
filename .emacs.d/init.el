@@ -660,6 +660,7 @@
                              :test 'equal :key 'car))
               (add-to-list 'persp-basewcs pair)))
           (add-hook 'persp-created-hook 'persp-basewc-save)
+          (add-hook 'projectile-switch-project-hook 'persp-basewc-save)
           (defun persp-basewc-restore ()
             (interactive)
             (let* ((name (persp-name persp-curr))
