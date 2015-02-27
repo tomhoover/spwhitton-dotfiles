@@ -1663,7 +1663,10 @@ BINDEE may be a command or another keymap, but whatever it is, it should not be 
           'executable-make-buffer-file-executable-if-script-p)
 
 ;; always update file contents
-(setq global-auto-revert-mode t)
+(global-auto-revert-mode 1)
+
+;; and a binding to do so manually
+(bind-key "C-x C-r" (lambda () (interactive) (revert-buffer nil t)))
 
 ;; mark settings
 (setq transient-mark-mode t
