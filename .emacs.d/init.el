@@ -860,7 +860,14 @@
 
 (use-package ace-jump-mode
   :ensure
-  :bind ("M-o" . ace-jump-mode))
+  :bind ("M-o" . ace-jump-mode)
+  ;; make `ace-jump-mode' respect dired-isearch-filenames
+  ;; from https://www.reddit.com/r/emacs/comments/2x3mke/making_acejump_play_nice_with_dired/
+  :config (add-hook 'dired-mode-hook
+                    (lambda ()
+                      (setq-local ace-jump-search-filter
+                                  (lambda ()
+                                    (get-text-property (point) 'dired-filename))))))
 
 ;;; use ace-jump-mode to move between links in help file
 
@@ -1832,6 +1839,7 @@ ARG, PRED ignored."
 (use-package dired-x)
 (setq-default dired-omit-mode t)
 (setq dired-omit-files "^\\...+$")
+(setq dired-isearch-filenames 'dwim)
 
 ;; dired omit mode mapping conflicts with my ace jump mode
 ;; binding
