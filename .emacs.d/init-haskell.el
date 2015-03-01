@@ -116,7 +116,17 @@
   :init (progn (setq hi2-layout-offset 4
                      hi2-left-offset 4
                      hi2-show-indentations nil)
-               (add-hook 'haskell-mode-hook 'turn-on-hi2)))
+
+               (defun spw/hi2-pipe ()
+                 "Newline, pipe char and indent"
+                 (interactive)
+                 (hi2-newline-and-indent)
+                 (insert "|")
+                 (indent-for-tab-command)
+                 (insert " "))
+
+               (add-hook 'haskell-mode-hook 'turn-on-hi2)
+               (bind-key "C-c |" 'spw/hi2-pipe hi2-mode-map)))
 
 (use-package shm
   :disabled t
