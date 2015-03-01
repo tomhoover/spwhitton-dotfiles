@@ -1566,6 +1566,7 @@ BINDEE may be a command or another keymap, but whatever it is, it should not be 
                 ("s" . spw/persp-eshell)
                 ("d" . spw/dired-jump)
                 ("a" . spw/align-dwim)
+                ("A" . align-regexp)
 
                 ;; perspectives map
                 ("q s" . persp-switch)
