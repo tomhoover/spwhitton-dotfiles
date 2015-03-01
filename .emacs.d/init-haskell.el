@@ -8,7 +8,7 @@
 
 ;; - flycheck over flymake
 ;; - ghc-mod over ghci-ng
-;; - structured haskell mode for indentation
+;; - hi2 for indentation
 ;; - stylish-haskell over hindent
 ;; - company over AC
 
@@ -104,17 +104,18 @@
   :init (progn (setq hindent-style "johan-tibell")
                (add-hook 'haskell-mode-hook #'hindent-mode)))
 
-;;; hi2^Wshm for indentation
+;;; shm^Whi2 for indentation
 
 (use-package hi2
-  :disabled t
   :ensure
   :diminish hi2-mode
   :init (progn (setq hi2-layout-offset 4
-                     hi2-left-offset 4)
+                     hi2-left-offset 4
+                     hi2-show-indentations nil)
                (add-hook 'haskell-mode-hook 'turn-on-hi2)))
 
 (use-package shm
+  :disabled t
   :ensure
   :init (progn (setq shm-indent-spaces 4)
                (set-face-background 'shm-current-face "#4F4F4F")
