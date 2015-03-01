@@ -103,6 +103,9 @@ update =
     git checkout master
     git pull --ff-only
     git checkout $branch
+push =
+    # always make a go of pushing master
+    git push origin master
 rebase =
     # common rebasing patterns
     branch="$(git rev-parse --abbrev-ref HEAD)"
