@@ -864,6 +864,7 @@
 ;;; chat on Jabber
 
 (use-package jabber
+  :disabled t
   :ensure
   :config (progn (when (f-exists? "~/.emacs.d/init-jabber.el")
                    (load-file "~/.emacs.d/init-jabber.el")
