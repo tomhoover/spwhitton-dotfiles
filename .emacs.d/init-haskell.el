@@ -53,6 +53,10 @@
 (when (and (=  emacs-major-version 24)
            (>= emacs-minor-version 4))
   (with-eval-after-load "haskell-mode"
+    ;; Disable haskell-mode's default snippets for now.  We take the
+    ;; car of this list because that should be the latest version of
+    ;; haskell-mode.
+    (delete (car (f-glob (f-join package-user-dir "haskell-mode-*/snippets"))) yas-snippet-dirs)
     (setq flymake-allowed-file-name-masks nil)
     (remove-hook 'haskell-mode-hook (lambda ()
                                       (ghc-init)

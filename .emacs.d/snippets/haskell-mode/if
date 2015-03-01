@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# --
+if   $0${1:undefined}
+then ${2:undefined}
+else ${3:undefined}
