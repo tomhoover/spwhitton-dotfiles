@@ -37,6 +37,19 @@ ToggleWinMinimize(TheWindowTitle, TheExe)
   Return
 }
 
+KillCurrent()
+{
+  Send !{F4}
+
+  ; accept the 'are you sure you want to quit' dialogue of textbook
+  ; CDs
+  IfWinActive, ahk_class TPlayerForm
+  {
+    Sleep, 100
+    Send !y
+  }
+}
+
 IceMessenger()
 {
   CoordMode Pixel
@@ -57,7 +70,7 @@ IceMessenger()
 
 F9::ToggleWinMinimize("emacs", "c:\emacs\bin\runemacs.exe")
 F10::ToggleWinMinimize("MINGW32", "c:\Users\swhitton\Old shortcuts\Git Bash")
-F11::Send !{F4}
+F11::KillCurrent()
 F12::ToggleWinMinimize("Mozilla Firefox", "Firefox")
 
 +F9::ToggleWinMinimize("3~4", "C:\e-Book\start\TitleList.exe")
