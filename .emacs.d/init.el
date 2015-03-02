@@ -221,10 +221,17 @@
   :config (progn
             (require 'smartparens-config)
             (setq sp-navigate-consider-symbols t)
+
+            ;; global smartparens bindings
             (sp-use-smartparens-bindings)
             (bind-key "C-w" 'sp-backward-kill-word emacs-lisp-mode-map)
             (bind-key "C-k" 'sp-kill-hybrid-sexp emacs-lisp-mode-map)
             (bind-key "M-<up>" 'sp-raise-sexp smartparens-mode-map)
+
+            ;; and now undo some of that in particular major modes
+            (add-hook 'org-mode-hook (lambda ()
+                                       (crowding/local-set-minor-mode-key
+                                        'smartparens-mode (kbd "M-<up>") nil)))
 
             ;; override smartparens binding for C-k outside of lisp,
             ;; since sp-kill-hybrid-sexp isn't very smart in comint
@@ -1516,6 +1523,21 @@ With arg ARG, put shell in current window."
     (save-excursion
       (mark-paragraph)
       (call-interactively 'align))))
+
+(defun crowding/local-set-minor-mode-key (mode key def)
+  "Overrides a minor mode MODE's binding to KEY with DEF for the local buffer.
+
+Does this by creating or altering keymaps stored in buffer-local
+`minor-mode-overriding-map-alist'.
+
+From <http://stackoverflow.com/a/14769115>."
+  (let* ((oldmap (cdr (assoc mode minor-mode-map-alist)))
+         (newmap (or (cdr (assoc mode minor-mode-overriding-map-alist))
+                     (let ((map (make-sparse-keymap)))
+                       (set-keymap-parent map oldmap)
+                       (push `(,mode . ,map) minor-mode-overriding-map-alist)
+                       map))))
+    (define-key newmap key def)))
 
 
 
