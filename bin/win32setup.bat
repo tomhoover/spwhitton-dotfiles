@@ -13,6 +13,9 @@ copy /y src\dotfiles\.shenv .shenv
 mkdir %APPDATA%\cabal
 copy /y src\dotfiles\.cabal\config %APPDATA%\cabal\config
 
+REM Could generalise the following for all dirs under dotfiles/AppData/Roaming
+mklink /J %APPDATA%\VirtuaWin src\dotfiles\AppData\Roaming\VirtuaWin
+
 REM ---- END   WORK
 REM ECHO.
 REM ECHO That should be everything set-up.
