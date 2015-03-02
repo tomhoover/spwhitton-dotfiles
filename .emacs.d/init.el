@@ -1496,6 +1496,12 @@ With arg ARG, put shell in current window."
                          grade "\\CD" cd "\\start.exe"))))
     (call-process path nil 0)))
 
+(defun spw/teachers-book (grade lesson)
+  "Open the textbook's teacher's guide for grade GRADE and lesson LESSON."
+  (interactive "sGrade: \nsGrade %s, lesson: ")
+  (let* ((path (car (f-glob (concat "D:\\Teacher's guides\\*" grade "]*_" lesson "단" "*.pdf")))))
+    (find-file path)))
+
 (defun spw/auto-textbook ()
   "Call `spw/textbook', guessing appropriate arguments from current directory."
   (interactive)
@@ -1503,6 +1509,14 @@ With arg ARG, put shell in current window."
          (grade (car (last path 4)))
          (lesson (car (last path 3))))
     (spw/textbook grade lesson)))
+
+(defun spw/auto-teachers-book ()
+  "Call `spw/teachers-book', guessing appropriate arguments from current directory."
+  (interactive)
+  (let* ((path (split-string default-directory "/"))
+         (grade (car (last path 4)))
+         (lesson (car (last path 3))))
+    (spw/teachers-book grade lesson)))
 
 (defun spw/persp-clone (new-name)
   "Clone current perspective with the name NEW-NAME."
@@ -1619,7 +1633,8 @@ BINDEE may be a command or another keymap, but whatever it is, it should not be 
                 ;; Sariul launcher map
                 ("S l" . spw/tblesson)
                 ("S S" . spw/auto-textbook)
-                ("S t" . spw/textbook)
+                ("S s" . spw/textbook)
+                ("S t" . spw/auto-teachers-book)
 
                 ;; toggle map
                 ("t e" . toggle-debug-on-error)
