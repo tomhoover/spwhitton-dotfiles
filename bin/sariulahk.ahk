@@ -4,14 +4,26 @@ SetWorkingDir, C:\Users\swhitton
 ; but I've added TheExe parameter
 ToggleWinMinimize(TheWindowTitle, TheExe)
 {
+  ; If VirtuaWin is running, switch to top-left desktop before raising
+  ; or starting.  Assumes VirtuaWin's desktop wrapping is turned off!
+  Process, Exist, VirtuaWin.exe
+  VirtuaWinPID = %ErrorLevel%
+  if VirtuaWinPID != 0
+  {
+    Send ^!{Up}
+    Send ^!{Left}
+    Sleep, 200
+  }
+
+  ; main function body
   SetTitleMatchMode,2
   DetectHiddenWindows, Off
-  IfWinActive, %TheWindowTitle%
-  {
-    WinMinimize, %TheWindowTitle%
-  }
-  Else
-  {
+  ; IfWinActive, %TheWindowTitle%
+  ; {
+  ;   WinMinimize, %TheWindowTitle%
+  ; }
+  ; Else
+  ; {
     IfWinExist, %TheWindowTitle%
     {
       WinGet, winid, ID, %TheWindowTitle%
@@ -21,7 +33,7 @@ ToggleWinMinimize(TheWindowTitle, TheExe)
     {
       Run, %TheExe%
     }
-  }
+  ; }
   Return
 }
 
