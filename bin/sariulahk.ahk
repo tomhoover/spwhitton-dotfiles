@@ -105,6 +105,8 @@ IceMessenger()
 }
 
 F9::ToggleWinMinimizeByClass("Emacs", "c:\emacs\bin\runemacs.exe")
+; open a new Emacs client window
+#F9::Run, emacsclient -n -c
 F10::ToggleWinMinimize("MINGW32", "c:\Users\swhitton\Old shortcuts\Git Bash")
 F11::KillCurrent()
 F12::ToggleWinMinimize("Mozilla Firefox", "Firefox")
