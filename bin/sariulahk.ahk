@@ -12,7 +12,7 @@ ToggleWinMinimize(TheWindowTitle, TheExe)
   {
     Send ^!{Up}
     Send ^!{Left}
-    Sleep, 200
+    Sleep, 100
   }
 
   ; main function body
