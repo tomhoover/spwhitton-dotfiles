@@ -1506,7 +1506,10 @@ With arg ARG, put shell in current window."
 (defun spw/teachers-book (grade lesson)
   "Open the textbook's teacher's guide for grade GRADE and lesson LESSON."
   (interactive "sGrade: \nsGrade %s, lesson: ")
-  (let* ((path (car (f-glob (concat "D:\\Teacher's guides\\*" grade "]*_" lesson "단" "*.pdf")))))
+  (let* ((lesson-string (if (<= (string-to-number grade) 4)
+                            (concat "_" lesson "단")
+                          (concat "L" lesson "-")))
+         (path (car (f-glob (concat "D:\\Teacher's guides\\*" grade "]*" lesson-string "*.pdf")))))
     (find-file path)))
 
 (defun spw/auto-textbook ()
