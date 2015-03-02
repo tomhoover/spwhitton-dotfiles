@@ -37,6 +37,42 @@ ToggleWinMinimize(TheWindowTitle, TheExe)
   Return
 }
 
+; same but by class not title
+ToggleWinMinimizeByClass(TheWindowClass, TheExe)
+{
+  ; If VirtuaWin is running, switch to top-left desktop before raising
+  ; or starting.  Assumes VirtuaWin's desktop wrapping is turned off!
+  Process, Exist, VirtuaWin.exe
+  VirtuaWinPID = %ErrorLevel%
+  if VirtuaWinPID != 0
+  {
+    Send ^!{Up}
+    Send ^!{Left}
+    Sleep, 100
+  }
+
+  ; main function body
+  SetTitleMatchMode,2
+  DetectHiddenWindows, Off
+  ; IfWinActive, %TheWindowTitle%
+  ; {
+  ;   WinMinimize, %TheWindowTitle%
+  ; }
+  ; Else
+  ; {
+    IfWinExist, ahk_class %TheWindowClass%
+    {
+      WinGet, winid, ID, ahk_class %TheWindowClass%
+      DllCall("SwitchToThisWindow", "UInt", winid, "UInt", 1)
+    }
+    Else
+    {
+      Run, %TheExe%
+    }
+  ; }
+  Return
+}
+
 KillCurrent()
 {
   Send !{F4}
@@ -68,7 +104,7 @@ IceMessenger()
   Send, {Down}
 }
 
-F9::ToggleWinMinimize("emacs", "c:\emacs\bin\runemacs.exe")
+F9::ToggleWinMinimizeByClass("Emacs", "c:\emacs\bin\runemacs.exe")
 F10::ToggleWinMinimize("MINGW32", "c:\Users\swhitton\Old shortcuts\Git Bash")
 F11::KillCurrent()
 F12::ToggleWinMinimize("Mozilla Firefox", "Firefox")
