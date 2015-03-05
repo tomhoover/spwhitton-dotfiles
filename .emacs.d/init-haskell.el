@@ -23,7 +23,6 @@
 (require 'flycheck)
 (require 'use-package)
 (require 'bind-key)
-(require 'haskell-flycheck)
 
 ;;; haskell mode does most of our work
 
@@ -43,6 +42,10 @@
 
           ;; Start up all my usual minor modes and bindings.
           (add-hook 'haskell-mode-hook 'spw/haskell-mode-hook)))
+
+;; load haskell-flycheck only once haskell-mode is loaded
+
+(require 'haskell-flycheck)
 
 ;;; Try to kill off flymake since init.el is starting flycheck.  Also
 ;;; remove a call to flymake-mode (add the call to `ghc-init' back in

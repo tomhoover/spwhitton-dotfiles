@@ -319,10 +319,6 @@
   :diminish org-indent-mode
   :config (load "~/.emacs.d/init-org.el"))
 
-;;; Haskell
-
-(load "~/.emacs.d/init-haskell.el")
-
 ;;; keep pop up windows under control
 
 (use-package popwin
@@ -1003,6 +999,10 @@
 ;;; edit .nix files
 
 (use-package nix-mode :ensure)
+
+;;; Haskell (load after packages that it depends on)
+
+(load "~/.emacs.d/init-haskell.el")
 
 
 
