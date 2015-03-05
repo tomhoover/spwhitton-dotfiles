@@ -139,7 +139,8 @@ skip = ! which stow >/dev/null && ! win32
 
 # similarly for .stow-global-ignore
 fixups =
-    # first rehash cos maybe we just stowed
+    # first fix $PATH and rehash cos maybe we just stowed
+    . $HOME/.shenv
     hash -r
     if ! win32; then
         ln -sf ~/src/dotfiles/home-mrconfig ~/.mrconfig

@@ -44,12 +44,12 @@ fi
 ln -sf $HOME/src/dotfiles/home-mrconfig $HOME/.mrconfig
 
 # remove extra stuff that unskel doesn't
-rm $HOME/.cabal/config
+rm -f $HOME/.cabal/config
 
 # unskel can't catch these for root cos they're slightly different on
 # Debian Stable
 if [ "$USER" = "root" ]; then
-    rm $HOME/.bashrc $HOME/.profile
+    rm -f $HOME/.bashrc $HOME/.profile
 fi
 
 mr stow
