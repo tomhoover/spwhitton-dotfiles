@@ -1,1 +1,1 @@
-#+DATE: $0
+#+DATE: ${1:`(progn (org-insert-time-stamp (current-time) nil 'inactive) "")`}
