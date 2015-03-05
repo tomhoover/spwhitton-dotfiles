@@ -8,10 +8,13 @@ set -e
 STOWURL="http://ftp.gnu.org/gnu/stow/stow-2.2.0.tar.gz"
 cd $HOME
 
-# 1. install our two small helper scripts
+# seems to be needed for a find command run at some point; not sure
+# where but I see the output of find failing to find this dir
+mkdir -p $HOME/local/src
 
-if ! which stow; then
-    mkdir -p $HOME/local/src
+# 1. install our two small helper scripts (UNTESTED)
+
+if ! which stow >/dev/null; then
     cd $HOME/local/src
     curl -O $STOWURL
     tar xfz stow-*
@@ -19,7 +22,7 @@ if ! which stow; then
     ./configure --prefix=$HOME/local && make install
     cd $HOME
 fi
-if ! which mr; then
+if ! which mr >/dev/null; then
     mkdir -p $HOME/local/bin
     cp $HOME/src/dotfiles/bin/mr $HOME/local/bin
 fi
@@ -27,11 +30,11 @@ fi
 # 2. check those installs
 
 hash -r
-if ! which stow; then
+if ! which stow >/dev/null; then
     echo "still can't find stow :(" >&2
     exit 1
 fi
-if ! which mr; then
+if ! which mr >/dev/null; then
     echo "still can't find mr :(" >&2
     exit 1
 fi
@@ -39,7 +42,7 @@ fi
 # 3. use those scripts to do the setup
 
 ln -sf $HOME/src/dotfiles/home-mrconfig $HOME/.mrconfig
-$HOME/src/dotfiles/bin/unskel
+# $HOME/src/dotfiles/bin/unskel
 mr stow
 mr fixups
 
