@@ -250,15 +250,16 @@
 ;; have one so can easily search it manually
 (setq org-agenda-text-search-extra-files nil)
 
-(with-current-buffer (find-file-noselect org-agenda-files)
-  (dolist (file (directory-files org-directory nil "\\.org$" t))
-    (save-excursion
-      (goto-char (point-min))
-      ;; search for the file name in ~/doc/org-agenda-files.  If it's
-      ;; there, don't add to the list: agenda files are included in
-      ;; text searches automatically
-      (if (not (search-forward file nil t))
-          (add-to-list 'org-agenda-text-search-extra-files (concat "~/doc/org/" file))))))
+(when (file-exists-p abbrev-file-name)
+  (with-current-buffer (find-file-noselect org-agenda-files)
+    (dolist (file (directory-files org-directory nil "\\.org$" t))
+      (save-excursion
+        (goto-char (point-min))
+        ;; search for the file name in ~/doc/org-agenda-files.  If it's
+        ;; there, don't add to the list: agenda files are included in
+        ;; text searches automatically
+        (if (not (search-forward file nil t))
+            (add-to-list 'org-agenda-text-search-extra-files (concat "~/doc/org/" file)))))))
 
 ;; remove my massive archive file; can search that manually if necessary
 (delete "~/doc/org/archive.org" org-agenda-text-search-extra-files)
