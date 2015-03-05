@@ -229,8 +229,8 @@ post_checkout =
     git remote add -f upstream git://github.com/joeyh/propellor.git
     cabal sandbox init
     cabal install --only-dependencies
-    if ! which propellor > /dev/null; then
-        cd && halcyon install propellor
+    if ! which propellor > /dev/null && [ -d "/nix" ]; then
+        cd && nix-env -iA nixpkgs.haskellngPackages.propellor
     fi
 post_update = git fetch upstream
 # check that the link isn't already in place before making the link
