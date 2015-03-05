@@ -8,6 +8,7 @@ mklink /J bin src\dotfiles\bin
 mklink /J tmp Desktop
 copy /y src\dotfiles\home-mrconfig .mrconfig
 copy /y src\dotfiles\.gitconfig .gitconfig
+copy /y src\dotfiles\.globgitignore .globgitignore
 copy /y src\dotfiles\.bashrc .bashrc
 copy /y src\dotfiles\.shenv .shenv
 mkdir %APPDATA%\cabal
