@@ -7,7 +7,7 @@ feh_*_filelist
 *ltxpng
 flycheck_*
 *_flymake*
-*/.cabal-sandbox/*
+*.cabal-sandbox*
 cabal.sandbox.config
 shell.nix
 
