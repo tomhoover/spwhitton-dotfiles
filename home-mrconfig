@@ -154,6 +154,8 @@ fixups =
     git config branch.autosetuprebase always
     # update crontab
     if ! win32; then
+        # use absolute path because maybe we only just stowed so this
+        # shell doesn't have $PATH setup by .shenv
         $HOME/bin/loadcron
     fi
     if win32; then
