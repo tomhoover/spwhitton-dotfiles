@@ -347,9 +347,10 @@
           (add-hook 'kill-emacs-hook 'save-place-kill-emacs-hook)
           (add-hook 'kill-buffer-hook 'save-place-to-alist)))
 
-;;; fix up whitespace around kill and yanking
+;;; fix up whitespace around kill and yanking (package seems to be
+;;; unavailable for download)
 
-(use-package smart-whitespace-comment-fixup :ensure
+(use-package smart-whitespace-comment-fixup :disabled t :ensure
   ;; the advice that this package applies to indent-for-tab-command
   ;; uses a function (line-matches) which doesn't seem to exist
   :config (ad-deactivate 'indent-for-tab-command))
@@ -563,13 +564,16 @@
                 (goto-char (point-min))
                 (insert "#+TITLE: ")))))
 
+;;; The following two python packages seem to be unavailable for
+;;; download.  Disable them for now.
+
 ;;; allow lisp to interact with python
 
-(use-package pymacs :ensure)
+(use-package pymacs :disabled t :ensure)
 
 ;;; Get Python documentation as info files
 
-(use-package python-info :ensure)
+(use-package python-info :disabled t :ensure)
 ;;(use-package pydoc-info :ensure)
 
 ;;; flycheck
