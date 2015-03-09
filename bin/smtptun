@@ -49,10 +49,10 @@ nc localhost 8025
 # started netcat, then it's safe from the -O cancel we do here).  A
 # crude check.
 
-if ssh -O check -S $ALTSOCKET $REMHOST 2>/dev/null; then
-    us=$(basename $0)
-    count=$(pgrep $us | wc -l)
-    if ! [ "$count" -gt 1 ]; then
-        ssh -O cancel $FORWARD -S $ALTSOCKET $REMHOST
-    fi
-fi
+# if ssh -O check -S $ALTSOCKET $REMHOST 2>/dev/null; then
+#     us=$(basename $0)
+#     count=$(pgrep $us | wc -l)
+#     if ! [ "$count" -gt 3 ]; then
+#         ssh -O cancel $FORWARD -S $ALTSOCKET $REMHOST
+#     fi
+# fi
