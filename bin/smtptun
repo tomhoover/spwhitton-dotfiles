@@ -21,9 +21,12 @@ FORWARD="-L localhost:8025:mx.sdf.org:25"
 # as root in order to be able to command the socket to add the port
 # forward.
 
-if ssh -O check -S $ALTSOCKET $REMHOST 2>/dev/null; then
-    ssh -O forward $FORWARD -S $ALTSOCKET $REMHOST
-else
+# if ssh -O check -S $ALTSOCKET $REMHOST 2>/dev/null; then
+#     # Check the port isn't already bound ...
+#     if ! ssh -O check -S $SOCKET $REMHOST 2>/dev/null; then
+#         ssh -O forward $FORWARD -S $ALTSOCKET $REMHOST
+#     fi
+# else
 
     # Now see if another invocation of this script has already constructed a tunnel.
     if ! ssh -O check -S $SOCKET $REMHOST 2>/dev/null; then
@@ -36,7 +39,7 @@ else
             -f -N $FORWARD $REMHOST # `-i /root/.ssh/id_rsa' is implicit
 
     fi
-fi
+# fi
 
 # Now connect to the tunnel we just made.
 
