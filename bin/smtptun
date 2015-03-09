@@ -1,0 +1,30 @@
+#!/bin/sh
+. $HOME/.shenv
+
+# Make a tunnel with SSH to send e-mail via the SDF mail exchanger,
+# and then netcat to that tunnel.  Designed to be run by xinetd.
+
+# An alternative approach is to just run `ssh foo@bar nc ..' but doing
+# it with a port-forward means that our SSH can be restricted to the
+# command rrsync and a particular port-forward, rather than netcat so
+# we can use one SSH key for both purposes.
+
+# Interesting notes for doing this on Windows:
+# <http://www.greenend.org.uk/rjk/sshfwd/>
+
+SOCKET="$HOME/tmp/smtptun_sock"
+REMHOST="spw@ma.sdf.org"
+
+# Check if tunnel is running.  If it isn't, create it.
+
+if ! ssh -O check -S $SOCKET $REMHOST 2>/dev/null; then
+    # Set up the tunnel (only accessible from localhost) and time it
+    # out after two minutes of no e-mails being sent.
+    ssh -M -S $SOCKET -o "ControlPersist=120s" \
+        -f -N -L localhost:8025:mx.sdf.org:25 \
+        $REMHOST # `-i /root/.ssh/id_rsa' is implicit
+fi
+
+# Now connect to the tunnel we just made.
+
+nc localhost 8025
