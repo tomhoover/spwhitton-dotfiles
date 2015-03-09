@@ -41,3 +41,18 @@ fi
 # Now connect to the tunnel we just made.
 
 nc localhost 8025
+
+# Remove forwarding from swhitton's connection if we added it, and no
+# other script invocations are using it (to prevent a situation where
+# the other script has started and passed the if-statement to not
+# construct the tunnel, but hasn't started netcat yet (if it's already
+# started netcat, then it's safe from the -O cancel we do here).  A
+# crude check.
+
+if ssh -O check -S $ALTSOCKET $REMHOST 2>/dev/null; then
+    us=$(basename $0)
+    count=$(pgrep $us | wc -l)
+    if ! [ "$count" -gt 1 ]; then
+        ssh -O cancel $FORWARD -S $ALTSOCKET $REMHOST
+    fi
+fi
