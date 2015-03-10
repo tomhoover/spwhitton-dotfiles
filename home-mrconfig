@@ -146,7 +146,9 @@ fixups =
         mkdir -p $HOME/tmp $HOME/src $HOME/local/src $HOME/local/bin $HOME/local/big $HOME/local/lib $HOME/local/pub
         touch $HOME/local/big/.duplicity-ignore
         touch $HOME/.ssh/known_hosts
-        makecabalconf
+        # use absolute path because maybe we only just stowed so this
+        # shell doesn't have $PATH setup by .shenv
+        $HOME/bin/makecabalconf
     fi
     # we don't want git doing any automated merges of master, or other
     # intermediate branches.  mr is configured not to do this (see
