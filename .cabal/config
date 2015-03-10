@@ -1,7 +1,9 @@
 -- Cabal library version: 1.22.0.0
 -- cabal-install version: 1.22.0.0
 
-require-sandbox: True
+# Propellor requires sandboxes to be disabled for root.
+# require-sandbox: True
+
 remote-repo: hackage.haskell.org:http://hackage.haskell.org/packages/archive
 remote-repo-cache: /home/swhitton/.cabal/packages
 world-file: /home/swhitton/.cabal/world
