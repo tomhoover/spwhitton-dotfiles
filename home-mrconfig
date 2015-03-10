@@ -148,7 +148,7 @@ fixups =
         touch $HOME/.ssh/known_hosts
         # use absolute path because maybe we only just stowed so this
         # shell doesn't have $PATH setup by .shenv
-        $HOME/bin/makecabalconf
+        $HOME/bin/mkcabalc
     fi
     # we don't want git doing any automated merges of master, or other
     # intermediate branches.  mr is configured not to do this (see
