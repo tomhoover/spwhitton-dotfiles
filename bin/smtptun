@@ -16,6 +16,7 @@ SOCKET="$HOME/tmp/smtptun_sock"
 ALTSOCKET="/tmp/ssh-swhitton-spw@ma.sdf.org:22"
 REMHOST="spw@ma.sdf.org"
 FORWARD="-L localhost:8025:mx.sdf.org:25"
+ID="-i $HOME/.ssh/id_rsa"
 
 # First see if I'm SSHing to the MetaArray already.  Requires running
 # as root in order to be able to command the socket to add the port
@@ -36,7 +37,7 @@ FORWARD="-L localhost:8025:mx.sdf.org:25"
         # getting sent down it.
 
         ssh -M -S $SOCKET -o "ControlPersist=120s" \
-            -f -N $FORWARD $REMHOST # `-i /root/.ssh/id_rsa' is implicit
+            -f -N $FORWARD $REMHOST $ID
 
     fi
 # fi
