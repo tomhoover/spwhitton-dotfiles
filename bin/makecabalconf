@@ -1,16 +1,28 @@
+#!/bin/sh
+. $HOME/.shenv
+
+# Create my cabal config file, which needs to be different for root
+# and must contain absolute path to home directory (AFAICT).
+
+if [ "$USER" = "root" ]; then
+    sandbox="False"
+else
+    sandbox="True"
+fi
+
+mkdir -p $HOME/.cabal
+cat > $HOME/.cabal/config << EOF
 -- Cabal library version: 1.22.0.0
 -- cabal-install version: 1.22.0.0
 
-# Propellor requires sandboxes to be disabled for root.
-# require-sandbox: True
-
+require-sandbox: $sandbox
 remote-repo: hackage.haskell.org:http://hackage.haskell.org/packages/archive
-remote-repo-cache: /home/swhitton/.cabal/packages
-world-file: /home/swhitton/.cabal/world
-extra-prog-path: /home/swhitton/.cabal/bin
-build-summary: /home/swhitton/.cabal/logs/build.log
+remote-repo-cache: $HOME/.cabal/packages
+world-file: $HOME/.cabal/world
+extra-prog-path: $HOME/.cabal/bin
+build-summary: $HOME/.cabal/logs/build.log
 remote-build-reporting: anonymous
-jobs: $ncpus
+jobs: \$ncpus
 
 -- The following line is suggested by
 -- <http://www.vex.net/~trebla/haskell/cabal-cabal.xhtml>.
@@ -24,3 +36,4 @@ jobs: $ncpus
 documentation: True
 haddock
   hyperlink-source: True
+EOF
