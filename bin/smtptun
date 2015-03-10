@@ -44,7 +44,13 @@ ID="-i $HOME/.ssh/id_rsa"
         # localhost and have it time out after two minutes of no e-mails
         # getting sent down it.
 
-        ssh -M -S $SOCKET -o "ControlPersist=120s" \
+        # Due to an OpenSSH bug
+        # <https://bugzilla.mindrot.org/show_bug.cgi?id=1988>, we
+        # persist the socket for only five seconds.  The following SSH
+        # process hangs on to STDERR, which means this script doesn't
+        # exit once the netcat command is finished.
+
+        ssh -M -S $SOCKET -o "ControlPersist=5s" \
             -f -N $FORWARD $REMHOST $ID
 
     fi
