@@ -1,4 +1,12 @@
 #!/bin/sh
+
+# fix $HOME when run from xinetd (which does run it as root...)
+if [ "$HOME" = "/" ]; then
+    HOME=/root
+    export HOME
+fi
+
+# set up standard environment
 . $HOME/.shenv
 
 # Make a tunnel with SSH to send e-mail via the SDF mail exchanger,
