@@ -5,6 +5,10 @@ set -e
 
 ulimit -n 1024
 
+# we want python 2 not python 3
+PATH=/usr/bin:$PATH
+export PATH
+
 case "$(hostname -f)" in
     "ma.sdf.org")
         cd $HOME/src/dotfiles
