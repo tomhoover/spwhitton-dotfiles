@@ -1,8 +1,8 @@
 #!/bin/sh
 
 # fix $HOME when run from xinetd (which does run it as root...)
-if [ "$HOME" = "/" ]; then
-    HOME=/root
+if [ "$HOME" = "/" -o "$HOME" = "" ]; then
+    HOME="/root"
     export HOME
 fi
 
