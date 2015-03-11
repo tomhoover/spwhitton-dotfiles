@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#export MOSH_TITLE_NOPREFIX=true
+export MOSH_TITLE_NOPREFIX=true
 
 openurxvt ()
 {
