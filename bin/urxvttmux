@@ -16,22 +16,15 @@ else
     launchcmd="mosh $1 tmux attach"
 fi
 
-echo $tmuxtitle
-echo $launchcmd
-
 currwin=$(xprop -id $(xprop -root _NET_ACTIVE_WINDOW | cut -d ' ' -f 5) WM_NAME | cut -d '"' -f 2)
 
-echo $currwin
 # if we're already looking at tmux, maximise it
 if [ "$currwin" = "$tmuxtitle" ]; then
-    echo "trying to maximise"
     sleep 0.2
     wmctrl -r :ACTIVE: -b add,maximized_vert,maximized_horz
 else
     # We're not looking at tmux.  Try to raise it.  If that fails, launch it.b
-    echo "trying to raise"
     if ! wmctrl -a "$tmuxtitle"; then
-        echo "trying to launch"
         openurxvt $launchcmd
     fi
 fi
