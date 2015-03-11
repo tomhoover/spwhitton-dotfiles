@@ -2,18 +2,25 @@
 
 export MOSH_TITLE_NOPREFIX=true
 
+# check if username was supplied
+if [ "$1" = "${1/@/}" ]; then
+    input="$USER@$1"
+else
+    input="$1"
+fi
+
 openurxvt ()
 {
     cmd="$@"
     urxvt ++iso14755 ++iso14755_52 -title "$tmuxtitle" -e /bin/sh -c "$cmd" &
 }
 
-if [ "$1" = "local" ]; then
+if [ "$input" = "local" ]; then
     tmuxtitle="$USER@$(hostname -s)"
     launchcmd="tmux attach"
 else
-    tmuxtitle="$1"
-    launchcmd="mosh $1 tmux attach"
+    tmuxtitle="$input"
+    launchcmd="mosh $input tmux attach"
 fi
 
 currwin=$(xprop -id $(xprop -root _NET_ACTIVE_WINDOW | cut -d ' ' -f 5) WM_NAME | cut -d '"' -f 2)
