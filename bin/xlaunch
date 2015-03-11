@@ -12,20 +12,9 @@ case $1 in
         wmctrl -a emacs@`hostname -f` || emacsclient -c -F "((fullscreen . maximized))" &        
         ;;
     ma)
-        wmctrl -a "spw@ma" || urxvtma &
+        urxvttmux "spw@ma"
         ;;
     term)
-        currwin=$(xprop -id $(xprop -root _NET_ACTIVE_WINDOW | cut -d ' ' -f 5) WM_NAME | cut -d '"' -f 2)
-        tmuxtitle="terms"
-        # if we're already looking at tmux, maximise it
-        if [ "$currwin" = "$tmuxtitle" ]; then
-            sleep 0.2
-            wmctrl -r :ACTIVE: -b add,maximized_vert,maximized_horz
-        else
-            # We're not looking at tmux.  Try to raise it.  If that fails, launch it.b
-            if ! wmctrl -a "$tmuxtitle"; then
-                urxvt ++iso14755 ++iso14755_52 -title "$tmuxtitle" -e /bin/sh -c 'tmux attach' &
-            fi
-        fi
+        urxvttmux local
         ;;
 esac
