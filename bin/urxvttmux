@@ -15,7 +15,7 @@ openurxvt ()
     urxvt ++iso14755 ++iso14755_52 -title "$tmuxtitle" -e /bin/sh -c "$cmd" &
 }
 
-if [ "$input" = "local" ]; then
+if [ "$input" = "swhitton@local" ]; then
     tmuxtitle="$USER@$(hostname -s)"
     launchcmd="tmux attach"
 else
