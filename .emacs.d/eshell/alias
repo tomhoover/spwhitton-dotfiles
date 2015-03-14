@@ -10,6 +10,7 @@ alias git-rebase-host-branch git rebase master;git checkout ${hostname};git reba
 alias git-push-host-branch git push origin master +${hostname}
 alias workgit cd ~/doc;git add org/*.org;git commit -a -e -m "work commit";git push
 alias sonatarc cd ~/src/dotfiles;git checkout .config/sonata/sonatarc;cd -
+alias newtorrents mv ~/tmp/*.torrent ~/local/rt/watch
 
 # fix stuff in the folder mounted on classroom computer that isn't
 # readable by the classroom computer's user
