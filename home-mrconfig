@@ -342,6 +342,9 @@ pre_update = if ! win32; then doccheckin; fi
 # ... and let me do it manually
 autoci = doccheckin
 
+# quick syncs
+sync = doccheckin && git pull && git push
+
 # after pulling, update the online copy of my Org-mode agenda
 # currently disabled because it's slow and with a computer at work I've not been checking this online copy
 # post_update = echo -n "Updating web calendar... ";emacs -batch -l ~/.emacs.d/init.el -eval "(org-batch-store-agenda-views)" >/dev/null 2>/dev/null;echo "hopefully done."

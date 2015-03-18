@@ -4,7 +4,7 @@ alias g git $*
 alias d dired $1
 alias ga git annex $*
 alias blank sleep 1;xset dpms force off
-alias docs cd ~/doc;mr autoci;git pull;git push
+alias docs cd ~/doc && mr sync
 alias annex-to-ma cd ~/lib/annex;ga copy -t metaarray --auto --fast
 alias git-rebase-host-branch git rebase master;git checkout ${hostname};git rebase master
 alias git-push-host-branch git push origin master +${hostname}
