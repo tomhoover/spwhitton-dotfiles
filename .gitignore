@@ -13,3 +13,5 @@
 /.emacs.d/projectile.cache
 /.emacs.d/server/
 /bin/spw.pyc
+.gnupg/secring.gpg
+.gnupg/pubring.gpg
