@@ -52,7 +52,9 @@ if [ "$USER" = "root" ]; then
     rm -f $HOME/.bashrc $HOME/.profile
 fi
 
+cd $HOME/src/dotfiles
 mr stow
 mr fixups
+cd $HOME
 
 echo "Dotfiles should be stowed into $HOME.  You should check out the host-specific branch and restow, if it exists, and then run 'mr --force co' to get all my other repos."
