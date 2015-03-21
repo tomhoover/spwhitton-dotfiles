@@ -10,6 +10,7 @@ flycheck_*
 *.cabal-sandbox*
 cabal.sandbox.config
 shell.nix
+TAGS
 
 # now ignoring LaTeX junk because I'm not going to check it in anymore
 *.aux
