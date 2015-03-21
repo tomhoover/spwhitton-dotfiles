@@ -31,17 +31,8 @@
   :mode (("\\.hs\\'" . haskell-mode)
          ("\\.cabal\\'" . haskell-cabal-mode)
          ("\\.hcr\\'" . haskell-core-mode))
-  :init (progn
-          ;; Wrap up interactive shell in nix and cabal reply.  Might
-          ;; be set in directory variables instead.  Or might get set
-          ;; conditionally, if shell.nix file exists.
-          (setq haskell-process-type 'ghci)
-          (setq haskell-process-wrapper-function
-                (lambda (argv) (append (list "nix-shell" "-I" "." "--command" )
-                                       (list (mapconcat 'identity argv " ")))))
-
-          ;; Start up all my usual minor modes and bindings.
-          (add-hook 'haskell-mode-hook 'spw/haskell-mode-hook)))
+  ;; Start up all my usual minor modes and bindings.
+  :init (add-hook 'haskell-mode-hook 'spw/haskell-mode-hook))
 
 ;; load haskell-flycheck only once haskell-mode is loaded
 
@@ -98,7 +89,17 @@
   ;;; make sure haskell-flycheck checker being used?
 
   (when (fboundp 'flycheck-disable-checker)
-    (flycheck-disable-checker 'haskell-ghc)))
+    (flycheck-disable-checker 'haskell-ghc))
+
+  ;; When I've created a shell.nix in the project root, use nix-shell
+  ;; to run ghci and cabal.
+  (when (f-exists? (projectile-expand-root "shell.nix"))
+    (make-local-variable 'haskell-process-type)
+    (make-local-variable 'haskell-process-wrapper-function)
+    (setq haskell-process-type 'ghci)
+    (setq haskell-process-wrapper-function
+          (lambda (argv) (append (list "nix-shell" "-I" "." "--command" )
+                                 (list (mapconcat 'identity argv " ")))))))
 
 ;;; hindent for reformatting code
 
