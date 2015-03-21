@@ -44,6 +44,7 @@ alias ls="ls -F --color=always"
 alias ll="ls -al"
 alias g="git"
 alias ga="git annex"
+alias gs="git status"
 alias pg="ps auxxxxxxxxxxxxxxxxxxx | grep"
 
 alias fixmpd="sudo invoke-rc.d mpd restart; pkill sonata"
