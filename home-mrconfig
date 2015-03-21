@@ -140,15 +140,12 @@ skip = ! which stow >/dev/null && ! win32
 # similarly for .stow-global-ignore
 fixups =
     if ! win32; then
-        ln -sf ~/src/dotfiles/home-mrconfig ~/.mrconfig
-        ln -sf ~/src/dotfiles/.stow-global-ignore ~
-        mkdir -p ~/local/mutt ~/.ssh
+        ln -sf $HOME/src/dotfiles/home-mrconfig $HOME/.mrconfig
+        ln -sf $HOME/src/dotfiles/.stow-global-ignore $HOME
+        mkdir -p $HOME/local/mutt $HOME/.ssh
         mkdir -p $HOME/tmp $HOME/src $HOME/local/src $HOME/local/bin $HOME/local/big $HOME/local/lib $HOME/local/pub
         touch $HOME/local/big/.duplicity-ignore
         touch $HOME/.ssh/known_hosts
-        # use absolute path because maybe we only just stowed so this
-        # shell doesn't have $PATH setup by .shenv
-        $HOME/bin/mkcabalc
     fi
     # we don't want git doing any automated merges of master, or other
     # intermediate branches.  mr is configured not to do this (see
@@ -161,6 +158,7 @@ fixups =
         # use absolute path because maybe we only just stowed so this
         # shell doesn't have $PATH setup by .shenv
         $HOME/bin/loadcron
+        $HOME/bin/mkcabalc
     fi
     if win32; then
         cd ~/src/dotfiles/bin
