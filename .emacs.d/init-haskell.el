@@ -32,7 +32,8 @@
          ("\\.cabal\\'" . haskell-cabal-mode)
          ("\\.hcr\\'" . haskell-core-mode))
   ;; Start up all my usual minor modes and bindings.
-  :init (add-hook 'haskell-mode-hook 'spw/haskell-mode-hook))
+  :init (add-hook 'haskell-mode-hook 'spw/haskell-mode-hook)
+  :config (setq haskell-tags-on-save t))
 
 ;; load haskell-flycheck only once haskell-mode is loaded
 
@@ -76,6 +77,7 @@
   (bind-key "M-/" 'dabbrev-expand interactive-haskell-mode-map)
 
   (bind-key "C-c C-b" 'haskell-interactive-bring interactive-haskell-mode-map)
+  ;; (bind-key "C-x C-s" 'haskell-mode-save-buffer interactive-haskell-mode-map)
 
   ;; suggested bindings from Chris Done
 
