@@ -12,5 +12,5 @@ if [ "$1" = "" ]; then
 fi
 filename=$(date +$HOME/tmp/$1_%F_%H:%M:%S.txt)
 echo "running $@ at $(date +%F\ %H:%M:%S)\n" >> $filename
-unbuffer $@ | ts 2>&1 >> $filename
+unbuffer $@ | ts 2>&1 | tee -a $filename
 echo "" >> $filename
