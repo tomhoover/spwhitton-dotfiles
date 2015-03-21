@@ -35,7 +35,7 @@ if [ -d "$dir" ]; then
 	echo
 	if [ -e "$dir/common" ]; then
 	    echo "# From $dir/common:"
-	    sed "s!\$HOME!$HOME!" < "$dir/common"
+	    sed "s!\$HOME!$HOME!g" < "$dir/common"
 	    echo
 	fi
 	hostfile="$dir/`hostname -f`"
