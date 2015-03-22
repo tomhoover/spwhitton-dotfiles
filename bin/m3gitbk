@@ -47,6 +47,8 @@ status processing dotfiles.git from github
 gitbk git@github.com:spwhitton/dotfiles.git $DEST/github
 status processing propellor.git from github
 gitbk git@github.com:spwhitton/propellor.git $DEST/github
+status processing sariulclocks.git from github
+gitbk git@github.com:spwhitton/sariulclocks.git $DEST/github
 
 # Stage 3 : Backup other repos ad hoc
 
