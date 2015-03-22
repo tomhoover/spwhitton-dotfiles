@@ -243,9 +243,9 @@ post_update = git fetch upstream
 fixups = if ! [ -L ~/.propellor ]; then ln -sf ~/src/propellor ~/.propellor; fi
 
 # Skip if we're on Windows (where there's no hope, let's be honest
-# here), or I haven't got halcyon up and running yet (see comproc.org
-# for how to do that).
-skip = ! [ -d "$HOME/local/app/halcyon" ] || win32
+# here), or I haven't got GHC and friends up and running yet (see
+# comproc.org for how to do that).
+skip = (! whereis cabal >/dev/null) || win32
 
 # --- primary git annex
 
