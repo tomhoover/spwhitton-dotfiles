@@ -1206,10 +1206,17 @@ automatically."
    (if (equal current-language-environment "English")
        "Korean" "English")))
 
+;; <menu> should activate ibus Korean typing but in case we want the
+;; Emacs version, bind that to S-<menu>.  Hanja key is the same as the
+;; key imenu uses: Alt Gr.  I might want to use this as a compose key
+;; outside of Emacs but only when Hangeul typing is disabled so it's
+;; okay to find it for this purpose.
+
 (bind-key "S-<menu>" 'spw/toggle-language-environment)
-;; and for Apple keyboard
-(bind-key "S-<Multi_key>" 'spw/toggle-language-environment)
-;; kill the one korea-utils.el seems to be setting
+(bind-key "<Multi_key>" 'hangul-to-hanja-conversion)
+
+;; kill the binding korea-utils.el seems to be setting
+
 (global-unset-key (kbd "S-SPC"))
 
 (defun spw/centre-window (arg)
