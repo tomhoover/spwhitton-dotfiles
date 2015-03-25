@@ -1042,6 +1042,7 @@ narrowed."
   "Activate my prose writing features."
   (wc-mode 1)
   (variable-pitch-mode 1)
+  (setq-local cursor-type 'bar)
   (unless (or (eq system-type 'windows-nt)
               (not (fboundp 'set-fringe-mode)))
     (centered-window-mode 1)
@@ -1058,6 +1059,7 @@ narrowed."
   "Deactivate my prose writing features."
   (wc-mode 0)
   (variable-pitch-mode 0)
+  (setq-local cursor-type 'box)
   (unless (or (eq system-type 'windows-nt)
               (not (fboundp 'set-fringe-mode)))
     (centered-window-mode 0)
