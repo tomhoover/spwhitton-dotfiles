@@ -1049,8 +1049,9 @@ narrowed."
     ;; window mode
     (when (eq major-mode 'org-mode)
       (org-indent-mode 0)))
-  (if (or (eq system-type 'windows-nt)
-          (not (fboundp 'set-fringe-mode)))
+  (if (and (or (eq system-type 'windows-nt)
+               (not (fboundp 'set-fringe-mode)))
+           (> (window-width) 120))
       (spw/centre-window nil)))
 
 (defun spw/writing-off ()
@@ -1065,8 +1066,9 @@ narrowed."
     (when (eq major-mode 'org-mode)
       ;; TODO: finesse this.  don't turn it on if it wouldn't be on by default
       (org-indent-mode 1)))
-  (if (or (eq system-type 'windows-nt)
-          (not (fboundp 'set-fringe-mode)))
+  (if (and (or (eq system-type 'windows-nt)
+               (not (fboundp 'set-fringe-mode)))
+           (> (window-width) 120))
       (delete-other-windows)))
 
 (defun spw/writing-toggle ()
