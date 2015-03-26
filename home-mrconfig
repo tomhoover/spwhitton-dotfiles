@@ -245,7 +245,7 @@ fixups = if ! [ -L ~/.propellor ]; then ln -sf ~/src/propellor ~/.propellor; fi
 # Skip if we're on Windows (where there's no hope, let's be honest
 # here), or I haven't got GHC and friends up and running yet (see
 # comproc.org for how to do that).
-skip = (! whereis cabal >/dev/null) || win32
+skip = win32 || (! whereis cabal >/dev/null)
 
 # --- primary git annex
 
