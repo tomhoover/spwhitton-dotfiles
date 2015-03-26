@@ -108,7 +108,7 @@
 ;;; cursor settings
 
 (setq x-stretch-cursor t)
-(setq-default cursor-type 'box)
+(setq-default cursor-type 'bar)
 (if (fboundp 'blink-cursor-mode) (blink-cursor-mode 0)) ; turns off blink-cursor-mode if it ended up on
 
 ;; get the mouse out of the way
@@ -1008,6 +1008,34 @@
 ;;; Haskell (load after packages that it depends on)
 
 (load "~/.emacs.d/init-haskell.el")
+
+;;; god-mode to save my hands
+
+(use-package god-mode
+  :ensure
+  :config (progn
+            ;; (unless god-global-mode (god-mode))
+
+            ;; activate with a key-chord to avoid having to have
+            ;; capslock bound to both escape and control
+            (use-package key-chord
+              :ensure
+              :init (progn
+                      (key-chord-mode 1)
+                      (key-chord-define-global "jk" 'god-local-mode)))
+
+            ;; just a little vi in god-mode
+            (define-key god-local-mode-map (kbd ".") 'repeat)
+            (define-key god-local-mode-map (kbd "i") 'god-local-mode)
+
+            ;; change cursor depending on whether in god-mode
+            (defun spw/god-mode-update-cursor ()
+              (setq cursor-type (if (or god-local-mode buffer-read-only)
+                                    'box
+                                  'bar)))
+
+            (add-hook 'god-mode-enabled-hook 'spw/god-mode-update-cursor)
+            (add-hook 'god-mode-disabled-hook 'spw/god-mode-update-cursor)))
 
 
 
