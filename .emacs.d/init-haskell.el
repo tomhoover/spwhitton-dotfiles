@@ -96,12 +96,11 @@
   ;; When I've created a shell.nix in the project root, use nix-shell
   ;; to run ghci and cabal.
   (when (f-exists? (projectile-expand-root "shell.nix"))
-    (make-local-variable 'haskell-process-type)
-    (make-local-variable 'haskell-process-wrapper-function)
-    (setq haskell-process-type 'ghci)
-    (setq haskell-process-wrapper-function
-          (lambda (argv) (append (list "nix-shell" "-I" "." "--command" )
-                                 (list (mapconcat 'identity argv " ")))))))
+    (setq-local haskell-process-type 'cabal-repl)
+    (setq-local
+     haskell-process-wrapper-function
+     (lambda (argv) (append (list "nix-shell" "-I" "." "--command" )
+                            (list (mapconcat 'identity argv " ")))))))
 
 ;;; hindent for reformatting code
 
