@@ -49,6 +49,8 @@ status processing propellor.git from github
 gitbk git@github.com:spwhitton/propellor.git $DEST/github
 status processing sariulclocks.git from github
 gitbk git@github.com:spwhitton/sariulclocks.git $DEST/github
+status processing srem.git from github
+gitbk git@github.com:spwhitton/srem.git $DEST/github
 
 # Stage 3 : Backup other repos ad hoc
 
