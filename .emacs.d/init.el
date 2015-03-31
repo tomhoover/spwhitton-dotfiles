@@ -108,7 +108,7 @@
 ;;; cursor settings
 
 (setq x-stretch-cursor t)
-(setq-default cursor-type 'bar)
+(setq-default cursor-type 'box)
 (if (fboundp 'blink-cursor-mode) (blink-cursor-mode 0)) ; turns off blink-cursor-mode if it ended up on
 
 ;; get the mouse out of the way
@@ -1028,14 +1028,15 @@
             (define-key god-local-mode-map (kbd ".") 'repeat)
             (define-key god-local-mode-map (kbd "i") 'god-local-mode)
 
-            ;; change cursor depending on whether in god-mode
-            (defun spw/god-mode-update-cursor ()
-              (setq cursor-type (if (or god-local-mode buffer-read-only)
-                                    'box
-                                  'bar)))
+            ;; change a part of the modeline depending on whether in god-mode
+            (defun spw/god-mode-update-modeline ()
+              (set-face-background 'sml/filename (if god-local-mode
+                                                     "red"
+                                                   ;; following from smart-mode-line-powerline-theme.el
+                                                   (or (face-background 'powerline-active1) "Grey30"))))
 
-            (add-hook 'god-mode-enabled-hook 'spw/god-mode-update-cursor)
-            (add-hook 'god-mode-disabled-hook 'spw/god-mode-update-cursor)))
+            (add-hook 'god-mode-enabled-hook 'spw/god-mode-update-modeline)
+            (add-hook 'god-mode-disabled-hook 'spw/god-mode-update-modeline)))
 
 
 
