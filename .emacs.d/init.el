@@ -1022,11 +1022,11 @@
               :ensure
               :init (progn
                       (key-chord-mode 1)
-                      (key-chord-define-global "jk" 'god-local-mode)))
+                      (key-chord-define-global "jk" 'god-mode-all)))
 
             ;; just a little vi in god-mode
             (define-key god-local-mode-map (kbd ".") 'repeat)
-            (define-key god-local-mode-map (kbd "i") 'god-local-mode)
+            (define-key god-local-mode-map (kbd "i") 'god-mode-all)
 
             ;; change a part of the modeline depending on whether in god-mode
             (defun spw/god-mode-update-modeline ()
