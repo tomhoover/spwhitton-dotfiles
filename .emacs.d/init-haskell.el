@@ -32,8 +32,11 @@
          ("\\.cabal\\'" . haskell-cabal-mode)
          ("\\.hcr\\'" . haskell-core-mode))
   ;; Start up all my usual minor modes and bindings.
-  :init (add-hook 'haskell-mode-hook 'spw/haskell-mode-hook)
-  :config (setq haskell-tags-on-save t))
+  :init (progn
+          (add-hook 'haskell-mode-hook 'spw/haskell-mode-hook)
+          (add-hook 'after-save-hook 'spw/haskell-cabal-mode-save-hook))
+  :config (setq haskell-tags-on-save t
+                haskell-process-suggest-remove-import-lines t))
 
 ;; load haskell-flycheck only once haskell-mode is loaded
 
@@ -105,6 +108,15 @@
      haskell-process-wrapper-function
      (lambda (argv) (append (list "nix-shell" "-I" "." "--command" )
                             (list (mapconcat 'identity argv " ")))))))
+
+;; save hook
+
+(defun spw/haskell-cabal-mode-save-hook ()
+  "Regenerate shell.nix if it exists."
+  (interactive)
+  (when (and (eq (major-mode) 'haskell-cabal-mode)
+             (f-exists? (f-join default-directory "shell.nix")))
+    (call-process "/bin/sh" nil t nil "-c" "cabal2nix --shell . > shell.nix")))
 
 ;;; hindent for reformatting code
 
