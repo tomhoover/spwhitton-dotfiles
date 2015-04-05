@@ -114,7 +114,7 @@
 (defun spw/haskell-cabal-mode-save-hook ()
   "Regenerate shell.nix if it exists."
   (interactive)
-  (when (and (eq (major-mode) 'haskell-cabal-mode)
+  (when (and (eq major-mode 'haskell-cabal-mode)
              (f-exists? (f-join default-directory "shell.nix")))
     (call-process "/bin/sh" nil t nil "-c" "cabal2nix --shell . > shell.nix")))
 
