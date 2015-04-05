@@ -8,6 +8,7 @@ alias docs cd ~/doc && mr sync
 alias annex-to-ma cd ~/lib/annex;ga copy -t metaarray --auto --fast
 alias git-rebase-host-branch git rebase master;git checkout ${hostname};git rebase master
 alias git-push-host-branch git push origin master +${hostname}
+alias git-dotfiles git-rebase-host-branch && git-push-host-branch
 alias workgit cd ~/doc;git add org/*.org;git commit -a -e -m "work commit";git push
 alias sonatarc cd ~/src/dotfiles;git checkout .config/sonata/sonatarc;cd -
 alias newtorrents mv ~/tmp/*.torrent ~/local/rt/watch
