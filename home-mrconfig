@@ -325,6 +325,7 @@ fixups = :
 [src/srem]
 checkout = git clone github:spwhitton/dotfiles.git dotfiles
 post_checkout = ln -s $HOME/src/srem/dist/build/srem/srem $HOME/local/bin/srem
+skip = lazy
 
 # --- my personal documents, website and blog.  Override my global
 # --- update command back to the myrepos default so that git
