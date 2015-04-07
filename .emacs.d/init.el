@@ -1680,13 +1680,20 @@ From <http://stackoverflow.com/a/14769115>."
 
 ;;; bind all up into the C-c keymap
 
+(setq spw/personal-bindings (make-sparse-keymap))
+(key-chord-define-global "jf" spw/personal-bindings)
+
 (defmacro spw/C-c-bind (key bindee)
   "Bind BINDEE to C-c KEY with `bind-key' macro.
 
 BINDEE may be a command or another keymap, but whatever it is, it should not be quoted."
   `(if (keymapp ,bindee)
-       (bind-key (concat "C-c " ,key) ,bindee)
-     (bind-key (concat "C-c " ,key) bindee)))
+       (progn
+         (bind-key (concat "C-c " ,key) ,bindee)
+         (define-key spw/personal-bindings (kbd ,key) ,bindee))
+     (bind-key (concat "C-c " ,key) bindee)
+     (define-key spw/personal-bindings (kbd ,key) bindee)))
+
 (dolist (pair '(("p" . projectile-command-map)
                 ("j" . spw/helm-mini)
                 ("v" . projectile-vc)
