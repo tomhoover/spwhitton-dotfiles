@@ -1062,6 +1062,15 @@
 ;; YY YJ YQ
 ;; ZB ZD ZF ZG ZJ ZK ZM ZP ZQ ZS ZV ZW ZX
 
+;;; jump back and forth to and from Emacs lisp definitions with
+;;; M-. and M-, and C-c C-d [C-]d to describe
+
+(use-package elisp-slime-nav
+  :ensure
+  :commands turn-on-elisp-slime-nav-mode
+  :init (dolist (hook '(emacs-lisp-mode-hook ielm-mode-hook))
+          (add-hook hook 'elisp-slime-nav-mode)))
+
 
 
 ;;;; ---- functions ----
