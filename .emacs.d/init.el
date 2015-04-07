@@ -316,11 +316,11 @@
   :ensure org-plus-contrib
   :mode (("\\.org" . org-mode)
          ("\\.org_archive" . org-mode))
-  :bind (("C-c o c" . org-capture)
-         ("C-c o l" . org-store-link)
-         ("C-c o a" . org-agenda)
-         ("C-c o [" . spw/org-agenda-file-to-front)
-         ("C-c o ]" . spw/org-remove-file))
+  :commands (org-capture
+             org-store-link
+             org-agenda
+             spw/org-agenda-file-to-front
+             spw/org-remove-file)
   :diminish org-indent-mode
   :config (load "~/.emacs.d/init-org.el"))
 
@@ -1711,6 +1711,13 @@ BINDEE may be a command or another keymap, but whatever it is, it should not be 
                 ("q u" . persp-basewc-save)
                 ("q q" . persp-basewc-restore)
                 ("q C" . spw/persp-clone)
+
+                ;; Org-mode map
+                ("o c" . org-capture)
+                ("o l" . org-store-link)
+                ("o a" . org-agenda)
+                ("o [" . spw/org-agenda-file-to-front)
+                ("o ]" . spw/org-remove-file)
 
                 ;; launcher map
                 ("g k" . kill-emacs)
