@@ -1009,7 +1009,13 @@
 
 (load "~/.emacs.d/init-haskell.el")
 
-;;; god-mode to save my hands
+;; key-chord to save my hands
+
+(use-package key-chord
+  :ensure
+  :init (key-chord-mode 1))
+
+;;; god-mode to maybe save my hands
 
 (use-package god-mode
   :ensure
@@ -1018,11 +1024,7 @@
 
             ;; activate with a key-chord to avoid having to have
             ;; capslock bound to both escape and control
-            (use-package key-chord
-              :ensure
-              :init (progn
-                      (key-chord-mode 1)
-                      (key-chord-define-global "jk" 'god-mode-all)))
+            (key-chord-define-global "hj" 'god-mode-all)
 
             ;; just a little vi in god-mode
             (define-key god-local-mode-map (kbd ".") 'repeat)
@@ -1680,8 +1682,8 @@ From <http://stackoverflow.com/a/14769115>."
 
 ;;; bind all up into the C-c keymap
 
-(setq spw/personal-bindings (make-sparse-keymap))
-(key-chord-define-global "jf" spw/personal-bindings)
+(setq spw/personal-map (make-sparse-keymap))
+(key-chord-define-global "jk" spw/personal-map)
 
 (defmacro spw/C-c-bind (key bindee)
   "Bind BINDEE to C-c KEY with `bind-key' macro.
@@ -1690,75 +1692,82 @@ BINDEE may be a command or another keymap, but whatever it is, it should not be 
   `(if (keymapp ,bindee)
        (progn
          (bind-key (concat "C-c " ,key) ,bindee)
-         (define-key spw/personal-bindings (kbd ,key) ,bindee))
+         (define-key spw/personal-map (kbd ,key) ,bindee))
      (bind-key (concat "C-c " ,key) bindee)
-     (define-key spw/personal-bindings (kbd ,key) bindee)))
+     (define-key spw/personal-map (kbd ,key) bindee)))
 
-(dolist (pair '(("p" . projectile-command-map)
-                ("j" . spw/helm-mini)
-                ("v" . projectile-vc)
-                ("n" . mwf/narrow-or-widen-dwim)
-                ("s" . spw/persp-eshell)
-                ("d" . spw/dired-jump)
-                ("a" . spw/align-dwim)
-                ("A" . align-regexp)
+(setq spw/personal-bindings
+      '(("p" . projectile-command-map)
+        ("j" . spw/helm-mini)
+        ("v" . projectile-vc)
+        ("n" . mwf/narrow-or-widen-dwim)
+        ("s" . spw/persp-eshell)
+        ("d" . spw/dired-jump)
+        ("a" . spw/align-dwim)
+        ("A" . align-regexp)
 
-                ;; perspectives map
-                ("q s" . persp-switch)
-                ("q k" . persp-remove-buffer)
-                ("q c" . persp-kill)
-                ("q r" . persp-rename)
-                ("q a" . persp-add-buffer)
-                ("q A" . persp-set-buffer)
-                ("q i" . persp-import)
-                ("q n" . persp-next)
-                ("q <right>" . persp-next)
-                ("q p" . persp-prev)
-                ("q <left>" . persp-prev)
-                ("q u" . persp-basewc-save)
-                ("q q" . persp-basewc-restore)
-                ("q C" . spw/persp-clone)
+        ;; perspectives map
+        ("q s" . persp-switch)
+        ("q k" . persp-remove-buffer)
+        ("q c" . persp-kill)
+        ("q r" . persp-rename)
+        ("q a" . persp-add-buffer)
+        ("q A" . persp-set-buffer)
+        ("q i" . persp-import)
+        ("q n" . persp-next)
+        ("q <right>" . persp-next)
+        ("q p" . persp-prev)
+        ("q <left>" . persp-prev)
+        ("q u" . persp-basewc-save)
+        ("q q" . persp-basewc-restore)
+        ("q C" . spw/persp-clone)
 
-                ;; Org-mode map
-                ("o c" . org-capture)
-                ("o l" . org-store-link)
-                ("o a" . org-agenda)
-                ("o [" . spw/org-agenda-file-to-front)
-                ("o ]" . spw/org-remove-file)
+        ;; Org-mode map
+        ("o c" . org-capture)
+        ("o l" . org-store-link)
+        ("o a" . org-agenda)
+        ("o [" . spw/org-agenda-file-to-front)
+        ("o ]" . spw/org-remove-file)
 
-                ;; launcher map
-                ("g k" . kill-emacs)
-                ("g c" . spw/manual-cleanup)
-                ("g l" . spw/tblesson)
-                ("g r" . (lambda ()
-                           (interactive)
-                           (projectile-persp-switch-project "~/src/dotfiles")
-                           (find-file "~/src/dotfiles/.emacs.d/init.el")
-                           (eval-buffer)))
+        ;; launcher map
+        ("g k" . kill-emacs)
+        ("g c" . spw/manual-cleanup)
+        ("g l" . spw/tblesson)
+        ("g r" . (lambda ()
+                   (interactive)
+                   (projectile-persp-switch-project "~/src/dotfiles")
+                   (find-file "~/src/dotfiles/.emacs.d/init.el")
+                   (eval-buffer)))
 
-                ;; Sariul launcher map
-                ("S l" . spw/tblesson)
-                ("S S" . spw/auto-textbook)
-                ("S s" . spw/textbook)
-                ("S t" . spw/auto-teachers-book)
+        ;; Sariul launcher map
+        ("S l" . spw/tblesson)
+        ("S S" . spw/auto-textbook)
+        ("S s" . spw/textbook)
+        ("S t" . spw/auto-teachers-book)
 
-                ;; toggle map
-                ("t e" . toggle-debug-on-error)
-                ("t i" . org-indent-mode)
-                ("t w" . spw/writing-toggle)
+        ;; toggle map
+        ("t e" . toggle-debug-on-error)
+        ("t i" . org-indent-mode)
+        ("t w" . spw/writing-toggle)
 
-                ;; insertion map
-                ("i h" . add-file-local-variable-prop-line)
+        ;; insertion map
+        ("i h" . add-file-local-variable-prop-line)
 
-                ;; evaluation map
-                ("e e" . spw/eval-surrounding-sexp)
-                ("e f" . eval-defun)
-                ("e r" . eval-region)
-                ("e b" . eval-buffer)
-                ("E" . prelude/eval-and-replace)))
-  (let ((key (car pair))
-        (bindee (cdr pair)))
-    (spw/C-c-bind key bindee)))
+        ;; evaluation map
+        ("e e" . spw/eval-surrounding-sexp)
+        ("e f" . eval-defun)
+        ("e r" . eval-region)
+        ("e b" . eval-buffer)
+        ("E" . prelude/eval-and-replace)))
+
+(defun spw/personal-bindings ()
+  (interactive)
+  (dolist (pair spw/personal-bindings)
+    (let ((key (car pair))
+          (bindee (cdr pair)))
+      (spw/C-c-bind key bindee))))
+
+(spw/personal-bindings)
 
 ;;; abbreviations
 
