@@ -94,6 +94,7 @@
   (bind-key "C-c C-t" 'haskell-process-do-type interactive-haskell-mode-map)
   (bind-key "C-c C-i" 'haskell-process-do-info interactive-haskell-mode-map)
   (bind-key "C-c C-r" 'haskell-process-restart interactive-haskell-mode-map)
+  (bind-key "SPC"     'haskell-mode-contextual-space haskell-mode-map)
 
   ;;; make sure haskell-flycheck checker being used?
 
