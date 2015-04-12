@@ -641,8 +641,6 @@
 (use-package perspective
   :ensure
   :commands (persp-toggle persp-switch)
-  :bind (("C-c l" . persp-toggle)
-         ("C-c L" . persp-switch))
   :init (progn
           (setq persp-modestring-dividers '("" "" "|"))
 
@@ -1705,6 +1703,8 @@ BINDEE may be a command or another keymap, but whatever it is, it should not be 
         ("d" . spw/dired-jump)
         ("a" . spw/align-dwim)
         ("A" . align-regexp)
+        ("l" . persp-toggle)
+        ("L" . persp-switch)
 
         ;; perspectives map
         ("q s" . persp-switch)
