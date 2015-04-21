@@ -20,7 +20,7 @@ set edit_hdrs
 set include
 set reply_to
 set abort_nosubject = no
-#alternates '(sean@silentflame.com)|(sean.whitton@balliol.ox.ac.uk)'
+alternates '(spw@sdf.org)|(spwhitton@email.arizona.edu)'
 set hdr_format="%4C %Z %{%m/%d} %-15.15F (%4c) %s"
 unset help
 set mail_check=20
@@ -45,6 +45,15 @@ set smart_wrap
 set wrapmargin=10
 unset markers
 set wait_key=no
+
+# --- CatMail hooks
+
+# reply-hook . 'set from="Sean Whitton <spw@sdf.org>" use_from'
+# reply-hook "~f arizona.edu" 'set from="Sean Whitton <spwhitton@email.arizona.edu>" use_from'
+# reply-hook "~t spwhitton@email.arizona.edu" 'set from="Sean Whitton <spwhitton@email.arizona.edu>" use_from'
+
+# send2-hook . 'set from="Sean Whitton <spw@sdf.org>" use_from'
+# send2-hook "~t arizona.edu" 'set from="Sean Whitton <spwhitton@email.arizona.edu>" use_from'
 
 # --- sorting
 

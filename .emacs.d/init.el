@@ -1644,6 +1644,20 @@ From <http://stackoverflow.com/a/14769115>."
                        map))))
     (define-key newmap key def)))
 
+(defun spw/set-from-address ()
+  "Set e-mail from address correctly by looking at other headers."
+  (interactive)
+  (save-excursion
+    (message-narrow-to-headers)
+    (goto-char (point-min))
+    (when (or (search-forward-regexp "^To:.*arizona.edu" nil t)
+              (search-forward-regexp "^Cc:.*arizona.edu" nil t)
+              (search-forward-regexp "^Bcc:.*arizona.edu" nil t))
+      (goto-char (point-min))
+      (search-forward-regexp "^From:.*$")
+      (replace-match "From: Sean Whitton <spwhitton@email.arizona.edu>"))
+    (widen)))
+
 
 
 ;;;; ---- personal settings ----
@@ -1920,6 +1934,7 @@ ARG, PRED ignored."
           (setq mail-header-separator "")
           (add-hook 'message-mode-hook (lambda ()
                                          (auto-fill-mode)
+                                         (spw/set-from-address)
                                          (footnote-mode)
                                          (message-goto-body)))))
 
