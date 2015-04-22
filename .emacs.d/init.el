@@ -1932,6 +1932,12 @@ ARG, PRED ignored."
 (use-package message
   :mode ("/mutt-.*$" . message-mode)
   :init (progn
+          (defadvice message-newline-and-reformat (before spw/delete-superflous-newlines activate)
+            "Have `message-newline-and-reformat' get rid of some more superflous blank quoted lines."
+            (save-excursion
+              (beginning-of-line)
+              (when (looking-at ">[[:space:]]*$")
+                (kill-line 1))))
           (setq mail-header-separator "")
           (add-hook 'message-mode-hook (lambda ()
                                          (auto-fill-mode)
