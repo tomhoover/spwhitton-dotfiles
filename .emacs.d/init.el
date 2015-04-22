@@ -593,6 +593,7 @@
             (add-to-list 'tramp-default-user-alist '("sudo" "localhost" "root"))
             (add-to-list 'tramp-default-user-alist '(nil nil "swhitton") t)
             (add-to-list 'tramp-default-user-alist '(nil "ma" "spw"))
+            (add-to-list 'tramp-default-user-alist '(nil "sage" "spwhitton"))
 
             ;; TRAMP and zsh are not friends so might as well switch
             ;; over here
