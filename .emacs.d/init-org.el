@@ -785,7 +785,8 @@
 
 ;;;; ---- functions ----
 
-;;; the default C-c [ and C-c ] expand the directory ~/doc/org in the
+;;; the default
+C-c [ and C-c ] expand the directory ~/doc/org in the
 ;;; org-agenda-files variable using the local path,
 ;;; e.g. /meta/s/spw/doc/org, which is not good when init-custom.el is
 ;;; held in git.  So use alternative behaviour of storing the agenda
@@ -815,6 +816,26 @@
               (beginning-of-line)
               (kill-line 1)
               (save-buffer)))))))
+
+;; defeat variable-pitch-mode for tables and source blocks, per
+;; http://stackoverflow.com/a/16819449
+
+(defun my-adjoin-to-list-or-symbol (element list-or-symbol)
+  (let ((list (if (not (listp list-or-symbol))
+                  (list list-or-symbol)
+                list-or-symbol)))
+    (require 'cl-lib)
+    (cl-adjoin element list)))
+
+(mapc
+ (lambda (face)
+   (set-face-attribute
+    face nil
+    :inherit
+    (my-adjoin-to-list-or-symbol
+     'fixed-pitch
+     (face-attribute face :inherit))))
+ (list 'org-code 'org-block 'org-table 'org-block-background))
 
 ;;;; ---- hooks and keys ----
 
