@@ -44,8 +44,8 @@ unplug your AC adapter and run this program again.'''
     if now.hour < computer_up.hour:
         computer_up = computer_up - timedelta(days=1)
 
-    # sync e-mail
-    subprocess.call(['movemail'])
+    # sync e-mail and docs
+    subprocess.call(['mr sync'])
 
     # bring network down since NetworkManager sucks at bringing
     # it back up itself
@@ -65,8 +65,8 @@ unplug your AC adapter and run this program again.'''
     subprocess.call(['sudo', 'nmcli', 'nm', 'sleep', 'false'])
     time.sleep(20)
 
-    # sync e-mail
-    subprocess.call(['movemail'])
+    # sync e-mail & docs
+    subprocess.call(['mr sync'])
 
     # now wait until it's time to wake Sean up
     while sean_up > datetime.today():
