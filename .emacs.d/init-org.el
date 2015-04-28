@@ -785,8 +785,7 @@
 
 ;;;; ---- functions ----
 
-;;; the default
-C-c [ and C-c ] expand the directory ~/doc/org in the
+;;; the default C-c [ and C-c ] expand the directory ~/doc/org in the
 ;;; org-agenda-files variable using the local path,
 ;;; e.g. /meta/s/spw/doc/org, which is not good when init-custom.el is
 ;;; held in git.  So use alternative behaviour of storing the agenda
