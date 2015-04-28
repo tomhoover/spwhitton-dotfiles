@@ -359,3 +359,13 @@ order = 6
 checkout = git clone 'ssh://ma/~/local/git/doc.www.blog.git' 'blog'
 update = git pull "$@"
 skip = ! ( mine || on spw@ma ) || win32
+
+# --- my offline e-mail (& machine's postfix queue)
+
+[.offlinemail]
+order = 10
+sync = movemail
+
+# Don't do anything if I don't use offlineimap on this machine, or I
+# didn't run the sync command.
+skip = ! [ -d "$HOME/.offlinemail" ] || ! [ "$MR_ACTION" = "sync" ]
