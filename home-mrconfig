@@ -249,6 +249,7 @@ skip = (! (on swhitton@artemis || on swhitton@zephyr)) || (! which cabal >/dev/n
 # --- primary git annex
 
 [lib/annex]
+order = 8
 # It's best to get a copy of this repo from e.g. my laptop.  The
 # gcrypt repo can then be activated as a special remote.  This makes
 # more sense because the gcrypt repo on the metaarray is a transitive
@@ -282,6 +283,7 @@ skip = lazy
 # --- git annex for use with rtorrent
 
 [lib/rt]
+order = 9
 checkout = :
 post_checkout = git remote rm origin
 status = git annex status --fast
