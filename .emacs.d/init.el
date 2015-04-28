@@ -1136,6 +1136,10 @@ narrowed."
            (> (window-width) 120))
       (delete-other-windows)))
 
+;; Org tables should never be variable-pitch despite
+;; variable-pitch-mode
+(set-face-attribute 'org-table nil :inherit 'fixed-pitch)
+
 (defun spw/writing-toggle ()
   "Toggle on and off my prose writing features."
   (interactive)
