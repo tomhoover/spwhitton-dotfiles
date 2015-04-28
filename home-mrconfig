@@ -310,16 +310,11 @@ skip = lazy
 # --- source code repositories registered to their own mr config file
 
 [src]
-update = :
-checkout = :
-status = :
-push = :
-commit = :
-autoci = :
-rebase = :
 chain = true
-sync = :
-fixups = :
+
+# Always skip, since this is a dummy repository entry in order to
+# chainload.
+skip = true
 
 [src/srem]
 checkout = git clone github:spwhitton/dotfiles.git dotfiles
