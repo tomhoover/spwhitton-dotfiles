@@ -125,6 +125,7 @@ rebase =
             git rebase master
         fi
     fi
+# sync = git push origin master
 
 # skip this repository if stow is not installed, and we're not on
 # Windows where we don't use stow.  This should be a prompt to
