@@ -344,7 +344,12 @@ pre_update = if ! win32; then doccheckin; fi
 autoci = doccheckin
 
 # quick syncs
-sync = doccheckin && git pull && git push
+sync =
+    if win32; then
+        cmd "/C doccheckin.bat" && git pull && git push
+    else
+        doccheckin && git pull && git push
+    fi
 
 # after pulling, update the online copy of my Org-mode agenda
 # currently disabled because it's slow and with a computer at work I've not been checking this online copy
