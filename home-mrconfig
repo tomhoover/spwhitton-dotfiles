@@ -6,8 +6,9 @@
 git_gc = git gc "$@"
 jobs = 5
 
-# action to be used only on my git annex repo
+# actions to be configured per repository
 git_sync = :
+git_rebase = :
 
 # In general, I don't want merge commits to be made en masse by mr
 git_update = git pull --ff-only "$@"
