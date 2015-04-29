@@ -1,6 +1,6 @@
 #!/bin/bash
 
-output=$(mairix $@)
+output=$(mairix --threads $@)
 #echo $output
 
 if ! [ "$output" = "Matched 0 messages" ]; then
