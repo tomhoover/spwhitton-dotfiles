@@ -1072,6 +1072,22 @@
   :init (dolist (hook '(emacs-lisp-mode-hook ielm-mode-hook))
           (add-hook hook 'elisp-slime-nav-mode)))
 
+(use-package world-time-mode)
+
+;; and set up time zones I'm interested in
+
+(if (eq system-type 'windows-nt)
+
+    (setq display-time-world-list '(("MST7" "Phoenix")
+                                    ("GMT0BST" "London")
+                                    ("CET-1CDT" "Paris")
+                                    ("KST-9" "Seoul")))
+
+  (setq display-time-world-list '(("America/Phoenix" "Phoenix")
+                                  ("Europe/London" "London")
+                                  ("Europe/Paris" "Paris")
+                                  ("Asia/Seoul" "Seoul"))))
+
 
 
 ;;;; ---- functions ----
@@ -1753,6 +1769,10 @@ BINDEE may be a command or another keymap, but whatever it is, it should not be 
                    (projectile-persp-switch-project "~/src/dotfiles")
                    (find-file "~/src/dotfiles/.emacs.d/init.el")
                    (eval-buffer)))
+
+        ("g t l" . world-time-list)
+        ("g t h" . helm-world-time)
+        ("g t t" . display-time-world)
 
         ;; Sariul launcher map
         ("S l" . spw/tblesson)
