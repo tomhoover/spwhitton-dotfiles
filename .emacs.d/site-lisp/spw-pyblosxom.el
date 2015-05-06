@@ -10,7 +10,7 @@
 (require 'f)
 (require 's)
 
-(defvar spw-pyblosxom-image-extensions '("png" "jpg")
+(defvar spw-pyblosxom-image-extensions '("png" "jpg" "jpeg")
   "Extensions for image files that may be inserted with `spw-pyblosxom-insert-image'.")
 
 (defun spw-pyblosxom--image-extensions-regexp ()
