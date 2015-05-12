@@ -155,7 +155,7 @@
 
 ;;; libraries of useful lisp functions
 
-(use-package f :ensure) (use-package s :ensure)
+(use-package f :ensure) (use-package s :ensure) (use-package dash :ensure)
 
 ;;; instead of vim text objects
 
@@ -1674,6 +1674,33 @@ From <http://stackoverflow.com/a/14769115>."
       (replace-match "From: Sean Whitton <spwhitton@email.arizona.edu>"))
     (widen)))
 
+;;; Find and open projects in ~/src/ that aren't yet known to
+;;; projectile.  Inspired by
+;;; <https://alanpearce.uk/post/opening-projects-with-projectile>.
+
+(defvar programming-projects-dir (expand-file-name "~/src"))
+
+(defun spw/get-programming-projects (dir)
+  "Find all projectile projects in DIR that are presently unknown to projectile."
+  (-filter (lambda (d)
+             (and (file-directory-p d)
+                  (not (-contains?
+                        projectile-known-projects
+                        (f-slash (replace-regexp-in-string (expand-file-name "~") "~" d))))
+                  (-any? (lambda (f) (funcall f d))
+                         projectile-project-root-files-functions)))
+           (directory-files dir t "^[^.]")))
+
+(defun spw/open-programming-project (arg)
+  "Open a programming project that is presently unknown to projectile.
+
+Passes ARG to `projectile-switch-project-by-name'."
+  (interactive "P")
+  (let ((project-dir
+         (projectile-completing-read "open new project: "
+                                     (spw/get-programming-projects programming-projects-dir))))
+    (projectile-switch-project-by-name project-dir arg)))
+
 
 
 ;;;; ---- personal settings ----
@@ -1752,6 +1779,7 @@ BINDEE may be a command or another keymap, but whatever it is, it should not be 
         ("q u" . persp-basewc-save)
         ("q q" . persp-basewc-restore)
         ("q C" . spw/persp-clone)
+        ("q o" . spw/open-programming-project)
 
         ;; Org-mode map
         ("o c" . org-capture)
