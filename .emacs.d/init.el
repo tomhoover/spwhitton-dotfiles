@@ -544,15 +544,14 @@
 
 (use-package deft
   :ensure
-  :bind ("C-c g d" . deft)
   :init (setq deft-extension "org"
               deft-text-mode 'org-mode
               deft-directory "~/doc/org/"
               deft-use-filename-as-title nil
               deft-auto-save-interval 20.0
-              deft-incremental-search nil
+              deft-incremental-search t
               ;; don't just strip the leading hash but the whole #+TITLE:
-              deft-strip-title-regexp "\\(?:\\#\\+TITLE\\: \\|\\#\\+FILETAGS\\: \\|^%+\\|^[#* ]+\\|-\\*-[[:alpha:]]+-\\*-\\|#+$\\)")
+              deft-strip-title-regexp "\\(?:\\#\\+TITLE\\: \\'\\#\\+FILETAGS\\: \\'^%+\\'^[#* ]+\\'-\\*-[[:alpha:]]+-\\*-\\'#+$\\)")
   :config (progn
             (bind-key "C-w" 'deft-filter-decrement-word deft-mode-map)
             ;; (bind-key "C-h" 'deft-filter-decrement deft-mode-map)
@@ -1732,6 +1731,7 @@ BINDEE may be a command or another keymap, but whatever it is, it should not be 
         ("n" . mwf/narrow-or-widen-dwim)
         ("s" . spw/persp-eshell)
         ("d" . spw/dired-jump)
+        ("f" . deft)
         ("a" . spw/align-dwim)
         ("A" . align-regexp)
         ("l" . persp-toggle)
