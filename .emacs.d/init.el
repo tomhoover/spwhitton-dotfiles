@@ -765,7 +765,7 @@
             (let ((sources '())
                   (excluded-projects '("annex")))
 
-              (add-to-ordered-list 'sources 'helm-source-buffers-list 3)
+              (add-to-ordered-list 'sources 'helm-source-buffers-list 2)
               (add-to-ordered-list 'sources 'helm-source-imenu-anywhere 4)
               (add-to-ordered-list 'sources 'helm-source-bookmarks 5)
               (add-to-ordered-list 'sources 'helm-source-dired-recent-dirs 7)
@@ -780,7 +780,7 @@
                          (projectile-project-p)
                          (not (memq (projectile-project-name) excluded-projects))
                          (not (equal (persp-name persp-curr) "main")))
-                (add-to-ordered-list 'sources 'helm-source-projectile-files-list 2)
+                (add-to-ordered-list 'sources 'helm-source-projectile-files-list 3)
                 (delete 'helm-source-dired-recent-dirs sources))
 
               ;; Org headlines source: imenu covers all open org
