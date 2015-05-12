@@ -1917,12 +1917,22 @@ BINDEE may be a command or another keymap, but whatever it is, it should not be 
 (setq browse-url-generic-program "iceweasel"
       browse-url-browser-function 'browse-url-generic)
 
-;; return to Emacs 23 selection/clipboard behaviour
-(setq select-active-regions nil
+;; clipboard & primary selection: see https://www.gnu.org/software/emacs/manual/html_node/emacs/Clipboard.html
+
+;; with this setup, C-y and M-w access the clipboard, while selecting
+;; a region and then pressing C-g and middle click access the primary
+;; selection
+
+(setq select-active-regions t
       mouse-drag-copy-region t
-      x-select-enable-primary t
-      x-select-enable-clipboard t)
-(global-set-key [mouse-2] 'mouse-yank-at-click)
+      x-select-enable-primary nil
+      x-select-enable-clipboard t
+      mouse-yank-at-point t
+      yank-pop-change-selection t
+      save-interprogram-paste-before-kill t
+      x-select-enable-clipboard-manager t)
+
+(global-set-key [mouse-2] 'mouse-yank-primary)
 
 ;; require a buffer to have a final newline
 (setq require-final-newline 'visit-save)
