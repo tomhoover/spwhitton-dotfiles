@@ -551,7 +551,7 @@
               deft-auto-save-interval 20.0
               deft-incremental-search t
               ;; don't just strip the leading hash but the whole #+TITLE:
-              deft-strip-title-regexp "\\(?:\\#\\+TITLE\\: \\'\\#\\+FILETAGS\\: \\'^%+\\'^[#* ]+\\'-\\*-[[:alpha:]]+-\\*-\\'#+$\\)")
+              deft-strip-title-regexp "\\(?:\\#\\+TITLE\\: \\|\\#\\+FILETAGS\\: \\|^%+\\|^[#* ]+\\|-\\*-[[:alpha:]]+-\\*-\\|#+$\\)")
   :config (progn
             (bind-key "C-w" 'deft-filter-decrement-word deft-mode-map)
             ;; (bind-key "C-h" 'deft-filter-decrement deft-mode-map)
