@@ -1087,6 +1087,12 @@
                                   ("Europe/Paris" "Paris")
                                   ("Asia/Seoul" "Seoul"))))
 
+;; make it easier to compile to PDF with pandoc
+
+(use-package pandoc-mode
+  :ensure
+  :init (add-hook 'markdown-mode-hook 'conditionally-turn-on-pandoc))
+
 
 
 ;;;; ---- functions ----

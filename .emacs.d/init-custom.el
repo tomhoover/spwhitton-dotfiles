@@ -135,7 +135,8 @@
              (projectile-project-name)))))
  '(safe-local-variable-values
    (quote
-    ((eval spw/writing-toggle)
+    ((eval pandoc-set-write "latex")
+     (eval spw/writing-toggle)
      (indent-tabs-mode . t\,))))
  '(smart-tab-disabled-major-modes (quote (org-mode term-mode latex-mode message-mode)))
  '(smart-tab-using-hippie-expand nil)
