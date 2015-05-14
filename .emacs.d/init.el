@@ -1087,13 +1087,6 @@
                                   ("Europe/Paris" "Paris")
                                   ("Asia/Seoul" "Seoul"))))
 
-;; make it easier to compile to PDF with pandoc
-
-(use-package pandoc-mode
-  :ensure
-  :commands pandoc-mode conditionally-turn-on-pandoc
-  :init (add-hook 'markdown-mode-hook 'conditionally-turn-on-pandoc))
-
 
 
 ;;;; ---- functions ----
@@ -1707,6 +1700,21 @@ Passes ARG to `projectile-switch-project-by-name'."
          (projectile-completing-read "open new project: "
                                      (spw/get-programming-projects programming-projects-dir))))
     (projectile-switch-project-by-name project-dir arg)))
+
+(defun spw/pandoc-paper-compile ()
+  "Compile a paper to PDF with pandoc.
+
+Lightweight alternative to pandoc-mode."
+  (interactive)
+  (when (and (string= default-directory (expand-file-name "~/doc/papers/"))
+             (eq major-mode 'markdown-mode))
+    (let ((output-file (f-join "~/tmp" (f-filename (f-swap-ext (buffer-file-name) "pdf")))))
+      (call-process-shell-command
+       "pandoc" nil "*pandoc output*" nil
+       "-s" "--filter" "pandoc-citeproc" (concat "--bibliography=" (expand-file-name "~/doc/spw.bib"))
+       "--template" "pessay" "-V" "documentclass=pessay"
+       (buffer-file-name) "-o" output-file)
+      (find-file output-file))))
 
 
 
