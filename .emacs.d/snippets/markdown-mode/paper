@@ -1,0 +1,12 @@
+---
+title: $1
+author: ${2:Sean Whitton}
+date: ${3:`(format-time-string "%B %Y")`}
+bibliography: spw.bib
+...
+
+# 
+
+$0
+
+# References
