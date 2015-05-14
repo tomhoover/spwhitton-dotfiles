@@ -1091,6 +1091,7 @@
 
 (use-package pandoc-mode
   :ensure
+  :commands pandoc-mode conditionally-turn-on-pandoc
   :init (add-hook 'markdown-mode-hook 'conditionally-turn-on-pandoc))
 
 
