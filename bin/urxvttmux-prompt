@@ -1,0 +1,9 @@
+#!/bin/sh
+
+. $HOME/.shenv
+
+input=$(zenity --title "remote tmux" --text "[user@]host" --entry)
+
+if ! [ "$input" = "" ]; then
+    urxvttmux $input
+fi
