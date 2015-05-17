@@ -45,6 +45,7 @@ set smart_wrap
 set wrapmargin=10
 unset markers
 set wait_key=no
+set print_command="muttprint"
 
 # --- CatMail hooks
 
