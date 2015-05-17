@@ -531,13 +531,12 @@
 
 (use-package markdown-mode
   :ensure
+  :mode "\\.md"
   :init (progn
           (add-hook 'markdown-mode-hook 'turn-on-orgstruct)
-          (add-hook 'markdown-mode-hook 'turn-on-orgstruct++)
-
-          ;; This binding replaces a `markdown-export'.
-          (bind-key "C-c C-c e" 'spw/pandoc-paper-compile markdown-mode-map))
-  :mode "\\.md")
+          (add-hook 'markdown-mode-hook 'turn-on-orgstruct++))
+  ;; This binding replaces a `markdown-export'.
+  :config (bind-key "C-c C-c e" 'spw/pandoc-paper-compile markdown-mode-map))
 
 ;;; PHP mode
 
