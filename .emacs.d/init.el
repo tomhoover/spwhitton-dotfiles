@@ -73,6 +73,9 @@
 ;; y/n rather than yes/no
 (fset 'yes-or-no-p 'y-or-n-p)
 
+;; warn before killing Emacs
+(setq confirm-kill-emacs #'y-or-n-p)
+
 ;; don't handle keyboard events before redrawing
 (setq redisplay-dont-pause t)
 
