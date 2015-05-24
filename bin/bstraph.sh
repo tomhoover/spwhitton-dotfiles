@@ -12,7 +12,7 @@ cd $HOME
 # where but I see the output of find failing to find this dir
 mkdir -p $HOME/local/src
 
-# 1. install our two small helper scripts (UNTESTED)
+# 1. install our two small helper scripts
 
 if ! which stow >/dev/null; then
     cd $HOME/local/src
