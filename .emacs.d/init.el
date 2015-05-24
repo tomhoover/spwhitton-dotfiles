@@ -390,6 +390,9 @@
   :ensure
   :diminish magit-auto-revert-mode
   :config (progn
+
+            (setq magit-completing-read-function 'magit-ido-completing-read)
+
             ;; C-c C-a to amend without any prompt
             (defun magit-just-amend ()
               (interactive)
@@ -638,7 +641,7 @@
   :diminish 'projectile-mode
   :config (progn
             (setq projectile-switch-project-action 'projectile-dired
-                  projectile-completion-system 'helm)
+                  projectile-completion-system 'ido)
             (diminish 'projectile-mode)))
 
 (use-package persp-projectile :ensure)
@@ -688,156 +691,73 @@
                    (wc (cdr pair)))
               (set-window-configuration wc)))))
 
-;;; powerful completion everywhere, especially for jumping between files
+;; completion with ido
+
+(add-hook 'ido-setup-hook
+          (lambda () (define-key
+                       ido-completion-map "\C-w"
+                       'ido-delete-backward-word-updir)))
+
+(setq ido-use-filename-at-point 'guess
+      ido-create-new-buffer 'always
+      ido-file-extensions-order '(".org" ".tex" ".py" )
+      ido-default-file-method 'selected-window
+      ido-max-directory-size 100000
+      ido-auto-merge-delay-time 99999 ; only search when I tell you to M-s
+      ido-use-virtual-buffers t
+      ido-use-virtual-buffers-automatically t
+      ido-enable-regexp nil
+      ido-use-url-at-point nil
+      ido-max-file-prompt-width 0.1
+      ido-save-directory-list-file "~/.emacs.d/ido.last"
+
+      ;; Have Ido respect completion-ignored-extensions
+      ido-ignore-extensions t
+
+      ;; When moving through work directories with M-n/M-p, ignore those
+      ;; that don't match the current input
+      ido-work-directory-match-only t)
+
+(ido-mode 1)
+(ido-everywhere 1)
+
+(use-package flx-ido
+  :ensure
+  :init (progn
+          (flx-ido-mode 1)
+          (setq ido-enable-flex-matching t
+                ido-use-faces nil
+                flx-ido-threshhold 7500
+                gc-cons-threshold 20000000)))
+
+(use-package ido-ubiquitous
+  :ensure
+  :init (ido-ubiquitous-mode 1))
+
+;; (use-package ido-vertical-mode
+;;   :ensure
+;;   :init (ido-vertical-mode 1))
+
+(use-package smex
+  :ensure
+  ;; TODO: get keyboard macro bindings back
+  :bind ("C-x C-m" . smex))
+
+;; imenu
+
+(use-package imenu-anywhere :ensure)
+
+;;; use Helm for a few things
 
 (use-package helm
   :ensure
-  :bind (("C-x C-f" . helm-find-files)
-         ("M-s o" . helm-occur))
-  :diminish helm-mode
-  :init (progn
-          (require 'helm-config)
-
-          ;; extra sources
-          (use-package helm-projectile :ensure)
-          (use-package helm-dired-recent-dirs :ensure)
-          (use-package imenu-anywhere :ensure)
-
-          ;; no fuzzy matching and other settings
-          (setq helm-buffers-fuzzy-matching nil
-                helm-time-zone-home-location "Seoul"
-                helm-quick-update t
-                helm-split-window-in-side-p t
-                helm-ff-search-library-in-sexp t
-                helm-ff-file-name-history-use-recentf t
-                helm-ff-newfile-prompt-p nil
-                helm-tramp-verbose 3)
-
-          (helm-mode 1)
-          (helm-autoresize-mode 1)
-
-          ;; helm-mode adds an two arguments to the end of the normal
-          ;; completing-read argument list, the first of which is
-          ;; `cands-in-buffer'.  This makes completion faster because
-          ;; if we type 'mast' to match 'master', we can then hit
-          ;; <enter> to choose master.  Without `cands-in-buffer',
-          ;; hitting enter will select 'mast' (which is intended
-          ;; (https://github.com/emacs-helm/helm/issues/376#issuecomment-30872692),
-          ;; so that helm-mode is consistent with standard Emacs
-          ;; completing-read), and to select master requires an
-          ;; additional C-n keypress which is inconvenient
-          (defadvice helm-completing-read-default-1
-              (around spw/helm-completing-read-cands-in-buffer activate)
-            (interactive)
-            ;; unfortunately this doesn't work if require-match is
-            ;; nil, so block that case
-            (let ((require-match (if (not require-match)
-                                     'confirm require-match))
-                  (cands-in-buffer t))
-              ad-do-it))
-
-          (add-to-list 'helm-completing-read-handlers-alist
-                       '(org-capture . completing-read-default))
-
-          ;; rebind some keys
-          (bind-key "C-w" 'spw/backward-delete-word helm-map)
-          (bind-key "C-o" 'helm-select-action helm-map)
-          (bind-key "M-i" 'helm-next-source helm-map)
-
-          (defun helm-choose-last ()
-            (interactive)
-            (helm-end-of-buffer)
-            (helm-exit-minibuffer))
-          (bind-key "M-RET" 'helm-choose-last helm-map)
-
-          ;; swap <tab> and C-z in helm since use persistent action
-          ;; much more frequently
-          (bind-key "<tab>" 'helm-execute-persistent-action helm-map)
-          (bind-key "C-i" 'helm-execute-persistent-action helm-map)
-          (bind-key "C-z" 'helm-select-action helm-map)
-
-          ;; eshell history -- let Helm handle eshell completion
-          (add-hook 'eshell-mode-hook
-                    #'(lambda ()
-                        (define-key eshell-mode-map [remap company-complete] 'helm-esh-pcomplete)))
-
-          ;; My helm mini: add and remove some sources depending
-          ;; on context it is launched from.  Also default to "" to
-          ;; avoid `thing-at-point'
-          (defun spw/helm-mini ()
-            (interactive)
-            (require 'helm-files)
-            (let ((sources '())
-                  (excluded-projects '("annex")))
-
-              (add-to-ordered-list 'sources 'helm-source-buffers-list 2)
-              (add-to-ordered-list 'sources 'helm-source-imenu-anywhere 4)
-              (add-to-ordered-list 'sources 'helm-source-bookmarks 5)
-              (add-to-ordered-list 'sources 'helm-source-dired-recent-dirs 7)
-              (add-to-ordered-list 'sources 'helm-source-recentf 9)
-
-              ;; Enable projectile stuff if we're in a project and not
-              ;; in its eshell buffer, since this doesn't work well
-              ;; when TRAMP'd to a remote host.  Disable it for
-              ;; certain projects and if we're in the default
-              ;; perspective.
-              (when (and (not (equal major-mode 'eshell-mode))
-                         (projectile-project-p)
-                         (not (memq (projectile-project-name) excluded-projects))
-                         (not (equal (persp-name persp-curr) "main")))
-                (add-to-ordered-list 'sources 'helm-source-projectile-files-list 3)
-                (delete 'helm-source-dired-recent-dirs sources))
-
-              ;; Org headlines source: imenu covers all open org
-              ;; buffers so better
-              ;; (when (or
-              ;;        (f-child-of? default-directory org-directory)
-              ;;        (f-same? default-directory org-directory))
-              ;;   (add-to-ordered-list 'sources 'helm-source-org-headline 1.5))
-
-              ;; begin code from original helm-mini
-              (unless helm-source-buffers-list
-                (setq helm-source-buffers-list
-                      (helm-make-source "Buffers" 'helm-source-buffers)))
-              (let ((helm-ff-transformer-show-only-basename nil))
-                (helm :default "" :sources sources :buffer "*spw helm mini*"))
-              ;; end code from original helm-mini
-              (helm-adaptive-mode)))
-
-          (use-package helm-descbinds
-            :ensure
-            :idle (helm-descbinds-mode))
-
-          ;; jump around current buffer, and if necessary currently
-          ;; open buffers
-          (use-package helm-swoop
-            :disabled t
-            :commands (helm-swoop
-                       helm-swoop-back-to-last-point
-                       helm-multi-swoop
-                       helm-multi-swoop-all)
-            :config (progn
-                      (bind-key "M-i" 'helm-multi-swoop-all-from-helm-swoop helm-swoop-map)
-
-                      ;; it's better to swoop for the symbol at point
-                      ;; explicitly rather than automatically.  Just
-                      ;; hit "vao" to select the symbol and then call helm-swoop
-                      (setq helm-swoop-pre-input-function (lambda () nil))))
-
-          ;; redefine this Helm function to work nicely with
-          ;; perspectives: just replace its code to create or switch
-          ;; to the shell buffer with a call to my function
-          (defun helm-ff-switch-to-eshell (_candidate)
-            "Switch to eshell and cd to `helm-ff-default-directory'."
-            (let ((cd-eshell #'(lambda ()
-                                 (eshell-kill-input)
-                                 (goto-char (point-max))
-                                 (insert
-                                  (format "cd '%s'" helm-ff-default-directory))
-                                 (eshell-send-input))))
-              (spw/persp-eshell)
-              (unless (get-buffer-process (current-buffer))
-                (funcall cd-eshell))))))
+  :init
+  (progn
+    (use-package helm-mode
+      :bind ("M-s o" . helm-occur))
+    (use-package helm-descbinds
+      :ensure
+      :idle (helm-descbinds-mode))))
 
 ;;; snippets
 
@@ -1193,7 +1113,6 @@ Originally from http://stackoverflow.com/a/2172827"
 (bind-key "C-w" 'spw/backward-delete-word)
 (bind-key "C-x C-k" 'kill-region)
 (global-set-key "\M-d" 'spw/delete-word)
-(bind-key "C-x C-m" 'helm-M-x)
 
 ;;; my buffer save cleanup functions
 
@@ -1773,7 +1692,7 @@ BINDEE may be a command or another keymap, but whatever it is, it should not be 
 
 (setq spw/personal-bindings
       '(("p" . projectile-command-map)
-        ("j" . spw/helm-mini)
+        ("j" . projectile-find-file-dwim)
         ("v" . projectile-vc)
         ("n" . mwf/narrow-or-widen-dwim)
         ("s" . spw/persp-eshell)
