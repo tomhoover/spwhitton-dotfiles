@@ -64,6 +64,7 @@
 ;; diminish `org-indent-mode' lighter
 
 (require 'diminish)
+(require 'org-indent)
 (diminish 'org-indent-mode)
 
 ;; custom doesn't actually set all the faces it should, so we'll do
