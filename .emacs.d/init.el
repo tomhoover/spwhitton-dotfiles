@@ -313,7 +313,7 @@
 
 ;;; Org
 
-(eval-after-load 'org (load "~/.emacs.d/init-org.el"))
+(eval-after-load 'org '(load "~/.emacs.d/init-org.el"))
 
 (use-package org
   :ensure org-plus-contrib
