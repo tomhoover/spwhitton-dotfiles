@@ -17,9 +17,7 @@
    ("melpa-stable" . "http://stable.melpa.org/packages/")
    ;; ("marmalade" . "http://marmalade-repo.org/packages/")
    ("org" . "http://orgmode.org/elpa/")
-   ("gnu" . "http://elpa.gnu.org/packages/"))
- package-pinned-packages
- '((org-plus-contrib . "org")))
+   ("gnu" . "http://elpa.gnu.org/packages/")))
 
 (package-initialize)
 (unless package-archive-contents
@@ -127,15 +125,15 @@
 
 (use-package smart-mode-line
   :ensure
-  :init (progn
-          (use-package powerline :ensure)
-          (use-package smart-mode-line-powerline-theme :ensure)
-          (sml/setup)
-          (sml/apply-theme 'powerline)
-          (setq sml/shorten-directory nil
-                sml/shorten-modes t
-                sml/mode-width 'right
-                sml/vc-mode-show-backend t)))
+  :init
+  (use-package powerline :ensure)
+  (use-package smart-mode-line-powerline-theme :ensure)
+  (sml/setup)
+  (sml/apply-theme 'powerline)
+  (setq sml/shorten-directory nil
+        sml/shorten-modes t
+        sml/mode-width 'right
+        sml/vc-mode-show-backend t))
 
 ;;; I'm in Korea
 
@@ -165,31 +163,32 @@
 (use-package expand-region
   :ensure
   :bind ("M-i" . er/expand-region)
-  :init (progn
-          (setq expand-region-contract-fast-key (kbd "o"))
-          ;; fill out the region to the beginning and ends of the
-          ;; lines at either end of it when we're not using
-          ;; expand-region but we've activated the mark (but only do
-          ;; this once)
-          (defadvice er/expand-region (around fill-out-region activate)
-            (if (or (not (region-active-p))
-                    (eq last-command 'er/expand-region))
-                ad-do-it
-              (if (< (point) (mark))
-                  (let ((beg (point)))
-                    (goto-char (mark))
-                    (end-of-line)
-                    (forward-char 1)
-                    (push-mark)
-                    (goto-char beg)
-                    (beginning-of-line))
-                (let ((end (point)))
-                  (goto-char (mark))
-                  (beginning-of-line)
-                  (push-mark)
-                  (goto-char end)
-                  (end-of-line)
-                  (forward-char 1)))))))
+  :init
+  (setq expand-region-contract-fast-key (kbd "o"))
+
+  ;; fill out the region to the beginning and ends of the
+  ;; lines at either end of it when we're not using
+  ;; expand-region but we've activated the mark (but only do
+  ;; this once)
+  (defadvice er/expand-region (around fill-out-region activate)
+    (if (or (not (region-active-p))
+            (eq last-command 'er/expand-region))
+        ad-do-it
+      (if (< (point) (mark))
+          (let ((beg (point)))
+            (goto-char (mark))
+            (end-of-line)
+            (forward-char 1)
+            (push-mark)
+            (goto-char beg)
+            (beginning-of-line))
+        (let ((end (point)))
+          (goto-char (mark))
+          (beginning-of-line)
+          (push-mark)
+          (goto-char end)
+          (end-of-line)
+          (forward-char 1))))))
 
 ;;; keep parentheses under control: modern replacement for the mighty paredit
 
@@ -200,123 +199,123 @@
          ;; for when I use Emacs via PuTTY
          ("M-<right>" . sp-forward-slurp-sexp)
          ("M-<left>" . sp-forward-barf-sexp))
-  :commands (smartparens-strict-mode smartparens-mode show-smartparens-global-mode)
-  :init (dolist (hook '(emacs-lisp-mode-hook
-                        lisp-mode-hook
-                        lisp-interaction-mode-hook
-                        ielm-mode-hook
-                        scheme-mode-hook
-                        inferior-scheme-mode-hook
-                        python-mode-hook
-                        minibuffer-setup-hook
-                        haskell-mode-hook))
-          (add-hook hook
-                    (lambda ()
-                      (smartparens-strict-mode))))
-  :idle (progn
-          (show-smartparens-global-mode)
+  :commands (smartparens-strict-mode
+             smartparens-mode
+             show-smartparens-global-mode)
+  :defer 5
+  :init
 
-          ;; non-strict mode the default, and strict mode in some
-          ;; programming language major modes
-          ;; (smartparens-global-mode)
-          )
-  :config (progn
-            (require 'smartparens-config)
-            (setq sp-navigate-consider-symbols t)
+  (dolist (hook '(emacs-lisp-mode-hook
+                  lisp-mode-hook
+                  lisp-interaction-mode-hook
+                  ielm-mode-hook
+                  scheme-mode-hook
+                  inferior-scheme-mode-hook
+                  python-mode-hook
+                  minibuffer-setup-hook
+                  haskell-mode-hook))
+    (add-hook hook
+              (lambda ()
+                (smartparens-strict-mode 1))))
 
-            ;; global smartparens bindings
-            (sp-use-smartparens-bindings)
-            (bind-key "C-w" 'sp-backward-kill-word emacs-lisp-mode-map)
-            (bind-key "C-k" 'sp-kill-hybrid-sexp emacs-lisp-mode-map)
-            (bind-key "M-<up>" 'sp-raise-sexp smartparens-mode-map)
+  :config
 
-            ;; and now undo some of that in particular major modes
-            (add-hook 'org-mode-hook (lambda ()
-                                       (crowding/local-set-minor-mode-key
-                                        'smartparens-mode (kbd "M-<up>") nil)))
+  (require 'smartparens-config)
+  (setq sp-navigate-consider-symbols t)
 
-            ;; override smartparens binding for C-k outside of lisp,
-            ;; since sp-kill-hybrid-sexp isn't very smart in comint
-            ;; and I like using C-u C-k
-            ;; (define-key smartparens-strict-mode-map [remap kill-line] 'kill-line)
-            ;; (bind-key "C-k" 'sp-kill-hybrid-sexp
-            ;; emacs-lisp-mode-map)
+  ;; global smartparens bindings
+  (sp-use-smartparens-bindings)
+  (bind-key "C-w" 'sp-backward-kill-word emacs-lisp-mode-map)
+  (bind-key "C-k" 'sp-kill-hybrid-sexp emacs-lisp-mode-map)
+  (bind-key "M-<up>" 'sp-raise-sexp smartparens-mode-map)
 
-            (defadvice sp-backward-kill-word (after sp-backward-kill-word-fix-punctuation activate)
-              ;; when killing the first word of a sentence, leave the
-              ;; two spaces after the previous sentence's terminal
-              ;; period
-              (save-excursion
-                (backward-char 2)
-                (if (and
-                     (or
-                      (looking-at "\\. ")
-                      (looking-at   "! ")
-                      (looking-at "\\? "))
-                     (not (looking-back "^[1-9]+")))
-                    (progn
-                      (forward-char 1)
-                      (insert " ")))))
+  ;; and now undo some of that in particular major modes
+  (add-hook 'org-mode-hook (lambda ()
+                             (crowding/local-set-minor-mode-key
+                              'smartparens-mode (kbd "M-<up>") nil)))
 
-            ;; fix cursor position after M-d at the beginning of a line
-            (defadvice sp-kill-word (after sp-kill-word-beg-of-line-fix activate)
-              (if (looking-back "^[[:space:]]")
-                  (backward-char 1)))
+  ;; override smartparens binding for C-k outside of lisp,
+  ;; since sp-kill-hybrid-sexp isn't very smart in comint
+  ;; and I like using C-u C-k
+  ;; (define-key smartparens-strict-mode-map [remap kill-line] 'kill-line)
+  ;; (bind-key "C-k" 'sp-kill-hybrid-sexp
+  ;; emacs-lisp-mode-map)
 
-            (defadvice sp-backward-delete-char (around sp-backward-delete-char-remove-indentation activate)
-              ;; when after whitespace at the beginning of a line or
-              ;; an Org bullet or heading, delete it all
-              (if (and
-                   ;; do it if we're not at the beginning of the line,
-                   ;; and there's whitespace: if we're at the
-                   ;; beginning of the line we should always delete
-                   (not (equal (point) (line-beginning-position)))
-                   (or
-                    (looking-back "^[[:space:]]+")
-                    (looking-back "^[[:space:]]*- ")
-                    (looking-back "^[*]+ ")))
-                  (kill-line 0)
-                ;; if not after whitespace at the beginning of the
-                ;; line, just call as usual
-                ad-do-it))
+  (defadvice sp-backward-kill-word (after sp-backward-kill-word-fix-punctuation activate)
+    ;; when killing the first word of a sentence, leave the
+    ;; two spaces after the previous sentence's terminal
+    ;; period
+    (save-excursion
+      (backward-char 2)
+      (if (and
+           (or
+            (looking-at "\\. ")
+            (looking-at   "! ")
+            (looking-at "\\? "))
+           (not (looking-back "^[1-9]+")))
+          (progn
+            (forward-char 1)
+            (insert " ")))))
 
-            (defadvice sp-backward-kill-word (around sp-backward-delete-word-remove-indentation activate)
-              ;; when after whitespace at the beginning of a line or
-              ;; an Org bullet or heading, delete it all.  This is
-              ;; more intuitive when C-w is one's main way to delete
-              ;; stuff
-              (if (and
-                   ;; do it if we're not at the beginning of the line,
-                   ;; and there's whitespace: if we're at the
-                   ;; beginning of the line we should always delete
-                   (not (equal (point) (line-beginning-position)))
-                   (or
-                    (looking-back "^[[:space:]]+")
-                    (looking-back "^[[:space:]]*- ")
-                    (looking-back "^[*]+ ")))
-                  (kill-line 0)
-                ;; if not after whitespace at the beginning of the
-                ;; line, just call as usual
-                ad-do-it))
+  ;; fix cursor position after M-d at the beginning of a line
+  (defadvice sp-kill-word (after sp-kill-word-beg-of-line-fix activate)
+    (if (looking-back "^[[:space:]]")
+        (backward-char 1)))
 
-            ;; define some additional pairings for Org-mode
-            (sp-local-pair 'org-mode "=" "=") ; verbatim
-            ;; (sp-local-pair 'org-mode "*" "*")
-            ;; (sp-local-pair 'org-mode "/" "/")
-            ;; (sp-local-pair 'org-mode "~" "~") ; code
-            ;; (sp-local-pair 'org-mode "+" "+")
-            ;; (sp-local-pair 'org-mode "_" "_")
+  (defadvice sp-backward-delete-char (around sp-backward-delete-char-remove-indentation activate)
+    ;; when after whitespace at the beginning of a line or
+    ;; an Org bullet or heading, delete it all
+    (if (and
+         ;; do it if we're not at the beginning of the line,
+         ;; and there's whitespace: if we're at the
+         ;; beginning of the line we should always delete
+         (not (equal (point) (line-beginning-position)))
+         (or
+          (looking-back "^[[:space:]]+")
+          (looking-back "^[[:space:]]*- ")
+          (looking-back "^[*]+ ")))
+        (kill-line 0)
+      ;; if not after whitespace at the beginning of the
+      ;; line, just call as usual
+      ad-do-it))
 
-            (defadvice sp--cleanup-after-kill (after haskell-sp-unindent activate)
-              (when hi2-mode
-                (hi2-indent-backwards)))
+  (defadvice sp-backward-kill-word (around sp-backward-delete-word-remove-indentation activate)
+    ;; when after whitespace at the beginning of a line or
+    ;; an Org bullet or heading, delete it all.  This is
+    ;; more intuitive when C-w is one's main way to delete
+    ;; stuff
+    (if (and
+         ;; do it if we're not at the beginning of the line,
+         ;; and there's whitespace: if we're at the
+         ;; beginning of the line we should always delete
+         (not (equal (point) (line-beginning-position)))
+         (or
+          (looking-back "^[[:space:]]+")
+          (looking-back "^[[:space:]]*- ")
+          (looking-back "^[*]+ ")))
+        (kill-line 0)
+      ;; if not after whitespace at the beginning of the
+      ;; line, just call as usual
+      ad-do-it))
 
-            ))
+  ;; define some additional pairings for Org-mode
+  (sp-local-pair 'org-mode "=" "=") ; verbatim
+  ;; (sp-local-pair 'org-mode "*" "*")
+  ;; (sp-local-pair 'org-mode "/" "/")
+  ;; (sp-local-pair 'org-mode "~" "~") ; code
+  ;; (sp-local-pair 'org-mode "+" "+")
+  ;; (sp-local-pair 'org-mode "_" "_")
+
+  (defadvice sp--cleanup-after-kill (after haskell-sp-unindent activate)
+    (when hi2-mode
+      (hi2-indent-backwards)))
+  (show-smartparens-global-mode 1))
 
 ;;; Org
 
 (use-package org
   :ensure org-plus-contrib
+  :pin org
   :mode (("\\.org" . org-mode)
          ("\\.org_archive" . org-mode))
   :commands (org-capture
@@ -332,7 +331,8 @@
 (use-package popwin
   :ensure
   :commands popwin-mode
-  :idle (popwin-mode 1))
+  :defer 5
+  :config (popwin-mode 1))
 
 ;;; save my places in buffers; this is all the session management I need
 
@@ -346,10 +346,11 @@
 (use-package saveplace
   :init (setq-default save-place t
                       save-place-file "~/.emacs.d/saveplace")
-  :idle (progn
-          (add-hook 'find-file-hook 'save-place-find-file-hook t)
-          (add-hook 'kill-emacs-hook 'save-place-kill-emacs-hook)
-          (add-hook 'kill-buffer-hook 'save-place-to-alist)))
+  :defer 5
+  :config
+  (add-hook 'find-file-hook 'save-place-find-file-hook t)
+  (add-hook 'kill-emacs-hook 'save-place-kill-emacs-hook)
+  (add-hook 'kill-buffer-hook 'save-place-to-alist))
 
 ;;; fix up whitespace around kill and yanking (package seems to be
 ;;; unavailable for download)
@@ -369,7 +370,9 @@
 (use-package openwith
   :ensure
   :commands openwith-mode
-  :idle (openwith-mode t))
+
+  :demand
+  :config (openwith-mode 1))
 
 ;; thanks to openwith, the warning for large files can be at a much
 ;; larger threshold as the chances of hitting it are low (this is
@@ -389,23 +392,25 @@
 (use-package magit
   :ensure
   :diminish magit-auto-revert-mode
-  :config (progn
+  :demand
+  :config
 
-            (setq magit-completing-read-function 'magit-ido-completing-read)
+  (setq magit-completing-read-function 'magit-ido-completing-read)
 
-            ;; C-c C-a to amend without any prompt
-            (defun magit-just-amend ()
-              (interactive)
-              (save-window-excursion
-                (magit-with-refresh
-                 (shell-command "git --no-pager commit --amend --reuse-message=HEAD"))))
-            (bind-key "C-c C-a" 'magit-just-amend magit-status-mode-map)
+  ;; C-c C-a to amend without any prompt
+  (defun magit-just-amend ()
+    (interactive)
+    (save-window-excursion
+      (magit-with-refresh
+       (shell-command "git --no-pager commit --amend --reuse-message=HEAD"))))
 
-            (use-package magit-annex :ensure)
+  (bind-key "C-c C-a" 'magit-just-amend magit-status-mode-map)
 
-            (use-package magit-wip
-              :diminish magit-wip-save-mode
-              :config (global-magit-wip-save-mode 1))))
+  (use-package magit-annex :ensure)
+
+  (use-package magit-wip
+    :diminish magit-wip-save-mode
+    :config (global-magit-wip-save-mode 1)))
 
 ;;; pointback mode: make sure that point is back where I left it when
 ;;; switching between buffers where at least one buffer is displayed
@@ -414,7 +419,9 @@
 (use-package pointback
   :ensure
   :commands global-pointback-mode
-  :idle (global-pointback-mode 1))
+  :defer 5
+  :config
+  (global-pointback-mode 1))
 
 ;;; colour those parentheses
 
@@ -428,9 +435,9 @@
 (use-package rainbow-mode
   :ensure
   :commands rainbow-mode
-  :init (progn
-          (add-hook 'html-mode-hook 'rainbow-mode)
-          (add-hook 'css-mode-hook 'rainbow-mode)))
+  :init
+  (add-hook 'html-mode-hook 'rainbow-mode)
+  (add-hook 'css-mode-hook 'rainbow-mode))
 
 ;;; keep reindenting lisp
 
@@ -448,10 +455,9 @@
                 inferior-scheme-mode-hook))
   (add-hook hook
             (lambda ()
-              (turn-on-eldoc-mode)
-              ;; (diminish 'eldoc-mode)
-              (aggressive-indent-mode)
-              (rainbow-delimiters-mode t))))
+              (eldoc-mode 1)
+              (aggressive-indent-mode 1)
+              (rainbow-delimiters-mode 1))))
 
 ;;; boxquotes
 
@@ -492,39 +498,40 @@
   ;; :bind ("<tab>" . company-complete)
   ;; :idle (global-company-mode)
   :diminish company-mode
-  :config (progn
-            ;;; startup company
+  :config
 
-            (defun spw/company-prog-setup ()
-              "Setup company mode carefully when its needed, rather than using the brash global-company-mode"
-              (company-mode 1)
-              (define-key (current-local-map) (kbd "M-/") 'company-complete)
-              )
-            (add-hook 'prog-mode-hook 'spw/company-prog-setup)
-            ;; alternative approach: https://github.com/company-mode/company-mode/issues/94#issuecomment-40884387
+  ;; startup company
 
-            ;; I like my C-w binding so move one of company's bindings
-            (define-key company-active-map "\C-w" nil)
-            (bind-key "M-o" 'company-show-location company-active-map)
+  (defun spw/company-prog-setup ()
+    "Setup company mode carefully when its needed, rather than using the brash global-company-mode"
+    (company-mode 1)
+    (define-key (current-local-map) (kbd "M-/") 'company-complete)
+    )
+  (add-hook 'prog-mode-hook 'spw/company-prog-setup)
+  ;; alternative approach: https://github.com/company-mode/company-mode/issues/94#issuecomment-40884387
 
-            ;;; settings
+  ;; I like my C-w binding so move one of company's bindings
+  (define-key company-active-map "\C-w" nil)
+  (bind-key "M-o" 'company-show-location company-active-map)
 
-            (setq company-idle-delay nil
-                  company-minimum-prefix-length 0
-                  company-echo-delay 0)
+  ;; settings
 
-            (add-to-list 'company-backends 'company-capf)
-            (add-to-list 'company-transformers 'company-sort-by-occurrence)
+  (setq company-idle-delay nil
+        company-minimum-prefix-length 0
+        company-echo-delay 0)
 
-            ;;; python code completion
+  (add-to-list 'company-backends 'company-capf)
+  (add-to-list 'company-transformers 'company-sort-by-occurrence)
 
-            (use-package anaconda-mode
-              :disabled t
-              :ensure
-              :config (progn
-                        (add-hook 'python-mode-hook 'anaconda-mode)
-                        (add-to-list 'company-backends 'company-anaconda)
-                        (add-hook 'python-mode-hook 'anaconda-eldoc)))))
+  ;; python code completion
+
+  (use-package anaconda-mode
+    :disabled t
+    :ensure
+    :config (progn
+              (add-hook 'python-mode-hook 'anaconda-mode)
+              (add-to-list 'company-backends 'company-anaconda)
+              (add-hook 'python-mode-hook 'anaconda-eldoc))))
 ;; C-o during company isearch narrows to stuff matching that search;
 ;; mnemonic 'occur'.  C-M-s while outside of search to do the same
 ;; thing
@@ -538,11 +545,14 @@
 (use-package markdown-mode
   :ensure
   :mode "\\.md"
-  :init (progn
-          (add-hook 'markdown-mode-hook 'turn-on-orgstruct)
-          (add-hook 'markdown-mode-hook 'turn-on-orgstruct++))
+
+  :init
+  (add-hook 'markdown-mode-hook 'turn-on-orgstruct)
+  (add-hook 'markdown-mode-hook 'turn-on-orgstruct++)
+
+  :config
   ;; This binding replaces a `markdown-export'.
-  :config (bind-key "C-c C-c e" 'spw/pandoc-paper-compile markdown-mode-map))
+  (bind-key "C-c C-c e" 'spw/pandoc-paper-compile markdown-mode-map))
 
 ;;; PHP mode
 
@@ -552,6 +562,7 @@
 
 (use-package deft
   :ensure
+  :commands deft
   :init (setq deft-extension "org"
               deft-text-mode 'org-mode
               deft-directory "~/doc/org/"
@@ -560,17 +571,16 @@
               deft-incremental-search t
               ;; don't just strip the leading hash but the whole #+TITLE:
               deft-strip-title-regexp "\\(?:\\#\\+TITLE\\: \\|\\#\\+FILETAGS\\: \\|^%+\\|^[#* ]+\\|-\\*-[[:alpha:]]+-\\*-\\|#+$\\)")
-  :config (progn
-            (bind-key "C-w" 'deft-filter-decrement-word deft-mode-map)
-            ;; (bind-key "C-h" 'deft-filter-decrement deft-mode-map)
+  :config
+  (bind-key "C-w" 'deft-filter-decrement-word deft-mode-map)
 
-            (defadvice deft (before persp-deft activate)
-              (projectile-persp-switch-project "~/doc"))
+  (defadvice deft (before persp-deft activate)
+    (projectile-persp-switch-project "~/doc"))
 
-            (defadvice deft-new-file (after insert-org-TITLE activate)
-              (save-excursion
-                (goto-char (point-min))
-                (insert "#+TITLE: ")))))
+  (defadvice deft-new-file (after insert-org-TITLE activate)
+    (save-excursion
+      (goto-char (point-min))
+      (insert "#+TITLE: "))))
 
 ;;; The following two python packages seem to be unavailable for
 ;;; download.  Disable them for now.
@@ -588,33 +598,36 @@
 
 (use-package flycheck
   :ensure
-  :idle (global-flycheck-mode)
-  ;; disable flymake; having both running at the same time is annoying
-  :init (setq flymake-allowed-file-name-masks nil))
+  :defer 5
+  :init
+  ;; try to disable flymake; having both running at the same time is annoying
+  (setq flymake-allowed-file-name-masks nil)
+  :config
+  (global-flycheck-mode 1))
 
 ;;; TRAMP
 
 (use-package tramp
-  :config (progn
-            (add-to-list 'tramp-default-user-alist '(nil "sdf" "spw"))
-            (add-to-list 'tramp-default-user-alist '("sudo" "localhost" "root"))
-            (add-to-list 'tramp-default-user-alist '(nil nil "swhitton") t)
-            (add-to-list 'tramp-default-user-alist '(nil "ma" "spw"))
-            (add-to-list 'tramp-default-user-alist '(nil "sage" "spwhitton"))
+  :config
+  (add-to-list 'tramp-default-user-alist '(nil "sdf" "spw"))
+  (add-to-list 'tramp-default-user-alist '("sudo" "localhost" "root"))
+  (add-to-list 'tramp-default-user-alist '(nil nil "swhitton") t)
+  (add-to-list 'tramp-default-user-alist '(nil "ma" "spw"))
+  (add-to-list 'tramp-default-user-alist '(nil "sage" "spwhitton"))
 
-            ;; TRAMP and zsh are not friends so might as well switch
-            ;; over here
-            (setenv "SHELL" "/bin/bash")))
+  ;; TRAMP and zsh are not friends so might as well switch
+  ;; over here
+  (setenv "SHELL" "/bin/bash"))
 
 ;;; ebib for editing BiBTeX databases
 
 (use-package ebib
   :ensure
   :bind ("C-c g e" . ebib)
-  :init (progn
-          (defadvice ebib (before spw/persp-ebib activate)
-            (persp-switch "ebib"))
-          (setq ebib-preload-bib-files '("~/doc/spw.bib"))))
+  :init
+  (defadvice ebib (before spw/persp-ebib activate)
+    (persp-switch "ebib"))
+  (setq ebib-preload-bib-files '("~/doc/spw.bib")))
 
 ;;; dired enhancements
 
@@ -637,59 +650,60 @@
 (use-package projectile
   :ensure
   :commands projectile-vc
-  :init (projectile-global-mode)
-  :diminish 'projectile-mode
-  :config (progn
-            (setq projectile-switch-project-action 'projectile-dired
-                  projectile-completion-system 'ido)
-            (diminish 'projectile-mode)))
+  :demand
+  :config
+  (projectile-global-mode 1)
+  (setq projectile-switch-project-action 'projectile-dired
+        projectile-completion-system 'ido)
+  (diminish 'projectile-mode))
 
 (use-package persp-projectile :ensure)
 
 (use-package perspective
   :ensure
   :commands (persp-toggle persp-switch)
-  :init (progn
-          (setq persp-modestring-dividers '("" "" "|"))
+  :demand
+  :config
+  (setq persp-modestring-dividers '("" "" "|"))
 
-          ;; activate persp mode, but don't activate it if it's
-          ;; already active cos this removes all existing perspectives
-          ;; which is annoying
-          (unless persp-mode
-            (persp-mode))
+  ;; activate persp mode, but don't activate it if it's
+  ;; already active cos this removes all existing perspectives
+  ;; which is annoying
+  (unless persp-mode
+    (persp-mode))
 
-          (defun persp-toggle (arg)
-            (interactive "P")
-            (if arg (call-interactively 'persp-switch)
-              (persp-switch (persp-find-some))))
+  (defun persp-toggle (arg)
+    (interactive "P")
+    (if arg (call-interactively 'persp-switch)
+      (persp-switch (persp-find-some))))
 
-          ;; save and restore a base window configuration ala
-          ;; workgroups.el.  Designed to handle the perennial Emacs
-          ;; problem of Emacs totally screwing up your windows in the
-          ;; middle of your work
-          (setq persp-basewcs nil)
-          (defun persp-basewc-save ()
-            (interactive)
-            (let* ((name (persp-name persp-curr))
-                   (wc (current-window-configuration))
-                   (pair (cons name wc)))
-              (setq persp-basewcs
-                    (remove* name persp-basewcs
-                             :test 'equal :key 'car))
-              (add-to-list 'persp-basewcs pair)))
-          ;; Save when opening a perspective.
-          (add-hook 'persp-created-hook 'persp-basewc-save)
-          ;; Also do a save of the basewc after
-          ;; `projectile-persp-switch-project' (I never use
-          ;; `projectile-switch-project' directly) switches to dired
-          ;; as this is a more sensible initial basewc to go back to.
-          (add-hook 'projectile-switch-project-hook 'persp-basewc-save)
-          (defun persp-basewc-restore ()
-            (interactive)
-            (let* ((name (persp-name persp-curr))
-                   (pair (assoc name persp-basewcs))
-                   (wc (cdr pair)))
-              (set-window-configuration wc)))))
+  ;; save and restore a base window configuration ala
+  ;; workgroups.el.  Designed to handle the perennial Emacs
+  ;; problem of Emacs totally screwing up your windows in the
+  ;; middle of your work
+  (setq persp-basewcs nil)
+  (defun persp-basewc-save ()
+    (interactive)
+    (let* ((name (persp-name persp-curr))
+           (wc (current-window-configuration))
+           (pair (cons name wc)))
+      (setq persp-basewcs
+            (remove* name persp-basewcs
+                     :test 'equal :key 'car))
+      (add-to-list 'persp-basewcs pair)))
+  ;; Save when opening a perspective.
+  (add-hook 'persp-created-hook 'persp-basewc-save)
+  ;; Also do a save of the basewc after
+  ;; `projectile-persp-switch-project' (I never use
+  ;; `projectile-switch-project' directly) switches to dired
+  ;; as this is a more sensible initial basewc to go back to.
+  (add-hook 'projectile-switch-project-hook 'persp-basewc-save)
+  (defun persp-basewc-restore ()
+    (interactive)
+    (let* ((name (persp-name persp-curr))
+           (pair (assoc name persp-basewcs))
+           (wc (cdr pair)))
+      (set-window-configuration wc))))
 
 ;; completion with ido
 
@@ -723,16 +737,17 @@
 
 (use-package flx-ido
   :ensure
-  :init (progn
-          (flx-ido-mode 1)
-          (setq ido-enable-flex-matching t
-                ido-use-faces nil
-                flx-ido-threshhold 7500
-                gc-cons-threshold 20000000)))
+  :config
+  (flx-ido-mode 1)
+  (setq ido-enable-flex-matching t
+        ido-use-faces nil
+        flx-ido-threshhold 7500
+        gc-cons-threshold 20000000))
 
 (use-package ido-ubiquitous
   :ensure
-  :init (ido-ubiquitous-mode 1))
+  :config
+  (ido-ubiquitous-mode 1))
 
 ;; (use-package ido-vertical-mode
 ;;   :ensure
@@ -740,7 +755,8 @@
 
 (use-package smex
   :ensure
-  ;; TODO: get keyboard macro bindings back
+  ;; TODO: get keyboard macro bindings, that vanilla emacs has under
+  ;; the prefix C-x C-m, back
   :bind ("C-x C-m" . smex))
 
 ;; imenu
@@ -751,20 +767,25 @@
 
 (use-package helm
   :ensure
-  :init
-  (progn
-    (use-package helm-mode
-      :bind ("M-s o" . helm-occur))
-    (use-package helm-descbinds
-      :ensure
-      :idle (helm-descbinds-mode))))
+  :defer 5
+  :config
+  (use-package helm-mode
+    :bind ("M-s o" . helm-occur))
+  (use-package helm-descbinds
+    :ensure
+    :defer 5
+    :config
+    (helm-descbinds-mode)))
 
 ;;; snippets
 
 (use-package yasnippet
   :ensure
   :diminish yas-minor-mode
-  :idle (yas-global-mode))
+
+  :defer 5
+  :config
+  (yas-global-mode 1))
 
 ;;; htmlize for Org HTML export/publishing
 
@@ -779,29 +800,33 @@
 
 (use-package highlight-indentation
   :ensure
-  :init (progn
-          (add-hook 'python-mode-hook 'highlight-indentation-current-column-mode)
-          ;; (add-hook 'haskell-mode-hook 'highlight-indentation-current-column-mode)
-          ))
+  :init
+  (add-hook 'python-mode-hook 'highlight-indentation-current-column-mode))
 
 ;;; jump around what's visible
 
 (use-package ace-jump-mode
   :ensure
   :bind ("M-o" . ace-jump-mode)
+  :config
+
   ;; make `ace-jump-mode' respect dired-isearch-filenames
   ;; from https://www.reddit.com/r/emacs/comments/2x3mke/making_acejump_play_nice_with_dired/
-  :config (add-hook 'dired-mode-hook
-                    (lambda ()
-                      (setq-local ace-jump-search-filter
-                                  (lambda ()
-                                    (get-text-property (point) 'dired-filename))))))
+  ;; (add-hook 'dired-mode-hook
+  ;;           (lambda ()
+  ;;             (setq-local ace-jump-search-filter
+  ;;                         (lambda ()
+  ;;                           (get-text-property (point) 'dired-filename)))))
+
+  )
 
 ;;; use ace-jump-mode to move between links in help file
 
 (use-package ace-link
   :ensure
-  :idle (ace-link-setup-default))
+  :defer 5
+  :config
+  (ace-link-setup-default))
 
 ;;; chat on Jabber
 
@@ -885,44 +910,46 @@
 (use-package whole-line-or-region
   :ensure
   :diminish whole-line-or-region-mode
-  :idle (whole-line-or-region-mode 1))
+  :defer 5
+  :config
+  (whole-line-or-region-mode 1))
 
 (use-package hydra
   :ensure
-  :init (progn
-          (setq hydra-windows-config nil)
-          (defun spw/maybe-delete-other-windows ()
-            (interactive)
-            (if (= (count-windows) 1)
-                (set-window-configuration hydra-windows-config)
-              (setq hydra-windows-config (current-window-configuration))
-              (delete-other-windows)))
-          (defhydra hydra-windows (global-map "C-x" :color red)
-            "windows"
-            ("o" other-window "next" :color red)
-            ("O" (lambda () (interactive) (other-window -1)) "previous" :color red)
-            ("S" spw/toggle-window-split "toggle" :color red)
-            ("0" delete-window "del" :color red)
-            ("1" spw/maybe-delete-other-windows "max" :color red)
-            ("2" split-window-below "horiz" :color red)
-            ("3" split-window-right "vert" :color red))))
+  :config
+  (setq hydra-windows-config nil)
+  (defun spw/maybe-delete-other-windows ()
+    (interactive)
+    (if (= (count-windows) 1)
+        (set-window-configuration hydra-windows-config)
+      (setq hydra-windows-config (current-window-configuration))
+      (delete-other-windows)))
+  (defhydra hydra-windows (global-map "C-x" :color red)
+    "windows"
+    ("o" other-window "next" :color red)
+    ("O" (lambda () (interactive) (other-window -1)) "previous" :color red)
+    ("S" spw/toggle-window-split "toggle" :color red)
+    ("0" delete-window "del" :color red)
+    ("1" spw/maybe-delete-other-windows "max" :color red)
+    ("2" split-window-below "horiz" :color red)
+    ("3" split-window-right "vert" :color red)))
 
 ;;; aligning rule for Haskell adapted from Haskell mode wiki
 
 (use-package align
-  :init (progn
-          (add-to-list 'align-rules-list
-                       '(haskell-defns
-                         (regexp . "\\(\\s-+\\)\\(::\\|∷\\|=\\)\\s-+")
-                         (modes quote (haskell-mode literate-haskell-mode))))
-          (add-to-list 'align-rules-list
-                       '(haskell-arrows
-                         (regexp . "^[^:\n]+\\(\\s-+\\)\\(->\\)\\s-+")
-                         (modes quote (haskell-mode literate-haskell-mode))))
-          (add-to-list 'align-rules-list
-                       '(haskell-left-arrows
-                         (regexp . "\\(\\s-+\\)\\(<-\\|←\\)\\s-+")
-                         (modes quote (haskell-mode literate-haskell-mode))))))
+  :config
+  (add-to-list 'align-rules-list
+               '(haskell-defns
+                 (regexp . "\\(\\s-+\\)\\(::\\|∷\\|=\\)\\s-+")
+                 (modes quote (haskell-mode literate-haskell-mode))))
+  (add-to-list 'align-rules-list
+               '(haskell-arrows
+                 (regexp . "^[^:\n]+\\(\\s-+\\)\\(->\\)\\s-+")
+                 (modes quote (haskell-mode literate-haskell-mode))))
+  (add-to-list 'align-rules-list
+               '(haskell-left-arrows
+                 (regexp . "\\(\\s-+\\)\\(<-\\|←\\)\\s-+")
+                 (modes quote (haskell-mode literate-haskell-mode)))))
 
 ;;; edit .nix files
 
@@ -942,26 +969,26 @@
 
 (use-package god-mode
   :ensure
-  :config (progn
-            ;; (unless god-global-mode (god-mode))
+  :config
+  ;; (unless god-global-mode (god-mode))
 
-            ;; activate with a key-chord to avoid having to have
-            ;; capslock bound to both escape and control
-            (key-chord-define-global "hj" 'god-mode-all)
+  ;; activate with a key-chord to avoid having to have
+  ;; capslock bound to both escape and control
+  (key-chord-define-global "hj" 'god-mode-all)
 
-            ;; just a little vi in god-mode
-            (define-key god-local-mode-map (kbd ".") 'repeat)
-            (define-key god-local-mode-map (kbd "i") 'god-mode-all)
+  ;; just a little vi in god-mode
+  (define-key god-local-mode-map (kbd ".") 'repeat)
+  (define-key god-local-mode-map (kbd "i") 'god-mode-all)
 
-            ;; change a part of the modeline depending on whether in god-mode
-            (defun spw/god-mode-update-modeline ()
-              (set-face-background 'sml/filename (if god-local-mode
-                                                     "red"
-                                                   ;; following from smart-mode-line-powerline-theme.el
-                                                   (or (face-background 'powerline-active1) "Grey30"))))
+  ;; change a part of the modeline depending on whether in god-mode
+  (defun spw/god-mode-update-modeline ()
+    (set-face-background 'sml/filename (if god-local-mode
+                                           "red"
+                                         ;; following from smart-mode-line-powerline-theme.el
+                                         (or (face-background 'powerline-active1) "Grey30"))))
 
-            (add-hook 'god-mode-enabled-hook 'spw/god-mode-update-modeline)
-            (add-hook 'god-mode-disabled-hook 'spw/god-mode-update-modeline)))
+  (add-hook 'god-mode-enabled-hook 'spw/god-mode-update-modeline)
+  (add-hook 'god-mode-disabled-hook 'spw/god-mode-update-modeline))
 
 ;; good key chords from
 ;; <http://www.johndcook.com/blog/2015/02/01/rare-bigrams/> via
@@ -992,7 +1019,7 @@
 
 (use-package elisp-slime-nav
   :ensure
-  :commands turn-on-elisp-slime-nav-mode
+  :commands (turn-on-elisp-slime-nav-mode elisp-slime-nav-mode)
   :init (dolist (hook '(emacs-lisp-mode-hook ielm-mode-hook))
           (add-hook hook 'elisp-slime-nav-mode)))
 

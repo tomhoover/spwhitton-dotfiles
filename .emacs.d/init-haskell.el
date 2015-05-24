@@ -31,12 +31,15 @@
   :mode (("\\.hs\\'" . haskell-mode)
          ("\\.cabal\\'" . haskell-cabal-mode)
          ("\\.hcr\\'" . haskell-core-mode))
+  
+  :config
+  
   ;; Start up all my usual minor modes and bindings.
-  :init (progn
-          (add-hook 'haskell-mode-hook 'spw/haskell-mode-hook)
-          (add-hook 'after-save-hook 'spw/haskell-cabal-mode-save-hook))
-  :config (setq haskell-tags-on-save t
-                haskell-process-suggest-remove-import-lines t))
+  (add-hook 'haskell-mode-hook 'spw/haskell-mode-hook)
+  (add-hook 'after-save-hook 'spw/haskell-cabal-mode-save-hook)
+
+  (setq haskell-tags-on-save t
+	haskell-process-suggest-remove-import-lines t))
 
 ;; load haskell-flycheck only once haskell-mode is loaded
 
@@ -135,20 +138,21 @@
 (use-package hi2
   :ensure
   :diminish hi2-mode
-  :init (progn (setq hi2-layout-offset 4
-                     hi2-left-offset 4
-                     hi2-show-indentations nil)
+  :config
+  (setq hi2-layout-offset 4
+	hi2-left-offset 4
+	hi2-show-indentations nil)
 
-               (defun spw/hi2-pipe ()
-                 "Newline, pipe char and indent"
-                 (interactive)
-                 (hi2-newline-and-indent)
-                 (insert "|")
-                 (indent-for-tab-command)
-                 (insert " "))
+  (defun spw/hi2-pipe ()
+    "Newline, pipe char and indent"
+    (interactive)
+    (hi2-newline-and-indent)
+    (insert "|")
+    (indent-for-tab-command)
+    (insert " "))
 
-               (add-hook 'haskell-mode-hook 'turn-on-hi2)
-               (bind-key "C-c |" 'spw/hi2-pipe hi2-mode-map)))
+  (add-hook 'haskell-mode-hook 'turn-on-hi2)
+  (bind-key "C-c |" 'spw/hi2-pipe hi2-mode-map))
 
 (use-package shm
   :disabled t
