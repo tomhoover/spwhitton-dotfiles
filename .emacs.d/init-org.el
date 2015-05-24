@@ -61,6 +61,11 @@
 
 ;;;; ---- preferences ----
 
+;; diminish `org-indent-mode' lighter
+
+(require 'diminish)
+(diminish 'org-indent-mode)
+
 ;; custom doesn't actually set all the faces it should, so we'll do
 ;; some manually
 ;;(set-face-foreground 'org-hide "#3f3f3f")

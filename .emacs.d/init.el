@@ -313,6 +313,8 @@
 
 ;;; Org
 
+(eval-after-load 'org (load "~/.emacs.d/init-org.el"))
+
 (use-package org
   :ensure org-plus-contrib
   :pin org
@@ -322,9 +324,7 @@
              org-store-link
              org-agenda
              spw/org-agenda-file-to-front
-             spw/org-remove-file)
-  :diminish org-indent-mode
-  :config (load "~/.emacs.d/init-org.el"))
+             spw/org-remove-file))
 
 ;;; keep pop up windows under control
 
