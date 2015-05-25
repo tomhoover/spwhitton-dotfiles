@@ -481,6 +481,8 @@
     (grep-find (concat "find " org-directory
                        " -regextype posix-egrep -type f"
                        args-together
+                       " -not -regex '" (expand-file-name org-directory) "/archive/.*'"
+                       " -not -name reading.org"
                        " -not -name archive.org -not -regex '" (expand-file-name org-directory) "/[ABCDEFGHIJKLMNOPQRSTUVWXYZ].*' -exec egrep -nH -e \"\\* \(TODO\|SOMEDAY\|WAITING\|SOONDAY\) \" {} +"))))
 
 (defadvice org-agenda (after spw/org-agenda-run-find-non-agenda-todos activate)
