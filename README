@@ -15,3 +15,22 @@ repository to require time-consuming, complex rebase operations.  In
 particular, the restriction allows for the `mr update' and `mr rebase'
 commands to be simple scripts that almost always do exactly what's
 needed.
+
+===========================
+Minimal system requirements
+===========================
+
+git, the usual POSIX userland
+
+================================
+Recommended pre-installed extras
+================================
+
+GNU stow, myrepos
+
+=============
+Minimal setup
+=============
+
+1. Get the repo: git clone https://github.com/spwhitton/dotfiles.git src/dotfiles
+2. Run botstrap script: src/dotfiles/bin/bstraph.sh
