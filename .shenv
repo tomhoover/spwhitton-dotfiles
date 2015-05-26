@@ -74,6 +74,10 @@ fi
 
 # ---- set language (snippet from joeyh's home-etc.git repo)
 
+# TODO: according to <https://wiki.debian.org/Locale>, I ought not to
+# be setting LC_ALL.  Instead I could set most of LC_* to en_GB.UTF-8,
+# and some e.g. LC_PAPER to en_US.UTF-8.
+
 case " $(echo $(locale -a)) " in
     *\ en_GB.utf8\ *) LANG=en_GB.utf8 ;;
     *\ en_GB.UTF-8\ *) LANG=en_GB.UTF-8 ;;
