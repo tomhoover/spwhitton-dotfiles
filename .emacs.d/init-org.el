@@ -810,7 +810,8 @@
             (progn
               (goto-char (point-max))
               (insert path)
-              (save-buffer)))))))
+              (save-buffer)
+              (message "added")))))))
 
 (defun spw/org-remove-file ()
   (interactive)
@@ -822,7 +823,8 @@
             (progn
               (beginning-of-line)
               (kill-line 1)
-              (save-buffer)))))))
+              (save-buffer)
+              (message "remove")))))))
 
 ;; defeat variable-pitch-mode for tables and source blocks, per
 ;; http://stackoverflow.com/a/16819449
