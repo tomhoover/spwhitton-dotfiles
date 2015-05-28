@@ -102,10 +102,6 @@
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 (if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
 
-;;; winner mode: undo window configuration changes
-
-(winner-mode 1)
-
 ;;; cursor settings
 
 (setq x-stretch-cursor t)
@@ -932,7 +928,27 @@
     ("0" delete-window "del" :color red)
     ("1" spw/maybe-delete-other-windows "max" :color red)
     ("2" split-window-below "horiz" :color red)
-    ("3" split-window-right "vert" :color red)))
+    ("3" split-window-right "vert" :color red))
+
+  ;;; winner mode: undo window configuration changes
+
+  (winner-mode 1)
+
+  ;; Undo the bindings so that the hydra bindings take precedence
+  (define-key winner-mode-map (kbd "C-c <left>") nil)
+  (define-key winner-mode-map (kbd "C-c <right>") nil)
+
+  (defhydra hydra-winner (global-map "C-c" :color red)
+    "winner"
+    ("<left>" winner-undo "back" :color red)
+
+    ;; We need a lambda here to override `winner-redo''s check that
+    ;; the last command was winner-undo, since the last command will
+    ;; be `hydra-winner/winner-undo' if we replace the lambda with
+    ;; just `winner-undo'
+    ("<right>" (lambda () (interactive)
+                 (let ((last-command 'winner-undo))
+                   (winner-redo))) "forward" :color red)))
 
 ;;; aligning rule for Haskell adapted from Haskell mode wiki
 
