@@ -18,7 +18,7 @@ if ! which stow >/dev/null; then
     cd $HOME/local/src
     curl -O $STOWURL
     tar xfz stow-*
-    cd stow-*
+    cd $(basename $STOWURL | sed -e 's/.tar.gz//')
     ./configure --prefix=$HOME/local && make install
     cd $HOME
 fi
