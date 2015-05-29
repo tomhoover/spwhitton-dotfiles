@@ -1735,7 +1735,8 @@ BINDEE may be a command or another keymap, but whatever it is, it should not be 
 
 (setq spw/personal-bindings
       '(("p" . projectile-command-map)
-        ("j" . projectile-find-file-dwim)
+        ;; ("j" . projectile-find-file-dwim)
+        ("j" . projectile-find-file)
         ("v" . projectile-vc)
         ("n" . mwf/narrow-or-widen-dwim)
         ("s" . spw/persp-eshell)
