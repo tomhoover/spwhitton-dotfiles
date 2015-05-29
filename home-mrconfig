@@ -321,7 +321,7 @@ chain = true
 skip = true
 
 [src/srem]
-checkout = git clone github:spwhitton/dotfiles.git dotfiles
+checkout = git clone github:spwhitton/srem.git srem
 post_checkout = ln -s $HOME/src/srem/dist/build/srem/srem $HOME/local/bin/srem
 skip = lazy
 
