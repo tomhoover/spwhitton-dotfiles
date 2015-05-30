@@ -19,7 +19,14 @@ if ! which stow >/dev/null; then
     curl -O $STOWURL
     tar xfz stow-*
     cd $(basename $STOWURL | sed -e 's/.tar.gz//')
-    ./configure --prefix=$HOME/local && make install
+
+    # we need to use gmake on BSD
+    if which gmake; then
+        ./configure --prefix=$HOME/local && gmake install
+    else
+        ./configure --prefix=$HOME/local && make install
+    fi
+
     cd $HOME
 fi
 if ! which mr >/dev/null; then
