@@ -16,6 +16,7 @@ mkdir -p $HOME/local/src
 
 if ! which stow >/dev/null; then
     cd $HOME/local/src
+    rm -rf stow-*
     curl -O $STOWURL
     tar xfz stow-*
     cd $(basename $STOWURL | sed -e 's/.tar.gz//')
