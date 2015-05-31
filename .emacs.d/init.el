@@ -6,6 +6,9 @@
 
 ;;;; ---- package management ----
 
+;; be sure not to load stale bytecode-compiled lisp
+(setq load-prefer-newer t)
+
 (add-to-list 'load-path (concat user-emacs-directory "site-lisp"))
 (require 'use-package)
 (require 'package)
