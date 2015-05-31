@@ -803,8 +803,8 @@
 
 (use-package ace-jump-mode
   :ensure
-  :bind ("M-o" . ace-jump-mode)
-  :config
+  ;; :bind ("M-o" . ace-jump-mode)
+  ;; :config
 
   ;; make `ace-jump-mode' respect dired-isearch-filenames
   ;; from https://www.reddit.com/r/emacs/comments/2x3mke/making_acejump_play_nice_with_dired/
@@ -815,6 +815,10 @@
   ;;                           (get-text-property (point) 'dired-filename)))))
 
   )
+
+(use-package avy
+  :ensure
+  :bind ("M-o" . avy-goto-char))
 
 ;;; use ace-jump-mode to move between links in help file
 
