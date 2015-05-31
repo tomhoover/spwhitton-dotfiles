@@ -818,7 +818,19 @@
 
 (use-package avy
   :ensure
-  :bind ("M-o" . avy-goto-char))
+  :bind ("M-o" . spw/avy-goto-word)
+  :config
+
+  ;; Attempt to restore ace-jump-mode functionality whereby M-o jumps
+  ;; by word start, C-u M-o by any char in the word.  We're taking the
+  ;; input ourselves so that `avy-goto-word-1' doesn't see arg and
+  ;; thus narrow to the current window.
+
+  (defun spw/avy-goto-word (char &optional arg)
+    (interactive (list (read-char "char: ")
+                       current-prefix-arg))
+    (if arg (avy-goto-char char nil)
+      (avy-goto-word-1 char nil))))
 
 ;;; use ace-jump-mode to move between links in help file
 
