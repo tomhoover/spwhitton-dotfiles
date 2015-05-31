@@ -821,11 +821,13 @@
   :bind ("M-o" . spw/avy-goto-word)
   :config
 
+  ;; Make avy overlays look more like ace-jump
+  (setq avy-style 'at-full)
+
   ;; Attempt to restore ace-jump-mode functionality whereby M-o jumps
   ;; by word start, C-u M-o by any char in the word.  We're taking the
   ;; input ourselves so that `avy-goto-word-1' doesn't see arg and
-  ;; thus narrow to the current window.
-
+  ;; thus narrow to the current window
   (defun spw/avy-goto-word (char &optional arg)
     (interactive (list (read-char "char: ")
                        current-prefix-arg))
