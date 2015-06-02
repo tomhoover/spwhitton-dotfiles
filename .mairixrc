@@ -1,8 +1,9 @@
 base=$HOME
-maildir=.offlinemail/*
+maildir=.fmail/*
 mbox=lib/annex/doc/mail/*
 mformat=mbox
 mfolder=local/mairixresults
-database=~/.mairixdb
-omit=lib/annex/doc/mail/mairixresults
+database=~/local/mairixdb
 omit=spam*
+omit=*Junk Mail*
+omit=*Trash*
