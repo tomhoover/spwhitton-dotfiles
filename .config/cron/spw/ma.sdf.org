@@ -10,4 +10,3 @@
 @reboot emacs --daemon
 
 #0 11 * * * /meta/s/spw/bin/diaryreminder
-*/10 * * * * getmail -qr catmail
