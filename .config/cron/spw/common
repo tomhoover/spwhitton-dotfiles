@@ -1,4 +1,4 @@
 # /usr/pkg/bin before other system directories so get correct version
 # of e.g. Emacs
 
-PATH=$HOME/bin:/usr/pkg/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
+PATH=$HOME/bin:$HOME/pkg/bin:$HOME/pkg/sbin:/usr/pkg/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
