@@ -65,6 +65,13 @@ done
 unset addition
 export PATH
 
+# ---- maybe add to $MANPATH
+
+if [ -d "$HOME/pkg/man" ]; then
+    MANPATH="$HOME/pkg/man:$MANPATH"
+    export MAHPATH
+fi
+
 # ---- package management by Nix: add to $PATH once more
 
 # crude heuristic to determine if it's already been added
