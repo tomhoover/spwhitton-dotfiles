@@ -146,7 +146,7 @@ fixups =
         ln -sf $HOME/src/dotfiles/.stow-global-ignore $HOME
         mkdir -p $HOME/local/mutt $HOME/.ssh
         mkdir -p $HOME/tmp $HOME/src $HOME/local/src $HOME/local/bin $HOME/local/big $HOME/local/lib $HOME/local/pub
-        mkdir -o $HOME/local/auth && chmod 700 $HOME/local/auth && chmod -R 600 $HOME/local/auth
+        mkdir -o $HOME/local/auth && chmod 700 $HOME/local/auth && chmod -R 600 $HOME/local/auth 2>/dev/null
         touch $HOME/local/big/.duplicity-ignore
         touch $HOME/.ssh/known_hosts
     fi
