@@ -46,6 +46,14 @@ Channel          fmails
 Master           :fmimap:INBOX/"Sent Items"
 Slave            :fmmaildir:sent
 
+# when I'm actively using listservs again, this kind of thing should
+# allow downloading all of them without the INBOX.Lists prefix:
+
+# Channel fmaill
+#   Master :fmimap:INBOX/Lists/
+#   Slave :fmmaildir:
+#   Patterns * !INBOX
+
 # Channel          fmaila
 # Master           :fmimap:INBOX/Archive
 # Slave            :fmmaildir:archive
