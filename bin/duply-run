@@ -20,8 +20,8 @@ case "$(hostname -f)" in
         cd $HOME
         printf "\n>>> running home dir backup\n\n"
         duply ma-spw-home backup
-        printf "\n>>> running mail spool backup\n\n"
-        duply ma-spw-mail backup
+        # printf "\n>>> running mail spool backup\n\n"
+        # duply ma-spw-mail backup
         printf "\n>>> running web dir backup\n\n"
         duply ma-spw-www backup
         ;;
