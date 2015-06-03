@@ -1,9 +1,27 @@
 # -*- mode: conf-space; -*-
 
+# ---- defaults
+
+Create           Slave
+# FastMail always expunges server-side.  mbsync author says this is a
+# really bad idea.  Let's just have mbsync expunge client-side.
+Expunge          Slave
+SyncState        *
+
+# ---- stores
+
 MaildirStore     fmmaildir
 Path             ~/.fmail/
-Inbox            ~/.fmail/INBOX
-Flatten          .
+Inbox            ~/.fmail/inbox
+# Flatten          .
+
+# Trash option doesn't seem to work.  Setting Trash to trash and
+# Expunge to Slave makes deleted mail get moved into the trash folder,
+# but it is left marked as deleted so it the FastMail IMAP server
+# won't add it to the folder, however many times mbsync tries to put
+# it there.  So just unbind deletion in mutt for now.
+
+# Trash            trash
 
 IMAPAccount      fastmail
 Host             mail.messagingengine.com
@@ -15,24 +33,34 @@ CertificateFile  /etc/ssl/certs/ca-certificates.crt
 
 IMAPStore        fmimap
 Account          fastmail
+# UseNamespace     no
+# PathDelimiter    .
+
+# ---- mailboxes
 
 Channel          fmaili
 Master           :fmimap:INBOX
 Slave            :fmmaildir:
-Create           Slave
-#                following line will need to be changed once this config has been tested
-Expunge          None
-SyncState        *
 
-Channel          fmailo
-Master           :fmimap:
-Slave            :fmmaildir:
-Create           Slave
-#                following line will need to be changed once this config has been tested
-Expunge          None
-SyncState        *
-Patterns         * "INBOX"
+Channel          fmails
+Master           :fmimap:INBOX/"Sent Items"
+Slave            :fmmaildir:sent
+
+# Channel          fmaila
+# Master           :fmimap:INBOX/Archive
+# Slave            :fmmaildir:archive
+
+Channel          fmaild
+Master           :fmimap:INBOX/Drafts
+Slave            :fmmaildir:drafts
+
+# Channel          fmailt
+# Master           :fmimap:INBOX/Trash
+# Slave            :fmmaildir:trash
 
 Group            fastmail
 Channel          fmaili
-Channel          fmailo
+Channel          fmails
+Channel          fmaild
+# Channel          fmailt
+# Channel          fmaila

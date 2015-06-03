@@ -2,16 +2,16 @@
 
 # --- preferences
 
-set from=spw@sdf.org
+set from=spwhitton@spwhitton.name
 set realname="Sean Whitton"
 #set reverse_name = yes
 #set reverse_realname = no
 set envelope_from = yes
 set use_from = yes
 set folder=~/.fmail/
-set spoolfile = +INBOX
-set record = "+INBOX.Sent Items"
-set postponed = +INBOX.Drafts
+set spoolfile = +inbox
+set record = +sent
+set postponed = +drafts
 set certificate_file = ~/.mutt/certificates
 set move = no
 set delete = ask-yes
@@ -97,7 +97,7 @@ unignore From: Date: User-Agent: X-Mailer: x-oxford-username: Message-Id: To: Cc
 
 # --- mailboxes
 
-source ~/.mutt/mailboxes
+mailboxes +inbox +sent +drafts
 
 # --- message part viewing
 
@@ -111,7 +111,6 @@ set alias_file=~/.mutt/aliases  # this is the main alias file
 source ~/.mutt/aliases
 source ~/.mutt/groups           # keep shortcut groups in a separate
                                 # file for simplicity
-
 # --- key bindings
 
 # filtering function keys, some from Jonathan
@@ -119,9 +118,10 @@ macro index <F2> "<limit>((~N|~O)!~D)<enter><home>"
 macro pager <F2> "<limit>~(((~N|~O)!~D))<enter><home>"
 
 macro index,pager <F3> "lall\n<end>"
-macro index,pager <F5> "c=INBOX<return>" "switch to inbox"
+macro index,pager <F5> "c=inbox<return>" "switch to inbox"
 macro index,pager <F6> "c=sent<return>" "switch to sent"
-macro index,pager <F7> "c=archive<return>" "switch to archive"
+# macro index,pager <F7> "c=archive<return>" "switch to archive"
+bind index,pager <F7> next-unread-mailbox
 
 # limit to the messages I haven't dealt with yet when opening inbox
 folder-hook INBOX$ push <F2>
@@ -158,6 +158,11 @@ bind pager p previous-undeleted
 bind index ! flag-message
 bind pager ! flag-message
 bind pager t display-toggle-weed
+
+# safety, since mbsync trash functionality doesn't work with FastMail
+
+bind generic,index,pager d noop
+bind generic,index,pager D noop
 
 # --- colours
 
