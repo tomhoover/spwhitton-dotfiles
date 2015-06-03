@@ -1,10 +1,10 @@
 # -*- mode: conf -*-
 
-*/15 * * * * chronic doccheckin
+# */15 * * * * chronic doccheckin
 
-23 23 * * * chronic spwwiki
-0 18 * * * duply-run
-0 19 * * * chronic archivemail-ma
-0 3 * * * chronic planetnewspipe
+# 23 23 * * * chronic spwwiki
+# 0 18 * * * duply-run
+# 0 19 * * * chronic archivemail-ma
+# 0 3 * * * chronic planetnewspipe
 
-@reboot emacs --daemon
+# @reboot emacs --daemon
