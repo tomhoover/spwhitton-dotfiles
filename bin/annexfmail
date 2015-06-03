@@ -5,6 +5,17 @@
 
 set -e
 
+# 1. turn off mbsync for a bit
+
+if pgrep mbsync >/dev/null; then
+    echo "archivemail-ma: mbsync is running so I can't disable it" >&2
+    exit 1
+fi
+
+mv "$HOME/.mbsyncrc" "$HOME/.mbsyncrc~"
+
+# 2. set constants
+
 OUTPUT=$HOME/lib/annex/doc/mail
 INPUT=$HOME/.fmail
 
@@ -13,7 +24,7 @@ INPUT=$HOME/.fmail
 # that it may be safely archived into the annex
 suffix=$(date +-%b-%Y | sed 's/\(.*\)/\L\1/')
 
-# safety check to be sure we don't overwrite anything
+# 3. safety check to be sure we don't overwrite anything
 
 if [ -e "$OUTPUT/archive${suffix}.gz" ] || [ -e "$OUTPUT/sent${suffix}.gz" ]; then
     echo "archivemail-ma: looks like you've already made an archive recently" >&2
@@ -21,7 +32,7 @@ if [ -e "$OUTPUT/archive${suffix}.gz" ] || [ -e "$OUTPUT/sent${suffix}.gz" ]; th
     exit 1
 fi
 
-# now do the archiving run
+# 4. now do the archiving run
 
 archivemail \
     --days=31 \
@@ -41,3 +52,4 @@ cd $OUTPUT
 git annex add archive${suffix}.gz sent${suffix}.gz
 
 status now please commit and sync ~/lib/annex
+status and move .mbsyncrc back from .mbsyncrc\~
