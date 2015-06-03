@@ -51,5 +51,5 @@ archivemail \
 cd $OUTPUT
 git annex add archive${suffix}.gz sent${suffix}.gz
 
-status now please commit and sync ~/lib/annex
+status now please inspect,  commit and sync ~/lib/annex
 status and move .mbsyncrc back from .mbsyncrc\~
