@@ -64,3 +64,4 @@ alias g='git'
 alias ga='git annex'
 alias workgit='cd ~/doc && git add . && git commit -a -m "work commit" --edit && git push origin master && cd ~/src/dotfiles && git push origin master'
 alias mg=$EDITOR
+alias fmr='MR_FAST=true mr'

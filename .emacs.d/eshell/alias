@@ -3,6 +3,8 @@ alias mg find-file $1
 alias g git $*
 alias d dired $1
 alias ga git annex $*
+alias fmr MR_FAST=true mr
+
 alias blank sleep 1;xset dpms force off
 alias docs cd ~/doc && mr sync
 alias annex-to-ma cd ~/lib/annex;ga copy -t metaarray --auto --fast

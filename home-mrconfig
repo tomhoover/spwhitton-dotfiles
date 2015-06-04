@@ -283,8 +283,9 @@ sync =
         git annex sync --content ma
     fi
 
-# manual checkouts only
-skip = lazy
+# manual checkouts only, and skip when we're in a hurry and used 'fmr'
+# instead of 'mr'
+skip = lazy || $MR_FAST
 
 # --- git annex for use with rtorrent
 
