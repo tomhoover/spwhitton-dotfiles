@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source /root/.shenv
+
 # yankfmailpw USER, run as root, tries to grab the fastmail password
 # from ~user/local/auth and put it in /etc/postfix for use with
 # postfix sasl client
