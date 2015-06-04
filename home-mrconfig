@@ -380,4 +380,4 @@ sync = movemail
 
 # Don't do anything if I don't use offlineimap on this machine, or I
 # didn't run the sync command.
-skip = ! [ -d "$HOME/.offlinemail" ] || ! [ "$MR_ACTION" = "sync" ]
+skip = ! [ -d "$HOME/.fmail" ] || ! [ "$MR_ACTION" = "sync" ]
