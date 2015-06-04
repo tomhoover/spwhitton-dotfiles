@@ -149,6 +149,7 @@ fixups =
         mkdir -o $HOME/local/auth && chmod 700 $HOME/local/auth && chmod -R 600 $HOME/local/auth 2>/dev/null
         touch $HOME/local/big/.duplicity-ignore
         touch $HOME/.ssh/known_hosts
+        chmod 600 $HOME/.msmtprc
     fi
     # we don't want git doing any automated merges of master, or other
     # intermediate branches.  mr is configured not to do this (see
