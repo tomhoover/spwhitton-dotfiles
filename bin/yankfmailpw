@@ -25,4 +25,5 @@ fi
 
 fmailpass=$(cat $theirhome/local/auth/fmailsyncpass)
 echo "[127.0.0.1]:11565  spwhitton#fastmail.com:${fmailpass}" > /etc/postfix/sasl_passwd
+chmod 600 /etc/postfix/sasl_passwd
 postmap /etc/postfix/sasl_passwd
