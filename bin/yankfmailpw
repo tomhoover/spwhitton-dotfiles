@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# yankfmailpw USER, run as root, tries to grab the fastmail password
+# from ~user/local/auth and put it in /etc/postfix for use with
+# postfix sasl client
+
+if [ -e "/etc/postfix/sasl_passwd" ]; then
+    echo "yankfmailpw: Looks like you already ran this script." >&2
+    exit 1
+fi
+
+if [[ $EUID -ne 0 ]]; then
+    echo "yankfmailpw: This script must be run as root." >&2
+    exit 1
+fi
+
+theirhome=$(eval echo "~${1}")
+
+if ! [ -e "$theirhome/local/auth/fmailsyncpass" ]; then
+    echo "yankfmailpw: $1 doesn't have the password in their homedir." >&2
+    exit 1
+fi
+
+fmailpass=$(cat $theirhome/local/auth/fmailsyncpass)
+echo "[127.0.0.1]:11565  spwhitton#fastmail.com:${fmailpass}" > /etc/postfix/sasl_passwd
+postmap /etc/postfix/sasl_passwd
