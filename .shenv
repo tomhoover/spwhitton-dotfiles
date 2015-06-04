@@ -50,8 +50,8 @@ addition="/sbin";                                 maybe_add_to_path
 addition="/usr/sbin";                             maybe_add_to_path
 addition="/usr/local/bin";                        maybe_add_to_path
 addition="/usr/pkg/bin";                          maybe_add_to_path
-addition="$HOME/pkg/bin";                          maybe_add_to_path
-addition="$HOME/pkg/sbin";                          maybe_add_to_path
+addition="$HOME/local/pkg/bin";                   maybe_add_to_path
+addition="$HOME/local/pkg/sbin";                  maybe_add_to_path
 addition="$HOME/bin";                             maybe_add_to_path
 addition="$HOME/local/bin";                       maybe_add_to_path
 addition="$HOME/.cabal/bin";                      maybe_add_to_path
@@ -68,7 +68,7 @@ export PATH
 # ---- maybe add to $MANPATH
 
 if [ -d "$HOME/pkg/man" ]; then
-    MANPATH="$HOME/pkg/man:$MANPATH"
+    MANPATH="$HOME/local/pkg/man:$MANPATH"
     export MAHPATH
 fi
 

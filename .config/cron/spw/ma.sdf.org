@@ -9,5 +9,5 @@
 
 @reboot emacs --daemon
 
-# @weekly chronic /meta/s/spw/pkg/sbin/pkg_admin fetch-pkg-vulnerabilities
-# @weekly /meta/s/spw/pkg/sbin/pkg_admin audit
+@weekly pkg_admin fetch-pkg-vulnerabilities
+@weekly pkg_admin audit
