@@ -1,14 +1,14 @@
 # -*- mode: conf -*-
 
-# */15 * * * * chronic doccheckin
-# */15 * * * * chronic mbsync fastmail
+*/15 * * * * chronic doccheckin
+*/15 * * * * chronic mbsync fastmail
 
-# 23 23 * * * chronic spwwiki
-# 0 18 * * * duply-run
-# 0 19 * * * chronic archivemail-ma
-# 0 3 * * * chronic planetnewspipe
+23 23 * * * chronic spwwiki
+0 18 * * * duply-run
+0 19 * * * chronic archivemail-ma
+0 3 * * * chronic planetnewspipe
 
-# @reboot emacs --daemon
+@reboot emacs --daemon
 
 # @weekly chronic /meta/s/spw/pkg/sbin/pkg_admin fetch-pkg-vulnerabilities
 # @weekly /meta/s/spw/pkg/sbin/pkg_admin audit
