@@ -330,7 +330,9 @@ skip = lazy || fast
 # --- source code repositories registered to their own mr config file
 
 [src]
-chain = true
+
+# Chain load unless we invoked mr via fmr alias.
+chain = if [ "${MR_FAST}" = "true" ]; then return 1 else return 0; fi
 
 # Always skip, since this is a dummy repository entry in order to
 # chainload.
