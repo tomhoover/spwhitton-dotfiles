@@ -40,6 +40,13 @@ lib =
 # --- tests, plus my code for detecting Git-on-Windows
 
 lib =
+    fast() {
+        if [ "${MR_FAST}" = "true" ]; then
+            return 0
+        else
+            return 1
+        fi
+    }
     win32() {
         if [ "$(perl -e 'print $^O')" = "msys" ]; then
             return 0
@@ -214,7 +221,7 @@ checkout = git clone gcrypt::ssh://ma/~/local/git/priv.git priv
 # this repository can't be checked out until we install
 # git-remote-gcrypt.  And thanks to gcrypt being slow, skip if I run
 # via fmr.
-skip = (! gcrypt) || lazy || $MR_FAST
+skip = (! gcrypt) || lazy || fast
 
 # convenience automatic permission setting and checking in of
 # frequently changed files
@@ -286,7 +293,7 @@ sync =
 
 # manual checkouts only, and skip when we're in a hurry and used 'fmr'
 # instead of 'mr'
-skip = lazy || $MR_FAST
+skip = lazy || fast
 
 # --- git annex for use with rtorrent
 
@@ -318,7 +325,7 @@ fixups =
 
 # manual checkouts only, and skip when we're in a hurry and used 'fmr'
 # instead of 'mr'
-skip = lazy || $MR_FAST
+skip = lazy || fast
 
 # --- source code repositories registered to their own mr config file
 
