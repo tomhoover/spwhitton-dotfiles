@@ -7,5 +7,5 @@ if [[ $? -eq 0 ]]; then
     killall -9 mbsync 2>/dev/null || true
     mbsync --quiet fastmail
 else
-    echo >&2 ERROR: We\'re offline
+    echo >&2 ERROR: We\'re offline, cannot sync mail
 fi
