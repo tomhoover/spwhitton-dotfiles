@@ -82,6 +82,7 @@
       org-tag-alist '((:startgroup)
                       ("@work" . ?W)
                       ("@home" . ?H)
+                      ("july2015" . ?j)
                       (:endgroup))
 
       ;; enable speed commands and bind N to narrow to subtree
