@@ -28,4 +28,5 @@ gtk-redshift -l 53.57:1.5 -t 6500:3700 &
 # in crontab
 emacs --daemon
 
-xlaunch-all
+# xlaunch-all
+
