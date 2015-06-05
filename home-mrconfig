@@ -374,7 +374,7 @@ skip = ! ( mine || on spw@ma ) || win32
 
 # --- my offline e-mail (& machine's postfix queue)
 
-[.offlinemail]
+[.fmail]
 order = 10
 sync = movemail
 
