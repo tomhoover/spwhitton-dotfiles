@@ -1,7 +1,7 @@
 # -*- mode: conf -*-
 
 */15 * * * * chronic doccheckin
-0 * * * * chronic mbsync fastmail
+@hourly chronic mbsync fastmail
 
 23 23 * * * chronic spwwiki
 0 18 * * * duply-run
