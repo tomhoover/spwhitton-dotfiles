@@ -212,8 +212,9 @@ stowable = true
 checkout = git clone gcrypt::ssh://ma/~/local/git/priv.git priv
 
 # this repository can't be checked out until we install
-# git-remote-gcrypt
-skip = (! gcrypt) || lazy
+# git-remote-gcrypt.  And thanks to gcrypt being slow, skip if I run
+# via fmr.
+skip = (! gcrypt) || lazy || $MR_FAST
 
 # convenience automatic permission setting and checking in of
 # frequently changed files
@@ -314,7 +315,10 @@ fixups =
             ln -s $HOME/lib/rt/$(hostname -s) watch
         fi
     fi
-skip = lazy
+
+# manual checkouts only, and skip when we're in a hurry and used 'fmr'
+# instead of 'mr'
+skip = lazy || $MR_FAST
 
 # --- source code repositories registered to their own mr config file
 
