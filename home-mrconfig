@@ -390,7 +390,8 @@ skip = ! ( mine || on spw@ma ) || win32
 [.fmail]
 order = 10
 sync = movemail
+update = mbsync --quiet fastmail
 
 # Don't do anything if I don't use offlineimap on this machine, or I
-# didn't run the sync command.
-skip = ! [ -d "$HOME/.fmail" ] || ! [ "$MR_ACTION" = "sync" ]
+# didn't run one of the sync or update commands.
+skip = ! [ -d "$HOME/.fmail" ] || ! ( [ "$MR_ACTION" = "sync" ] || [ "$MR_ACTION" = "update" ] )
