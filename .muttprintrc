@@ -1,0 +1,4 @@
+FONT="Charter"
+PRINTER="TO_FILE:~/tmp/printedmail.pdf"
+PENGUIN="${HOME}/lib/annex/doc/img/penguin.eps"
+FRONTSTYLE=shadowbox

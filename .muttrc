@@ -159,6 +159,9 @@ bind index ! flag-message
 bind pager ! flag-message
 bind pager t display-toggle-weed
 
+# printing
+bind index,pager \cP print-message
+
 # safety, since mbsync trash functionality doesn't work with FastMail
 
 bind generic,index,pager d noop
