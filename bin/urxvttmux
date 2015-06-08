@@ -18,9 +18,13 @@ openurxvt ()
 if [ "$input" = "swhitton@local" ]; then
     tmuxtitle="$USER@$(hostname -s)"
     launchcmd="tmux attach"
-else
-    tmuxtitle="$input"
-    launchcmd="mosh $input tmux attach"
+else if [ "$input" = "spw@ma" ]; then
+         tmuxtitle="$input"
+         launchcmd="mosh $input /usr/pkg/bin/tmux attach"
+     else
+         tmuxtitle="$input"
+         launchcmd="mosh $input tmux attach"
+     fi
 fi
 
 currwin=$(xprop -id $(xprop -root _NET_ACTIVE_WINDOW | cut -d ' ' -f 5) WM_NAME | cut -d '"' -f 2)
