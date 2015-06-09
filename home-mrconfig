@@ -336,7 +336,7 @@ chain = if [ "${MR_FAST}" = "true" ]; then return 1 else return 0; fi
 
 # Always skip, since this is a dummy repository entry in order to
 # chainload.
-skip = true
+skip = ! [ "$MR_ACTION" = "stowable" ]
 
 [src/srem]
 checkout = git clone github:spwhitton/srem.git srem
