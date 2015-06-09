@@ -361,9 +361,13 @@
 (defun org-my-auto-exclude-function (tag)
   (and (cond
         ((string= tag "@home")
-         (string= (system-name) "SPWHITTON"))
+         (or (string= (system-name) "SPWHITTON")
+             ;; if we're on the metaarray we're probably not on
+             ;; GNU/Linux machine at home
+             (string= (system-name) "ma.sdf.org")))
         ((string= tag "@work")
-         (not (string= (system-name) "SPWHITTON"))))
+         (not (or (string= (system-name) "SPWHITTON")
+                  (string= (system-name) "ma.sdf.org")))))
        (concat "-" tag)))
 
 (setq org-agenda-auto-exclude-function 'org-my-auto-exclude-function)
