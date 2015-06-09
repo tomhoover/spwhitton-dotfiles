@@ -2,9 +2,8 @@
 
 wget -q --tries=10 --timeout=20 --spider http://google.com
 if [[ $? -eq 0 ]]; then
-    postqueue -f
-    killall mbsync 2>/dev/null && sleep 5 || true
-    killall -9 mbsync 2>/dev/null || true
+    killall --user $USER mbsync 2>/dev/null && sleep 5 || true
+    killall -9 --user $USER mbsync 2>/dev/null || true
     mbsync --quiet fastmail
 else
     echo >&2 ERROR: We\'re offline, cannot sync mail
