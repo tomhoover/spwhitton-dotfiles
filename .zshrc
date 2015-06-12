@@ -69,6 +69,11 @@ alias mg=$EDITOR
 # spin propellor locally
 alias locspin="propellor `hostname --fqdn`"
 
+# tmux is smart and it detects a changed SSH_AUTH_SOCK and any newly
+# created shells use that.  But not old ones: this should pull the
+# newly detected value into the old sehll.
+alias fixsshagent="eval $(tmux show-environment | grep '^SSH_AUTH_SOCK')"
+
 # --- load zsh features
 
 # Change word boundary characters. Nabbed from
