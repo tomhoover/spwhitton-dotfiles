@@ -335,7 +335,7 @@ skip = lazy || fast
 [src]
 
 # Chain load unless we invoked mr via fmr alias.
-chain = if [ "${MR_FAST}" = "true" ]; then return 1 else return 0; fi
+chain = ! [ "${MR_FAST}" = "true" ]
 
 # Always skip, since this is a dummy repository entry in order to
 # chainload.
