@@ -20,10 +20,10 @@ if [ "$input" = "swhitton@local" ]; then
     launchcmd="tmux attach"
 else if [ "$input" = "spw@ma" ]; then
          tmuxtitle="$input"
-         launchcmd="mosh $input /usr/pkg/bin/tmux attach"
+         launchcmd="ssh -t $input /usr/pkg/bin/tmux attach"
      else
          tmuxtitle="$input"
-         launchcmd="mosh $input tmux attach"
+         launchcmd="ssh -t $input tmux attach"
      fi
 fi
 
