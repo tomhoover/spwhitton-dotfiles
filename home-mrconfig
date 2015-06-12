@@ -4,7 +4,10 @@
 
 [DEFAULT]
 git_gc = git gc "$@"
-jobs = 5
+
+# Just a single job for now because otherwise sometimes hangs due to
+# SSH connection sharing.
+jobs = 1
 
 # actions to be configured per repository
 git_sync = :
