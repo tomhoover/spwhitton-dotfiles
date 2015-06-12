@@ -1802,9 +1802,7 @@ BINDEE may be a command or another keymap, but whatever it is, it should not be 
                    (find-file "~/src/dotfiles/.emacs.d/init.el")
                    (eval-buffer)))
 
-        ("g t l" . world-time-list)
-        ("g t h" . helm-world-time)
-        ("g t t" . display-time-world)
+        ("g t" . world-time-list)
 
         ;; Sariul launcher map
         ("S l" . spw/tblesson)
