@@ -1027,16 +1027,17 @@
 
 (use-package key-chord
   :ensure
-  :init (key-chord-mode 1))
+  :init (key-chord-mode 1)
+  :config
+  ;; access the C-c keymap with a comfortable key-chord
+  (key-chord-define-global "jk" mode-specific-map))
 
 ;;; god-mode to maybe save my hands
 
 (use-package god-mode
+  :disabled
   :ensure
   :config
-
-  ;; access the C-c keymap with a comfortable key-chord
-  (key-chord-define-global "jk" mode-specific-map)
 
   ;; (unless god-global-mode (god-mode))
 
