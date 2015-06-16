@@ -1740,6 +1740,11 @@ Ensures the kill ring entry always ends with a newline."
    ;; override bind so not bound outside the hydra
    :bind nil))
 
+(defun spw/save-dir ()
+  "Copy buffer's directory to kill ring."
+  (interactive)
+  (kill-new default-directory))
+
 
 
 ;;;; ---- personal settings ----
@@ -1780,6 +1785,9 @@ Ensures the kill ring entry always ends with a newline."
 ;; aligning Haskell
 (bind-key "C-c a" 'spw/align-dwim)
 (bind-key "C-c A" 'align-regexp)
+
+;; copy current directory for use in a shell or moving a file in dired
+(bind-key "C-c D" 'spw/save-dir)
 
 ;;; launching
 
