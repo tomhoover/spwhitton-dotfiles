@@ -319,6 +319,11 @@
   :pin org
   :mode (("\\.org" . org-mode)
          ("\\.org_archive" . org-mode))
+  :bind (("C-c o c" . org-capture)
+         ("C-c o l" . org-store-link)
+         ("C-c o a" . org-agenda)
+         ("C-c o [" . spw/org-agenda-file-to-front)
+         ("C-c o ]" . spw/org-remove-file))
   :commands (org-capture
              org-store-link
              org-agenda
@@ -562,6 +567,7 @@
 (use-package deft
   :ensure
   :commands deft
+  :bind ("C-c f" . deft)
   :init (setq deft-extension "org"
               deft-text-mode 'org-mode
               deft-directory "~/doc/org/"
@@ -649,6 +655,9 @@
 (use-package projectile
   :ensure
   :commands projectile-vc
+  :bind(("C-c p" . projectile-command-map)
+        ("C-c j" . projectile-find-file)
+        ("C-c v" . projectile-vc))
   :demand
   :config
   (projectile-global-mode 1)
@@ -661,6 +670,31 @@
 (use-package perspective
   :ensure
   :commands (persp-toggle persp-switch)
+  :bind
+  ;; standard bindings reproduced from C-x x map
+  (("C-c q k" . persp-remove-buffer)
+   ("C-c q c" . persp-kill)
+   ("C-c q r" . persp-rename)
+   ("C-c q a" . persp-add-buffer)
+   ("C-c q A" . persp-set-buffer)
+   ("C-c q i" . persp-import)
+   ("C-c q n" . persp-next)
+   ("C-c q <right>" . persp-next)
+   ("C-c q p" . persp-prev)
+   ("C-c q <left>" . persp-prev)
+
+   ;; additional bindings of my own
+   ("C-c q u" . persp-basewc-save)
+   ("C-c q q" . persp-basewc-restore)
+   ("C-c q C" . spw/persp-clone)
+   ("C-c q o" . spw/open-programming-project)
+
+   ;; more personal bindings outside of main persp map
+   ("C-c l" . persp-toggle)
+   ("C-c L" . persp-switch)
+   ("C-c s" . spw/persp-eshell)
+   ("C-c d" . spw/dired-jump))
+
   :demand
   :config
   (setq persp-modestring-dividers '("" "" "|"))
@@ -1000,6 +1034,10 @@
 (use-package god-mode
   :ensure
   :config
+
+  ;; access the C-c keymap with a comfortable key-chord
+  (key-chord-define-global "jk" mode-specific-map)
+
   ;; (unless god-global-mode (god-mode))
 
   ;; activate with a key-chord to avoid having to have
@@ -1053,7 +1091,8 @@
   :init (dolist (hook '(emacs-lisp-mode-hook ielm-mode-hook))
           (add-hook hook 'elisp-slime-nav-mode)))
 
-(use-package world-time-mode)
+(use-package world-time-mode
+  :bind ("C-c g t" . world-time-list))
 
 ;; and set up time zones I'm interested in
 
@@ -1732,104 +1771,48 @@ Ensures the kill ring entry always ends with a newline."
 
 ;; smart versions of C-a, M-w from magnars
 (bind-key "C-a" 'magnars/move-beginning-of-line-dwim)
-
-;;; bind all up into the C-c keymap
-
-(setq spw/personal-map (make-sparse-keymap))
-(key-chord-define-global "jk" spw/personal-map)
-
-(defmacro spw/C-c-bind (key bindee)
-  "Bind BINDEE to C-c KEY with `bind-key' macro.
-
-BINDEE may be a command or another keymap, but whatever it is, it should not be quoted."
-  `(if (keymapp ,bindee)
-       (progn
-         (bind-key (concat "C-c " ,key) ,bindee)
-         (define-key spw/personal-map (kbd ,key) ,bindee))
-     (bind-key (concat "C-c " ,key) bindee)
-     (define-key spw/personal-map (kbd ,key) bindee)))
-
-(setq spw/personal-bindings
-      '(("p" . projectile-command-map)
-        ;; ("j" . projectile-find-file-dwim)
-        ("j" . projectile-find-file)
-        ("v" . projectile-vc)
-        ("n" . mwf/narrow-or-widen-dwim)
-        ("s" . spw/persp-eshell)
-        ("d" . spw/dired-jump)
-        ("f" . deft)
-        ("a" . spw/align-dwim)
-        ("A" . align-regexp)
-        ("l" . persp-toggle)
-        ("L" . persp-switch)
-
-        ;; perspectives map
-        ("q s" . persp-switch)
-        ("q k" . persp-remove-buffer)
-        ("q c" . persp-kill)
-        ("q r" . persp-rename)
-        ("q a" . persp-add-buffer)
-        ("q A" . persp-set-buffer)
-        ("q i" . persp-import)
-        ("q n" . persp-next)
-        ("q <right>" . persp-next)
-        ("q p" . persp-prev)
-        ("q <left>" . persp-prev)
-        ("q u" . persp-basewc-save)
-        ("q q" . persp-basewc-restore)
-        ("q C" . spw/persp-clone)
-        ("q o" . spw/open-programming-project)
-
-        ;; Org-mode map
-        ("o c" . org-capture)
-        ("o l" . org-store-link)
-        ("o a" . org-agenda)
-        ("o [" . spw/org-agenda-file-to-front)
-        ("o ]" . spw/org-remove-file)
-
-        ;; launcher map
-        ("g k" . kill-emacs)
-        ("g c" . spw/manual-cleanup)
-        ("g l" . spw/tblesson)
-        ("g r" . (lambda ()
-                   (interactive)
-                   (projectile-persp-switch-project "~/src/dotfiles")
-                   (find-file "~/src/dotfiles/.emacs.d/init.el")
-                   (eval-buffer)))
-
-        ("g t" . world-time-list)
-
-        ;; Sariul launcher map
-        ("S l" . spw/tblesson)
-        ("S S" . spw/auto-textbook)
-        ("S s" . spw/textbook)
-        ("S t" . spw/auto-teachers-book)
-
-        ;; toggle map
-        ("t e" . toggle-debug-on-error)
-        ("t i" . org-indent-mode)
-        ("t w" . spw/writing-toggle)
-
-        ;; insertion map
-        ("i h" . add-file-local-variable-prop-line)
-
-        ;; evaluation map
-        ("e e" . spw/eval-surrounding-sexp)
-        ("e f" . eval-defun)
-        ("e r" . eval-region)
-        ("e b" . eval-buffer)
-        ("E" . prelude/eval-and-replace)))
-
-(defun spw/personal-bindings ()
-  (interactive)
-  (dolist (pair spw/personal-bindings)
-    (let ((key (car pair))
-          (bindee (cdr pair)))
-      (spw/C-c-bind key bindee))))
 (bind-key "M-w" 'spw/copy-line)
 
+;; don't think about narrowing and widening
+(bind-key "C-c n" 'mwf/narrow-or-widen-dwim)
 
-(spw/personal-bindings)
+;; aligning Haskell
+(bind-key "C-c a" 'spw/align-dwim)
+(bind-key "C-c A" 'align-regexp)
+
+;;; launching
+
+(bind-key "C-c g k" 'kill-emacs)
+(bind-key "C-c g c" 'spw/manual-cleanup)
+(bind-key "C-c g l" 'spw/tblesson)
+(bind-key "C-c g r" '(lambda ()
+                       (interactive)
+                       (projectile-persp-switch-project "~/src/dotfiles")
+                       (find-file "~/src/dotfiles/.emacs.d/init.el")
+                       (eval-buffer)))
+
+(bind-key "C-c S l" 'spw/tblesson)
+(bind-key "C-c S S" 'spw/auto-textbook)
+(bind-key "C-c S s" 'spw/textbook)
+(bind-key "C-c S t" 'spw/auto-teachers-book)
+
+;;; toggling
+
+(bind-key "C-c t e" 'toggle-debug-on-error)
+(bind-key "C-c t i" 'org-indent-mode)
+(bind-key "C-c t w" 'spw/writing-toggle)
+
+;;; evaluation
+
+(bind-key "C-c e e" 'spw/eval-surrounding-sexp)
+(bind-key "C-c e f" 'eval-defun)
+(bind-key "C-c e r" 'eval-region)
+(bind-key "C-c e b" 'eval-buffer)
+(bind-key "C-c E" 'prelude/eval-and-replace)
+
+;;; insertion
+
+(bind-key "C-c i h" 'add-file-local-variable-prop-line)
 
 ;;; abbreviations
 
