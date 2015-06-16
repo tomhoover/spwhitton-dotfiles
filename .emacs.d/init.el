@@ -922,14 +922,7 @@
   :ensure
   :bind ("C-c t '" . toggle-quotes))
 
-;;; have M-w and C-xC-k work on the whole line when region is inactive
-
-(use-package whole-line-or-region
-  :ensure
-  :diminish whole-line-or-region-mode
-  :defer 5
-  :config
-  (whole-line-or-region-mode 1))
+;;; advanced key binding techniques with hydra
 
 (use-package hydra
   :ensure
@@ -1379,35 +1372,6 @@ point reaches the beginning or end of the buffer, stop there."
     (when (= orig-point (point))
       (move-beginning-of-line 1))))
 
-(defun magnars/copy-to-end-of-line ()
-  "Save from point to end of line to keyring."
-  (interactive)
-  (kill-ring-save (point)
-                  (line-end-position))
-  (message "Copied to end of line"))
-(defun magnars/copy-whole-lines (arg)
-  "Copy ARG lines to the kill ring."
-  (interactive "p")
-  (kill-ring-save (line-beginning-position)
-                  (line-beginning-position (+ 1 arg)))
-  (message "%d line%s copied" arg (if (= 1 arg) "" "s")))
-(defun magnars/copy-line (arg)
-  "Copy to end of line.
-
-If ARG, just copy that many lines."
-  (interactive "P")
-  (if (null arg)
-      (magnars/copy-to-end-of-line)
-    (magnars/copy-whole-lines (prefix-numeric-value arg))))
-(defun magnars/kill-ring-save-dwim (arg)
-  "If region active, save it.  Otherwise, save to end of line.
-
-If ARG and region inactive, save that many lines."
-  (interactive "P")
-  (if (region-active-p)
-      (kill-ring-save (region-beginning) (region-end))
-    (magnars/copy-line arg)))
-
 ;;; tidy up troublesome unicode
 
 (defun gleitzman/unicode-hunt ()
@@ -1704,6 +1668,38 @@ Lightweight alternative to pandoc-mode."
        (buffer-file-name) "-o" output-file)
       (find-file output-file))))
 
+;; Move lines around smartly.  Originally from
+;; <http://emacswiki.org/emacs/CopyingWholeLines>.
+
+(defun spw/copy-line (arg)
+  "Copy ARG lines into the kill ring, and move to the start of the next line.
+
+If region is active, instead call `kill-ring-save'.
+
+Appends to the kill ring entry on sequential calls.
+
+Ensures the kill ring entry always ends with a newline."
+  (interactive "p")
+  (if mark-active
+      (call-interactively 'kill-ring-save)
+    (let ((beg (line-beginning-position))
+          (end (line-end-position arg)))
+      (if (eq last-command 'spw/copy-line)
+          (kill-append (buffer-substring beg end) (< end beg))
+        (kill-ring-save beg end))
+      (kill-append "\n" nil)
+      (beginning-of-line (or (and arg (1+ arg)) 2))
+      (if (and arg (not (= 1 arg))) (message "%d lines copied" arg)))))
+
+(defhydra hydra-whole-lines (global-map "C-c" :color red)
+  "whole lines"
+
+  ;; The following might do something smarter for LISPs
+  ("k" kill-whole-line "kill another whole line" :color red)
+  ("/" undo "get that line back" :color red
+   ;; override bind so not bound outside the hydra
+   :bind nil))
+
 
 
 ;;;; ---- personal settings ----
@@ -1736,7 +1732,6 @@ Lightweight alternative to pandoc-mode."
 
 ;; smart versions of C-a, M-w from magnars
 (bind-key "C-a" 'magnars/move-beginning-of-line-dwim)
-(bind-key "M-w" 'magnars/kill-ring-save-dwim)
 
 ;;; bind all up into the C-c keymap
 
@@ -1831,6 +1826,8 @@ BINDEE may be a command or another keymap, but whatever it is, it should not be 
     (let ((key (car pair))
           (bindee (cdr pair)))
       (spw/C-c-bind key bindee))))
+(bind-key "M-w" 'spw/copy-line)
+
 
 (spw/personal-bindings)
 
