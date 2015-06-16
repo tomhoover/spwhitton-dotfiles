@@ -1613,7 +1613,7 @@ From <http://stackoverflow.com/a/14769115>."
     (define-key newmap key def)))
 
 (defun spw/set-from-address ()
-  "Set e-mail from address correctly by looking at other headers."
+  "Set e-mail From: address correctly by looking at other headers."
   (interactive)
   (save-excursion
     (message-narrow-to-headers)
