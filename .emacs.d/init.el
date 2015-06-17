@@ -1760,6 +1760,22 @@ Ensures the kill ring entry always ends with a newline."
   (persp-basewc-save)
   (message "Perspective base window configuration saved; C-c q q to restore it"))
 
+;; Access the power of git grep: from
+;; <http://stackoverflow.com/a/25633595>
+
+;; alternative: https://www.ogre.com/node/447
+
+(defcustom git-grep-command "git --no-pager grep --no-color --line-number <C> <R> `git rev-parse --show-toplevel`"
+  "The command to run with M-x git-grep.")
+(defun git-grep (regexp)
+  "Search for the given regexp using `git grep' in the current directory."
+  (interactive "sRegexp: ")
+  (unless (boundp 'grep-find-template) (grep-compute-defaults))
+  (let ((old-command grep-find-template))
+    (grep-apply-setting 'grep-find-template git-grep-command)
+    (rgrep regexp "*" """")
+    (grep-apply-setting 'grep-find-template old-command)))
+
 
 
 ;;;; ---- personal settings ----
