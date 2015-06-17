@@ -1745,6 +1745,20 @@ Ensures the kill ring entry always ends with a newline."
   (interactive)
   (kill-new default-directory))
 
+(defun spw/tile ()
+  "Tile three buffers."
+  (interactive)
+  (delete-other-windows)
+  (split-window-right)
+  (other-window 1)
+  (call-interactively 'ido-switch-buffer)
+  (split-window-below)
+  (other-window 1)
+  (call-interactively 'ido-switch-buffer)
+  (other-window 1)
+  (persp-basewc-save)
+  (message "Perspective base window configuration saved; C-c q q to restore it"))
+
 
 
 ;;;; ---- personal settings ----
