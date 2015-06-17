@@ -32,3 +32,4 @@ emacs --daemon
 
 # xlaunch-all
 
+xmonad --replace

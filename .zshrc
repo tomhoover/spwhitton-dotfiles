@@ -47,6 +47,7 @@ alias ga="git annex"
 alias gs="git status"
 alias pg="ps auxxxxxxxxxxxxxxxxxxx | grep"
 alias fmr="MR_FAST=true mr"
+alias d="emacsclient -c -n -e '(dired \"$(pwd)\")'"
 
 alias fixmpd="sudo invoke-rc.d mpd restart; pkill sonata"
 alias radio4="mplayer \"http://wmlive-acl.bbc.co.uk/wms/bbc_ami/radio4/radio4_bb_live_eq1_sl0?BBC-UID=044be39365f98aaa88a55ca7f1aa8fc5b3569ae000708114d4dfd43698a07e8a&amp;SSO2-UID=\""

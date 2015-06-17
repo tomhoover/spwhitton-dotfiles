@@ -69,7 +69,7 @@
 
 ;; focus follow mouse
 (setq mouse-autoselect-window nil
-      focus-follows-mouse t)
+      focus-follows-mouse nil)
 
 ;; y/n rather than yes/no
 (fset 'yes-or-no-p 'y-or-n-p)
@@ -334,6 +334,7 @@
 
 (use-package popwin
   :ensure
+  :disabled t
   :commands popwin-mode
   :defer 5
   :config (popwin-mode 1))
@@ -579,7 +580,7 @@
   :config
   (bind-key "C-w" 'deft-filter-decrement-word deft-mode-map)
 
-  (defadvice deft (before persp-deft activate)
+  (defadvice deft (before persp-deft)
     (projectile-persp-switch-project "~/doc"))
 
   (defadvice deft-new-file (after insert-org-TITLE activate)
@@ -665,10 +666,11 @@
         projectile-completion-system 'ido)
   (diminish 'projectile-mode))
 
-(use-package persp-projectile :ensure)
+(use-package persp-projectile :ensure :disabled t)
 
 (use-package perspective
   :ensure
+  :disabled t
   :commands (persp-toggle persp-switch)
   :bind
   ;; standard bindings reproduced from C-x x map
@@ -692,7 +694,7 @@
    ;; more personal bindings outside of main persp map
    ("C-c l" . persp-toggle)
    ("C-c L" . persp-switch)
-   ("C-c s" . spw/persp-eshell)
+   ;; ("C-c s" . spw/persp-eshell)
    ("C-c d" . spw/dired-jump))
 
   :demand
@@ -1108,6 +1110,8 @@
                                   ("Europe/London" "London")
                                   ("Europe/Paris" "Paris")
                                   ("Asia/Seoul" "Seoul"))))
+
+(use-package frames-only-mode)
 
 
 
@@ -1776,6 +1780,12 @@ Ensures the kill ring entry always ends with a newline."
     (rgrep regexp "*" """")
     (grep-apply-setting 'grep-find-template old-command)))
 
+(defun spw/open-term-here ()
+  "Open a fresh urxvt terminal in current directory."
+  (interactive)
+  (call-process "urxvtcd" nil "*errors*" nil
+                "-cd" (expand-file-name  default-directory)))
+
 
 
 ;;;; ---- personal settings ----
@@ -1819,6 +1829,9 @@ Ensures the kill ring entry always ends with a newline."
 
 ;; copy current directory for use in a shell or moving a file in dired
 (bind-key "C-c D" 'spw/save-dir)
+
+;; get a shell
+(bind-key "C-c s" 'spw/open-term-here)
 
 ;;; launching
 
