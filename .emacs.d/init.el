@@ -580,7 +580,7 @@
   :config
   (bind-key "C-w" 'deft-filter-decrement-word deft-mode-map)
 
-  (defadvice deft (before persp-deft)
+  (defadvice deft (before persp-deft disable)
     (projectile-persp-switch-project "~/doc"))
 
   (defadvice deft-new-file (after insert-org-TITLE activate)
