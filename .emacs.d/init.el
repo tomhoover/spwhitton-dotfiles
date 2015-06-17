@@ -1743,7 +1743,8 @@ Ensures the kill ring entry always ends with a newline."
 (defun spw/save-dir ()
   "Copy buffer's directory to kill ring."
   (interactive)
-  (kill-new default-directory))
+  (kill-new default-directory)
+  (message (concat "Saved \"" default-directory "\" to the kill ring")))
 
 (defun spw/tile ()
   "Tile three buffers."
