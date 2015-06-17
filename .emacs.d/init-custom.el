@@ -109,7 +109,7 @@
  '(popwin:special-display-config
    (quote
     (("*Miniedit Help*" :noselect t)
-     (help-mode)
+     (help-mode :stick t)
      (completion-list-mode :width 80 :position right :noselect t)
      (compilation-mode :noselect t)
      (grep-mode :dedicated nil :stick nil :tail nil)
