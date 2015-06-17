@@ -25,6 +25,7 @@ myKeys = [ ((myMod, xK_e), spawn myEditor)
 
            -- launchers
          , ((myMod, xK_f), spawnOn "web" "iceweasel")
+         , ((myMod, xK_o), spawn "xmousetidy")
          , ((myMod .|. shiftMask, xK_m), spawn "urxvtcd -e mutt")
 
            -- workspaces
