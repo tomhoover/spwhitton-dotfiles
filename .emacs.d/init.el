@@ -767,6 +767,10 @@
       ;; that don't match the current input
       ido-work-directory-match-only t)
 
+;; disable *Completions* and *Ido Completions* buffers
+(setq ido-completion-buffer nil
+      completion-auto-help nil)
+
 (ido-mode 1)
 (ido-everywhere 1)
 
