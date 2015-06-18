@@ -114,17 +114,15 @@ source ~/.mutt/groups           # keep shortcut groups in a separate
 # --- key bindings
 
 # filtering function keys, some from Jonathan
-macro index <F2> "<limit>((~N|~O)!~D)<enter><home>"
-macro pager <F2> "<limit>~(((~N|~O)!~D))<enter><home>"
-
-macro index,pager <F3> "lall\n<end>"
+macro index,pager <F9> "l((~N|~O)!~D)<return><home>" "blah"
+macro index,pager <F10> "lall\n<end>" "blahblah"
 macro index,pager <F5> "c=inbox<return>" "switch to inbox"
 macro index,pager <F6> "c=sent<return>" "switch to sent"
 # macro index,pager <F7> "c=archive<return>" "switch to archive"
 bind index,pager <F7> next-unread-mailbox
 
 # limit to the messages I haven't dealt with yet when opening inbox
-folder-hook INBOX$ push <F2>
+folder-hook inbox/$ push <F9>
 
 # extract URLS--config from http://www.memoryhole.net/~kyle/extract_url/
 macro index,pager ,b "<enter-command> set my_pdsave=\$pipe_decode<enter>\
