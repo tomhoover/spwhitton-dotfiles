@@ -108,7 +108,7 @@ GIT_MERGE_AUTOEDIT=no
 export GIT_MERGE_AUTOEDIT
 GPG_KEY_ID=3B6D411B
 export GPG_KEY_ID
-MAILDIR="$HOME/.offlinemail/"
+MAILDIR="$HOME/.fmail/"
 export MAILDIR
 LD_RUN_PATH="$HOME/local/lib/"
 export LD_RUN_PATH
