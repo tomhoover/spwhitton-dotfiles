@@ -1,17 +1,18 @@
 import XMonad
 import XMonad.Config.Xfce
-import XMonad.Util.EZConfig (additionalKeysP)
+import XMonad.Util.EZConfig (additionalKeysP, removeKeysP)
 import XMonad.Actions.CycleWS (toggleWS)
-import XMonad.Actions.SpawnOn (manageSpawn, spawnOn)
 import qualified XMonad.StackSet as W
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
+import XMonad.Hooks.InsertPosition
 import XMonad.Actions.Submap
 
 import Data.List (isInfixOf)
 import Control.Arrow hiding ((<+>))
 import Data.Bits
 import qualified Data.Map as M
+import Control.Monad (liftM2)
 
 myMod = mod4Mask
 
@@ -22,7 +23,12 @@ main = xmonad $ addMyKeys $ xfceConfig
     , focusedBorderColor = "#656555"
     , modMask            = myMod
     , workspaces         = myWorkspaces
-    , manageHook         = manageSpawn
+                           -- I would prefer to have newly created
+                           -- windows always inserted at the top of
+                           -- the non-master area.  But insertPosition
+                           -- doesn't support that so let's always put
+                           -- them at the end.
+    , manageHook         = insertPosition End Newer
                            <+> myManageHook
                            <+> manageHook xfceConfig
     -- , startupHook     = myStartup
@@ -30,12 +36,13 @@ main = xmonad $ addMyKeys $ xfceConfig
     }
 
 myEditor = "emacsclient -c -n -e '(switch-to-buffer nil)'"
-myWorkspaces = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "web"]
+myWorkspaces = ["one", "two", "web", "misc"]
 
 myPrefixedKeys = [ ("e", spawn myEditor)
 
                    -- launchers
-                 , ("f", spawnOn "web" "iceweasel")
+                 , ("g w", spawn "iceweasel")
+                 , ("s", spawn "urxvtcd")
                  , ("o", windows W.focusDown)
                  , ("S-o", windows W.focusUp)
                  , ("i", spawn "xmousetidy")
@@ -43,7 +50,6 @@ myPrefixedKeys = [ ("e", spawn myEditor)
 
                    -- workspaces
                  , (";", toggleWS)
-                 , ("0", windows $ W.greedyView "web")
                  ]
 
 myKeys = [ ("M4-j", windows W.focusDown)
@@ -55,12 +61,13 @@ myManageHook = composeOne
                , isDialog               -?> doFloat
                , className =? "Gimp"    -?> doFloat
                , className =? "MPlayer" -?> doFloat
-               , return True -?> doF W.swapDown
+               , className =? "Iceweasel" -?> doShift "www"
+               -- , return True -?> doF W.swapDown
                ]
 
 addMyKeys conf = conf'' `additionalKeysP` myKeys
   where
-    conf'      = conf `additionalKeysP` myPrefixedKeys
+    conf'      = conf `additionalKeysP` myPrefixedKeys `removeKeysP` ["M-e"]
     conf''     = conf' { keys = addPrefix (controlMask, xK_i) (keys conf') }
 
 -- from <http://kojevnikov.com/xmonad-metacity-gnome.html>
