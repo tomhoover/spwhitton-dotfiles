@@ -188,7 +188,7 @@ fixups =
 # have to be put into .gitignore.  Similarly the XDG autostart folder,
 # .ssh and lib and more
 pre_stow = $HOME/src/dotfiles/bin/unskel; mkdir -p ~/.emacs.d ~/.config/autostart ~/.ssh ~/lib ~/.cabal
-pre_checkout = mkdir -p ~/.emacs.d  ~/.config/autostart ~/.ssh ~/lib ~/.cabal
+pre_checkout = mkdir -p ~/.emacs.d  ~/.config/autostart ~/.ssh ~/lib ~/.cabal ~/.xmonad
 
 # GTK insists on replacing the symlink to its bookmarks file with the
 # actual file even if the bookmarks in that file don't change (XFCE
