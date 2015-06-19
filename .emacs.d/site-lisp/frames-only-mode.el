@@ -2,22 +2,30 @@
 ;; Collection of settings and code to use frames instead of emacs
 ;; "windows".
 
-
-
 ;; To automatically open a "useful" buffer in new frames xmonads binding
 ;; for a new frame is set to "emacsclient -c -n -e '(switch-to-buffer
 ;; nil)'". For other window managers something similar should work...
-
 
 
 
 ;; Options:
 
 (defvar kill-frame-when-buffer-killed-buffer-list
-  '("*RefTeX Select*" "*Help*" "*Popup Help*")
+  '("*RefTeX Select*" "*Help*" "*Popup Help*" "*Completions*")
   "Buffer names for which the containing frame should be
  killed when the buffer is killed.")
 
+(defcustom frames-only-mode-use-windows-for-completion t
+  "Use emacs windows for display of completions.
+
+This is useful because a new completion frame would steal
+window manager focus.
+
+Completion windows are always split horizontally (helm style).
+
+To disable completion popups entirely use the variable
+`completion-auto-help' for default emacs completion or
+`ido-completion-buffer' for ido-based completion. ")
 
 
 ;; Code
@@ -65,21 +73,42 @@ extra useless frames."
   (abort-recursive-edit))
 (global-set-key [remap abort-recursive-edit] #'super-abort-recursive-edit)
 
-
-
 ;; kill frames when a buffer is buried, makes most things play nice with
 ;; frames
 (set 'frame-auto-hide-function 'delete-frame)
 
-;; Hack to make other things play nice by killing the frame when certain
+;; Hacks to make other things play nice by killing the frame when certain
 ;; buffers are closed.
 (defun kill-frame-if-current-buffer-matches ()
-  "Kill frames as well when certain buffers are closed, helps stop some
+  "Kill frames as well when certain buffers are closed (but only
+  if there is only a single window in the frame), helps stop some
   packages spamming frames."
-  (interactive)
-  (if (member (buffer-name) kill-frame-when-buffer-killed-buffer-list)
-      (delete-frame)))
+  (when (and (one-window-p)
+             (member (buffer-name) kill-frame-when-buffer-killed-buffer-list))
+    (delete-frame)))
+
 (add-hook 'kill-buffer-hook 'kill-frame-if-current-buffer-matches)
 
+(defadvice bury-buffer (around kill-frame-if-current-buffer-matches activate)
+  "Kill the frame when burying certain buffers (but only if there
+  is only a single window in the frame)."
+  (let ((buffer-to-bury (buffer-name)))
+    ad-do-it
+    (when (and (one-window-p)
+               (member buffer-to-bury kill-frame-when-buffer-killed-buffer-list))
+      (delete-frame))))
+
+(defadvice minibuffer-completion-help (around use-windows-for-completion)
+  (let ((pop-up-frames (not frames-only-mode-use-windows-for-completion))
+        (split-width-threshold 9999))
+    ad-do-it))
+(defadvice ido-completion-help (around use-windows-for-ido-completion)
+  (let ((pop-up-frames (not frames-only-mode-use-windows-for-completion))
+        (split-width-threshold 9999))
+    ad-do-it))
+
+;; Make sure completions buffer is buried after we are done with the minibuffer
+(add-hook 'minibuffer-exit-hook (lambda () (when (get-buffer "*Completions*")
+                                        (bury-buffer "*Completions*"))))
 
 (provide 'frames-only-mode)
