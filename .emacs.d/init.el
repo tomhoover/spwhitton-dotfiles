@@ -124,6 +124,7 @@
 
 (use-package smart-mode-line
   :ensure
+  :disabled t
   :init
   (use-package powerline :ensure)
   (use-package smart-mode-line-powerline-theme :ensure)
