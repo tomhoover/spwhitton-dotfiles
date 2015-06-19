@@ -37,7 +37,7 @@ myMod        = mod4Mask
 myTerm       = "urxvtcd"
 myEditor     = "emacsclient -c -n -e '(switch-to-buffer nil)'"
 myBrowser    = "iceweasel"
-myWorkspaces = ["one", "two", "web", "misc"]
+myWorkspaces = ["one", "two", "www", "misc"]
 
 -- key bindings
 
@@ -61,16 +61,17 @@ myUnprefixedKeys = [ ("M4-j", windows W.focusDown)
                    , ("M4-k", windows W.focusUp)
                    ]
 
-myManageHook = composeOne
-               [ checkDock -?> doIgnore
-               , isDialog               -?> doFloat
-               , className =? "Gimp"    -?> doFloat
-               , className =? "MPlayer" -?> doFloat
-               , className =? "Iceweasel" -?> doShift "www"
-               -- , return True -?> doF W.swapDown
-               ]
-
 myUnwantedKeys = ["M-e"]
+
+-- hooks
+
+myManageHook = composeOne
+               [ checkDock                -?> doIgnore
+               , isDialog                 -?> doFloat
+               , className =? "Gimp"      -?> doFloat
+               , className =? "MPlayer"   -?> doFloat
+               , className =? "Iceweasel" -?> doShift "www"
+               ]
 
 -- helper functions
 
