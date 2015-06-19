@@ -41,7 +41,7 @@ myMod        = mod4Mask
 myTerm       = "urxvtcd"
 myEditor     = "emacsclient -c -n -e '(switch-to-buffer nil)'"
 myBrowser    = "iceweasel"
-myWorkspaces = ["one", "two", "www", "misc"]
+myWorkspaces = ["ops", "conn", "www", "misc"]
 
 -- key bindings
 
