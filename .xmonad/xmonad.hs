@@ -7,9 +7,12 @@ import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.InsertPosition
 import XMonad.Actions.Submap
+import XMonad.Layout.LimitWindows
+import XMonad.Layout.FixedColumn
+import XMonad.Layout.Magnifier
 
 import Data.List (isInfixOf)
-import Control.Arrow hiding ((<+>))
+import Control.Arrow hiding ((<+>), (|||))
 import Data.Bits
 import qualified Data.Map as M
 import Control.Monad (liftM2)
@@ -29,6 +32,7 @@ main = xmonad $ addMyKeys $ xfceConfig
     , manageHook         = insertPosition End Newer
                            <+> myManageHook
                            <+> manageHook xfceConfig
+    , layoutHook = myLayoutHook
     }
 
 -- basic preferences
@@ -72,6 +76,16 @@ myManageHook = composeOne
                , className =? "MPlayer"   -?> doFloat
                , className =? "Iceweasel" -?> doShift "www"
                ]
+
+myLayoutHook = avoidStruts $ myEditing ||| Full
+
+-- custom layouts
+
+-- this magnification setting should result in magnified Emacs windows
+-- being 80 columns wide at 1024x
+myEditing = limitWindows 5 $
+            magnifiercz' 1.03 $
+            FixedColumn 1 20 80 10
 
 -- helper functions
 
