@@ -49,7 +49,7 @@ myPrefixedKeys = [ ("e", spawn myEditor)
                  , ("S-m", spawn "urxvtcd -e mutt")
 
                    -- workspaces
-                 , (";", toggleWS)
+                 , ("C-i", toggleWS)
                  ]
 
 myKeys = [ ("M4-j", windows W.focusDown)
