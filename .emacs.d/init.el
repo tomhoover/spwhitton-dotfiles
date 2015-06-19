@@ -864,8 +864,12 @@
   :bind ("M-o" . spw/avy-goto-word)
   :config
 
-  ;; Make avy overlays look more like ace-jump
-  (setq avy-style 'at-full)
+  (setq
+   ;; Make avy overlays look more like ace-jump
+   avy-style       'at-full
+   ;; Make avy work over all visible frames (nice with
+   ;; frames-only-mode)
+   avy-all-windows 'all-frames)
 
   ;; Attempt to restore ace-jump-mode functionality whereby M-o jumps
   ;; by word start, C-u M-o by any char in the word.  We're taking the
