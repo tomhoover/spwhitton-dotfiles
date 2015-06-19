@@ -1120,7 +1120,9 @@
                                   ("Europe/Paris" "Paris")
                                   ("Asia/Seoul" "Seoul"))))
 
-(use-package frames-only-mode)
+(use-package frames-only-mode
+  ;; only under X11, thanks
+  :if (eq window-system 'x))
 
 
 
