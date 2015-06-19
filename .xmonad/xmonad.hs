@@ -65,10 +65,14 @@ myManageHook = composeOne
                -- , return True -?> doF W.swapDown
                ]
 
-addMyKeys conf = conf'' `additionalKeysP` myKeys
+myUnwantedKeys = ["M-e"]
+
+addMyKeys                   = addMyUnprefixed . prefixMainMap . addMyPrefixed . removeSomeDefaults
   where
-    conf'      = conf `additionalKeysP` myPrefixedKeys `removeKeysP` ["M-e"]
-    conf''     = conf' { keys = addPrefix (controlMask, xK_i) (keys conf') }
+    removeSomeDefaults conf = conf `removeKeysP` myUnwantedKeys
+    addMyPrefixed conf      = conf `additionalKeysP` myPrefixedKeys
+    prefixMainMap conf      = conf { keys = addPrefix (controlMask, xK_i) (keys conf) }
+    addMyUnprefixed conf    = conf `additionalKeysP` myKeys
 
 -- from <http://kojevnikov.com/xmonad-metacity-gnome.html>
 addPrefix p ms conf =
