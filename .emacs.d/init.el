@@ -1122,7 +1122,7 @@
 
 (use-package frames-only-mode
   ;; only under X11, thanks
-  :if (eq window-system 'x))
+  :if (call-process-shell-command "pgrep" nil nil nil "lightdm"))
 
 
 
