@@ -769,7 +769,7 @@
 
 ;; disable *Completions* and *Ido Completions* buffers
 (setq ido-completion-buffer nil
-      completion-auto-help nil)
+      completion-auto-help  nil)
 
 (ido-mode 1)
 (ido-everywhere 1)
