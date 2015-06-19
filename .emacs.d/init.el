@@ -1841,11 +1841,9 @@ Ensures the kill ring entry always ends with a newline."
 ;; copy current directory for use in a shell or moving a file in dired
 (bind-key "C-c D" 'spw/save-dir)
 
-;; get a shell
-(bind-key "C-c s" 'spw/open-term-here)
-
 ;;; launching
 
+(bind-key "C-c g g" 'spw/open-term-here)
 (bind-key "C-c g k" 'kill-emacs)
 (bind-key "C-c g c" 'spw/manual-cleanup)
 (bind-key "C-c g l" 'spw/tblesson)
