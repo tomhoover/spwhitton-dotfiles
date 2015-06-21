@@ -75,13 +75,17 @@ myUnwantedKeys = ["M-e"]
 
 -- hooks
 
-myManageHook = composeOne
+myFloatClasses = ["Gimp"
+                 -- , "feh"
+                 , "MPlayer"
+                 , "Xfrun4"]
+
+myManageHook = composeOne $
                [ checkDock                -?> doIgnore
                , isDialog                 -?> doFloat
-               , className =? "Gimp"      -?> doFloat
-               , className =? "MPlayer"   -?> doFloat
                , className =? "Iceweasel" -?> doShift "www"
-               ]
+               , className =? "libreoffice-impress" -?> doShift "misc"
+               ] ++ [className =? c -?> doFloat | c <- myFloatClasses]
 
 myLayoutHook = avoidStruts $ myEditing ||| noBorders Full
 
