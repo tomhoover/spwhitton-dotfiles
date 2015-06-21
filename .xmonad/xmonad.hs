@@ -22,9 +22,9 @@ import Control.Monad (liftM2)
 main = xmonad $ addMyKeys $ xfceConfig
 
     { terminal           = myTerm
-    , normalBorderColor  = "#3F3F3F"
-    , focusedBorderColor = "#656555"
-    , borderWidth        = 2
+    , normalBorderColor  = "#656555"
+    , focusedBorderColor = "#94BFF3"
+    , borderWidth        = 1
     , modMask            = myMod
     , workspaces         = myWorkspaces
 
