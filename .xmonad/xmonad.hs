@@ -89,6 +89,11 @@ myLayoutHook = avoidStruts $ myEditing ||| noBorders Full
 
 -- this magnification setting should result in magnified Emacs windows
 -- being 80 columns wide at 1024x
+
+-- TODO: use XMonad.Layout.OnHost from contrib to set the limitWindows
+-- and the magnification percentage on artemis and zephyr.
+-- Alternatively put in branches of dotfiles repo (it's neater to have
+-- it here though).
 myEditing = limitWindows 5 $
             magnifiercz' 1.03 $
             FixedColumn 1 20 80 10
