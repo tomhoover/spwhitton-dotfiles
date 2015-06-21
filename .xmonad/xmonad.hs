@@ -7,6 +7,7 @@ import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.InsertPosition
 import XMonad.Actions.Submap
+import XMonad.Actions.RotSlaves
 import XMonad.Layout.LimitWindows
 import XMonad.Layout.FixedColumn
 import XMonad.Layout.Magnifier
@@ -63,6 +64,10 @@ myPrefixedKeys = [ ("i", spawn "xmousetidy")
 
 myUnprefixedKeys = [ ("M4-j", windows W.focusDown)
                    , ("M4-k", windows W.focusUp)
+                   , ("M4-S-j", windows W.swapDown)
+                   , ("M4-S-k", windows W.swapUp)
+                   , ("M1-<Tab>", rotSlavesDown)
+                   , ("M1-S-<Tab>", rotSlavesUp)
                    ]
 
 myUnwantedKeys = ["M-e"]
