@@ -11,6 +11,7 @@ import XMonad.Actions.RotSlaves
 import XMonad.Layout.LimitWindows
 import XMonad.Layout.FixedColumn
 import XMonad.Layout.Magnifier
+import XMonad.Layout.NoBorders
 
 import Data.List (isInfixOf)
 import Control.Arrow hiding ((<+>), (|||))
@@ -82,7 +83,7 @@ myManageHook = composeOne
                , className =? "Iceweasel" -?> doShift "www"
                ]
 
-myLayoutHook = avoidStruts $ myEditing ||| Full
+myLayoutHook = avoidStruts $ myEditing ||| noBorders Full
 
 -- custom layouts
 
