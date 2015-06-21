@@ -48,7 +48,7 @@ myWorkspaces = ["ops", "conn", "www", "misc"]
 myPrefixedKeys = [ ("i", spawn "xmousetidy")
 
                    -- launchers
-                 , ("g w", spawn myBrowser)
+                 , ("g w", spawn myBrowser) -- could use `XMonad.Actions.WindowGo (runOrRaise)' here
                  , ("g e", spawn myEditor)
                  , ("g g", spawn myTerm)
                  , ("g m", spawn $ inMyTerm "mutt")
