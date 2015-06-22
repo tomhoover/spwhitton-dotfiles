@@ -87,7 +87,7 @@ myManageHook = composeOne $
                , className =? "libreoffice-impress" -?> doShift "misc"
                ] ++ [className =? c -?> doFloat | c <- myFloatClasses]
 
-myLayoutHook = avoidStruts $ smartBorders $ myEditing ||| Full
+myLayoutHook = avoidStrutsOn [] $ smartBorders $ myEditing ||| Full
 
 -- custom layouts
 
