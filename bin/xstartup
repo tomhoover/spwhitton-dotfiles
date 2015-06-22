@@ -10,7 +10,7 @@ setxkbmap -option "compose:ralt"
 setxkbmap -layout gb
 xbindkeys
 
-# settings for (broken) Apple USB keyboard
+# settings for (currently out of action) Apple USB keyboard
 
 if lsusb | grep -q "Aluminum Keyboard"; then
     echo 2 | sudo tee /sys/module/hid_apple/parameters/fnmode > /dev/null
