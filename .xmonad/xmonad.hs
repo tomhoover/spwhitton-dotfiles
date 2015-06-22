@@ -41,7 +41,7 @@ main = xmonad $ addMyKeys $ xfceConfig
 
 myMod        = mod4Mask
 myTerm       = "urxvtcd"
-myEditor     = "emacsclient -c -n -e '(switch-to-buffer nil)'"
+myEditor     = "emacscd"
 myBrowser    = "iceweasel"
 myWorkspaces = ["ops", "conn", "www", "misc"]
 
