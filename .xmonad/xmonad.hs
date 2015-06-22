@@ -12,6 +12,7 @@ import XMonad.Layout.LimitWindows
 import XMonad.Layout.FixedColumn
 import XMonad.Layout.Magnifier
 import XMonad.Layout.NoBorders
+import XMonad.Layout.PerWorkspace
 
 import Data.List (isInfixOf)
 import Control.Arrow hiding ((<+>), (|||))
@@ -87,7 +88,9 @@ myManageHook = composeOne $
                , className =? "libreoffice-impress" -?> doShift "misc"
                ] ++ [className =? c -?> doFloat | c <- myFloatClasses]
 
-myLayoutHook = avoidStrutsOn [] $ smartBorders $ myEditing ||| Full
+myLayoutHook = avoidStrutsOn [] $ smartBorders $
+               onWorkspace "www" (myWebLayout ||| Full) $
+               myEditing ||| Full -- default for other workspaces
 
 -- custom layouts
 
@@ -101,6 +104,8 @@ myLayoutHook = avoidStrutsOn [] $ smartBorders $ myEditing ||| Full
 myEditing = limitWindows 5 $
             magnifiercz' 1.03 $
             FixedColumn 1 20 80 10
+
+myWebLayout = Mirror $ Tall 1 0.03 0.8
 
 -- helper functions
 
