@@ -56,6 +56,7 @@ myPrefixedKeys = [ ("i", spawn "xmousetidy")
                  , ("g e", spawn myEditor)
                  , ("g g", spawn myTerm)
                  , ("g m", spawn $ inMyTerm "mutt")
+                 , ("g c", spawn "sonata --toggle") -- 'c' for chaones
 
                    -- window management
                  , ("o", windows W.focusDown)
