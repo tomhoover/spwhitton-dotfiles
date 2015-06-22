@@ -98,7 +98,7 @@ myLayoutHook = avoidStrutsOn [] $ smartBorders $
 -- custom layouts
 
 -- this magnification setting should result in magnified Emacs windows
--- being 80 columns wide at 1024x
+-- being 80 columns wide at 1280x
 
 -- TODO: use XMonad.Layout.OnHost from contrib to set the limitWindows
 -- and the magnification percentage on artemis and zephyr.
