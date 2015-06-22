@@ -72,7 +72,9 @@ alias locspin="propellor `hostname --fqdn`"
 # tmux is smart and it detects a changed SSH_AUTH_SOCK and any newly
 # created shells use that.  But not old ones: this should pull the
 # newly detected value into the old sehll.
-if pgrep -u ${USER} tmux; then
+
+# check tmux is running first by seeing if we're inside it
+if ! [ "$TMUX" = "" ]; then
     alias fixsshagent="eval $(tmux show-environment | grep '^SSH_AUTH_SOCK')"
 fi
 
