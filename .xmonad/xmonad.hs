@@ -13,6 +13,7 @@ import XMonad.Layout.FixedColumn
 import XMonad.Layout.Magnifier
 import XMonad.Layout.NoBorders
 import XMonad.Layout.PerWorkspace
+import XMonad.Layout.LayoutHints
 
 import Data.List (isInfixOf)
 import Control.Arrow hiding ((<+>), (|||))
@@ -89,6 +90,7 @@ myManageHook = composeOne $
                ] ++ [className =? c -?> doFloat | c <- myFloatClasses]
 
 myLayoutHook = avoidStrutsOn [] $ smartBorders $
+               layoutHintsWithPlacement (0.5, 0.5) $
                onWorkspace "www" (myWebLayout ||| Full) $
                myEditing ||| Full -- default for other workspaces
 
