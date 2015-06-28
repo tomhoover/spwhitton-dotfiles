@@ -14,9 +14,9 @@ Xft.rgba:               rgb
 
 ! http://git.sysphere.org/dotfiles/tree/Xdefaults
 ! Zenburn color-scheme
-!urxvt*background:  #3f3f3f
+urxvt*background:  #3f3f3f
 ! this is the same as the vim zenburn theme
-urxvt*background:  #3a3a3a
+!urxvt*background:  #3a3a3a
 urxvt*foreground:  #dcdccc
 ! black + red
 !urxvt*color0:     #3f3f3f

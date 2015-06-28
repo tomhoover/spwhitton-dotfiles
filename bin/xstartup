@@ -24,11 +24,6 @@ fi
 
 gtk-redshift -l 53.57:1.5 -t 6500:3700 &
 
-# better if Emacs is started as a child of the desktop environment,
-# unlike on a host which I just SSH to on which it's started with a
-# @reboot line in crontab
+# ---- fire up my window manager
 
-emacs --daemon
-
-# xlaunch-all
-
+xmonad --replace

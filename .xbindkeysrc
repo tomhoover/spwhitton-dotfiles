@@ -1,22 +1,22 @@
 keystate_numlock = enable
 
-"xlaunch emacs"
-  F9
+# "xlaunch emacs"
+#   F9
 
-"xlaunch term"
-  F10
+# "xlaunch term"
+#   F10
 
-"xlaunch www"
-  F12
+# "xlaunch www"
+#   F12
 
-"xlaunch ma"
-  Shift + F11
+# "xlaunch ma"
+#   Shift + F11
 
-"xmousetidy"
-  Shift + F10
+# "xmousetidy"
+#   Shift + F10
 
-"xscreensaver-command -lock"
-  Mod4 + l
+# "xscreensaver-command -lock"
+#   Mod4 + l
 
-"sonata --toggle"
-  Shift + F9
+# "sonata --toggle"
+#   Shift + F9

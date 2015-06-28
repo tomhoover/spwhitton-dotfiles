@@ -69,7 +69,7 @@
 
 ;; focus follow mouse
 (setq mouse-autoselect-window nil
-      focus-follows-mouse t)
+      focus-follows-mouse nil)
 
 ;; y/n rather than yes/no
 (fset 'yes-or-no-p 'y-or-n-p)
@@ -124,6 +124,7 @@
 
 (use-package smart-mode-line
   :ensure
+  :disabled t
   :init
   (use-package powerline :ensure)
   (use-package smart-mode-line-powerline-theme :ensure)
@@ -334,6 +335,7 @@
 
 (use-package popwin
   :ensure
+  :disabled t
   :commands popwin-mode
   :defer 5
   :config (popwin-mode 1))
@@ -579,7 +581,7 @@
   :config
   (bind-key "C-w" 'deft-filter-decrement-word deft-mode-map)
 
-  (defadvice deft (before persp-deft activate)
+  (defadvice deft (before persp-deft disable)
     (projectile-persp-switch-project "~/doc"))
 
   (defadvice deft-new-file (after insert-org-TITLE activate)
@@ -665,10 +667,11 @@
         projectile-completion-system 'ido)
   (diminish 'projectile-mode))
 
-(use-package persp-projectile :ensure)
+(use-package persp-projectile :ensure :disabled t)
 
 (use-package perspective
   :ensure
+  :disabled t
   :commands (persp-toggle persp-switch)
   :bind
   ;; standard bindings reproduced from C-x x map
@@ -692,7 +695,7 @@
    ;; more personal bindings outside of main persp map
    ("C-c l" . persp-toggle)
    ("C-c L" . persp-switch)
-   ("C-c s" . spw/persp-eshell)
+   ;; ("C-c s" . spw/persp-eshell)
    ("C-c d" . spw/dired-jump))
 
   :demand
@@ -764,6 +767,10 @@
       ;; When moving through work directories with M-n/M-p, ignore those
       ;; that don't match the current input
       ido-work-directory-match-only t)
+
+;; disable *Completions* and *Ido Completions* buffers
+(setq ido-completion-buffer nil
+      completion-auto-help  nil)
 
 (ido-mode 1)
 (ido-everywhere 1)
@@ -858,8 +865,12 @@
   :bind ("M-o" . spw/avy-goto-word)
   :config
 
-  ;; Make avy overlays look more like ace-jump
-  (setq avy-style 'at-full)
+  (setq
+   ;; Make avy overlays look more like ace-jump
+   avy-style       'at-full
+   ;; Make avy work over all visible frames (nice with
+   ;; frames-only-mode)
+   avy-all-windows 'all-frames)
 
   ;; Attempt to restore ace-jump-mode functionality whereby M-o jumps
   ;; by word start, C-u M-o by any char in the word.  We're taking the
@@ -1108,6 +1119,10 @@
                                   ("Europe/London" "London")
                                   ("Europe/Paris" "Paris")
                                   ("Asia/Seoul" "Seoul"))))
+
+(use-package frames-only-mode
+  ;; only under X11, thanks
+  :if (call-process-shell-command "pgrep" nil nil nil "lightdm"))
 
 
 
@@ -1776,6 +1791,12 @@ Ensures the kill ring entry always ends with a newline."
     (rgrep regexp "*" """")
     (grep-apply-setting 'grep-find-template old-command)))
 
+(defun spw/open-term-here ()
+  "Open a fresh urxvt terminal in current directory."
+  (interactive)
+  (call-process "urxvtcd" nil "*errors*" nil
+                "-cd" (expand-file-name  default-directory)))
+
 
 
 ;;;; ---- personal settings ----
@@ -1822,6 +1843,7 @@ Ensures the kill ring entry always ends with a newline."
 
 ;;; launching
 
+(bind-key "C-c g g" 'spw/open-term-here)
 (bind-key "C-c g k" 'kill-emacs)
 (bind-key "C-c g c" 'spw/manual-cleanup)
 (bind-key "C-c g l" 'spw/tblesson)
