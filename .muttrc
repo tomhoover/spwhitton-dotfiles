@@ -114,8 +114,8 @@ source ~/.mutt/groups           # keep shortcut groups in a separate
 # --- key bindings
 
 # filtering function keys, some from Jonathan
-macro index,pager <F9> "l((~N|~O)!~D)<return><home>" "blah"
-macro index,pager <F10> "lall\n<end>" "blahblah"
+macro index <F10> "l((~N|~O)!~D)<return><home>" "blah"
+macro index <F9> "lall\n<end>" "blahblah"
 macro index,pager <F5> "c=inbox<return>" "switch to inbox"
 macro index,pager <F6> "c=sent<return>" "switch to sent"
 # macro index,pager <F7> "c=archive<return>" "switch to archive"
