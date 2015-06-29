@@ -14,6 +14,7 @@ import XMonad.Layout.Magnifier
 import XMonad.Layout.NoBorders
 import XMonad.Layout.PerWorkspace
 -- import XMonad.Layout.LayoutHints
+import XMonad.Layout.OnHost
 
 import Data.List (isInfixOf)
 import Control.Arrow hiding ((<+>), (|||))
@@ -105,9 +106,11 @@ myLayoutHook = avoidStrutsOn [] $ smartBorders $
 -- and the magnification percentage on artemis and zephyr.
 -- Alternatively put in branches of dotfiles repo (it's neater to have
 -- it here though).
-myEditing = limitWindows 5 $
-            magnifiercz' 1.03 $
-            FixedColumn 1 20 80 10
+myEditing = modHost "zephyr" (limitWindows 7) $
+            modHost "artemis" (limitWindows 5) $
+            modHost "artemis" (magnifiercz' 1.03) $
+            onHost "artemis" (FixedColumn 1 20 80 10) $
+            Tall 1 0.03 0.55
 
 myWebLayout = Mirror $ Tall 1 0.03 0.8
 
