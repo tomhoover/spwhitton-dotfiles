@@ -68,6 +68,7 @@ myPrefixedKeys = [ ("i", spawn "xmousetidy")
 
 myUnprefixedKeys = [ ("M4-j", windows W.focusDown)
                    , ("M4-k", windows W.focusUp)
+                   , ("M4-l", spawn "xscreensaver-command -lock")
                    , ("M4-S-j", windows W.swapDown)
                    , ("M4-S-k", windows W.swapUp)
                    , ("M1-<Tab>", rotSlavesDown)
