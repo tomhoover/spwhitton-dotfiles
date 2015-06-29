@@ -19,3 +19,5 @@
 /.xmonad/xmonad.errors
 /.xmonad/xmonad.hi
 /.xmonad/xmonad.o
+/.config/sonata/art_cache
+/.config/gtk-3.0/bookmarks
