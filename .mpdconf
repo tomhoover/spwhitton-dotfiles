@@ -1,0 +1,22 @@
+music_directory		"/home/swhitton/lib/annex/music"
+playlist_directory		"/home/swhitton/doc/playlists"
+db_file			"/home/swhitton/local/mpd/database"
+log_file			"/home/swhitton/local/mpd/log"
+pid_file			"/home/swhitton/local/mpd/pid"
+state_file			"/home/swhitton/local/mpd/state"
+sticker_file                   "/home/swhitton/local/mpd/sticker.sql"
+bind_to_address		"localhost"
+
+# An example of a pulseaudio output (streaming to a remote pulseaudio server)
+# Please see README.Debian if you want mpd to play through the pulseaudio
+# daemon started as part of your graphical desktop session!
+#
+#audio_output {
+#	type		"pulse"
+#	name		"My Pulse Output"
+#	server		"remote_server"		# optional
+#	sink		"remote_server_sink"	# optional
+#}
+
+filesystem_charset		"UTF-8"
+id3v1_encoding			"UTF-8"
