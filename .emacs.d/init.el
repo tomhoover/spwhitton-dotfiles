@@ -1796,7 +1796,8 @@ Ensures the kill ring entry always ends with a newline."
   "Open a fresh urxvt terminal in current directory."
   (interactive)
   (call-process "urxvtcd" nil "*errors*" nil
-                "-cd" (expand-file-name  default-directory)))
+                "-cd" (expand-file-name  default-directory)
+                "-e"  "/bin/zsh"))
 
 
 
