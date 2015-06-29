@@ -92,7 +92,9 @@ myManageHook = composeOne $
                , className =? "libreoffice-impress" -?> doShift "misc"
                ] ++ [className =? c -?> doFloat | c <- myFloatClasses]
 
-myLayoutHook = avoidStrutsOn [] $ smartBorders $
+myLayoutHook = modHost "artemis" (avoidStrutsOn []) $
+               modHost "zephyr" avoidStruts $
+               smartBorders $
                -- layoutHintsWithPlacement (0.5, 0.5) $
                onWorkspace "www" (myWebLayout ||| Full) $
                myEditing ||| Full -- default for other workspaces
