@@ -30,6 +30,7 @@
 # repo when cloning
 [url "git@github.com:"]
     pushInsteadOf = https://github.com/
+    pushInsteadOf = http://github.com/
     pushInsteadOf = git://github.com/
     pushInsteadOf = github:
 [url "git://github.com/"]
