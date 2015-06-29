@@ -8,7 +8,7 @@
 
 ;;; get Org headline completion in helm-mini
 
-(use-package helm-org)
+;; (use-package helm-org)
 
 ;;; my helper functions for blog posts
 
