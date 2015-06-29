@@ -31,9 +31,9 @@
   :mode (("\\.hs\\'" . haskell-mode)
          ("\\.cabal\\'" . haskell-cabal-mode)
          ("\\.hcr\\'" . haskell-core-mode))
-  
+
   :config
-  
+
   ;; Start up all my usual minor modes and bindings.
   (add-hook 'haskell-mode-hook 'spw/haskell-mode-hook)
   (add-hook 'after-save-hook 'spw/haskell-cabal-mode-save-hook)
