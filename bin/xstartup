@@ -22,7 +22,7 @@ fi
 
 # ---- other stuff to launch
 
-gtk-redshift -l 53.57:1.5 -t 6500:3700 &
+redshift-gtk -l 53.57:1.5 -t 6500:3700 &
 
 # ---- fire up my window manager
 
