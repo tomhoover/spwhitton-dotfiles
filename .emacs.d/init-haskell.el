@@ -77,6 +77,8 @@
   (interactive-haskell-mode)
   (diminish 'interactive-haskell-mode)
   (flymake-mode 0)
+  (hi2-mode t)
+  (smartparens-strict-mode)
 
   ;; until we get ghc-mod working, use dabbrev
   (company-mode 0)
@@ -151,7 +153,6 @@
     (indent-for-tab-command)
     (insert " "))
 
-  (add-hook 'haskell-mode-hook 'turn-on-hi2)
   (bind-key "C-c |" 'spw/hi2-pipe hi2-mode-map))
 
 (use-package shm
