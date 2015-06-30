@@ -824,7 +824,7 @@
   :ensure
   :diminish yas-minor-mode
 
-  :defer 5
+  ;; :defer 5
   :config
   (yas-global-mode 1))
 
