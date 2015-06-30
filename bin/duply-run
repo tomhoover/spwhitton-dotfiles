@@ -40,7 +40,7 @@ case "$(hostname -f)" in
         # force execution with duply in my dotfiles repo, not apt
         # package version installed system-wide (though $PATH from
         # .shenv should get this right anyway)
-             $HOME/bin/duply zephyr-swhitton-home-run backup_purge --force -v9
+             $HOME/bin/duply zephyr-swhitton-home-run backup_purge --force
         fi
         ;;
 esac
