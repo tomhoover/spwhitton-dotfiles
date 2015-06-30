@@ -48,6 +48,7 @@ alias gs="git status"
 alias pg="ps auxxxxxxxxxxxxxxxxxxx | grep"
 alias fmr="MR_FAST=true mr"
 alias d="emacsclient -c -n -e '(dired \".\")'"
+alias mg=$EDITOR
 
 alias fixmpd="sudo invoke-rc.d mpd restart; pkill sonata"
 alias radio4="mplayer \"http://wmlive-acl.bbc.co.uk/wms/bbc_ami/radio4/radio4_bb_live_eq1_sl0?BBC-UID=044be39365f98aaa88a55ca7f1aa8fc5b3569ae000708114d4dfd43698a07e8a&amp;SSO2-UID=\""
@@ -66,9 +67,14 @@ alias calup="emacs -batch -l /home/swhitton/.emacs.d/init.el -eval \"(org-batch-
 alias dotex="texi2dvi --pdf --clean --batch"
 alias whitenoise="cvlc --quiet --loop ~/lib/annex/doc/sounds/R*.ogg"
 alias myip="dig +short myip.opendns.com @resolver1.opendns.com"
-alias mg=$EDITOR
+
 # spin propellor locally
 alias locspin="propellor `hostname --fqdn`"
+
+# common dotfiles git operations
+alias git-rebase-host-branch="git rebase master;git checkout ${hostname};git rebase master"
+alias git-push-host-branch="git push origin master +${hostname}"
+alias git-dotfiles="git-rebase-host-branch && git-push-host-branch"
 
 # tmux is smart and it detects a changed SSH_AUTH_SOCK and any newly
 # created shells use that.  But not old ones: this should pull the
