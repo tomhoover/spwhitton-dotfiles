@@ -4,8 +4,8 @@
 
 set from=spwhitton@spwhitton.name
 set realname="Sean Whitton"
-#set reverse_name = yes
-#set reverse_realname = no
+set reverse_name = yes
+set reverse_realname = no
 set envelope_from = yes
 set use_from = yes
 set folder=~/.fmail/
