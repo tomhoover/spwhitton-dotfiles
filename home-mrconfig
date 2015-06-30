@@ -154,7 +154,7 @@ fixups =
     if ! win32; then
         ln -sf $HOME/src/dotfiles/home-mrconfig $HOME/.mrconfig
         ln -sf $HOME/src/dotfiles/.stow-global-ignore $HOME
-        mkdir -p $HOME/local/mutt $HOME/.ssh $HOME/local/mpd
+        mkdir -p $HOME/local/mutt $HOME/.ssh $HOME/local/mpd $HOME/local/anacron/spool
         mkdir -p $HOME/tmp $HOME/src $HOME/local/src $HOME/local/bin $HOME/local/big $HOME/local/lib $HOME/local/pub
         # set up auth info folder: the "|| true" is because if the
         # folder is empty the final recursive chmod will fail

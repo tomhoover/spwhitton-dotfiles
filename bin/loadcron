@@ -6,7 +6,7 @@
 # have "$HOME" in it, as in "PATH=$HOME/bin". cron is too dumb to deal
 # with that, so the expansion is handled by this script.
 
-# This script was written by Joey Hess:
+# This script was originally written by Joey Hess:
 # http://git.kitenet.net/?p=joey/home.git;a=blob;f=bin/loadcron
 
 set -e
@@ -44,5 +44,13 @@ if [ -d "$dir" ]; then
 	    cat "$hostfile"
 	    echo
 	fi
+        hostanacrontab=$HOME/.config/anacron/$(whoami)_$(hostname -f)
+        mkdir -p $HOME/local/anacron/spool
+        if [ -e "$hostanacrontab" ]; then
+            echo "# Personal anacron:"
+            echo "0 8 * * * anacron -s -t $hostanacrontab -S $HOME/local/anacron/spool"
+            echo "@reboot   anacron -s -t $hostanacrontab -S $HOME/local/anacron/spool"
+            echo
+        fi
     ) | crontab -
 fi
