@@ -25,11 +25,15 @@ case "$(hostname -f)" in
         printf "\n>>> running web dir backup\n\n"
         duply ma-spw-www backup
         ;;
-    "artemis.silentflame.com")
+    "zephyr.silentflame.com")
         cd $HOME
+        # if there's no key, backups have not been enabled on this
+        # (presumably fresly-installed) host: exit silently
+        if [ -e "$HOME/.ssh/id_duply" ]; then
         # force execution with duply in my dotfiles repo, not apt
         # package version installed system-wide (though $PATH from
         # .shenv should get this right anyway)
-        $HOME/bin/duply artemis-root backup_purge --force
+             $HOME/bin/duply zephyr-swhitton-home-run backup_purge --force
+        fi
         ;;
 esac
