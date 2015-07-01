@@ -44,6 +44,7 @@
 ;;; graphical calendar
 
 (use-package calfw
+  :disabled t
   :ensure
   :init (load-library "calfw-org"))
 
