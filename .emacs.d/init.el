@@ -19,8 +19,8 @@
  '(("melpa" . "http://melpa.org/packages/")
    ("melpa-stable" . "http://stable.melpa.org/packages/")
    ;; ("marmalade" . "http://marmalade-repo.org/packages/")
-   ("org" . "http://orgmode.org/elpa/")
    ("gnu" . "http://elpa.gnu.org/packages/")))
+   ;; ("org" . "http://orgmode.org/elpa/")
 
 (package-initialize)
 (unless package-archive-contents
@@ -316,8 +316,8 @@
 (eval-after-load 'org '(load "~/.emacs.d/init-org.el"))
 
 (use-package org
-  :ensure org-plus-contrib
-  :pin org
+  ;; :ensure org-plus-contrib ; Debian Jessie archive version is new enough
+  ;; :pin org
   :mode (("\\.org" . org-mode)
          ("\\.org_archive" . org-mode))
   :bind (("C-c o c" . org-capture)
