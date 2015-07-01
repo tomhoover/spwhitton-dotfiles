@@ -20,6 +20,13 @@ if lsusb | grep -q "Aluminum Keyboard"; then
     pkill zenity
 fi
 
+# ---- GTK settings
+
+# Have the GNOME keyring daemon cache our GPG key passphrase for no
+# more than 5 minutes.  Cache time cannot be controlled for SSH keys
+gsettings set org.gnome.crypto.cache gpg-cache-ttl 300
+gsettings set org.gnome.crypto.cache gpg-cache-method 'timeout'
+
 # ---- other stuff to launch
 
 redshift-gtk -l 53.57:1.5 -t 6500:3700 &
