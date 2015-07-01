@@ -825,7 +825,8 @@
       ;; that don't match the current input
       ido-work-directory-match-only t)
 
-;; disable *Completions* and *Ido Completions* buffers
+;; disable *Completions* and *Ido Completions* buffers for the sake of
+;; `frames-only-mode'
 (setq ido-completion-buffer nil
       completion-auto-help  nil)
 
