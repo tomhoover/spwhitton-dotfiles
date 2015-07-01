@@ -808,12 +808,14 @@
 
 (use-package helm
   :ensure
+  :disabled
   :defer 5
   :config
   (use-package helm-mode
     :bind ("M-s o" . helm-occur))
   (use-package helm-descbinds
     :ensure
+    :disabled
     :defer 5
     :config
     (helm-descbinds-mode)))
