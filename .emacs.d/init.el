@@ -63,7 +63,6 @@
    (elisp-slime-nav        . "melpa-stable")
    (haskell-mode           . "melpa-stable")
    (hi2                    . "melpa-stable")
-   (hl-sentence            . "melpa-stable")
    ;; (org-plus-contrib       . "org")
 
    ;; dependencies
