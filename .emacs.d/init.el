@@ -620,6 +620,10 @@
 
 (use-package php-mode :ensure :mode (("\\.php" .  php-mode)))
 
+;;; YAML mode
+
+(use-package yaml-mode :ensure :mode (("\\.yaml" .  yaml-mode)))
+
 ;;; Deft
 
 (use-package deft
