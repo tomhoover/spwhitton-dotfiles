@@ -1,28 +1,38 @@
-import XMonad
-import XMonad.Config.Xfce
-import XMonad.Util.EZConfig (additionalKeysP, removeKeysP)
-import XMonad.Actions.CycleWS (toggleWS)
-import qualified XMonad.StackSet as W
-import XMonad.Hooks.ManageDocks
-import XMonad.Hooks.ManageHelpers
-import XMonad.Hooks.InsertPosition
-import XMonad.Actions.Submap
-import XMonad.Actions.RotSlaves
-import XMonad.Layout.LimitWindows
-import XMonad.Layout.FixedColumn
-import XMonad.Layout.Magnifier
-import XMonad.Layout.NoBorders
-import XMonad.Layout.Grid
-import XMonad.Layout.Dishes
-import XMonad.Layout.PerWorkspace
--- import XMonad.Layout.LayoutHints
-import XMonad.Layout.OnHost
+{-
 
-import Data.List (isInfixOf)
-import Control.Arrow hiding ((<+>), (|||))
-import Data.Bits
-import qualified Data.Map as M
-import Control.Monad (liftM2)
+    Sean's second attempt at an XMonad configuration, after having learnt some Haskell
+
+    Much inspiration from Joey Hess's config
+
+-}
+
+import           XMonad
+import           XMonad.Config.Xfce
+import qualified XMonad.StackSet             as W
+import           XMonad.Util.EZConfig        (additionalKeysP, removeKeysP)
+
+import           XMonad.Actions.CycleWS      (toggleWS)
+import           XMonad.Actions.RotSlaves
+import           XMonad.Actions.Submap
+import           XMonad.Hooks.InsertPosition
+import           XMonad.Hooks.ManageDocks
+import           XMonad.Hooks.ManageHelpers
+
+import           XMonad.Layout.Dishes
+import           XMonad.Layout.FixedColumn
+import           XMonad.Layout.Grid
+-- import           XMonad.Layout.LayoutHints
+import           XMonad.Layout.LimitWindows
+import           XMonad.Layout.Magnifier
+import           XMonad.Layout.NoBorders
+import           XMonad.Layout.OnHost
+import           XMonad.Layout.PerWorkspace
+
+import           Control.Arrow               hiding ((<+>), (|||))
+import           Control.Monad               (liftM2)
+import           Data.Bits
+import           Data.List                   (isInfixOf)
+import qualified Data.Map                    as M
 
 main = xmonad $ addMyKeys $ xfceConfig
 
