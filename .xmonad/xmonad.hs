@@ -13,6 +13,7 @@ import XMonad.Layout.FixedColumn
 import XMonad.Layout.Magnifier
 import XMonad.Layout.NoBorders
 import XMonad.Layout.Grid
+import XMonad.Layout.Dishes
 import XMonad.Layout.PerWorkspace
 -- import XMonad.Layout.LayoutHints
 import XMonad.Layout.OnHost
@@ -98,6 +99,7 @@ myLayoutHook = modHost "artemis" (avoidStrutsOn []) $
                smartBorders $
                -- layoutHintsWithPlacement (0.5, 0.5) $
                onWorkspace "www" (myWebLayout ||| Full) $
+               onWorkspace "misc" (myDish ||| Full) $
                myEditing ||| Grid ||| Full -- default for other workspaces
 
 -- custom layouts
@@ -112,6 +114,9 @@ myEditing = modHost "zephyr" (limitWindows 7) $
             Tall 1 0.03 0.55
 
 myWebLayout = Mirror $ Tall 1 0.03 0.8
+
+-- logs, compiles, tails etc.
+myDish = limitWindows 5 $ Dishes 1 (1/5)
 
 -- helper functions
 
