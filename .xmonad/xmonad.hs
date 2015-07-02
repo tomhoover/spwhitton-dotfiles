@@ -12,6 +12,7 @@ import XMonad.Layout.LimitWindows
 import XMonad.Layout.FixedColumn
 import XMonad.Layout.Magnifier
 import XMonad.Layout.NoBorders
+import XMonad.Layout.Grid
 import XMonad.Layout.PerWorkspace
 -- import XMonad.Layout.LayoutHints
 import XMonad.Layout.OnHost
@@ -97,7 +98,7 @@ myLayoutHook = modHost "artemis" (avoidStrutsOn []) $
                smartBorders $
                -- layoutHintsWithPlacement (0.5, 0.5) $
                onWorkspace "www" (myWebLayout ||| Full) $
-               myEditing ||| Full -- default for other workspaces
+               myEditing ||| Grid ||| Full -- default for other workspaces
 
 -- custom layouts
 
