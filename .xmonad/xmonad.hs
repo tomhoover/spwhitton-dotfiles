@@ -81,7 +81,7 @@ myUnwantedKeys = ["M-e"]
 -- hooks
 
 myFloatClasses = ["Gimp"
-                 -- , "feh"
+                 , "feh"
                  , "MPlayer"
                  , "Xfrun4"]
 
