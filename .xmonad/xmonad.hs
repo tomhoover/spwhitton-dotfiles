@@ -48,7 +48,7 @@ myMod        = mod4Mask
 myTerm       = "urxvtcd"
 myEditor     = "emacscd"
 myBrowser    = "iceweasel"
-myWorkspaces = ["ops", "conn", "www", "misc"]
+myWorkspaces = ["ops", "conn", "www", "misc", "tail"]
 
 -- key bindings
 
@@ -99,7 +99,7 @@ myLayoutHook = modHost "artemis" (avoidStrutsOn []) $
                smartBorders $
                -- layoutHintsWithPlacement (0.5, 0.5) $
                onWorkspace "www" (myWebLayout ||| Full) $
-               onWorkspace "misc" (myDish ||| Full) $
+               onWorkspace "tail" (myDish ||| Full) $
                myEditing ||| Grid ||| Full -- default for other workspaces
 
 -- custom layouts
