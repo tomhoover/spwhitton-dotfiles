@@ -69,6 +69,24 @@
   "Haskell mode startup stuff."
   (interactive)
 
+  ;; When I've created a stack.yaml in the project root, use stack to
+  ;; run ghci.
+  (when (f-exists? (projectile-expand-root "stack.yaml"))
+    (setq-local haskell-process-type 'ghci)
+    (setq-local haskell-process-path-ghci "stack")
+    (setq-local haskell-process-args-ghci '("ghci"))
+    (setq-local flycheck-haskell-ghc-executable "stack")
+    (setq-local flycheck-ghc-args '("ghc")))
+
+  ;; When I've created a shell.nix in the project root, use nix-shell
+  ;; to run ghci and cabal.
+  ;; (when (f-exists? (projectile-expand-root "shell.nix"))
+  ;;   (setq-local haskell-process-type 'cabal-repl)
+  ;;   (setq-local
+  ;;    haskell-process-wrapper-function
+  ;;    (lambda (argv) (append (list "nix-shell" "-I" "." "--command" )
+  ;;                           (list (mapconcat 'identity argv " "))))))
+
   ;;; basic minor modes
 
   (turn-on-haskell-doc)
@@ -79,6 +97,11 @@
   (flymake-mode 0)
   (hi2-mode t)
   (smartparens-strict-mode)
+
+  ;;; make sure haskell-flycheck checker being used?
+
+  ;; (when (fboundp 'flycheck-disable-checker)
+  ;;   (flycheck-disable-checker 'haskell-ghc))
 
   ;; until we get ghc-mod working, use dabbrev
   (company-mode 0)
@@ -99,21 +122,7 @@
   (bind-key "C-c C-t" 'haskell-process-do-type interactive-haskell-mode-map)
   (bind-key "C-c C-i" 'haskell-process-do-info interactive-haskell-mode-map)
   (bind-key "C-c C-r" 'haskell-process-restart interactive-haskell-mode-map)
-  (bind-key "SPC"     'haskell-mode-contextual-space haskell-mode-map)
-
-  ;;; make sure haskell-flycheck checker being used?
-
-  (when (fboundp 'flycheck-disable-checker)
-    (flycheck-disable-checker 'haskell-ghc))
-
-  ;; When I've created a shell.nix in the project root, use nix-shell
-  ;; to run ghci and cabal.
-  (when (f-exists? (projectile-expand-root "shell.nix"))
-    (setq-local haskell-process-type 'cabal-repl)
-    (setq-local
-     haskell-process-wrapper-function
-     (lambda (argv) (append (list "nix-shell" "-I" "." "--command" )
-                            (list (mapconcat 'identity argv " ")))))))
+  (bind-key "SPC"     'haskell-mode-contextual-space haskell-mode-map))
 
 ;; save hook
 

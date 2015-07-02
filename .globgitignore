@@ -8,6 +8,7 @@ feh_*_filelist
 flycheck_*
 *_flymake*
 *.cabal-sandbox*
+*.stack-work*
 cabal.sandbox.config
 shell.nix
 TAGS

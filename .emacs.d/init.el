@@ -721,6 +721,7 @@
   (projectile-global-mode 1)
   (setq projectile-switch-project-action 'projectile-dired
         projectile-completion-system 'ido)
+  (add-to-list 'projectile-globally-ignored-directories ".stack-work")
   (diminish 'projectile-mode))
 
 (use-package persp-projectile :ensure :disabled t)
