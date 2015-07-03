@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Sean's wrapper around propellor --spin
 
@@ -9,7 +9,13 @@ if output=$(git status --porcelain) && [ -z "$output" ]; then
     if [ -z "$1" ]; then
         propellor --spin $(hostname --fqdn)
     else
-        propellor --spin $1
+        # If there's no dots in the host we've specified, it's one of
+        # my hosts, so append the rest of the domain.
+        if [ -z "${1//[^.]/}" ]; then
+            propellor --spin ${1}.silentflame.com
+        else
+            propellor --spin $1
+        fi
     fi
 else
     echo "commit first!"
