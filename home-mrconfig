@@ -173,7 +173,8 @@ fixups =
     if ! win32; then
         # use absolute path because maybe we only just stowed so this
         # shell doesn't have $PATH setup by .shenv
-        $HOME/bin/loadcron
+        $HOME/bin/loadcron || true
+        $HOME/bin/loadsshkeys || true
         $HOME/bin/mkcabalc
     fi
     if win32; then
