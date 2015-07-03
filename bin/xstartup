@@ -22,6 +22,9 @@ fi
 
 # ---- GTK settings
 
+# Note that at least some of these won't take effect until logging in
+# again to restart services.
+
 # Have the GNOME keyring daemon cache our GPG key passphrase for no
 # more than 5 minutes.  Cache time cannot be controlled for SSH keys
 gsettings set org.gnome.crypto.cache gpg-cache-ttl 300
