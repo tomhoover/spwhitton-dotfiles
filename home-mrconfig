@@ -239,7 +239,9 @@ autoci =
 # --- hosts configuration
 
 [src/propellor]
-checkout = git clone git://github.com/spwhitton/propellor.git propellor --branch spwconf
+# This URL needs to be one that will work without my ~/.gitconfig
+# insteadOf rewriting rules in place
+checkout = git clone https://github.com/spwhitton/propellor.git propellor --branch spwconf
 
 # Get a sandbox going.  Dependencies should already be in place with
 # system-wide propellor package.
