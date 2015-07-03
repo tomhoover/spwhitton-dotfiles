@@ -1,0 +1,17 @@
+#!/bin/sh
+
+# Sean's wrapper around propellor --spin
+
+cd $HOME/src/propellor
+
+# This check from <http://unix.stackexchange.com/a/155077>
+if output=$(git status --porcelain) && [ -z "$output" ]; then
+    if [ -z "$1" ]; then
+        propellor --spin $(hostname --fqdn)
+    else
+        propellor --spin $1
+    fi
+else
+    echo "commit first!"
+    exit 1
+fi

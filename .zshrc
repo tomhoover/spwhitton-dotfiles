@@ -69,9 +69,6 @@ alias whitenoise="cvlc --quiet --loop ~/lib/annex/doc/sounds/R*.ogg"
 alias myip="dig +short myip.opendns.com @resolver1.opendns.com"
 alias mailnow="mbsync -q fastmail && mutt -Z"
 
-# spin propellor locally
-alias locspin="propellor `hostname --fqdn`"
-
 # common dotfiles git operations
 alias git-rebase-host-branch="git checkout $(hostname);git rebase master"
 alias git-push-host-branch="git push origin master +$(hostname)"
