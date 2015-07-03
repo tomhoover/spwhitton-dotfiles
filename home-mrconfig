@@ -241,19 +241,12 @@ autoci =
 [src/propellor]
 checkout = git clone git://github.com/spwhitton/propellor.git propellor --branch spwconf
 
-# Get a sandbox going and get the dependencies of propellor installed
-# in that sandbox, so that propellor can build itself during a spin.
-# Then install propellor globally if we need to.  This is the
-# propellor we will call when we type `propellor --spin x.y.z', which
-# will go into the sandbox we just made and build and deploy.
+# Get a sandbox going.  Dependencies should already be in place with
+# system-wide propellor package.
 post_checkout =
     cd propellor
     git remote add -f upstream git://github.com/joeyh/propellor.git
     cabal sandbox init
-    cabal install --only-dependencies
-    if ! which propellor > /dev/null && [ -d "/nix" ]; then
-        cd && nix-env -iA nixpkgs.haskellngPackages.propellor
-    fi
 post_update = git fetch upstream
 # check that the link isn't already in place before making the link
 # because otherwise we get an infinite loop of links that breaks propellor
