@@ -95,8 +95,12 @@
   (interactive-haskell-mode)
   (diminish 'interactive-haskell-mode)
   (flymake-mode 0)
-  (hi2-mode t)
   (smartparens-strict-mode)
+
+  ;; Turn on hi2 if we're indenting with spaces.
+  (add-hook 'hack-local-variables-hook
+            (lambda () (unless indent-tabs-mode (hi2-mode)))
+            nil t)                      ; local hook
 
   ;;; make sure haskell-flycheck checker being used?
 
@@ -148,7 +152,7 @@
 
 (use-package hi2
   :ensure
-  :diminish hi2-mode
+  ;; :diminish hi2-mode
   :config
   (setq hi2-layout-offset 4
 	hi2-left-offset 4

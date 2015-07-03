@@ -137,7 +137,8 @@
              (projectile-project-name)))))
  '(safe-local-variable-values
    (quote
-    ((eval pandoc-set-write "latex")
+    ((eval highlight-regexp "^ *")
+     (eval pandoc-set-write "latex")
      (eval spw/writing-toggle)
      (indent-tabs-mode . t\,))))
  '(smart-tab-disabled-major-modes (quote (org-mode term-mode latex-mode message-mode)))
