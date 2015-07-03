@@ -81,7 +81,14 @@ myPrefixedKeys = [ ("i", spawn "xmousetidy")
 
 myUnprefixedKeys = [ ("M4-j", windows W.focusDown)
                    , ("M4-k", windows W.focusUp)
-                   , ("M4-l", spawn "xscreensaver-command -lock")
+
+                     -- When locking the screen, also clear out my SSH
+                     -- key.  Otherwise it lasts until I log off.  See
+                     -- GNOME bugzilla bug #525574.  Note that PGP
+                     -- keys may be set to timeout, but SSH keys can't
+                     -- be.
+                   , ("M4-l", spawn "sh -c 'ssh-add -D && xscreensaver-command -lock'")
+
                    , ("M4-S-j", windows W.swapDown)
                    , ("M4-S-k", windows W.swapUp)
                    , ("M1-<Tab>", rotSlavesDown)
