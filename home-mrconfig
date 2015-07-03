@@ -247,7 +247,7 @@ checkout = git clone https://github.com/spwhitton/propellor.git propellor --bran
 # system-wide propellor package.
 post_checkout =
     cd propellor
-    git remote add -f upstream git://github.com/joeyh/propellor.git
+    git remote add -f upstream github:joeyh/propellor.git
     cabal sandbox init
 post_update = git fetch upstream
 # check that the link isn't already in place before making the link
