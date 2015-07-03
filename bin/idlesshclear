@@ -1,0 +1,8 @@
+#!/bin/sh
+
+while true; do
+    if [ $(xprintidle) -ge 300000 ]; then
+        ssh-add -D 2>/dev/null
+    fi
+    sleep 300
+done

@@ -30,6 +30,12 @@ fi
 gsettings set org.gnome.crypto.cache gpg-cache-ttl 300
 gsettings set org.gnome.crypto.cache gpg-cache-method 'timeout'
 
+# ---- clear SSH keys out of gnome-keyring-daemon when idle (per GNOME
+# ---- bug #525574 it can't do this itself yet)
+
+pkill -u $USER idlesshclear
+idlesshclear &
+
 # ---- other stuff to launch
 
 redshift-gtk -l 53.57:1.5 -t 6500:3700 &
