@@ -56,6 +56,29 @@ set print_command="muttprint"
 # send2-hook . 'set from="Sean Whitton <spw@sdf.org>" use_from'
 # send2-hook "~t arizona.edu" 'set from="Sean Whitton <spwhitton@email.arizona.edu>" use_from'
 
+# See <http://comments.gmane.org/gmane.mail.mutt.user/28818> on
+# avoiding infinite loops with send2-hooks
+
+# from hooks: use CatMail address for members of cmrecps group
+
+group -group cmrecps -rx edu$ -rx ac.uk$
+
+send2-hook "!~f spwhitton@email.arizona.edu ^%C cmrecps" 'push <edit-from><home><kill-eol>Sean\ Whitton\ <spwhitton@email.arizona.edu><enter>'
+
+# PGP hooks: encrypt to members of the pgp_full group, do nothing for
+# members of pgp_none, sign to everyone else
+
+group -group pgp_none -rx arizona.edu$
+
+send-hook "." "set crypt_autosign=no"
+send-hook "." "set crypt_autoencrypt=no"
+send-hook "!^%Cpgp_none" "set crypt_autosign=yes"
+send-hook "^%Cpgp_full !^%Cpgp_none" "set crypt_autoencrypt=yes"
+
+send-hook '!~g !~G ^%C pgp_full !^%C pgp_none' 'push <pgp-menu>b'
+send-hook '!~g !^%C pgp_full !^%C pgp_none' 'push <pgp-menu>s'
+send-hook '(~G|~g) ^%C pgp_none' 'push <pgp-menu>c'
+
 # --- sorting
 
 set sort = threads

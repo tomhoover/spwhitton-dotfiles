@@ -2114,7 +2114,7 @@ ARG, PRED ignored."
           (setq mail-header-separator "")
           (add-hook 'message-mode-hook (lambda ()
                                          (auto-fill-mode)
-                                         (spw/set-from-address)
+                                         ;; (spw/set-from-address)
                                          (footnote-mode)
                                          (message-goto-body)))))
 
