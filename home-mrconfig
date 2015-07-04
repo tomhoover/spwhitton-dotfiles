@@ -229,7 +229,12 @@ skip = (! gcrypt) || lazy || fast
 
 # convenience automatic permission setting and checking in of
 # frequently changed files
-fixups = chmod 600 .passwddb.pet .s3ql/authinfo2; git config gcrypt.publish-participants true
+fixups =
+        chmod 600 .passwddb.pet .s3ql/authinfo2
+        git config remote.origin.gcrypt-publish-participants true
+        git config remote.origin.gcrypt-participants 0x3B6D411B
+        git config gcrypt.publish-participants true
+        git config gcrypt.participants 0x3B6D411B
 pre_update =
         git add .passwddb.pet .labbook.gpg
         git commit -a -m "auto passwddb and labbook commit on $(hostname -s)" || true
@@ -277,7 +282,10 @@ update = git annex sync ma
 push = git annex sync ma
 fixups =
     git config push.default matching
+    git config remote.origin.gcrypt-publish-participants true
+    git config remote.origin.gcrypt-participants 0x3B6D411B
     git config gcrypt.publish-participants true
+    git config gcrypt.participants 0x3B6D411B
     git config annex.startupscan false
     git config annex.autocommit false
 
