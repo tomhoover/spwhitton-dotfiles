@@ -30,7 +30,7 @@
  package-pinned-packages
  '((zenburn-theme          . "melpa-stable")
    (diminish               . "melpa-stable")
-   (f                      . "melpa-stable")
+   ;; (f                      . "melpa-stable")
    (s                      . "melpa-stable")
    (dash                   . "melpa-stable")
    (expand-region          . "melpa-stable")
@@ -1801,14 +1801,21 @@ Passes ARG to `projectile-switch-project-by-name'."
                                      (spw/get-programming-projects programming-projects-dir))))
     (projectile-switch-project-by-name project-dir arg)))
 
-(defun spw/pandoc-paper-compile ()
-  "Compile a paper to PDF with pandoc.
+(defun spw/pandoc-paper-compile (arg)
+  "Compile a paper to PDF with pandoc into ~/tmp.
+
+If ARG, put into my annex instead.
 
 Lightweight alternative to pandoc-mode."
-  (interactive)
+  (interactive "P")
   (when (and (string= default-directory (expand-file-name "~/doc/papers/"))
              (eq major-mode 'markdown-mode))
-    (let ((output-file (f-join "~/tmp" (f-filename (f-swap-ext (buffer-file-name) "pdf")))))
+    (let ((output-file (f-join (if arg "~/lib/annex/doc/papers" "~/tmp")
+                               (f-filename (f-swap-ext (buffer-file-name) "pdf")))))
+      (when (and arg (f-symlink? output-file))
+        (call-process-shell-command
+         "git" nil "*git annex output*" nil
+         "-C" "~/lib/annex" "annex" "unlock" output-file))
       (call-process-shell-command
        "pandoc" nil "*pandoc output*" nil
        "-s" "--filter" "pandoc-citeproc" (concat "--bibliography=" (expand-file-name "~/doc/spw.bib"))
