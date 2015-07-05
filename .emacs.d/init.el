@@ -461,11 +461,14 @@
 (setq magit-last-seen-setup-instructions "1.4.0")
 (use-package magit
   :ensure
-  ;; :diminish magit-auto-revert-mode
+  :diminish magit-wip-after-save-local-mode
   :demand
   :config
 
   (setq magit-completing-read-function 'magit-ido-completing-read)
+
+  ;; avoid a pop up that grabs focus every time we make a commit
+  (setq magit-diff-auto-show '())
 
   ;; C-c C-a to amend without any prompt
   (defun magit-just-amend ()
