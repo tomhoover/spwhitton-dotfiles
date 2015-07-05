@@ -2106,6 +2106,10 @@ ARG, PRED ignored."
 (if (fboundp 'advice-add)
     (advice-add 'save-some-buffers :before #'spw/save-org-buffers-first))
 
+;;; show column numbers as well as line numbers in the mode line
+
+(setq column-number-mode t)
+
 
 
 ;;;; ---- modes configuration ----
