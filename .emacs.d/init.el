@@ -36,6 +36,7 @@
    (expand-region          . "melpa-stable")
    (smartparens            . "melpa-stable")
    (magit                  . "melpa-stable")
+   (magit-popup            . "melpa-stable")
    (magit-annex            . "melpa-stable")
    (rainbow-delimiters     . "melpa-stable")
    (aggressive-indent      . "melpa-stable")
@@ -69,6 +70,7 @@
    (epl                    . "melpa-stable")
    (pkg-info               . "melpa-stable")
    (flx                    . "melpa-stable")
+   (git-commit             . "melpa-stable")
    (git-commit-mode        . "melpa-stable")
    (git-rebase-mode        . "melpa-stable")
    (helm-descbinds         . "melpa-stable")
@@ -459,7 +461,7 @@
 (setq magit-last-seen-setup-instructions "1.4.0")
 (use-package magit
   :ensure
-  :diminish magit-auto-revert-mode
+  ;; :diminish magit-auto-revert-mode
   :demand
   :config
 
@@ -477,8 +479,8 @@
   (use-package magit-annex :ensure)
 
   (use-package magit-wip
-    :diminish magit-wip-save-mode
-    :config (global-magit-wip-save-mode 1)))
+    ;; :diminish magit-wip-after-save-mode
+    :config (magit-wip-after-save-mode nil)))
 
 ;;; pointback mode: make sure that point is back where I left it when
 ;;; switching between buffers where at least one buffer is displayed
