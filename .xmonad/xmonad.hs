@@ -27,6 +27,7 @@ import           XMonad.Layout.Magnifier
 import           XMonad.Layout.NoBorders
 import           XMonad.Layout.OnHost
 import           XMonad.Layout.PerWorkspace
+import           XMonad.Layout.ResizeScreen
 
 import           Control.Arrow               hiding ((<+>), (|||))
 import           Control.Monad               (liftM2)
@@ -117,7 +118,7 @@ myLayoutHook = modHost "artemis" (avoidStrutsOn []) $
                -- layoutHintsWithPlacement (0.5, 0.5) $
                onWorkspace "www" (myWebLayout ||| Full) $
                onWorkspace "tail" (myDish ||| Full) $
-               myEditing ||| Grid ||| Full -- default for other workspaces
+               myEditing ||| Grid ||| myReadWriting ||| Full -- default for other workspaces
 
 -- custom layouts
 
@@ -129,6 +130,11 @@ myEditing = modHost "zephyr" (limitWindows 7) $
             modHost "artemis" (magnifiercz' 1.03) $
             onHost "artemis" (FixedColumn 1 20 80 10) $
             Tall 1 0.03 0.55
+
+myReadWriting = resizeHorizontal 600 $
+                resizeHorizontalRight 600 $
+                limitWindows 3 $
+                Dishes 1 (1/6)
 
 myWebLayout = Mirror $ Tall 1 0.03 0.8
 

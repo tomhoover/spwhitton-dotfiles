@@ -1023,7 +1023,7 @@
 
 ;;; alternative to my old `spw/centre-window'
 
-(use-package centered-window-mode :commands centered-window-mode)
+(use-package centered-window-mode :disabled t :commands centered-window-mode)
 
 ;;; IRC client, for when I need it
 
@@ -1253,7 +1253,7 @@ narrowed."
   (setq-local cursor-type 'bar)
   (unless (or (eq system-type 'windows-nt)
               (not (fboundp 'set-fringe-mode)))
-    (centered-window-mode 1)
+    ;; (centered-window-mode 1)
     ;; indent mode need only be turned off if we're using centered
     ;; window mode
     (when (eq major-mode 'org-mode)
@@ -1270,7 +1270,7 @@ narrowed."
   (setq-local cursor-type 'box)
   (unless (or (eq system-type 'windows-nt)
               (not (fboundp 'set-fringe-mode)))
-    (centered-window-mode 0)
+    ;; (centered-window-mode 0)
     ;; indent mode need only be turned off if we're using centered
     ;; window mode
     (when (eq major-mode 'org-mode)
