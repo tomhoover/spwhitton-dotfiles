@@ -1869,9 +1869,9 @@ Ensures the kill ring entry always ends with a newline."
 ;; alternative: https://www.ogre.com/node/447
 
 (defcustom git-grep-command "git --no-pager grep --no-color --line-number <C> <R> `git rev-parse --show-toplevel`"
-  "The command to run with M-x git-grep.")
+  "The command to run with `git-grep'.")
 (defun git-grep (regexp)
-  "Search for the given regexp using `git grep' in the current directory."
+  "Search for REGEXP using `git grep' in the current directory."
   (interactive "sRegexp: ")
   (unless (boundp 'grep-find-template) (grep-compute-defaults))
   (let ((old-command grep-find-template))
