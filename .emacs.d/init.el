@@ -470,6 +470,8 @@
   ;; avoid a pop up that grabs focus every time we make a commit
   (setq magit-diff-auto-show '())
 
+  (setq magit-revert-buffers 'silent)
+
   ;; C-c C-a to amend without any prompt
   (defun magit-just-amend ()
     (interactive)
