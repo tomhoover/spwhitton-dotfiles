@@ -43,7 +43,7 @@
    (company                . "melpa-stable")
    (markdown-mode          . "melpa-stable")
    (php-mode               . "melpa-stable")
-   (deft                   . "melpa-stable")
+   ;; (deft                   . "melpa-stable")
    (flycheck               . "melpa-stable")
    (ebib                   . "melpa-stable")
    (projectile             . "melpa-stable")
@@ -636,24 +636,42 @@
   :ensure
   :commands deft
   :bind ("C-c f" . deft)
-  :init (setq deft-extension "org"
+  :init (setq deft-extensions '("org" "mdwn")
               deft-text-mode 'org-mode
               deft-directory "~/doc/org/"
+              deft-recursive t
               deft-use-filename-as-title nil
+
+              ;; trying snake_case for now (CamelCase means main
+              ;; agenda files)
+              deft-use-filter-string-for-filename t
+              deft-file-naming-rules '((noslash . "_")
+                                       (nospace . "_")
+                                       (case-fn . downcase))
+
               deft-auto-save-interval 20.0
               deft-incremental-search t
               ;; don't just strip the leading hash but the whole #+TITLE:
-              deft-strip-title-regexp "\\(?:\\#\\+TITLE\\: \\|\\#\\+FILETAGS\\: \\|^%+\\|^[#* ]+\\|-\\*-[[:alpha:]]+-\\*-\\|#+$\\)")
+              ;; deft-strip-title-regexp "\\(?:\\#\\+TITLE\\: \\|\\#\\+FILETAGS\\: \\|^%+\\|^[#* ]+\\|-\\*-[[:alpha:]]+-\\*-\\|#+$\\)"
+              deft-org-mode-title-prefix t)
   :config
   (bind-key "C-w" 'deft-filter-decrement-word deft-mode-map)
 
   (defadvice deft (before persp-deft disable)
     (projectile-persp-switch-project "~/doc"))
 
-  (defadvice deft-new-file (after insert-org-TITLE activate)
+  (defadvice deft-new-file (after insert-org-TITLE disable)
     (save-excursion
       (goto-char (point-min))
-      (insert "#+TITLE: "))))
+      (insert "#+TITLE: ")))
+
+  ;; With my xmonad setup, when `window-width' is x then only x-1
+  ;; characters will actually fit in the window.  Advise deft so its
+  ;; display doesn't wrap unreadably.
+  (defadvice deft-buffer-setup (around fix-window-width activate)
+    (let ((width (window-width)))
+      (flet ((window-width () (- width 1)))
+        ad-do-it))))
 
 ;;; The following two python packages seem to be unavailable for
 ;;; download.  Disable them for now.
