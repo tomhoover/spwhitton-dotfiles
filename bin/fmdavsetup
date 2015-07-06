@@ -1,0 +1,13 @@
+#!/bin/sh
+
+. $HOME/.shenv
+
+if ! [ -e "$HOME/local/auth/fmailsyncpass" ]; then
+    echo "put mbsync password file in place first"
+    exit 1
+fi
+
+mkdir -p $HOME/lib/fm $HOME/.davfs2
+pass=$(cat $HOME/local/auth/fmailsyncpass)
+echo "https://myfiles.messagingengine.com/ \"spwhitton#fastmail.com\" \"${pass}\"" >> $HOME/.davfs2/secrets
+chmod 600 $HOME/.davfs2/secrets
