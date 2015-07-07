@@ -110,6 +110,7 @@ myManageHook = composeOne $
                , isDialog                 -?> doFloat
                , className =? "Iceweasel" -?> doShift "www"
                , className =? "libreoffice-impress" -?> doShift "misc"
+               , className =? "Vlc" -?> doShift "misc"
                ] ++ [className =? c -?> doFloat | c <- myFloatClasses]
 
 myLayoutHook = modHost "artemis" (avoidStrutsOn []) $
@@ -118,6 +119,7 @@ myLayoutHook = modHost "artemis" (avoidStrutsOn []) $
                -- layoutHintsWithPlacement (0.5, 0.5) $
                onWorkspace "www" (myWebLayout ||| Full) $
                onWorkspace "tail" (myDish ||| Full) $
+               onWorkspace "misc" (Full ||| Grid) $
                myEditing ||| Grid ||| myReadWriting ||| Full -- default for other workspaces
 
 -- custom layouts
