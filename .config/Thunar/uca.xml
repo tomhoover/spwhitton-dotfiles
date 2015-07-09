@@ -1,2 +1,17 @@
 <?xml encoding="UTF-8" version="1.0"?>
-<actions><action><icon>git-annex</icon><name>Copy to desktop (dereference)</name><command>cp -RLn --no-preserve=mode --preserve=timestamp,owner %F ~/tmp/</command><description>Copy to desktop with `cp -RLn --no-preserve=mode`</description><patterns>*</patterns><directories/><audio-files/><image-files/><other-files/><text-files/><video-files/></action></actions>
+<actions>
+<action>
+	<icon>git-annex</icon>
+	<name>Copy to desktop (dereference)</name>
+	<unique-id>1436175095417521-1</unique-id>
+	<command>cp -RLn --no-preserve=mode --preserve=timestamp,owner %F ~/tmp/</command>
+	<description>Copy to desktop with `cp -RLn --no-preserve=mode`</description>
+	<patterns>*</patterns>
+	<directories/>
+	<audio-files/>
+	<image-files/>
+	<other-files/>
+	<text-files/>
+	<video-files/>
+</action>
+</actions>
