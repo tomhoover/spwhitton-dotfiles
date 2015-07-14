@@ -66,9 +66,14 @@ Slave            :fmmaildir:drafts
 # Master           :fmimap:INBOX/Trash
 # Slave            :fmmaildir:trash
 
+Channel          debian
+Master           :fmimap:INBOX/Lists/Debian
+Slave            :fmmaildir:debian
+
 Group            fastmail
 Channel          fmaili
 Channel          fmails
 Channel          fmaild
 # Channel          fmailt
 # Channel          fmaila
+Channel          debian
