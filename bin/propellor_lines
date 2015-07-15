@@ -1,0 +1,20 @@
+#!/usr/bin/runhaskell
+
+main = interact $ unlines . propellorLines . lines
+
+propellorLines        :: [String] -> [String]
+propellorLines (x:xs) = ("[ " ++ wrapEscapeLine x) : propellorLines' xs
+
+propellorLines' :: [String] -> [String]
+propellorLines' = foldr step ["]"]
+  where
+    step x xs = (", " ++ wrapEscapeLine x) : xs
+
+wrapEscapeLine      :: String -> String
+wrapEscapeLine line = "\"" ++ (foldr step "" line) ++ "\""
+  where
+    step x xs
+    	| x == '\t' = "\\t" ++ xs
+        | x == '\\' = x : x : xs
+        | x == '"'  = '\\' : x : xs
+        | otherwise = x : xs
