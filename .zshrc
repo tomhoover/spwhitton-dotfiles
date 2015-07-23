@@ -391,7 +391,7 @@ setopt                   \
 
 # per http://promberger.info/linux/2009/01/02/running-x-apps-like-zenity-from-crontab-solving-cannot-open-display-problem/
 if pgrep Xorg >/dev/null; then
-    xhost local:${USER} > /dev/null
+    xhost local:${USER} > /dev/null 2> /dev/null
 fi
 # per http://superuser.com/questions/111771/using-either-notify-send-or-zenity-in-cron
 echo $DBUS_SESSION_BUS_ADDRESS > ~/.tmp-dbus-addr
