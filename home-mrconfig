@@ -291,7 +291,7 @@ fixups =
 
 # copy everything to other places
 sync =
-    if [ -d /media/m3/annex/.git/annex ]; then
+    if [ -d "/media/${USER}/m3/annex/.git/annex" ]; then
         git annex sync --content ma m3
         m3gitbk
     else

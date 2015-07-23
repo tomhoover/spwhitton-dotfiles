@@ -4,10 +4,10 @@
 
 set -e
 
-HDD=/media/m3
+HDD=/media/${USER}/m3
 DEST=${HDD}/git
 
-if ! mount | grep -q "/media/m3"; then
+if ! mount | grep -q "/media/${USER}/m3"; then
     echo "m3gitbk: USB HDD not mounted" >&2
     exit 1
 fi
