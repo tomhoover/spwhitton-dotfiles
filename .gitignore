@@ -21,3 +21,4 @@
 /.xmonad/xmonad.o
 /.config/sonata/art_cache
 /.config/gtk-3.0/bookmarks
+/.config/systemd/user/default.target.wants/mpd.service
