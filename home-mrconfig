@@ -188,8 +188,8 @@ fixups =
 # symlink.  That way Emacs junk that gets dumped in ~/.emacs.d doesn't
 # have to be put into .gitignore.  Similarly the XDG autostart folder,
 # .ssh and lib and more
-pre_stow = $HOME/src/dotfiles/bin/unskel; mkdir -p ~/.emacs.d ~/.config/autostart ~/.ssh ~/lib ~/.cabal
-pre_checkout = mkdir -p ~/.emacs.d  ~/.config/autostart ~/.ssh ~/lib ~/.cabal ~/.xmonad
+pre_stow = $HOME/src/dotfiles/bin/unskel; mkdir -p ~/.emacs.d ~/.config/autostart ~/.ssh ~/lib ~/.cabal ~/.config/xfce4/desktop ~/.config/xfce4/xfconf/xfce-perchannel-xml ~/.gnupg ~/.config/Thunar
+pre_checkout = mkdir -p ~/.emacs.d  ~/.config/autostart ~/.ssh ~/lib ~/.cabal ~/.xmonad ~/.config/xfce4/desktop ~/.config/xfce4/xfconf/xfce-perchannel-xml ~/.gnupg ~/.config/Thunar
 
 # GTK insists on replacing the symlink to its bookmarks file with the
 # actual file even if the bookmarks in that file don't change (XFCE
@@ -241,6 +241,9 @@ pre_update =
 autoci =
         git add .passwddb.pet .labbook.gpg
         git commit -a -m "auto passwddb and labbook commit on $(hostname -s)" || true
+
+# since dotfiles repo also stows into ~/.gnupg, make the dir first
+pre_stow = mkdir -p ~/.gnupg
 
 # --- hosts configuration
 
