@@ -43,4 +43,10 @@ case "$(hostname -f)" in
              $HOME/bin/duply zephyr-swhitton-home-run backup_purge --force
         fi
         ;;
+    "artemis.silentflame.com")
+        cd $HOME
+        if [ -e "$HOME/.ssh/id_duply" ]; then
+             $HOME/bin/duply artemis-swhitton-home-run backup_purge --force
+        fi
+        ;;
 esac
