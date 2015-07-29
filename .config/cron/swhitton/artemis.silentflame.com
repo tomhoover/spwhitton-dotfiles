@@ -2,6 +2,6 @@
 #0 */2 * * * srem --refresh-emacs
 
 */15 * * * * chronic doccheckin
-*/30 * * * * chronic mbsync fastmail
+*/30 * * * * offline || chronic mbsync fastmail
 
 @reboot rt
