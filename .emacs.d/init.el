@@ -148,9 +148,9 @@
               word-wrap t
               wrap-prefix "    ")
 
-;; kill the fringes, if we have window system support compiled in
-(if (fboundp 'set-fringe-mode)
-    (set-fringe-mode 0))
+;; ;; kill the fringes, if we have window system support compiled in
+;; (if (fboundp 'set-fringe-mode)
+;;     (set-fringe-mode 0))
 
 ;; Terminus
 (if (member "Terminus-11" (font-family-list))

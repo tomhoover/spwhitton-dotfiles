@@ -137,8 +137,8 @@ myEditing = modHost "zephyr" (limitWindows 7) $
 
 myReadWriting = modHost "zephyr" (resizeHorizontal 600) $
                 modHost "zephyr" (resizeHorizontalRight 600) $
-                modHost "artemis" (resizeHorizontal 100) $
-                modHost "artemis" (resizeHorizontalRight 100) $
+                modHost "artemis" (resizeHorizontal 300) $
+                modHost "artemis" (resizeHorizontalRight 300) $
                 limitWindows 3 $
                 Dishes 1 (1/6)
 
