@@ -124,17 +124,21 @@ myLayoutHook = modHost "artemis" (avoidStrutsOn []) $
 
 -- custom layouts
 
--- this magnification setting, on artemis, should result in magnified
--- Emacs windows being 80 columns wide at 1280x
+-- Set the fixed column layout to 90 columns to allow for 88 columns
+-- of quoted e-mail text in mutt and the '> ' prefix.  Then the
+-- magnification setting of 1.31 allows slave mutt windows to display
+-- their 90 columns properly on artemis' 1280x screen.
 
 myEditing = modHost "zephyr" (limitWindows 7) $
             modHost "artemis" (limitWindows 5) $
-            modHost "artemis" (magnifiercz' 1.03) $
-            onHost "artemis" (FixedColumn 1 20 80 10) $
+            modHost "artemis" (magnifiercz' 1.31) $
+            onHost "artemis" (FixedColumn 1 20 90 10) $
             Tall 1 0.03 0.55
 
-myReadWriting = resizeHorizontal 600 $
-                resizeHorizontalRight 600 $
+myReadWriting = modHost "zephyr" (resizeHorizontal 600) $
+                modHost "zephyr" (resizeHorizontalRight 600) $
+                modHost "artemis" (resizeHorizontal 100) $
+                modHost "artemis" (resizeHorizontalRight 100) $
                 limitWindows 3 $
                 Dishes 1 (1/6)
 
