@@ -34,8 +34,8 @@ Minimal setup
 
 1. Get the repo
 
-   $ git clone https://github.com/spwhitton/dotfiles.git src/dotfiles
+   $ git clone https://github.com/spwhitton/dotfiles.git $HOME/src/dotfiles
    
-2. Run botstrap script:
+2. Run bootstrap script:
 
-   $ src/dotfiles/bin/bstraph.sh
+   $ $HOME/src/dotfiles/bin/bstraph.sh
