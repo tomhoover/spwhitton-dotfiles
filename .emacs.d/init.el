@@ -1199,7 +1199,8 @@
           (add-hook hook 'elisp-slime-nav-mode)))
 
 (use-package world-time-mode
-  :bind ("C-c g t" . world-time-list))
+  :commands world-time-list
+  :bind ("C-c g t" . spw/world-time-list))
 
 ;; and set up time zones I'm interested in
 
@@ -1899,6 +1900,12 @@ Ensures the kill ring entry always ends with a newline."
   (call-process "urxvtcd" nil "*errors*" nil
                 "-cd" (expand-file-name  default-directory)
                 "-e"  "/bin/zsh"))
+
+(defun spw/world-time-list ()
+  (interactive)
+  (make-frame)
+  (other-frame 1)
+  (world-time-list))
 
 
 
