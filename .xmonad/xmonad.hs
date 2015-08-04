@@ -106,11 +106,12 @@ myFloatClasses = ["Gimp"
                  , "Xfrun4"]
 
 myManageHook = composeOne $
-               [ checkDock                -?> doIgnore
-               , isDialog                 -?> doFloat
-               , className =? "Iceweasel" -?> doShift "www"
-               , className =? "libreoffice-impress" -?> doShift "misc"
-               , className =? "Vlc" -?> doShift "misc"
+               [ checkDock                              -?> doIgnore
+               , isDialog                               -?> doFloat
+               , className     =? "Iceweasel"           -?> doShift "www"
+               , className     =? "libreoffice-impress" -?> doShift "misc"
+               , className     =? "Vlc"                 -?> doShift "misc"
+               , title         =? "Dominion"            -?> doShift "misc"
                ] ++ [className =? c -?> doFloat | c <- myFloatClasses]
 
 myLayoutHook = modHost "artemis" (avoidStrutsOn []) $
