@@ -2,9 +2,12 @@
 ;; Collection of settings and code to use frames instead of emacs
 ;; "windows".
 
+
+
 ;; To automatically open a "useful" buffer in new frames xmonads binding
 ;; for a new frame is set to "emacsclient -c -n -e '(switch-to-buffer
 ;; nil)'". For other window managers something similar should work...
+
 
 
 
@@ -14,6 +17,7 @@
   '("*RefTeX Select*" "*Help*" "*Popup Help*" "*Completions*")
   "Buffer names for which the containing frame should be
  killed when the buffer is killed.")
+
 
 (defcustom frames-only-mode-use-windows-for-completion t
   "Use emacs windows for display of completions.
@@ -26,6 +30,7 @@ Completion windows are always split horizontally (helm style).
 To disable completion popups entirely use the variable
 `completion-auto-help' for default emacs completion or
 `ido-completion-buffer' for ido-based completion. ")
+
 
 
 ;; Code
@@ -50,7 +55,13 @@ To disable completion popups entirely use the variable
 
 (when (require 'magit nil 'noerror)
   ;; Use the current frame/window to enter the magit commit message
-  (set 'magit-server-window-for-commit nil))
+  (set 'magit-server-window-for-commit nil)
+
+  ;; Don't auto popup a magit diff buffer when commiting, can still get it
+  ;; if needed with C-c C-d.
+  (set 'magit-diff-auto-show nil))
+
+
 
 ;; Make calendar do something more sensible with its window/frame layout.
 (defadvice calendar (around disable-pop-up-frames activate)
@@ -72,6 +83,8 @@ extra useless frames."
 
   (abort-recursive-edit))
 (global-set-key [remap abort-recursive-edit] #'super-abort-recursive-edit)
+
+
 
 ;; kill frames when a buffer is buried, makes most things play nice with
 ;; frames
@@ -98,17 +111,18 @@ extra useless frames."
                (member buffer-to-bury kill-frame-when-buffer-killed-buffer-list))
       (delete-frame))))
 
-(defadvice minibuffer-completion-help (around use-windows-for-completion)
+;; Advise completion popup functions to use windows instead of frames if
+;; the custom setting is true.
+(defun advice-use-windows-for-completion (orig-fun &rest args)
   (let ((pop-up-frames (not frames-only-mode-use-windows-for-completion))
         (split-width-threshold 9999))
-    ad-do-it))
-(defadvice ido-completion-help (around use-windows-for-ido-completion)
-  (let ((pop-up-frames (not frames-only-mode-use-windows-for-completion))
-        (split-width-threshold 9999))
-    ad-do-it))
+    (apply orig-fun args)))
+(advice-add 'minibuffer-completion-help :around #'advice-use-windows-for-completion)
+(advice-add 'ido-completion-help :around #'advice-use-windows-for-completion)
 
 ;; Make sure completions buffer is buried after we are done with the minibuffer
 (add-hook 'minibuffer-exit-hook (lambda () (when (get-buffer "*Completions*")
                                         (bury-buffer "*Completions*"))))
+
 
 (provide 'frames-only-mode)
