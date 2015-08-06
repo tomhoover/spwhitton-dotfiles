@@ -71,6 +71,7 @@ myPrefixedKeys = [ ("i", spawn "xmousetidy")
                  , ("g g", spawn myTerm)
                  , ("g m", spawn $ inMyTerm "sh -c 'offline || mbsync fastmail; mutt'")
                  , ("g c", spawn $ inMyTerm "ncmpcpp") -- 'c' for chaones
+                 , ("g f", spawn "sh -c 'wmctrl -a Messenger || messengerfordesktop'")
 
                    -- window management
                  , ("o", windows W.focusDown)
@@ -112,6 +113,7 @@ myManageHook = composeOne $
                , className     =? "libreoffice-impress" -?> doShift "misc"
                , className     =? "Vlc"                 -?> doShift "misc"
                , title         =? "Dominion"            -?> doShift "misc"
+               , title         =? "Messenger"           -?> doShift "misc"
                ] ++ [className =? c -?> doFloat | c <- myFloatClasses]
 
 myLayoutHook = modHost "artemis" (avoidStrutsOn []) $
