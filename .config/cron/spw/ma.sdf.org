@@ -3,7 +3,10 @@
 */15 * * * * chronic doccheckin
 @hourly chronic mbsync fastmail
 
-23 23 * * * chronic spwwiki
+# update Org wiki at 7am and 2pm MST
+0 14 * * * chronic spwwiki
+0 21 * * * chronic spwwiki
+
 0 18 * * * duply-run
 0 3 * * * chronic planetnewspipe
 
