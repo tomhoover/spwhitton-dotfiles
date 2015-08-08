@@ -1,0 +1,34 @@
+#!/bin/sh
+
+# DIR=$(TMPDIR=~/tmp mktemp -d)
+# cd $DIR
+# dirname=$(date +annotations_%F_%H%M)
+# mkdir $dirname
+
+if ! [ -d "$HOME/lib/fm/dionysus" ]; then
+    echo "please mount webdav share first" >&2
+    exit 1
+fi
+
+cd $HOME/lib/annex
+git annex unlock doc/dionysus
+rsync -vrtc $HOME/lib/fm/dionysus/ $HOME/lib/annex/doc/dionysus/
+git annex add doc/dionysus
+
+# # first sync read-only unannotated copies of files out of annex into
+# # webdav
+# rsync -vrLt --delete \
+#       --exclude="* - annotated - flattened.pdf" \
+#       --exclude="* - annotated.pdf" \
+#       $HOME/lib/annex/doc/dionysus/ $HOME/lib/fm/dionysus/
+# # now sync any edited, annotated files from webdav into a tar file
+# # dumped into annex
+# rsync -vart \
+#       --include="* - annotated - flattened.pdf" \
+#       --include="* - annotated.pdf" \
+#       --exclude="**" \
+#       $HOME/lib/fm/dionysus/ $dirname/
+
+# tar cf ${dirname}.tar $dirname
+# mv ${dirname}.tar $HOME/lib/annex/old/annotationsbk/
+# rm -rf ${DIR}
