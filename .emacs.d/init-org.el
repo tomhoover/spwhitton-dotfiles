@@ -662,6 +662,34 @@
                                         :table-of-contents t))))
       (org-publish-project "spw-wiki"))))
 
+(defun spw/update-dav-wiki ()
+  "Update copy of my Org files accessible on my tablet computer via WebDAV."
+  (interactive)
+  (if (not (f-exists? "~/lib/fm/Org docs"))
+      (message "not gonna do this unless webdav space mounted")
+    (let ((org-export-htmlize-output-type 'css)
+          (org-export-with-toc t)
+          (org-export-in-background t)
+          (org-publish-project-alist
+           `(("spw-wiki"
+              :base-directory "~/doc/org"
+              :base-extension "org"
+              :recursive nil
+              :publishing-directory "~/lib/fm/Org docs"
+              :publishing-function org-html-publish-to-html
+              :auto-sitemap t
+              :sitemap-filename "123Index.html"
+              :sitemap-title "Sean's ~/doc"
+              :html-head ,(concat
+                           "<style type=\"text/css\">"
+                           (with-temp-buffer
+                             (insert-file-contents "~/doc/www/inc/worg.css")
+                             (buffer-string))
+                           "</style>")
+              :html-head-include-default-style nil
+              :table-of-contents t))))
+      (org-publish-project "spw-wiki"))))
+
 (defun spw/cleanup-org-pdfs ()
   (interactive)
   (dolist (file (f-glob "~/doc/org/*.pdf"))
