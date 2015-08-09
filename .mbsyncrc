@@ -70,6 +70,11 @@ Channel          debian
 Master           :fmimap:INBOX/Lists/Debian
 Slave            :fmmaildir:debian
 
+# notes from tablet computer
+Channel          notes
+Master           :fmimap:INBOX/Notes
+Slave            :fmmaildir:notes
+
 Group            fastmail
 Channel          fmaili
 Channel          fmails
@@ -77,3 +82,4 @@ Channel          fmaild
 # Channel          fmailt
 # Channel          fmaila
 Channel          debian
+Channel          notes

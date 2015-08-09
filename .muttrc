@@ -120,7 +120,7 @@ unignore From: Date: User-Agent: X-Mailer: x-oxford-username: Message-Id: To: Cc
 
 # --- mailboxes
 
-mailboxes +inbox +sent +drafts +debian
+mailboxes +inbox +sent +drafts +debian +notes
 
 # --- message part viewing
 
@@ -184,9 +184,12 @@ bind pager t display-toggle-weed
 bind index,pager \cP print-message
 
 # safety, since mbsync trash functionality doesn't work with FastMail
-
 bind generic,index,pager d noop
 bind generic,index,pager D noop
+
+# ... but let me delete notes made on tablet computer
+folder-hook . bind generic,index,pager d noop
+folder-hook "notes" bind index,pager d delete-message
 
 # --- colours
 
