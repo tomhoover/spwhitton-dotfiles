@@ -1,27 +1,26 @@
 #!/bin/bash
 
-MNT=/mnt/kindle
-DEST="$HOME/lib/Dropbox/Kindle notes"
+MNT=/media/swhitton/Kindle
+DEST="$HOME/tmp/Kindle notes"
 
-kindle=$(blkid | awk -F: '/Kindle/ { print $1; exit; }')
+# kindle=$(blkid | awk -F: '/Kindle/ { print $1; exit; }')
 filename=$(date +kindle_%F_%H%M.txt)
 group=$(groups | awk '{print $1}')
-sudo mkdir -p "$MNT"
 mkdir -p "$DEST"
 
-sudo umount $kindle
-sudo mount $kindle $MNT
+# sudo umount $kindle
+# sudo mount -ouid=$(id -u) $kindle $MNT
 
 if [ -e "$DEST/$filename" ]; then
     echo >&2 ERROR: Won\'t clobber other Kindle notes
-elif sudo mv --no-clobber \
+elif mv --no-clobber \
     "$MNT/documents/My Clippings.txt" \
     "$DEST/$filename"; then
-    sudo chown "$USER:$group" "$DEST/$filename"
+    #chown "$USER:$group" "$DEST/$filename"
     # remove the supporting file only if the clippings were moved successfully
-    sudo rm -rf "$MNT/documents/My Clippings.sdr"
+    rm -rf "$MNT/documents/My Clippings.sdr"
 else
-    echo >&2 ERROR: Couldn\'t move the clippings file
+    echo >&2 ERROR: Couldn\'t move the clippings file: maybe you need to mount \in Thunar
 fi
         
-sudo umount $kindle
+# sudo umount $kindle
