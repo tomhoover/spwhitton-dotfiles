@@ -2,10 +2,22 @@
 
 set -e
 
-cd $HOME/doc
-git pull --ff-only     # if can't fast forward, chronic should e-mail the failed git to me
+case "$(hostname -f)" in
+    "ma.sdf.org")
+        cd $HOME/doc
+        git pull --ff-only     # if can't fast forward, chronic should
+                               # e-mail the failed git to me
 
-cd $HOME
-/usr/pkg/bin/emacs -batch -l $HOME/.emacs.d/init.el -l $HOME/.emacs.d/init-org.el \
-    -f spw/export-org-wiki \
-    -eval "(org-batch-store-agenda-views)"
+        cd $HOME
+        /usr/pkg/bin/emacs -batch -l $HOME/.emacs.d/init.el \
+                           -l $HOME/.emacs.d/init-org.el \
+                           -f spw/export-org-wiki \
+                           -eval "(org-batch-store-agenda-views)"
+        ;;
+    "artemis.silentflame.com")
+        cd $HOME
+        emacs -batch -l $HOME/.emacs.d/init.el \
+                           -l $HOME/.emacs.d/init-org.el \
+                           -f spw/update-dav-wiki
+        ;;
+esac
