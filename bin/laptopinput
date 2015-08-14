@@ -1,0 +1,46 @@
+#!/usr/bin/env runhaskell
+
+import           System.Environment (getArgs)
+
+-- constants
+
+-- | Keyboards in the output of lsusb(8) that are to be used instead
+-- of the laptops's built-in keyboard.  If none are present, the
+-- laptop keyboard will not be disabled.
+pluggedKBs = ["ID 04f2:0833 Chicony Electronics Co., Ltd"]
+
+-- | Pointing devices in the output of lsusb(8) that are to be used instead
+-- of the laptops's built-in pointing devices.  If none are present,
+-- the laptop pointing devices will not be disabled.
+pluggedMice = ["045e:0053 Microsoft Corp. Optical Mouse"]
+
+-- | The laptop's built-in keyboard as listed by xinput(1).
+laptopKB = "AT Translated Set 2 keyboard"
+
+-- | The laptop's built-in pointing devices as listed by xinput(1).
+laptopMice = ["DualPoint Stick", "AlpsPS/2 ALPS DualPoint TouchPad"]
+
+-- string processing
+
+-- IO actions to do the work
+
+enableInput :: IO ()
+enableInput = putStrLn "enabling"
+
+disableInput :: IO ()
+disableInput = putStrLn "disabling"
+
+-- handle command line arguments
+
+processArgs       :: [String] -> IO ()
+processArgs []    = usage
+processArgs (o:_) =
+    case o of
+        "--enable"  -> enableInput
+        "--disable" -> disableInput
+        _           -> usage
+
+main = getArgs >>= processArgs
+
+usage :: IO ()
+usage = putStrLn "usage: laptopinput --enable|--disable"
