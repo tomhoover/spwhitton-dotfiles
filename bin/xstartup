@@ -10,6 +10,14 @@ setxkbmap -option "compose:ralt"
 setxkbmap -layout gb
 xbindkeys
 
+# set US layout if my US usb keyboard is plugged in :(
+lsusb | grep -q "Chicony Electronics Co., Ltd" \
+    && setxkbmap -layout us
+
+# disable built-in laptop keyboard if US usb keyboard plugged in :)
+[ "$(hostname -s)" = "artemis" ] \
+    && laptopinput --maybe-disable
+
 # settings for (currently out of action) Apple USB keyboard
 
 if lsusb | grep -q "Aluminum Keyboard"; then
