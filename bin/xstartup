@@ -14,6 +14,10 @@ xbindkeys
 lsusb | grep -q "Chicony Electronics Co., Ltd" \
     && setxkbmap -layout us
 
+# enable numlock if using USB keyboard
+lsusb | grep -q "Chicony Electronics Co., Ltd" \
+    && numlockx on
+
 # disable built-in laptop keyboard if US usb keyboard plugged in :)
 [ "$(hostname -s)" = "artemis" ] \
     && laptopinput --maybe-disable
