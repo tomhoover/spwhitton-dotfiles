@@ -1,16 +1,27 @@
-#!/bin/bash
+#!/bin/sh
+
+# backup to removable, offline media
+
 . $HOME/.shenv
 . $HOME/lib/tputfs.sh
 
 set -e
 
-HDD=/media/${USER}/m3
-DEST=${HDD}/git
-
-if ! mount | grep -q "/media/${USER}/m3"; then
-    echo "m3gitbk: USB HDD not mounted" >&2
+# determine removable media available and if it's m3, sync annex content
+if mount | grep -q "/media/${USER}/m3"; then
+    HDD=/media/${USER}/m3
+    status syncing annex content
+    # we sync both ma and m3 here so that ma knows everything that got
+    # put onto m3
+    git annex sync --content ma m3
+elif mount | grep -q "/media/${USER}/bkupsd"; then
+    HDD=/media/${USER}/bkupsd
+else
+    echo "coldbkup: removable media not mounted" >&2
     exit 1
 fi
+DEST=${HDD}/git
+mkdir -p $DEST
 
 # function to backup a repo: first arg is ssh path to repo, second arg
 # is where to put it
@@ -29,6 +40,13 @@ gitbk ()
     fi
 }
 
+# backup a repo from github
+githubbk ()
+{
+    status processing $1 from github
+    gitbk git@github.com:$1 $DEST/github
+}
+
 # Stage 1 : Backup repos hosted on ma
 
 # TODO: don't use ls here (see http://mywiki.wooledge.org/ParsingLs)
@@ -43,14 +61,10 @@ done
 
 # TODO: consider using joeyh's github-backup program
 
-status processing dotfiles.git from github
-gitbk git@github.com:spwhitton/dotfiles.git $DEST/github
-status processing propellor.git from github
-gitbk git@github.com:spwhitton/propellor.git $DEST/github
-status processing sariulclocks.git from github
-gitbk git@github.com:spwhitton/sariulclocks.git $DEST/github
-status processing srem.git from github
-gitbk git@github.com:spwhitton/srem.git $DEST/github
+githubbk spwhitton/dotfiles.git
+githubbk spwhitton/propellor.git
+githubbk spwhitton/sariulclocks.git
+githubbk spwhitton/srem.git
 
 # Stage 3 : Backup other repos ad hoc
 

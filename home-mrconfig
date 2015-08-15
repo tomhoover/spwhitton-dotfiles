@@ -280,26 +280,21 @@ checkout = :
 post_checkout = git remote rm origin
 
 # basic commands
-status = git annex status --fast
 update = git annex sync ma
-push = git annex sync ma
+push = git annex sync --content ma
 fixups =
     git config push.default matching
-    git config remote.origin.gcrypt-publish-participants true
-    git config remote.origin.gcrypt-participants 0x3B6D411B
+    git config remote.ma.gcrypt-publish-participants true
+    git config remote.ma.gcrypt-participants 0x3B6D411B
     git config gcrypt.publish-participants true
     git config gcrypt.participants 0x3B6D411B
     git config annex.startupscan false
     git config annex.autocommit false
+    # set upstream so that mr can tell when I need to push
+    git branch -u ma/master master
+    git branch -u ma/git-annex git-annex
 
-# copy everything to other places
-sync =
-    if [ -d "/media/${USER}/m3/annex/.git/annex" ]; then
-        git annex sync --content ma m3
-        m3gitbk
-    else
-        git annex sync --content ma
-    fi
+sync = git annex sync ma
 
 # manual checkouts only, and skip when we're in a hurry and used 'fmr'
 # instead of 'mr'
