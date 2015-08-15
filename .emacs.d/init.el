@@ -701,6 +701,9 @@
   ;; try to disable flymake; having both running at the same time is annoying
   (setq flymake-allowed-file-name-masks nil)
   :config
+  ;; don't check too often: brief Emacs lock-ups are annoying
+  (setq flycheck-check-syntax-automatically '(mode-enabled save))
+
   (global-flycheck-mode 1))
 
 ;;; TRAMP
