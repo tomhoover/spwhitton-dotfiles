@@ -50,14 +50,18 @@ idlesshclear &
 
 # ---- screen locking
 
-# if alarm clock service is in place on this machine, turn over lid
-# switch handling to logind
-xfconf-query -c xfce4-power-manager -n \
-             -p /xfce4-power-manager/logind-handle-lid-switch \
-             -t bool -s true
+if [ -e "/etc/systemd/system/goodmorning.timer" ]; then
 
-# ... and then use xss-lock to make sure the screen still gets locked
-xss-lock -- xscreensaver-command -lock &
+    # if alarm clock service is in place on this machine, turn over lid
+    # switch handling to logind
+    xfconf-query -c xfce4-power-manager -n \
+                 -p /xfce4-power-manager/logind-handle-lid-switch \
+                 -t bool -s true
+
+    # ... and then use xss-lock to make sure the screen still gets locked
+    xss-lock -- xscreensaver-command -lock &
+
+fi
 
 # ---- other stuff to launch
 
