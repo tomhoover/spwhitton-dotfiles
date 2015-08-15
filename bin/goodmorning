@@ -1,0 +1,17 @@
+#!/bin/sh
+
+VOLUME=60
+SONG="/home/swhitton/lib/annex/music/Mainstream/John Mayer/Continuum/01 - Waiting On The World To Change.mp3"
+
+# systemd doesn't set $HOME for services
+HOME=/home/swhitton
+export HOME
+
+. $HOME/.shenv
+
+# make sure it's not too loud nor muted
+amixer set Master ${VOLUME}%
+amixer set Master unmute
+
+# play the alarm (TODO: randomly choose from folder of symlinks)
+mplayer "$SONG"
