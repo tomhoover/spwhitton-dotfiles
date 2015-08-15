@@ -1,5 +1,17 @@
 keystate_numlock = enable
 
+"mpc toggle"
+  Mod2 + XF86AudioPlay
+
+"mpc next"
+  Mod2 + XF86AudioNext
+
+"mpc prev"
+  Mod2 + XF86AudioPrev
+
+"mpc stop"
+  Mod2 + XF86AudioStop
+
 # "xlaunch emacs"
 #   F9
 
