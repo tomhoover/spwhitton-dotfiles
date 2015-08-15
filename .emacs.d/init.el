@@ -700,6 +700,11 @@
   :init
   ;; try to disable flymake; having both running at the same time is annoying
   (setq flymake-allowed-file-name-masks nil)
+
+  ;; disable flycheck in org-mode as it clobbers the important C-c !
+  (defadvice flycheck-mode (around spw/org-disable-flycheck activate)
+    (unless (eq major-mode 'org-mode) ad-do-it))
+
   :config
   ;; don't check too often: brief Emacs lock-ups are annoying
   (setq flycheck-check-syntax-automatically '(mode-enabled save))
