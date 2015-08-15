@@ -1,13 +1,17 @@
 #!/usr/bin/env runhaskell
 
-import           System.Environment (getArgs)
+import           Control.Applicative ((<$>))
+import           Control.Monad       (when)
+import           Data.List           (isInfixOf, isPrefixOf, isSuffixOf)
+import           System.Environment  (getArgs)
+import           System.Process      (readProcessWithExitCode, runCommand)
 
 -- constants
 
 -- | Keyboards in the output of lsusb(8) that are to be used instead
 -- of the laptops's built-in keyboard.  If none are present, the
 -- laptop keyboard will not be disabled.
-pluggedKBs = ["ID 04f2:0833 Chicony Electronics Co., Ltd"]
+pluggedKBs = ["04f2:0833 Chicony Electronics Co., Ltd "]
 
 -- | Pointing devices in the output of lsusb(8) that are to be used instead
 -- of the laptops's built-in pointing devices.  If none are present,
@@ -22,13 +26,72 @@ laptopMice = ["DualPoint Stick", "AlpsPS/2 ALPS DualPoint TouchPad"]
 
 -- string processing
 
+-- | Find a device's ID in the output of `xinput --list`
+findXInputID               :: String -> String -> Maybe Int
+findXInputID device xinput = do
+    (line:[])    <- Just $ filter (device `isInfixOf`) $ lines xinput
+    (idW:[])     <- Just $ filter ("id=" `isPrefixOf`) $ words line
+    ((id, _):[]) <- Just $ reads $ drop 3 idW
+    return id
+
+-- | Determines whether a device is plugged in using lsusb(8) output.
+checkPlugged              :: String -> String -> Bool
+checkPlugged device lsusb = length ls == 1
+  where
+    ls = filter (device `isSuffixOf`) $ lines lsusb
+
+-- | xinput(1) command to disable an input with a given id
+disableCommand    :: Int -> String
+disableCommand id = "xinput set-int-prop " ++ show id ++ " \"Device Enabled\" 8 0"
+
+-- | xinput(1) command to enable an input with a given id
+enableCommand :: Int -> String
+enableCommand id = init (disableCommand id) ++ "1"
+
 -- IO actions to do the work
 
-enableInput :: IO ()
-enableInput = putStrLn "enabling"
+enable :: IO ()
+enable = sequence_ $ enableInput <$> laptopKB : laptopMice
 
-disableInput :: IO ()
-disableInput = putStrLn "disabling"
+-- disable :: IO ()
+-- disable = undefined
+
+disable :: IO ()
+disable = do
+    mousePlugged <- any (== True) <$> (sequence $ checkInput <$> pluggedMice)
+    when mousePlugged $ sequence_ $ disableInput <$> laptopMice
+    kbPlugged <- any (== True) <$> (sequence $ checkInput <$> pluggedKBs)
+    when kbPlugged $ disableInput laptopKB
+
+enableInput :: String -> IO ()
+enableInput device = do
+    xinput <- getXInputList
+    let id = findXInputID device xinput
+    case id of
+        Just i  -> runCommand (enableCommand i) >> return ()
+        Nothing -> putStrLn $ "cannot enable input with xinput"
+
+disableInput :: String -> IO ()
+disableInput device = do
+    xinput <- getXInputList
+    let id = findXInputID device xinput
+    case id of
+        Just i  -> runCommand (disableCommand i) >> return ()
+        Nothing -> putStrLn $ "cannot disable input with xinput"
+
+checkInput        :: String -> IO Bool
+checkInput device = getUSBList >>= \lsusb ->
+    return $ checkPlugged device lsusb
+
+getXInputList :: IO String
+getXInputList = do
+    (_, output, _) <- readProcessWithExitCode "xinput" ["--list"] ""
+    return output
+
+getUSBList :: IO String
+getUSBList = do
+    (_, output, _) <- readProcessWithExitCode "lsusb" [] ""
+    return output
 
 -- handle command line arguments
 
@@ -36,11 +99,11 @@ processArgs       :: [String] -> IO ()
 processArgs []    = usage
 processArgs (o:_) =
     case o of
-        "--enable"  -> enableInput
-        "--disable" -> disableInput
+        "--enable"  -> enable
+        "--maybe-disable" -> disable
         _           -> usage
 
 main = getArgs >>= processArgs
 
 usage :: IO ()
-usage = putStrLn "usage: laptopinput --enable|--disable"
+usage = putStrLn "usage: laptopinput --enable|--maybe-disable"
