@@ -69,7 +69,8 @@ myPrefixedKeys = [ ("i", spawn "xmousetidy")
                  , ("g w", spawn myBrowser) -- could use `XMonad.Actions.WindowGo (runOrRaise)' here
                  , ("g e", spawn myEditor)
                  , ("g g", spawn myTerm)
-                 , ("g m", spawn $ inMyTerm "sh -c 'offline || mbsync fastmail; mutt'")
+                 -- , ("g m", spawn $ inMyTerm "sh -c 'offline || mbsync fastmail; mutt'")
+                 , ("g m", spawn $ inMyTerm "mutt")
                  , ("g c", spawn $ inMyTerm "ncmpcpp") -- 'c' for chaones
                  , ("g f", spawn "sh -c 'wmctrl -a Messenger || messengerfordesktop'")
 
