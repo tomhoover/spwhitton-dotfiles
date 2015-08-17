@@ -1749,12 +1749,14 @@ With arg ARG, put shell in current window."
 (defun spw/align-dwim ()
   "Align, if region inactive first mark paragraph."
   (interactive)
-  (if (region-active-p)
-      (let ((align-region-separate 'entire))
-        (call-interactively 'align))
-    (save-excursion
-      (mark-paragraph)
-      (call-interactively 'align))))
+  ;; should do this kind of aligning with spaces only
+  (let ((indent-tabs-mode nil))
+    (if (region-active-p)
+        (let ((align-region-separate 'entire))
+          (call-interactively 'align))
+      (save-excursion
+        (mark-paragraph)
+        (call-interactively 'align)))))
 
 (defun crowding/local-set-minor-mode-key (mode key def)
   "Overrides a minor mode MODE's binding to KEY with DEF for the local buffer.
