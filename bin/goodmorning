@@ -1,13 +1,13 @@
 #!/bin/sh
 
 VOLUME=60
-SONG="/home/swhitton/lib/annex/music/Mainstream/John Mayer/Continuum/01 - Waiting On The World To Change.mp3"
+SONG="/home/swhitton/lib/annex/music/Soundtracks/Steve Jablonsky & Trevor Morris/Command & Conquer 3 OST/05 - Black Dawn.mp3"
 
-dow=$(date +%u)
-# not at the weekend
-if [ "$dow" = "6" -o "$dow" = "7" ]; then
-    exit 0
-fi
+# dow=$(date +%u)
+# # not at the weekend
+# if [ "$dow" = "6" -o "$dow" = "7" ]; then
+#     exit 0
+# fi
 
 # systemd doesn't set $HOME for services
 HOME=/home/swhitton
