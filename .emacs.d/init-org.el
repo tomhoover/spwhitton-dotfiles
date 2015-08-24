@@ -695,6 +695,16 @@
   (dolist (file (f-glob "~/doc/org/*.pdf"))
     (delete-file file)))
 
+(defun spw/end-of-refile ()
+  (interactive)
+  (if (get-buffer "refile.org")
+      (progn
+        (switch-to-buffer "refile.org")
+        (unless (buffer-modified-p)
+          (revert-buffer t t)))
+    (find-file "~/doc/org/refile.org"))
+  (end-of-buffer))
+
 ;;; reftex setup from
 ;;; http://tincman.wordpress.com/2011/01/04/research-paper-management-with-emacs-org-mode-and-reftex/
 
