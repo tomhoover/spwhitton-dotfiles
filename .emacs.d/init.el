@@ -731,8 +731,8 @@
   :ensure
   :bind ("C-c g e" . ebib)
   :init
-  (defadvice ebib (before spw/persp-ebib activate)
-    (persp-switch "ebib"))
+  ;; (defadvice ebib (before spw/persp-ebib activate)
+  ;;   (persp-switch "ebib"))
   (setq ebib-preload-bib-files '("~/doc/spw.bib")))
 
 ;;; dired enhancements
