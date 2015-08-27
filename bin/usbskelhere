@@ -1,10 +1,19 @@
 #!/bin/bash
 . $HOME/.shenv
 
+skelhere ()
+{
+    usbpubkeys
+    mkdir -p doc bin
+    cp -RLf ~/lib/annex/big/skel/usb/* .
+    cp ~/bin/apple-setup.sh bin
+    cp -L ~/lib/pro.terminal lib
+}
+
 while true; do
     read -p "This might overwrite stuff in $(pwd).  Is that okay? " yn
     case $yn in
-        [Yy]* ) usbhostkeys; mkdir -p doc; cp -RLf ~/lib/annex/big/skel/usb/* .; break;;
+        [Yy]* ) skelhere; break;;
         [Nn]* ) exit;;
         * ) echo "Please answer yes or no.";;
     esac
