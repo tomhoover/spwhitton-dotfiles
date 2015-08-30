@@ -848,6 +848,14 @@
                        ido-completion-map "\C-w"
                        'ido-delete-backward-word-updir)))
 
+;; override ido-use-filename-at-point for dired buffers
+;; from http://emacs.stackexchange.com/a/5331
+(defun spw/ido-ignore-file-at-point ()
+  "Disable ido-use-filename-at-point for the current buffer."
+  (when (bound-and-true-p ido-use-filename-at-point)
+    (setq-local ido-use-filename-at-point nil)))
+(add-hook 'dired-mode-hook #'spw/ido-ignore-file-at-point)
+
 (setq ido-use-filename-at-point 'guess
       ido-create-new-buffer 'always
       ido-file-extensions-order '(".org" ".tex" ".py" )
