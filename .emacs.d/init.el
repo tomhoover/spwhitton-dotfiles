@@ -192,10 +192,10 @@
         sml/mode-width 'right
         sml/vc-mode-show-backend t))
 
-;;; I'm in Korea
+;;; I'm in Arizona
 
-;; (if (not (eq system-type 'windows-nt))
-;;     (set-time-zone-rule "/usr/share/zoneinfo/Asia/Seoul"))
+(if (not (eq system-type 'windows-nt))
+    (set-time-zone-rule "/usr/share/zoneinfo/US/Mountain"))
 
 ;;; be sure to start the server
 
