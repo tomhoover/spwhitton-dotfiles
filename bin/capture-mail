@@ -6,5 +6,5 @@ msg=$(cat /dev/stdin)
 from=$(echo $msg | grep -m 1 -i "^From:" | sed "s/^From: //" | sed "s/<.*$//" | sed 's/"//g' | sed 's/ $//')
 subject=$(echo $msg | grep -m 1 -i "^Subject:" | sed "s/^Subject: //")
 
-echo "* TODO E-mail \"$subject\" from $from" >>/home/swhitton/doc/org/refile.org
+echo "* TODO E-mail \"$subject\" from $from" >>$HOME/doc/org/refile.org
 emacsclient -t -e '(spw/end-of-refile)'
