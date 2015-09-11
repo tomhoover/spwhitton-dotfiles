@@ -71,6 +71,7 @@ myPrefixedKeys = [ ("i", spawn "xmousetidy")
                  , ("g g", spawn myTerm)
                  -- , ("g m", spawn $ inMyTerm "sh -c 'offline || mbsync fastmail; mutt'")
                  , ("g m", spawn $ inMyTerm "mutt")
+                 , ("g t", spawn $ inMyTerm "ssh -t ma /usr/pkg/bin/tmux attach")
                  , ("g c", spawn $ inMyTerm "ncmpcpp") -- 'c' for chaones
                  , ("g f", spawn "sh -c 'wmctrl -a Messenger || messengerfordesktop'")
 
