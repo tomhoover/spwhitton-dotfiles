@@ -1827,7 +1827,9 @@ Passes ARG to `projectile-switch-project-by-name'."
 
 If ARG, put into my annex instead.
 
-Lightweight alternative to pandoc-mode."
+Lightweight alternative to pandoc-mode.
+
+Generates calls to pandoc that look like this: pandoc -s --filter pandoc-citeproc --bibliography=$HOME/doc/spw.bib --filter pandoc-citeproc-preamble --template pessay -V documentclass=pessay input.md -o output.pdf"
   (interactive "P")
   (when (and (string= default-directory (expand-file-name "~/doc/papers/"))
              (eq major-mode 'markdown-mode))
