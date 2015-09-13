@@ -242,9 +242,10 @@
       org-export-with-toc nil         ; default to no table of contents
       org-footnote-section "Notes"
 
-      reftex-default-bibliography
-      (quote
-       ("~/doc/spw.bib")))
+      ;; reftex-default-bibliography
+      ;; (quote
+      ;;  ("~/doc/spw.bib"))
+      )
 
 ;; Org setting bookmarks that I never use makes for git merge
 ;; conflicts that I don't need to spend time resolving.  Eventually I
@@ -910,7 +911,7 @@
                             (if window-system
                                 (org-display-inline-images))
                             (turn-on-auto-fill)
-                            (org-mode-reftex-setup)
+                            ;; (org-mode-reftex-setup)
                             (smartparens-mode)))
 
 (add-hook 'org-agenda-mode-hook '(lambda ()
@@ -921,7 +922,7 @@
 
 (define-key org-mode-map (kbd "C-c C-SPC") 'org-mark-subtree)
 (define-key org-mode-map (kbd "<f11>") 'org-toggle-link-display)
-(define-key org-mode-map (kbd "C-c )") 'reftex-citation)
+;; (define-key org-mode-map (kbd "C-c )") 'reftex-citation)
 
 (bind-key "C-c [" 'spw/org-agenda-file-to-front org-mode-map)
 (bind-key "C-c ]" 'spw/org-remove-file org-mode-map)

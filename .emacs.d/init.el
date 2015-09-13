@@ -629,6 +629,17 @@
   ;; This binding replaces a `markdown-export'.
   (bind-key "C-c C-c e" 'spw/pandoc-paper-compile markdown-mode-map))
 
+;;; RefTeX
+
+(use-package reftex
+  :init
+  (add-hook 'markdown-mode-hook 'turn-on-reftex)
+  :config
+  ;; This setup binds `C-c [ RET search-string RET' to try to insert a
+  ;; citation
+  (setq reftex-default-bibliography (quote ("~/doc/spw.bib"))
+        reftex-cite-format '((?\C-m . "[@%l]"))))
+
 ;;; PHP mode
 
 (use-package php-mode :ensure :mode (("\\.php" .  php-mode)))
