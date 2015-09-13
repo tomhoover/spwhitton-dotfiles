@@ -59,7 +59,7 @@ myMod        = mod4Mask
 myTerm       = "urxvtcd"
 myEditor     = "emacscd"
 myBrowser    = "iceweasel"
-myWorkspaces = ["ops", "conn", "www", "misc", "tail"]
+myWorkspaces = ["ops", "conn", "www", "comm", "view", "tail"]
 
 -- key bindings
 
@@ -73,7 +73,7 @@ myPrefixedKeys = [ ("i", spawn "xmousetidy")
                  , ("g m", spawn $ inMyTerm "mutt")
                  , ("g t", spawn $ inMyTerm "softbeep ssh -t ma /usr/pkg/bin/tmux attach")
                  , ("g c", spawn $ inMyTerm "ncmpcpp") -- 'c' for chaones
-                 , ("g f", spawn "sh -c 'wmctrl -a Messenger || messengerfordesktop'")
+                 -- , ("g f", spawn "sh -c 'wmctrl -a Messenger || messengerfordesktop'")
 
                    -- window management
                  , ("o", windows W.focusDown)
@@ -112,10 +112,12 @@ myManageHook = composeOne $
                [ checkDock                              -?> doIgnore
                , isDialog                               -?> doFloat
                , className     =? "Iceweasel"           -?> doShift "www"
-               , className     =? "libreoffice-impress" -?> doShift "misc"
-               , className     =? "Vlc"                 -?> doShift "misc"
-               , title         =? "Dominion"            -?> doShift "misc"
-               , title         =? "Messenger"           -?> doShift "misc"
+               , className     =? "libreoffice-impress" -?> doShift "view"
+               , className     =? "Vlc"                 -?> doShift "view"
+               , className     =? "Evince"              -?> doShift "view"
+               , title         =? "Dominion"            -?> doShift "view"
+               , title         =? "Messenger"           -?> doShift "view"
+               , title         =? "softbeep"            -?> doShift "comm"
                ] ++ [className =? c -?> doFloat | c <- myFloatClasses]
 
 myLayoutHook = modHost "artemis" (avoidStrutsOn []) $
@@ -124,7 +126,7 @@ myLayoutHook = modHost "artemis" (avoidStrutsOn []) $
                -- layoutHintsWithPlacement (0.5, 0.5) $
                onWorkspace "www" (myWebLayout ||| Full) $
                onWorkspace "tail" (myDish ||| Full) $
-               onWorkspace "misc" (Full ||| Grid) $
+               onWorkspace "view" (Grid ||| Full) $
                myEditing ||| Grid ||| myReadWriting ||| Full -- default for other workspaces
 
 -- custom layouts
