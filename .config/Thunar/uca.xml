@@ -14,4 +14,18 @@
 	<text-files/>
 	<video-files/>
 </action>
+<action>
+	<icon>xterm-color</icon>
+	<name>Open terminal here</name>
+	<unique-id>1442411193795400-3</unique-id>
+	<command>urxvtcd -cd %d -e /bin/zsh</command>
+	<description></description>
+	<patterns>*</patterns>
+	<directories/>
+	<audio-files/>
+	<image-files/>
+	<other-files/>
+	<text-files/>
+	<video-files/>
+</action>
 </actions>
