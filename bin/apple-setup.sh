@@ -26,4 +26,4 @@ cd $HOME
 
 pkill firefox
 echo "Please wait, securely deleting files..."
-rm -rfP $HOME/.ssh/id_putty $HOME/Downloads/*
+rm -rfP $HOME/.ssh/{id_putty,config} $HOME/Downloads/* $HOME/.Trash/* $HOME/.zshist $HOME/.bash_history
