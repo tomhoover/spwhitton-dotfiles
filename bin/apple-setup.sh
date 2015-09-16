@@ -14,7 +14,7 @@ fi
 pkill firefox
 /Applications/Firefox.app/Contents/MacOS/firefox -private-window >/dev/null 2>/dev/null &
 mkdir -p $HOME/.ssh
-cp $USB/lib/{id_putty,known_hosts} $HOME/.ssh
+cp $USB/lib/{id_putty,known_hosts,config} $HOME/.ssh
 chmod 600 $HOME/.ssh/id_putty
 
 # run the shell
