@@ -91,7 +91,7 @@
 \RequirePackage{ifthen}
 %% \RequirePackage[all]{nowidow}
 \RequirePackage{fancyhdr}
-\initialdouble                  % defined above, loads setspace package
+\initialdouble                  % defined above; loads setspace package
 
 %% ---- Useful enumerations
 
