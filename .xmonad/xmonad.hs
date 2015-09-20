@@ -126,7 +126,7 @@ myLayoutHook = modHost "artemis" (avoidStrutsOn []) $
                modHost "zephyr" avoidStruts $
                smartBorders $
                -- layoutHintsWithPlacement (0.5, 0.5) $
-               onWorkspace "www" (myWebLayout ||| Full) $
+               onWorkspace "www" (maximize myWebLayout) $
                onWorkspace "tail" (myDish ||| Full) $
                onWorkspace "view" (Grid ||| Full) $
                maximize myEditing ||| maximize Grid ||| myReadWriting ||| Full -- default for other workspaces
