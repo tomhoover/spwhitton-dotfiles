@@ -25,5 +25,6 @@ cd $HOME
 # cleanup
 
 pkill firefox
+pkill ssh # cached connection!
 echo "Please wait, securely deleting files..."
 rm -rfP $HOME/.ssh/{id_putty,config} $HOME/Downloads/* $HOME/.Trash/* $HOME/.zshist $HOME/.bash_history
