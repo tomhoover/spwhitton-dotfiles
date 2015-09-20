@@ -24,6 +24,7 @@ import           XMonad.Layout.Grid
 -- import           XMonad.Layout.LayoutHints
 import           XMonad.Layout.LimitWindows
 import           XMonad.Layout.Magnifier
+import           XMonad.Layout.Maximize
 import           XMonad.Layout.NoBorders
 import           XMonad.Layout.OnHost
 import           XMonad.Layout.PerWorkspace
@@ -78,6 +79,7 @@ myPrefixedKeys = [ ("i", spawn "xmousetidy")
                    -- window management
                  , ("o", windows W.focusDown)
                  , ("S-o", windows W.focusUp)
+                 , (";", withFocused (sendMessage . maximizeRestore))
 
                    -- workspaces
                  , ("C-i", toggleWS)
@@ -127,7 +129,7 @@ myLayoutHook = modHost "artemis" (avoidStrutsOn []) $
                onWorkspace "www" (myWebLayout ||| Full) $
                onWorkspace "tail" (myDish ||| Full) $
                onWorkspace "view" (Grid ||| Full) $
-               myEditing ||| Grid ||| myReadWriting ||| Full -- default for other workspaces
+               maximize myEditing ||| maximize Grid ||| myReadWriting ||| Full -- default for other workspaces
 
 -- custom layouts
 
