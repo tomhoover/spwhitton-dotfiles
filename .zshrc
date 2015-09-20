@@ -401,7 +401,7 @@ echo $DBUS_SESSION_BUS_ADDRESS > ~/.tmp-dbus-addr
 # TeXLive 2010.  See
 # http://lists.gnu.org/archive/html/emacs-orgmode/2011-04/msg00845.html
 
-export BIBINPUTS="$HOME/doc:$BIBINPUTS"
+export BIBINPUTS="$HOME/doc:$HOME/doc/papers:$BIBINPUTS"
 
 # If we're on a weak terminal (probably non-interactive) such as
 # TRAMP, kill off a bunch of the cool stuff we just set-up.
