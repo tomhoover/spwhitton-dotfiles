@@ -54,7 +54,13 @@ githubbk ()
 repos=$(ssh ma ls \$HOME/local/git)
 for repo in $repos; do
     status processing $repo from ma
-    gitbk ma:local/git/$repo $DEST/ma
+    # TODO: maybe just move all gcrypt repos into a separate dir and
+    # then loop through them (only have one right now so not worth it)
+    if [ "$repo" = "priv.git" ]; then
+        gitbk gcrypt::ssh://ma/~/local/git/$repo $DEST/ma
+    else
+        gitbk ma:local/git/$repo $DEST/ma
+    fi
 done
 
 # Stage 2 : Backup some repos hosted on github (the ones I care about).
