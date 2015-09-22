@@ -39,7 +39,8 @@
   (add-hook 'after-save-hook 'spw/haskell-cabal-mode-save-hook)
 
   (setq haskell-tags-on-save t
-	haskell-process-suggest-remove-import-lines t))
+        haskell-process-suggest-remove-import-lines t
+        haskell-mode-contextual-import-completion nil))
 
 ;; load haskell-flycheck only once haskell-mode is loaded
 
