@@ -20,7 +20,6 @@
 
 ;;; Code:
 
-(require 'flycheck)
 (require 'use-package)
 (require 'bind-key)
 
@@ -41,10 +40,6 @@
   (setq haskell-tags-on-save t
         haskell-process-suggest-remove-import-lines t
         haskell-mode-contextual-import-completion nil))
-
-;; load haskell-flycheck only once haskell-mode is loaded
-
-(require 'haskell-flycheck)
 
 ;;; Try to kill off flymake since init.el is starting flycheck.  Also
 ;;; remove a call to flymake-mode (add the call to `ghc-init' back in
@@ -72,12 +67,12 @@
 
   ;; When I've created a stack.yaml in the project root, use stack to
   ;; run ghci.
-  (when (f-exists? (projectile-expand-root "stack.yaml"))
-    (setq-local haskell-process-type 'ghci)
-    (setq-local haskell-process-path-ghci "stack")
-    (setq-local haskell-process-args-ghci '("ghci"))
-    (setq-local flycheck-haskell-ghc-executable "stack")
-    (setq-local flycheck-ghc-args '("ghc")))
+  ;; (when (f-exists? (projectile-expand-root "stack.yaml"))
+  ;;   (setq-local haskell-process-type 'ghci)
+  ;;   (setq-local haskell-process-path-ghci "stack")
+  ;;   (setq-local haskell-process-args-ghci '("ghci"))
+  ;;   (setq-local flycheck-haskell-ghc-executable "stack")
+  ;;   (setq-local flycheck-ghc-args '("ghc")))
 
   ;; When I've created a shell.nix in the project root, use nix-shell
   ;; to run ghci and cabal.

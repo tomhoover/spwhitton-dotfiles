@@ -58,11 +58,11 @@
    (ace-jump-mode          . "melpa-stable")
    (avy                    . "melpa-stable")
    (ace-link               . "melpa-stable")
-   (async                  . "melpa-stable")
+   ;; (async                  . "melpa-stable")
    (hydra                  . "melpa-stable")
    (nix-mode               . "melpa-stable")
    (elisp-slime-nav        . "melpa-stable")
-   (haskell-mode           . "melpa-stable")
+   ;; (haskell-mode           . "melpa-stable")
    (hi2                    . "melpa-stable")
    ;; (org-plus-contrib       . "org")
 
@@ -715,6 +715,12 @@
   ;; disable flycheck in org-mode as it clobbers the important C-c !
   (defadvice flycheck-mode (around spw/org-disable-flycheck activate)
     (unless (eq major-mode 'org-mode) ad-do-it))
+
+  ;; special Flycheck for Haskell
+  (use-package flycheck-haskell
+    :ensure
+    :init
+    (add-hook 'flycheck-mode-hook #'flycheck-haskell-setup))
 
   :config
   ;; don't check too often: brief Emacs lock-ups are annoying
