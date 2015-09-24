@@ -3,7 +3,7 @@
 import           Control.Lens         hiding (argument)
 import           Control.Monad.Reader
 import           Options.Applicative
-import           System.Directory     (getDirectoryContents, doesFileExist)
+import           System.Directory     (getDirectoryContents, doesFileExist, makeAbsolute)
 import           System.FilePath      (takeExtension, (</>))
 
 -- #### Definitions
@@ -20,7 +20,7 @@ makeLenses ''Opts
 
 video4iPad :: ReaderT Opts IO ()
 video4iPad = do
-    opts <- ask
+    opts <- ask >>= liftIO . ensureAbsDirectory
     let extsFilter file = (tail . takeExtension) file `elem` (opts ^. inputExtensions)
     files <- filter extsFilter
              <$> filter (`notElem` [".", ".."])
@@ -34,6 +34,10 @@ video4iPad = do
 presetExtension        :: String -> Maybe String
 presetExtension "iPad" = Just "m4v"
 presetExtension _      = Nothing
+
+-- | Ensures directory supplied on command line is absolute.
+ensureAbsDirectory      :: Opts -> IO Opts
+ensureAbsDirectory opts = directory %~ makeAbsolute $ opts
 
 -- #### Process command line arguments
 
