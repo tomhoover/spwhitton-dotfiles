@@ -11,9 +11,10 @@ executable video4ipad
   hs-source-dirs:      src
   main-is:             video4ipad.hs
   build-depends:       base
-                     , optparse-applicative
-                     , lens
-                     , mtl
                      , directory
                      , filepath
+                     , lens
+                     , mtl
+                     , optparse-applicative
+                     , process
   default-language:    Haskell2010
