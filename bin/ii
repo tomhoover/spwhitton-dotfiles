@@ -1,0 +1,24 @@
+#!/bin/bash
+
+. $HOME/.shenv
+
+if [ "$(hostname -f)" = "ma.sdf.org" ]; then
+    # start irssi under dtach if it's not running
+    if ! pgrep -u $LOGNAME irssi >/dev/null; then
+        rm -f $HOME/local/irssi.dtach.socket
+        bitlbee_startup
+        sleep 10
+        TZ=MST dtach -n $HOME/local/irssi.dtach.socket junest irssi
+    fi
+    
+    # if we're not at a dumb terminal (so this script can be shoved in a
+    # crontab), try to attach what we (maybe) just made
+
+    # this is a bashism
+    if [ -t 1 ]; then
+        dtach -a $HOME/local/irssi.dtach.socket
+    fi
+else
+    # on a workstation, get connected to ma
+    ssh -t ma dtach -a $HOME/local/irssi.dtach.socket
+fi

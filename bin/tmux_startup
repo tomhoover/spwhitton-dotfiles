@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# deprecated by `ii' script
+
 . $HOME/.shenv
 TZ=MST
 export TZ

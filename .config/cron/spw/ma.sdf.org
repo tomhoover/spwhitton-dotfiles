@@ -11,7 +11,7 @@
 0 3 * * * chronic planetnewspipe
 
 @reboot emacs --daemon
-@reboot tmux_startup
+@reboot ii
 
 @weekly pkg_admin fetch-pkg-vulnerabilities
 @weekly pkg_admin audit
