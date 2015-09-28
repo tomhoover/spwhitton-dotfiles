@@ -72,6 +72,7 @@ githubbk spwhitton/propellor.git
 githubbk spwhitton/sariulclocks.git
 githubbk spwhitton/srem.git
 githubbk spwhitton/oso2pdf.git
+githubbk spwhitton/pandoc-citeproc-preamble.git
 
 # Stage 3 : Backup other repos ad hoc
 
