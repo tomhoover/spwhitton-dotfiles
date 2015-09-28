@@ -27,6 +27,10 @@ sub go_away {
     Irssi::signal_remove($_ , "reset_timer") foreach (@signals);
     $servers[0]->command('AWAY '.$reason);
     Irssi::signal_add($_ , "reset_timer") foreach (@signals);
+
+    # return to the status window so that messages received clearly
+    # visible in Act bar        -- spw
+    Irssi::command('window goto 1');
 }
 
 sub reset_timer {
