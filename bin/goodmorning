@@ -24,7 +24,7 @@ amixer -c 0 sset Master unmute
 amixer -c 0 sset Speaker 100%
 amixer -c 0 sset Speaker unmute
 amixer -c 0 sset PCM 100%
-amixer -c 0 sset PCM unmute
+# amixer -c 0 sset PCM unmute # invalid command
 
 # play the alarm (TODO: randomly choose from folder of symlinks into annex)
 mplayer "$SONG"
