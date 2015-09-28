@@ -1,6 +1,6 @@
 #!/bin/sh
 
-VOLUME=60
+VOLUME=80                      # lid closed!
 SONG="/home/swhitton/lib/annex/music/Soundtracks/Steve Jablonsky & Trevor Morris/Command & Conquer 3 OST/05 - Black Dawn.mp3"
 
 # dow=$(date +%u)
@@ -15,9 +15,19 @@ export HOME
 
 . $HOME/.shenv
 
-# make sure it's not too loud nor muted
-amixer set Master ${VOLUME}%
-amixer set Master unmute
+# make sure it's not too loud nor muted.  (`-c 0' ensures we're not
+# just interacting with PulseAudio)
+amixer sset Master ${VOLUME}%
+amixer sset Master unmute
+amixer -c 0 sset "Auto-Mute Mode" Disabled
+amixer -c 0 sset Master unmute
+amixer -c 0 sset Speaker 100%
+amixer -c 0 sset Speaker unmute
+amixer -c 0 sset PCM 100%
+amixer -c 0 sset PCM unmute
 
-# play the alarm (TODO: randomly choose from folder of symlinks)
+# play the alarm (TODO: randomly choose from folder of symlinks into annex)
 mplayer "$SONG"
+
+# probably want auto-mute back on (TODO: turn on/off only if it's not already off)
+amixer -c 0 sset "Auto-Mute Mode" Enabled
