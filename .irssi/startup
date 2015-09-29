@@ -1,2 +1,3 @@
 load perl
 script exec $ENV{'TZ'}='MST';
+window goto 1
