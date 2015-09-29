@@ -72,7 +72,7 @@ myPrefixedKeys = [ ("i", spawn "xmousetidy")
                  , ("g g", spawn myTerm)
                  -- , ("g m", spawn $ inMyTerm "sh -c 'offline || mbsync fastmail; mutt'")
                  , ("g m", spawn $ inMyTerm "mutt")
-                 , ("g t", spawn $ inMyTerm "softbeep ssh -t ma /usr/pkg/bin/tmux attach")
+                 , ("g t", spawn $ inMyTerm "ii")
                  , ("g c", spawn $ inMyTerm "ncmpcpp") -- 'c' for chaones
                  -- , ("g f", spawn "sh -c 'wmctrl -a Messenger || messengerfordesktop'")
 
@@ -119,7 +119,7 @@ myManageHook = composeOne $
                , className     =? "Evince"              -?> doShift "view"
                , title         =? "Dominion"            -?> doShift "view"
                , title         =? "Messenger"           -?> doShift "view"
-               , title         =? "softbeep"            -?> doShift "comm"
+               , title         =? "ii"                  -?> doShift "comm"
                ] ++ [className =? c -?> doFloat | c <- myFloatClasses]
 
 myLayoutHook = modHost "artemis" (avoidStrutsOn []) $

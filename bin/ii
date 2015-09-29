@@ -20,5 +20,5 @@ if [ "$(hostname -f)" = "ma.sdf.org" ]; then
     fi
 else
     # on a workstation, get connected to ma
-    ssh -t ma dtach -a $HOME/local/irssi.dtach.socket
+    softbeep ssh -t ma dtach -a local/irssi.dtach.socket
 fi
