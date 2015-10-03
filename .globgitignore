@@ -20,7 +20,7 @@ TAGS
 *.dvi
 *.toc
 *.fmt
-*.bib
+#*.bib
 *.bbl
 *.blg
 *.url
