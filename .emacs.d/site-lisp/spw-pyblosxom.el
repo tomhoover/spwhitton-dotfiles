@@ -57,9 +57,9 @@ With optional argument NOTHUMBS, exclude thumbnail files."
 
     (dolist (elt to-publish)
       (org-publish-file elt)
-      (magit-stage-item (f-filename elt))))
+      (magit-stage-file (f-relative elt (magit-toplevel)))))
   ;; 3. open a magit status buffer
-  (magit-status default-directory))
+  (magit-status (magit-toplevel)))
 
 (defun spw-pyblosxom-insert-image (file arg)
   "Insert image file FILE into one of my blog posts.
