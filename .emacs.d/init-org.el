@@ -26,6 +26,10 @@
 
 (use-package org-checklist)
 
+;;; inline tasks
+
+(use-package org-inlinetask)
+
 ;;; links to mairix messages by message-id in Org
 
 (use-package org-mairix-el
