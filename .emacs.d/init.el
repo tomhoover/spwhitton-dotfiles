@@ -1053,6 +1053,7 @@
 ;;; allow Emacs to resize images: keybinding S f
 
 (use-package eimp
+  :if (executable-find "mogrify")
   :ensure
   :init (add-hook 'image-mode-hook 'eimp-mode))
 
