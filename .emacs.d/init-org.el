@@ -691,6 +691,33 @@
               :table-of-contents t))))
       (org-publish-project "spw-wiki"))))
 
+(defun spw/update-philos-notes ()
+  "Update copy of my philosophy notes accessible on my tablet computer via WebDAV."
+  (interactive)
+  (if (not (f-exists? "~/lib/fm/Philos notes"))
+      (message "not gonna do this unless webdav space mounted")
+    (let ((org-export-htmlize-output-type 'css)
+          (org-export-with-toc t)
+          (org-export-in-background nil)
+          (org-publish-project-alist
+           `(("spw-philos"
+              :base-directory "~/doc/org/philos"
+              :base-extension "org"
+              :recursive nil
+              :publishing-directory "~/lib/fm/Philos notes"
+              :publishing-function org-html-publish-to-html
+              :auto-sitemap t
+              :sitemap-filename "123Index.html"
+              :sitemap-title "Sean's reading notes"
+              :table-of-contents t
+              :html-head ,(concat
+                           "<style type=\"text/css\">"
+                           (with-temp-buffer
+                             (insert-file-contents "~/doc/org/philos/style1.css")
+                             (buffer-string))
+                           "</style>")))))
+      (org-publish-project "spw-philos"))))
+
 (defun spw/cleanup-org-pdfs ()
   (interactive)
   (dolist (file (f-glob "~/doc/org/*.pdf"))
