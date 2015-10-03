@@ -3,6 +3,7 @@
 
 */15 * * * * chronic doccheckin
 */30 * * * * offline || chronic mbsync fastmail
+1 * * * * chronic philosnotes
 
 # alarm clock: artemis is always turned on at present and I can't get
 # joeyh's systemd alarm clock working

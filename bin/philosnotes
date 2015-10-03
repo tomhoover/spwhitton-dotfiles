@@ -1,0 +1,21 @@
+#!/bin/bash
+
+offline && exit 0
+
+doccheckin
+cd $HOME/doc
+git pull --ff-only 2>/dev/null >/dev/null || exit 0
+
+if ! [ -d "$HOME/lib/fm/Philos notes" ]; then
+    mount $HOME/lib/fm
+    unmount="yes"
+else
+    unmount="no"
+fi
+
+emacs -batch \
+      -l $HOME/.emacs.d/init.el \
+      -l $HOME/.emacs.d/init-org.el \
+      -f spw/update-philos-notes
+
+[ "$unmount" = "yes" ] && fusermount -u $HOME/lib/fm
