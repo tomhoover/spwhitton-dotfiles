@@ -10,8 +10,9 @@
 0 18 * * * duply-run
 0 3 * * * chronic planetnewspipe
 
-@reboot emacs --daemon
-@reboot ii
+# @reboot cronjobs don't work on the MetaArray, so check for a reboot
+# every 10 minutes
+*/10 * * * * ma_reboot_check
 
 @weekly pkg_admin fetch-pkg-vulnerabilities
 @weekly pkg_admin audit

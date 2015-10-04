@@ -1,0 +1,14 @@
+#!/bin/sh
+
+. $HOME/.shenv
+
+# @reboot cronjobs don't work on the MetaArray, so manually check if
+# we need to restart stuff
+
+# if I'm logged in then let me restart stuff manually
+who | grep spw && exit 0
+
+pgrep -u spw emacs   || emacs --daemon
+pgrep -u spw bitlbee || biblbee_startup
+sleep 10
+pgrep -u spw irssi   || ii
