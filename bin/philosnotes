@@ -27,7 +27,7 @@ fi
 emacs -batch \
       -l $HOME/.emacs.d/init.el \
       -l $HOME/.emacs.d/init-org.el \
-      -eval '(org-publish-project "philos")'
+      -eval '(org-publish-project "philos")' 2>/dev/null
 
 # 4. tear down publishing locations
 
@@ -40,5 +40,5 @@ else
 cd "Philos notes"
 mput $files
 EOF
-    rm $files
+    rm -r $HOME/lib/fm/*
 fi
