@@ -387,12 +387,14 @@
          ("C-c o l" . org-store-link)
          ("C-c o a" . org-agenda)
          ("C-c o [" . spw/org-agenda-file-to-front)
-         ("C-c o ]" . spw/org-remove-file))
+         ("C-c o ]" . spw/org-remove-file)
+         ("C-c o n" . spw/new-philos-notes))
   :commands (org-capture
              org-store-link
              org-agenda
              spw/org-agenda-file-to-front
-             spw/org-remove-file))
+             spw/org-remove-file
+             spw/new-philos-notes))
 
 ;;; keep pop up windows under control
 

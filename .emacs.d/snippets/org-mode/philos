@@ -1,0 +1,6 @@
+#+TITLE: $1
+#+DATE: `(progn (org-insert-time-stamp (current-time) nil 'inactive) "")`
+
+* Executive summary
+-
+* $0
