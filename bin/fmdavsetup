@@ -3,11 +3,24 @@
 . $HOME/.shenv
 
 if ! [ -e "$HOME/local/auth/fmailsyncpass" ]; then
-    echo "put mbsync password file in place first"
+    echo >&2 "$0: put mbsync password file in place first"
     exit 1
 fi
 
-mkdir -p $HOME/lib/fm $HOME/.davfs2
 pass=$(cat $HOME/local/auth/fmailsyncpass)
-echo "https://myfiles.messagingengine.com/ \"spwhitton#fastmail.com\" \"${pass}\"" >> $HOME/.davfs2/secrets
-chmod 600 $HOME/.davfs2/secrets
+
+# davfs2 setup
+
+if ! cat $HOME/.davfs2/secrets 2>/dev/null | grep "myfiles\.messagingengine\.com" >/dev/null; then
+   mkdir -p $HOME/lib/fm $HOME/.davfs2
+   echo "https://myfiles.messagingengine.com/ \"spwhitton#fastmail.com\" \"${pass}\"" >> $HOME/.davfs2/secrets
+   chmod 600 $HOME/.davfs2/secrets
+fi
+
+# cadaver setup
+
+if ! cat $HOME/.netrc 2>/dev/null | grep "myfiles\.messagingengine\.com" >/dev/null; then
+    echo >>$HOME/.netrc "machine myfiles.messagingengine.com"
+    echo >>$HOME/.netrc "	login spwhitton@fastmail.com"
+    echo >>$HOME/.netrc "	password '${pass}'"
+fi
