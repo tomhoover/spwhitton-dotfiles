@@ -1,21 +1,44 @@
 #!/bin/bash
 
-offline && exit 0
+. $HOME/.shenv
 
-doccheckin
-cd $HOME/doc
-git pull --ff-only 2>/dev/null >/dev/null || exit 0
+set -e
 
-if ! [ -d "$HOME/lib/fm/Philos notes" ]; then
-    mount $HOME/lib/fm
-    unmount="yes"
+# 1. set up publishing locations
+
+if which mount.davfs >/dev/null; then
+    if ! [ -d "$HOME/lib/fm/Philos notes" ]; then
+        mount $HOME/lib/fm
+        unmount="yes"
+    else
+        unmount="no"
+    fi
 else
-    unmount="no"
+    mkdir -p $HOME/lib/fm
+    [ "$(ls -A $HOME/lib/fm)" ] && echo "target dir not empty!" && exit 1
 fi
+
+# 2. update git if on metaarray
+
+[ "$(hostname -f)" = "ma.sdf.org" ] && cd $HOME/doc && doccheckin && git pull --ff-only
+
+# 3. have Emacs do the publishing
 
 emacs -batch \
       -l $HOME/.emacs.d/init.el \
       -l $HOME/.emacs.d/init-org.el \
-      -f spw/update-philos-notes
+      -eval '(org-publish-project "philos")'
 
-[ "$unmount" = "yes" ] && fusermount -u $HOME/lib/fm
+# 4. tear down publishing locations
+
+if which mount.davfs >/dev/null; then
+    [ "$unmount" = "yes" ] && fusermount -u $HOME/lib/fm
+else
+    cd $HOME/lib/fm/"Philos notes"
+    files="./*"
+    cadaver https://myfiles.messagingengine.com/ <<EOF
+cd "Philos notes"
+mput $files
+EOF
+    rm $files
+fi
