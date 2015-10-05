@@ -248,6 +248,7 @@ spaces in it and to remove any colons."
       org-export-date-timestamp-format "%e %B %Y"
       org-html-footnotes-section "<h3>%s</h3>\n%s"
       org-export-with-smart-quotes t
+      org-export-htmlize-output-type 'css
 
       org-latex-default-class "wordlike"
 
@@ -649,27 +650,47 @@ spaces in it and to remove any colons."
                :publishing-directory "~/tmp"
                :completion-function spw/cleanup-org-pdfs))
 
-(defun spw/export-org-wiki ()
-  (interactive)
-  (if (not (string= "ma.sdf.org" (system-name)))
-      (message "not gonna do this unless on the MetaArray")
-    (let ((org-export-htmlize-output-type 'css)
-          (org-export-with-toc t)
-          (org-export-in-background t)
-          (org-publish-project-alist '(("spw-wiki"
-                                        :base-directory "~/doc/org"
-                                        :base-extension "org"
-                                        :recursive nil
-                                        :publishing-directory "/meta/www/s/spw/wiki"
-                                        :publishing-function org-html-publish-to-html
-                                        :auto-sitemap t
-                                        :sitemap-filename "index.html"
-                                        :sitemap-title "Sean's ~/doc"
-                                        :html-head "<link rel=\"stylesheet\" title=\"Worg\" href=\"/inc/worg.css\" type=\"text/css\">
+;;; web-accessible and WebDAV-accessible notes
+
+;; Note that the path ~/lib/fm needs to be either mounted with davfs2
+;; or uploaded with cadaver.  So these projects should only be
+;; published by shell scripts calling `emacs --batch' and then
+;; sorting out davfs2 or cadaver
+
+(add-to-list 'org-publish-project-alist
+             `(("philos"
+                :base-directory "~/doc/org/philos"
+                :base-extension "org"
+                :recursive nil
+                :publishing-directory "~/lib/fm/Philos notes"
+                :publishing-function org-html-publish-to-html
+                :auto-sitemap t
+                :sitemap-filename "index.html"
+                :sitemap-title "Sean's reading notes"
+                :table-of-contents t
+                :html-head ,(concat
+                             "<style type=\"text/css\">"
+                             (when (f-exists? "~/doc/org/philos/style1.css")
+                               (with-temp-buffer
+                                 (insert-file-contents "~/doc/org/philos/style1.css")
+                                 (buffer-string)))
+                             "</style>"))))
+
+(add-to-list 'org-publish-project-alist
+             '(("spw-wiki"
+                :base-directory "~/doc/org"
+                :base-extension "org"
+                :recursive nil
+                :publishing-directory "/meta/www/s/spw/wiki"
+                :publishing-function org-html-publish-to-html
+                :auto-sitemap t
+                :sitemap-filename "index.html"
+                :sitemap-title "Sean's ~/doc"
+                :html-head "<link rel=\"stylesheet\" title=\"Worg\" href=\"/inc/worg.css\" type=\"text/css\">
 <link rel=\"alternate stylesheet\" title=\"Zenburn\" href=\"/inc/worg-zenburn.css\" type=\"text/css\">
 <link rel=\"icon\" href=\"/inc/org-mode-unicorn.ico\" type=\"image/vnd.microsoft.icon\" />
 <link rel=\"SHORTCUT ICON\" href=\"https://spw.sdf.org/inc/org-mode-unicorn.ico\" type=\"image/vnd.microsoft.icon\" />"
-                                        :html-preamble "<script type=\"text/javascript\">
+                :html-preamble "<script type=\"text/javascript\">
     document.addEventListener('DOMContentLoaded',function() {
         document.getElementById(\"table-of-contents\").onclick = function() {
             var elem = document.getElementById(\"text-table-of-contents\");
@@ -678,64 +699,8 @@ spaces in it and to remove any colons."
     });
 </script>
 <p><a href=\"/wiki\">Personal wiki index</a> &middot; <a href=\"/wiki/agenda.html\">Daily agenda view</a> &middot; <a href=\"/wiki/cal.html\">Three month diary</a></p>"
-                                        :html-head-include-default-style nil
-                                        :table-of-contents t))))
-      (org-publish-project "spw-wiki"))))
-
-(defun spw/update-dav-wiki ()
-  "Update copy of my Org files accessible on my tablet computer via WebDAV."
-  (interactive)
-  (if (not (f-exists? "~/lib/fm/Org docs"))
-      (message "not gonna do this unless webdav space mounted")
-    (let ((org-export-htmlize-output-type 'css)
-          (org-export-with-toc t)
-          (org-export-in-background t)
-          (org-publish-project-alist
-           `(("spw-wiki"
-              :base-directory "~/doc/org"
-              :base-extension "org"
-              :recursive nil
-              :publishing-directory "~/lib/fm/Org docs"
-              :publishing-function org-html-publish-to-html
-              :auto-sitemap t
-              :sitemap-filename "123Index.html"
-              :sitemap-title "Sean's ~/doc"
-              :html-head ,(concat
-                           "<style type=\"text/css\">"
-                           (with-temp-buffer
-                             (insert-file-contents "~/doc/www/inc/worg.css")
-                             (buffer-string))
-                           "</style>")
-              :html-head-include-default-style nil
-              :table-of-contents t))))
-      (org-publish-project "spw-wiki"))))
-
-(defun spw/update-philos-notes ()
-  "Update copy of my philosophy notes accessible on my tablet computer via WebDAV."
-  (interactive)
-  (if (not (f-exists? "~/lib/fm/Philos notes"))
-      (message "not gonna do this unless webdav space mounted")
-    (let ((org-export-htmlize-output-type 'css)
-          (org-export-with-toc t)
-          (org-export-in-background nil)
-          (org-publish-project-alist
-           `(("spw-philos"
-              :base-directory "~/doc/org/philos"
-              :base-extension "org"
-              :recursive nil
-              :publishing-directory "~/lib/fm/Philos notes"
-              :publishing-function org-html-publish-to-html
-              :auto-sitemap t
-              :sitemap-filename "123Index.html"
-              :sitemap-title "Sean's reading notes"
-              :table-of-contents t
-              :html-head ,(concat
-                           "<style type=\"text/css\">"
-                           (with-temp-buffer
-                             (insert-file-contents "~/doc/org/philos/style1.css")
-                             (buffer-string))
-                           "</style>")))))
-      (org-publish-project "spw-philos"))))
+                :html-head-include-default-style nil
+                :table-of-contents t)))
 
 (defun spw/cleanup-org-pdfs ()
   (interactive)
