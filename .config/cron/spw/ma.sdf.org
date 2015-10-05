@@ -7,6 +7,9 @@
 0 14 * * * chronic spwwiki
 0 21 * * * chronic spwwiki
 
+# update philosophy notes more frequently
+1 * * * * chronic philosnotes
+
 0 18 * * * duply-run
 0 3 * * * chronic planetnewspipe
 
