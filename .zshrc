@@ -71,6 +71,7 @@ alias myip="dig +short myip.opendns.com @resolver1.opendns.com"
 alias mailnow="mbsync -q fastmail && mutt -Z"
 alias mykb="setxkbmap gb; setxkbmap -option ctrl:nocaps"
 alias fixmacs="pkill -USR2 emacs"
+alias myfiles="cadaver https://myfiles.messagingengine.com/"
 
 # common dotfiles git operations
 alias git-rebase-host-branch="git checkout $(hostname);git rebase master"
