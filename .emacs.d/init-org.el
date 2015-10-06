@@ -931,6 +931,12 @@ spaces in it and to remove any colons."
                                    ;; make space work from the agenda to cycle the actual tree in the split
                                    (define-key org-agenda-mode-map " " 'org-agenda-cycle-show)))
 
+(defadvice org-agenda (after spw/open-weekday-schedule activate)
+  (when (and window-system
+             (not (get-buffer-window "fall_2015_weekday_schedule.org" 0))
+             (y-or-n-p "Also load Fall 2015 weekday schedule?"))
+    (find-file-other-window "~/doc/org/fall_2015_weekday_schedule.org")))
+
 (define-key org-mode-map (kbd "C-c C-SPC") 'org-mark-subtree)
 (define-key org-mode-map (kbd "<f11>") 'org-toggle-link-display)
 ;; (define-key org-mode-map (kbd "C-c )") 'reftex-citation)
