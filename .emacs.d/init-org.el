@@ -300,9 +300,9 @@ spaces in it and to remove any colons."
 
 ;;;; ---- agenda and refile ----
 
-(defadvice org-agenda (before persp-org-agenda disable)
+(defadvice org-agenda (before persp-org-agenda activate)
   "Switch perspective project before compiling the agenda."
-  (projectile-persp-switch-project "~/doc"))
+  (projectile-switch-project-by-name "~/doc"))
 
 (setq org-agenda-custom-commands
       '(("a" "Primary agenda view"
