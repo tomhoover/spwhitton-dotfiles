@@ -1,0 +1,56 @@
+#!/bin/sh
+
+. $HOME/.shenv
+
+set -e
+
+lisp=$(cat <<EOF
+(progn
+    (org-batch-store-agenda-views)
+    (org-publish-project "spw-wiki")
+    (org-publish-project "philos")
+    (org-publish-project "spw-org")
+    (org-publish-project "spw-static")
+    (org-publish-project "blog"))
+EOF
+    )
+
+# assume throughout we're on the MetaArray
+[ "$(hostname -f)" = "ma.sdf.org" ] \
+    || ( echo >&2 "run this script only on MetaArray"; exit 1 )
+
+# 1. git update
+
+# Thanks to `set -e' above, any failure to fast-forward will mean I
+# get an e-mail from crond telling me to resolve the merge.
+for dir in "$HOME/doc $HOME/doc/www $HOME/doc/www/blog"; do
+    cd $dir
+    git pull --ff-only
+done
+
+# 2. prepare publishing destinations
+
+# this is why this script cannot be executed locally!
+mkdir -p $HOME/lib/fm
+# [ "$(ls -A $HOME/lib/fm)" ] \
+#     && echo >&2 "target dir not empty!" && exit 1
+
+# 3. have Org publish
+
+emacs -batch \
+      -l $HOME/.emacs.d/init.el \
+      -l $HOME/.emacs.d/init-org.el \
+      -eval "$lisp"
+
+# 4. cleanup
+
+# TODO: factor this publishing via cadaver out into a shell function
+cd $HOME/lib/fm/"Philos notes"
+files="./*"
+cadaver https://myfiles.messagingengine.com/ <<EOF
+cd "Philos notes"
+mput $files
+EOF
+rm -r $HOME/lib/fm/*
+
+rdate.py-dir $HOME/html/blog/entries

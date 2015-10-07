@@ -3,12 +3,9 @@
 */15 * * * * chronic doccheckin
 @hourly chronic mbsync fastmail
 
-# update Org wiki at 7am and 2pm MST
-0 14 * * * chronic spwwiki
-0 21 * * * chronic spwwiki
-
-# update philosophy notes more frequently
-1 * * * * chronic philosnotes
+# update Org wiki & philosophy notes at 7am and 2pm MST
+0 14 * * * chronic ma_org_publish
+0 21 * * * chronic ma_org_publish
 
 0 18 * * * duply-run
 0 3 * * * chronic planetnewspipe
