@@ -1,6 +1,6 @@
 #!/bin/sh
 
-VOLUME=70                      # lid closed!
+VOLUME=60                      # lid closed!
 SONG="/home/swhitton/lib/annex/music/Soundtracks/Steve Jablonsky & Trevor Morris/Command & Conquer 3 OST/05 - Black Dawn.mp3"
 
 # dow=$(date +%u)
