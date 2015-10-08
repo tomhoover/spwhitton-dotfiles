@@ -467,7 +467,8 @@
   :demand
   :config
 
-  (setq magit-completing-read-function 'magit-ido-completing-read)
+  (setq magit-completing-read-function 'magit-ido-completing-read
+        magit-push-always-verify nil)
 
   ;; avoid a pop up that grabs focus every time we make a commit
   (setq magit-diff-auto-show '())
