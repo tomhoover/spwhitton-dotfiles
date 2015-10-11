@@ -5,6 +5,11 @@ title="$2"
 author="$3"
 output="${input%.*}.mobi"
 
+if [ "$2" = "" ]; then
+    echo "$(basename $0): usage: $(basename $0) input_file title author"
+    exit 1
+fi
+
 ebook-convert "$input" "$output"                        \
     --output-profile kindle_pw                      \
     --authors "$author"                             \
