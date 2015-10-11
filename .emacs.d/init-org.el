@@ -100,9 +100,10 @@ spaces in it and to remove any colons."
       org-directory "~/doc/org"
 
       org-tag-alist '((:startgroup)
-                      ("@work" . ?W)
-                      ("@home" . ?H)
-                      ("july2015" . ?j)
+                      ("@libDASL" . ?l)
+                      ("@Tucson" . ?e)
+                      ("@Sheffield" . ?u)
+                      ("@E5thSt" . ?h)
                       (:endgroup))
 
       ;; enable speed commands and bind N to narrow to subtree
@@ -182,9 +183,9 @@ spaces in it and to remove any colons."
                             ("\\.mm\\'" . system)
                             ("\\.x?html?\\'" . system)
                             ("\\.pdf\\'" . system)
-                            ("\\.jpg\\'" . "/usr/bin/eog %s")
-                            ("\\.png\\'" . "/usr/bin/eog %s")
-                            ("\\.gif\\'" . "/usr/bin/eog %s")))
+                            ("\\.jpg\\'" . "/usr/bin/feh %s")
+                            ("\\.png\\'" . "/usr/bin/feh %s")
+                            ("\\.gif\\'" . "/usr/bin/feh %s")))
       org-list-demote-modify-bullet (quote (("-" . "+")
                                             ("+" . "*")
                                             ("*" . "-")
@@ -209,11 +210,11 @@ spaces in it and to remove any colons."
       org-agenda-entry-text-maxlines 3
 
       org-todo-keywords
-      '((sequence "TODO(t)" "|" "DONE(d)")
-        (sequence "WAITING(w)" "SOONDAY(f)" "SOMEDAY(s)" "|" "CANCELLED(c)"))
+      '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
+        (sequence "WAITING(w)" "SOMEDAY(s)" "|" "CANCELLED(c)"))
 
       org-todo-keyword-faces '(("SOMEDAY" . (:foreground "#94BFF3" :weight bold)) ; zenburn-blue+1
-                               ("SOONDAY" . (:foreground "#F0DFAF" :weight bold))) ; zenburn-yellow
+                               ("NEXT" . (:foreground "#F0DFAF" :weight bold))) ; zenburn-yellow
 
       ;; Include agenda archive files when searching for things
       org-agenda-text-search-extra-files (quote (agenda-archives))
@@ -305,10 +306,26 @@ spaces in it and to remove any colons."
   (projectile-switch-project-by-name "~/doc"))
 
 (setq org-agenda-custom-commands
-      '(("a" "Primary agenda view"
+      '(
+
+        ("a" "Primary agenda view"
          ((agenda "day" ((org-agenda-ndays 1)
-                         (org-agenda-overriding-header "Today")
+                         (org-agenda-overriding-header
+                          "Tasks, appointments and waiting tasks to be chased today")
+                         (org-agenda-include-deadlines nil)
                          (org-agenda-time-grid nil)))
+
+          )
+         ((org-agenda-start-with-log-mode nil)
+          (org-agenda-start-with-follow-mode nil)
+          ;; (org-agenda-tag-filter-preset '("-Sariul"))
+          ) ("/ma:html/day/index.html"))
+
+        ("A" "Daily planning view"
+         ((agenda "day" ((org-agenda-ndays 1)
+                         (org-agenda-time-grid nil)
+                         (org-agenda-overriding-header "Plan for today & upcoming deadlines")))
+
           (agenda "" ((org-agenda-ndays 3)
                       (org-agenda-start-day "+1d")
                       (org-agenda-time-grid nil)
@@ -317,77 +334,81 @@ spaces in it and to remove any colons."
                       (org-agenda-show-all-dates nil)
                       (org-agenda-overriding-header "Coming up")
                       (org-agenda-files (quote ("~/doc/org/diary.org")))))
-          (todo "SOONDAY" ((org-agenda-overriding-header "Things to be done that shouldn't be dated"))))
-         ((org-agenda-start-with-log-mode nil)
-          (org-agenda-start-with-follow-mode nil)
-          ;; (org-agenda-tag-filter-preset '("-Sariul"))
-          ) ("/ma:html/day/index.html"))
-        ("w" "Weekly agenda"
-         ((agenda "week" ((org-agenda-ndays 7)))))
-        ("#" "Review view"
-         (
-          (todo "WAITING" ((org-agenda-todo-ignore-scheduled nil)
+
+          (todo "TODO|NEXT" ((org-agenda-todo-ignore-scheduled t)
+                             (org-agenda-todo-ignore-deadlines nil)
+                             (org-agenda-overriding-header "Unscheduled standalone tasks & project next actions")
+                             (org-agenda-skip-function 'spw/skip-projects-and-non-next-subprojects))))
+
+         )
+
+        ("#" "Weekly review view"
+
+         ((todo "WAITING" ((org-agenda-todo-ignore-scheduled t)
                            (org-agenda-todo-ignore-deadlines nil)
                            (org-agenda-todo-ignore-with-date nil)
-                           (org-agenda-overriding-header "Things waiting on others: chase them now or schedule a TODO to do so")))
+                           (org-agenda-overriding-header "Waiting on others & not scheduled to chase up")))
+
+          (todo "DONE|CANCELLED"
+                ((org-agenda-overriding-header "Tasks to be archived")
+                 (org-agenda-todo-ignore-scheduled nil)
+                 (org-agenda-todo-ignore-deadlines nil)
+                 (org-agenda-todo-ignore-with-date nil)
+                 (org-agenda-tag-filter-preset '("-APPT"))))
+
           (tags "LEVEL=1+REFILE"
                 ((org-agenda-todo-ignore-with-date nil)
                  (org-agenda-todo-ignore-deadlines nil)
                  (org-agenda-todo-ignore-scheduled nil)
-                 (org-agenda-overriding-header "Items to refile")
-                 (org-agenda-start-with-entry-text-mode t))) ; doesn't work per block, so this does nothing atm
+                 (org-agenda-overriding-header "Items to add context and priority, and refile")
+                 (org-agenda-start-with-entry-text-mode t)))
 
-          ;; A headline with TODO needs to be done so it should be
-          ;; dated.  This block finds undated headlines.  Subprojects
-          ;; are skipped because it is only if they are subprojects of
-          ;; a TODO that they need to be scheduled; subtasks of a
-          ;; SOONDAY might well be TODO, but they need not be
-          ;; scheduled.  And projects with scheduled or deadlines
-          ;; subprojects are skipped because actioning the project has
-          ;; been scheduled or deadlined, which is sufficient.
           (todo "TODO" ((org-agenda-todo-ignore-with-date t)
-                        (org-agenda-overriding-header "Undated TODO items: add schedule or deadline to the project or a subtask, or change keyword to SOONDAY")
-                        (org-agenda-skip-function 'spw/skip-subprojects-and-projects-with-scheduled-or-deadlined-subprojects)))
+                        (org-agenda-overriding-header "Stuck projects")
+                        (org-agenda-skip-function 'spw/skip-non-stuck-projects)))))
 
-          (agenda "day" ((org-agenda-ndays 7) (org-agenda-overriding-header "Schedule undated into the following schedule") (org-agenda-time-grid nil)))) ((org-agenda-dim-blocked-tasks nil) (org-agenda-tag-filter-preset '("-REPEATED"))))
-        ("A" "Tasks to be Archived" todo "DONE|CANCELLED|DELEGATED"
-         ((org-agenda-overriding-header "Tasks to archive")
-          (org-agenda-todo-ignore-scheduled nil)
-          (org-agenda-todo-ignore-deadlines nil)
-          (org-agenda-todo-ignore-with-date nil)
-          (org-agenda-tag-filter-preset '("-APPT"))))
-        ("d" "Three-month diary" agenda ""
-         ((org-agenda-ndays 90)
-          (org-agenda-start-on-weekday 1)
+        ("d" "Six-month diary" agenda ""
+         ((org-agenda-ndays 180)
+          ;; (org-agenda-start-on-weekday 1)
           (org-agenda-time-grid nil)
           (org-agenda-repeating-timestamp-show-all t)
           (org-agenda-entry-types '(:timestamp :sexp))
           (org-agenda-show-all-dates nil)
-          (org-agenda-overriding-header "Sean's diary for the next three months")
+          (org-agenda-overriding-header "Sean's diary for the next six months")
           (org-agenda-files (quote ("~/doc/org/diary.org")))
           ) ("/ma:html/cal/index.html"))
 
-        ("D" "One day diary" agenda ""
-         ((org-agenda-ndays 1)
-          (org-agenda-start-on-weekday 1)
-          (org-agenda-time-grid nil)
-          (org-agenda-repeating-timestamp-show-all t)
-          (org-agenda-entry-types '(:timestamp :sexp))
-          (org-agenda-show-all-dates nil)
-          (org-agenda-overriding-header "Sean's diary for today")
-          (org-agenda-files (quote ("~/doc/org/diary.org")))
-          ) ("/tmp/diary.txt"))))
+        ;; ("#" "Review view"
+        ;;  (
+
+        ;;                                 ; doesn't work per block, so this does nothing atm
+
+        ;; ;; A headline with TODO needs to be done so it should be
+        ;; ;; dated.  This block finds undated headlines.  Subprojects
+        ;; ;; are skipped because it is only if they are subprojects of
+        ;; ;; a TODO that they need to be scheduled; subtasks of a
+        ;; ;; SOONDAY might well be TODO, but they need not be
+        ;; ;; scheduled.  And projects with scheduled or deadlines
+        ;; ;; subprojects are skipped because actioning the project has
+        ;; ;; been scheduled or deadlined, which is sufficient.
+        ;; (todo "TODO" ((org-agenda-todo-ignore-with-date t)
+        ;;               (org-agenda-overriding-header "Undated TODO items: add schedule or deadline to the project or a subtask, or change keyword to SOONDAY")
+        ;;               (org-agenda-skip-function 'spw/skip-subprojects-and-projects-with-scheduled-or-deadlined-subprojects)))
+
+        ;;   (agenda "day" ((org-agenda-ndays 7) (org-agenda-overriding-header "Schedule undated into the following schedule") (org-agenda-time-grid nil)))) ((org-agenda-dim-blocked-tasks nil) (org-agenda-tag-filter-preset '("-REPEATED"))))
+
+        ))
 
 ;;; sensible automatic tag filtering
 
 (defun org-my-auto-exclude-function (tag)
   (and (cond
-        ((string= tag "@home")
+        ((string= tag "@E5thSt")
          (or (string= (system-name) "SPWHITTON")
              ;; if we're on the metaarray we're probably not on
              ;; GNU/Linux machine at home
              (string= (system-name) "ma.sdf.org")))
-        ((string= tag "@work")
+        ((string= tag "@libDASL")
          (not (or (string= (system-name) "SPWHITTON")
                   (string= (system-name) "ma.sdf.org")))))
        (concat "-" tag)))
@@ -395,6 +416,31 @@ spaces in it and to remove any colons."
 (setq org-agenda-auto-exclude-function 'org-my-auto-exclude-function)
 
 ;;; agenda skipping functions
+
+(defun spw/strip-text-properties (txt)
+  "From http://stackoverflow.com/questions/8372722/print-only-text-discarding-text-properties"
+  (set-text-properties 0 (length txt) nil txt)
+  txt)
+
+(defun spw/org-get-todo-keyword ()
+  (let ((todo-state (save-match-data (ignore-errors (org-get-todo-state)))))
+    (spw/strip-text-properties todo-state)))
+
+(defun bh/is-project-p ()
+  "Any task with a todo keyword subtask"
+  (save-restriction
+    (widen)
+    (let ((has-subtask)
+          (subtree-end (save-excursion (org-end-of-subtree t)))
+          (is-a-task (member (nth 2 (org-heading-components)) org-todo-keywords-1)))
+      (save-excursion
+        (forward-line 1)
+        (while (and (not has-subtask)
+                    (< (point) subtree-end)
+                    (re-search-forward "^\*+ " subtree-end t))
+          (when (member (org-get-todo-state) org-todo-keywords-1)
+            (setq has-subtask t))))
+      (and is-a-task has-subtask))))
 
 (defun bh/is-subproject-p ()
   "Any task which is a subtask of another project"
@@ -406,10 +452,34 @@ spaces in it and to remove any colons."
           (setq is-subproject t))))
     (and is-a-task is-subproject)))
 
+(defun bh/is-task-p ()
+  "Any task with a todo keyword and no subtask"
+  (save-restriction
+    (widen)
+    (let ((has-subtask)
+          (subtree-end (save-excursion (org-end-of-subtree t)))
+          (is-a-task (member (nth 2 (org-heading-components)) org-todo-keywords-1)))
+      (save-excursion
+        (forward-line 1)
+        (while (and (not has-subtask)
+                    (< (point) subtree-end)
+                    (re-search-forward "^\*+ " subtree-end t))
+          (when (member (org-get-todo-state) org-todo-keywords-1)
+            (setq has-subtask t))))
+      (and is-a-task (not has-subtask)))))
+
 (defun spw/skip-subprojects ()
   "Skip trees that are subprojects"
   (let ((next-headline (save-excursion (outline-next-heading))))
     (if (bh/is-subproject-p)
+        next-headline
+      nil)))
+
+(defun spw/skip-projects-and-non-next-subprojects ()
+  "Skip projects and subtasks of projects that are not NEXT actions"
+  (let ((next-headline (save-excursion (outline-next-heading))))
+    (if (or (and (bh/is-subproject-p) (not (string= (spw/org-get-todo-keyword) "NEXT")))
+            (bh/is-project-p))
         next-headline
       nil)))
 
@@ -437,6 +507,17 @@ spaces in it and to remove any colons."
               (setq has-scheduled-or-deadlined-subproject t)))))
     has-scheduled-or-deadlined-subproject))
 
+(defun spw/has-next-action-p ()
+  "A task that has a NEXT subproject"
+  (let (has-next-subproject)
+    (save-excursion
+      (save-restriction
+        (org-narrow-to-subtree)
+        (while (ignore-errors (outline-next-heading))
+          (if (string= (spw/org-get-todo-keyword) "NEXT")
+              (setq has-next-subproject t)))))
+    has-next-subproject))
+
 (defun spw/skip-projects-with-scheduled-or-deadlined-subprojects ()
   "Skip projects that have subtasks, where at least one of those
   is scheduled or deadlined"
@@ -455,18 +536,19 @@ spaces in it and to remove any colons."
         next-headline
       nil)))
 
+(defun spw/skip-non-stuck-projects ()
+  (let ((next-headline (save-excursion (outline-next-heading))))
+    (if (or (bh/is-task-p)
+            (spw/has-scheduled-or-deadlined-subproject-p)
+            (spw/has-next-action-p))
+        next-headline
+      nil)))
+
 (setq org-capture-templates
-      '(("t" "Task" entry (file "~/doc/org/refile.org")
-         "* TODO %^{Title}
+      '(("t" "Task to be refiled" entry (file "~/doc/org/refile.org")
+         "* TODO %^{Title} %^g
 %?")
-        ("e" "Task from an e-mail" entry (file "~/doc/org/refile.org")
-         "* TODO %^{Title}
-%(org-mairix-el-link)
-%?")
-        ("w" "Work task" entry (file "~/doc/org/refile.org")
-         "* TODO %^{Title}                      :@work:
-%?")
-        ("n" "Note" entry (file "~/doc/org/refile.org")
+        ("n" "Information to be refiled" entry (file "~/doc/org/refile.org")
          "* %^{Title}
 %?")
         ("a" "Appointment" entry (file+datetree "~/doc/org/diary.org")
@@ -475,13 +557,9 @@ spaces in it and to remove any colons."
         ("A" "Appointment (untimed)" entry (file+datetree "~/doc/org/diary.org")
          "* %^{Title & location}
 %^t" :immediate-finish t)
-        ("s" "For the future" entry (file "~/doc/org/refile.org")
+        ("s" "Task for the future to be refiled" entry (file "~/doc/org/refile.org")
          "* SOMEDAY %^{Title}
 %?")
-        ("f" "For the near future" entry (file "~/doc/org/refile.org")
-         "* SOONDAY %^{Title}
-%?")
-        ;; ("d" "Diary" entry (file+datetree+prompt "~/doc/misc/daily.org") ; produces "invalid time specification" atm :(
         ("d" "Diary entry" entry (file+datetree "~/.labbook.gpg")
          "* %^{Title}
 %U
