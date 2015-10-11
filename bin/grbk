@@ -10,9 +10,14 @@ if ! [ -d "$HOME/lib/fm/dionysus" ]; then
     exit 1
 fi
 
+if [ -d "$HOME/lib/annex/doc/dionysus/old/$(date +"%Y-%m-%d")" ]; then
+    echo "don't run me more than once per day" >&2
+    exit 1
+fi
+
 cd $HOME/lib/annex
-git annex unlock doc/dionysus
-rsync -vrtc $HOME/lib/fm/dionysus/ $HOME/lib/annex/doc/dionysus/
+git annex unlock --exclude "doc/dionysus/old/*" doc/dionysus
+rsync -vrtc --delete --backup --exclude "old/" --backup-dir=$HOME/lib/annex/doc/dionysus/old/$(date +"%Y-%m-%d") $HOME/lib/fm/dionysus/ $HOME/lib/annex/doc/dionysus/
 git annex add doc/dionysus
 
 # # first sync read-only unannotated copies of files out of annex into
