@@ -546,7 +546,7 @@ spaces in it and to remove any colons."
 
 (setq org-capture-templates
       '(("t" "Task to be refiled" entry (file "~/doc/org/refile.org")
-         "* TODO %^{Title} %^g
+         "* TODO %^{Title} %^G
 %?")
         ("n" "Information to be refiled" entry (file "~/doc/org/refile.org")
          "* %^{Title}
