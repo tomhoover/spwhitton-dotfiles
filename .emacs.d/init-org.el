@@ -587,6 +587,7 @@ spaces in it and to remove any colons."
                        " -regextype posix-egrep -type f"
                        args-together
                        " -not -regex '" (expand-file-name org-directory) "/archive/.*'"
+                       " -not -regex '" (expand-file-name org-directory) "/philos/.*'"
                        " -not -name reading.org"
                        " -not -name archive.org -not -regex '" (expand-file-name org-directory) "/[ABCDEFGHIJKLMNOPQRSTUVWXYZ].*' -exec egrep -nH -e \"\\* \(TODO\|SOMEDAY\|WAITING\|SOONDAY\) \" {} +"))))
 
