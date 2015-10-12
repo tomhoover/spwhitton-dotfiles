@@ -368,13 +368,15 @@ spaces in it and to remove any colons."
 
 (defun org-my-auto-exclude-function (tag)
   (and (cond
-        ((string= tag "@E5thSt")
+        ;; tags passed to org-agenda-auto-exclude-function always
+        ;; lower case per version Org 6.34 changelog
+        ((string= tag "@e5thst")
          (not (string= (system-name) "artemis.silentflame.com")))
-        ((string= tag "@Tucson")
+        ((string= tag "@tucson")
          (not (string= (system-name) "artemis.silentflame.com")))
-        ((string= tag "@Sheffield")
+        ((string= tag "@sheffield")
          (not (string= (system-name) "zephyr.silentflame.com")))
-        ((string= tag "@libDASL")
+        ((string= tag "@libdasl")
          (not (string= (system-name) "ma.sdf.org"))))
        (concat "-" tag)))
 
