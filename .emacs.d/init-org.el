@@ -306,26 +306,24 @@ spaces in it and to remove any colons."
   (projectile-switch-project-by-name "~/doc"))
 
 (setq org-agenda-custom-commands
-      '(
-
-        ("a" "Primary agenda view"
+      '(("a" "Primary agenda view"
          ((agenda "day" ((org-agenda-ndays 1)
                          (org-agenda-overriding-header
                           "Tasks, appointments and waiting tasks to be chased today")
                          (org-agenda-include-deadlines nil)
-                         (org-agenda-time-grid nil)))
-
-          )
+                         (org-agenda-time-grid nil))))
          ((org-agenda-start-with-log-mode nil)
-          (org-agenda-start-with-follow-mode nil)
           ;; (org-agenda-tag-filter-preset '("-Sariul"))
-          ) ("/ma:html/day/index.html"))
-
+          (org-agenda-start-with-follow-mode nil))
+         ("~/lib/fm/dionysus/agenda.html" "/ma:html/day/index.html"))
         ("A" "Daily planning view"
          ((agenda "day" ((org-agenda-ndays 1)
                          (org-agenda-time-grid nil)
                          (org-agenda-overriding-header "Plan for today & upcoming deadlines")))
-
+          (todo "TODO|NEXT" ((org-agenda-todo-ignore-scheduled t)
+                             (org-agenda-todo-ignore-deadlines 'far)
+                             (org-agenda-overriding-header "Unscheduled standalone tasks & project next actions")
+                             (org-agenda-skip-function 'spw/skip-projects-and-non-next-subprojects)))
           (agenda "" ((org-agenda-ndays 3)
                       (org-agenda-start-day "+1d")
                       (org-agenda-time-grid nil)
@@ -333,39 +331,27 @@ spaces in it and to remove any colons."
                       (org-agenda-entry-types '(:timestamp :sexp))
                       (org-agenda-show-all-dates nil)
                       (org-agenda-overriding-header "Coming up")
-                      (org-agenda-files (quote ("~/doc/org/diary.org")))))
-
-          (todo "TODO|NEXT" ((org-agenda-todo-ignore-scheduled t)
-                             (org-agenda-todo-ignore-deadlines nil)
-                             (org-agenda-overriding-header "Unscheduled standalone tasks & project next actions")
-                             (org-agenda-skip-function 'spw/skip-projects-and-non-next-subprojects))))
-
-         )
-
+                      (org-agenda-files (quote ("~/doc/org/diary.org")))))))
         ("#" "Weekly review view"
-
          ((todo "WAITING" ((org-agenda-todo-ignore-scheduled t)
                            (org-agenda-todo-ignore-deadlines nil)
                            (org-agenda-todo-ignore-with-date nil)
                            (org-agenda-overriding-header "Waiting on others & not scheduled to chase up")))
-
-          (todo "DONE|CANCELLED"
-                ((org-agenda-overriding-header "Tasks to be archived")
-                 (org-agenda-todo-ignore-scheduled nil)
-                 (org-agenda-todo-ignore-deadlines nil)
-                 (org-agenda-todo-ignore-with-date nil)
-                 (org-agenda-tag-filter-preset '("-APPT"))))
-
+          (todo "TODO" ((org-agenda-todo-ignore-with-date t)
+                        (org-agenda-overriding-header "Stuck projects")
+                        (org-agenda-skip-function 'spw/skip-non-stuck-projects)))
           (tags "LEVEL=1+REFILE"
                 ((org-agenda-todo-ignore-with-date nil)
                  (org-agenda-todo-ignore-deadlines nil)
                  (org-agenda-todo-ignore-scheduled nil)
                  (org-agenda-overriding-header "Items to add context and priority, and refile")
                  (org-agenda-start-with-entry-text-mode t)))
-
-          (todo "TODO" ((org-agenda-todo-ignore-with-date t)
-                        (org-agenda-overriding-header "Stuck projects")
-                        (org-agenda-skip-function 'spw/skip-non-stuck-projects)))))
+          (todo "DONE|CANCELLED"
+                ((org-agenda-overriding-header "Tasks to be archived")
+                 (org-agenda-todo-ignore-scheduled nil)
+                 (org-agenda-todo-ignore-deadlines nil)
+                 (org-agenda-todo-ignore-with-date nil)
+                 (org-agenda-tag-filter-preset '("-APPT"))))))
 
         ("d" "Six-month diary" agenda ""
          ((org-agenda-ndays 180)
@@ -375,29 +361,8 @@ spaces in it and to remove any colons."
           (org-agenda-entry-types '(:timestamp :sexp))
           (org-agenda-show-all-dates nil)
           (org-agenda-overriding-header "Sean's diary for the next six months")
-          (org-agenda-files (quote ("~/doc/org/diary.org")))
-          ) ("/ma:html/cal/index.html"))
-
-        ;; ("#" "Review view"
-        ;;  (
-
-        ;;                                 ; doesn't work per block, so this does nothing atm
-
-        ;; ;; A headline with TODO needs to be done so it should be
-        ;; ;; dated.  This block finds undated headlines.  Subprojects
-        ;; ;; are skipped because it is only if they are subprojects of
-        ;; ;; a TODO that they need to be scheduled; subtasks of a
-        ;; ;; SOONDAY might well be TODO, but they need not be
-        ;; ;; scheduled.  And projects with scheduled or deadlines
-        ;; ;; subprojects are skipped because actioning the project has
-        ;; ;; been scheduled or deadlined, which is sufficient.
-        ;; (todo "TODO" ((org-agenda-todo-ignore-with-date t)
-        ;;               (org-agenda-overriding-header "Undated TODO items: add schedule or deadline to the project or a subtask, or change keyword to SOONDAY")
-        ;;               (org-agenda-skip-function 'spw/skip-subprojects-and-projects-with-scheduled-or-deadlined-subprojects)))
-
-        ;;   (agenda "day" ((org-agenda-ndays 7) (org-agenda-overriding-header "Schedule undated into the following schedule") (org-agenda-time-grid nil)))) ((org-agenda-dim-blocked-tasks nil) (org-agenda-tag-filter-preset '("-REPEATED"))))
-
-        ))
+          (org-agenda-files (quote ("~/doc/org/diary.org"))))
+         ("~/lib/fm/dionysus/diary.html" "/ma:html/cal/index.html"))))
 
 ;;; sensible automatic tag filtering
 
