@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 . $HOME/.shenv
 
@@ -14,6 +14,17 @@ lisp=$(cat <<EOF
     (org-publish-project "blog"))
 EOF
     )
+
+webdav_dir ()
+{
+    local dir=$1
+    cd "$dir"
+    local files="./*"
+    cadaver https://myfiles.messagingengine.com/ <<EOF
+cd "$dir"
+mput $files
+EOF
+}
 
 # assume throughout we're on the MetaArray
 [ "$(hostname -f)" = "ma.sdf.org" ] \
@@ -31,7 +42,7 @@ done
 # 2. prepare publishing destinations
 
 # this is why this script cannot be executed locally!
-mkdir -p $HOME/lib/fm
+mkdir -p $HOME/lib/fm/{,dionysus/Agenda}
 # [ "$(ls -A $HOME/lib/fm)" ] \
 #     && echo >&2 "target dir not empty!" && exit 1
 
@@ -44,13 +55,10 @@ emacs -batch \
 
 # 4. cleanup
 
-# TODO: factor this publishing via cadaver out into a shell function
-cd $HOME/lib/fm/"Philos notes"
-files="./*"
-cadaver https://myfiles.messagingengine.com/ <<EOF
-cd "Philos notes"
-mput $files
-EOF
+cd $HOME/lib/fm
+webdav_dir "Philos notes"
+cd $HOME/lib/fm
+webdav_dir "dionysus/Agenda"
 rm -r $HOME/lib/fm/*
 
 rdate.py-dir $HOME/html/blog/entries
