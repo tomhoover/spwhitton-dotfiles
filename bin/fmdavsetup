@@ -24,3 +24,4 @@ if ! cat $HOME/.netrc 2>/dev/null | grep "myfiles\.messagingengine\.com" >/dev/n
     echo >>$HOME/.netrc "	login spwhitton@fastmail.com"
     echo >>$HOME/.netrc "	password '${pass}'"
 fi
+chmod 600 $HOME/.netrc
