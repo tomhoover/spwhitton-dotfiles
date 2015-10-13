@@ -1084,10 +1084,10 @@
               (load-file "~/.emacs.d/init-rcirc.el"))))
 
 ;;; zap-up-to-char is at least as useful as zap-to-char, so load it
-;;; out of misc.el.  Don't need M-m binding as have smarter C-a
+;;; out of misc.el.
 
 (use-package misc
-  :bind ("M-m" . zap-up-to-char))
+  :commands zap-up-to-char)
 
 ;;; make Emacs regexps easier
 
@@ -1950,6 +1950,44 @@ Ensures the kill ring entry always ends with a newline."
   (other-frame 1)
   (world-time-list))
 
+;; Make `C-x z' repeat zap-up-to-char without requiring typing the
+;; char again.  From Chris Done's Emacs config.
+
+(defvar zap-up-to-char-last-char nil
+  "The last char used with zap-up-to-char-repeateable.")
+(defvar zap-up-to-char-last-arg 0
+  "The last direction used with zap-up-to-char-repeateable.")
+(defun zap-up-to-char-repeatable (arg char)
+  "Case is ignored if `case-fold-search' is non-nil in the current buffer.
+  Goes backward if ARG is negative; error if CHAR not found."
+  (interactive (if (and (eq last-command 'zap-up-to-char-repeatable)
+                        (eq 'repeat real-this-command))
+                   (list zap-up-to-char-last-arg
+                         zap-up-to-char-last-char)
+                 (list (prefix-numeric-value current-prefix-arg)
+                       (read-char "Zap to char: " t))))
+  ;; Avoid "obsolete" warnings for translation-table-for-input.
+  (with-no-warnings
+    (if (char-table-p translation-table-for-input)
+        (setq char (or (aref translation-table-for-input char) char))))
+  (let ((start (point))
+        (end (save-excursion
+               (when (eq last-command 'zap-up-to-char-repeatable)
+                 (forward-char))
+               (search-forward (char-to-string char) nil nil arg)
+               (forward-char -1)
+               (point))))
+    (cond
+     ((and (eq last-command 'zap-up-to-char-repeatable)
+           (eq 'repeat real-this-command))
+      (let ((last-command 'kill-region))
+        (kill-region start end)))
+     (t
+      (kill-region start end))))
+  (setq zap-up-to-char-last-char char)
+  (setq zap-up-to-char-last-arg arg)
+  (setq this-command 'zap-up-to-char-repeatable))
+
 
 
 ;;;; ---- personal settings ----
@@ -1993,6 +2031,9 @@ Ensures the kill ring entry always ends with a newline."
 
 ;; copy current directory for use in a shell or moving a file in dired
 (bind-key "C-c D" 'spw/save-dir)
+
+;; don't need default M-m binding as have smarter C-a
+(bind-key "M-m" 'zap-up-to-char-repeatable)
 
 ;;; launching
 
