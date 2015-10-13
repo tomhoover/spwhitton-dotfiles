@@ -77,6 +77,17 @@ spaces in it and to remove any colons."
     (insert name)
     (yas-next-field)))
 
+(defun spw/fmr-sync-doc ()
+  "Perform `mr sync' command in ~/doc/."
+  (interactive)
+  (let ((default-directory (expand-file-name "~/doc/"))
+        (buffer (get-buffer "*mr sync*")))
+    (when buffer
+      (with-current-buffer buffer
+        (delete-region (point-min) (point-max))))
+    (call-process-shell-command "mr" nil "*mr sync*" t "sync")
+    (display-buffer "*mr sync*")))
+
 
 
 ;;;; ---- preferences ----
