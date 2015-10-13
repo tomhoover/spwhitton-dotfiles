@@ -58,7 +58,7 @@ if ! [ -d "$HOME/src/dotfiles/.git" ]; then
     cp $HOME/src/dotfiles/{.zshrc,.shenv} $HOME # instead
 fi
 pkill firefox
-/Applications/Firefox.app/Contents/MacOS/firefox -private-window >/dev/null 2>/dev/null &
+/Applications/Firefox.app/Contents/MacOS/firefox -private-window http://u.arizona.edu/~spwhitton/bookmarks.shtml >/dev/null 2>/dev/null &
 mkdir -p $HOME/.ssh
 cp $USB/lib/{id_putty,known_hosts,config} $HOME/.ssh
 chmod 600 $HOME/.ssh/id_putty
