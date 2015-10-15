@@ -112,6 +112,7 @@ spaces in it and to remove any colons."
       org-tag-alist '((:startgroup)
                       ("@libDASL" . ?l)
                       ("@Tucson" . ?e)
+                      ("@campus" . ?m)
                       ("@Sheffield" . ?u)
                       ("@E5thSt" . ?h)
                       (:endgroup))
