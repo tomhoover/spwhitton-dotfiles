@@ -387,6 +387,8 @@ spaces in it and to remove any colons."
          (not (string= (system-name) "artemis.silentflame.com")))
         ((string= tag "@sheffield")
          (not (string= (system-name) "zephyr.silentflame.com")))
+        ((string= tag "@campus")
+         (string= (system-name) "artemis.silentflame.com"))
         ((string= tag "@libdasl")
          (not (string= (system-name) "ma.sdf.org"))))
        (concat "-" tag)))
