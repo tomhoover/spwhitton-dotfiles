@@ -632,7 +632,7 @@
 
   :config
   ;; This binding replaces a `markdown-export'.
-  (bind-key "C-c C-c e" 'spw/pandoc-paper-compile markdown-mode-map))
+  (bind-key "C-c M-e" 'spw/pandoc-paper-compile markdown-mode-map))
 
 ;;; RefTeX
 
@@ -1850,12 +1850,13 @@ Passes ARG to `projectile-switch-project-by-name'."
 
 If ARG, put into my annex instead.
 
-Lightweight alternative to pandoc-mode.
+Lightweight alternative to both pandoc-mode ox-pandoc.el.
 
-Generates calls to pandoc that look like this: pandoc -s --filter pandoc-citeproc --bibliography=$HOME/doc/spw.bib --filter pandoc-citeproc-preamble --template pessay -V documentclass=pessay input.md -o output.pdf"
+Generates calls to pandoc that look like this: pandoc -s --filter pandoc-citeproc --bibliography=$HOME/doc/spw.bib --filter pandoc-citeproc-preamble --template pessay -V documentclass=pessay input.[md|org] -o output.pdf"
   (interactive "P")
   (when (and (string= default-directory (expand-file-name "~/doc/papers/"))
-             (eq major-mode 'markdown-mode))
+             (or (eq major-mode 'markdown-mode)
+                 (eq major-mode 'org-mode)))
     (let ((output-file (f-join (if arg "~/lib/annex/doc/papers" "~/tmp")
                                (f-filename (f-swap-ext (buffer-file-name) "pdf")))))
       (when (and arg (f-symlink? output-file))

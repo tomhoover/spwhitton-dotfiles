@@ -1119,5 +1119,9 @@ This function is run automatically after each state change to a DONE state."
 
 (define-key org-read-date-minibuffer-local-map (kbd "ESC") 'abort-recursive-edit)
 
+;;; export essays via Pandoc not ox.el
+
+(bind-key "C-c M-e" 'spw/pandoc-paper-compile org-mode-map)
+
 (provide 'init-org)
 ;;; init-org.el ends here
