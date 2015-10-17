@@ -74,6 +74,7 @@ myPrefixedKeys = [ ("i", spawn "xmousetidy")
                  , ("g m", spawn $ inMyTerm "mutt")
                  , ("g t", spawn $ inMyTerm "ii")
                  , ("g c", spawn $ inMyTerm "ncmpcpp") -- 'c' for chaones
+                 , ("g v", spawn $ inMyTerm "alsamixer")
                  -- , ("g f", spawn "sh -c 'wmctrl -a Messenger || messengerfordesktop'")
 
                    -- window management
