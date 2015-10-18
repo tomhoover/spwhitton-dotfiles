@@ -364,7 +364,7 @@ manage to do this by itself on the MetaArray alone."
                  (org-agenda-overriding-header "Items to add context and priority, and refile")
                  (org-agenda-start-with-entry-text-mode t)))
           (todo "DONE|CANCELLED"
-                ((org-agenda-overriding-header "Tasks to be archived")
+                ((org-agenda-overriding-header "Tasks to be archived CAREFUL DON'T ARCHIVE SUBTASKS OF INCOMPLETE PROJECTS")
                  (org-agenda-todo-ignore-scheduled nil)
                  (org-agenda-todo-ignore-deadlines nil)
                  (org-agenda-todo-ignore-with-date nil)
