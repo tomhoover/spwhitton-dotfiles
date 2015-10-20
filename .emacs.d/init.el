@@ -126,7 +126,7 @@
 
 ;; focus follow mouse
 (setq mouse-autoselect-window nil
-      focus-follows-mouse nil)
+      focus-follows-mouse window-system)
 
 ;; y/n rather than yes/no
 (fset 'yes-or-no-p 'y-or-n-p)
