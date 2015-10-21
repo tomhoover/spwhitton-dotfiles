@@ -89,6 +89,7 @@ myPrefixedKeys = [ ("i", spawn "xmousetidy")
 
 myUnprefixedKeys = [ ("M4-j", windows W.focusDown)
                    , ("M4-k", windows W.focusUp)
+                   , ("M4-S-i", kill)
 
                      -- Amazon Basics keyboard
                    , ("<XF86Tools>", spawn $ inMyTerm "ncmpcpp")
