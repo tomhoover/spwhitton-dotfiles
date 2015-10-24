@@ -6,7 +6,7 @@ skelhere ()
     usbpubkeys
     mkdir -p doc bin
     cp -RLf ~/lib/annex/big/skel/usb/* .
-    cp ~/bin/apple-setup.sh bin
+    cp ~/bin/{apple,dasl}-setup.sh bin
     cp -L ~/lib/pro.terminal lib
 }
 
