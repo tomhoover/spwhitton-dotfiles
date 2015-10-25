@@ -121,6 +121,7 @@ manage to do this by itself on the MetaArray alone."
                       ("@campus" . ?m)
                       ("@Sheffield" . ?u)
                       ("@E5thSt" . ?h)
+                      ("@www" . ?i)
                       (:endgroup))
 
       ;; enable speed commands and bind N to narrow to subtree
