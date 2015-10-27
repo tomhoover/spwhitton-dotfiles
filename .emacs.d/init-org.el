@@ -321,7 +321,10 @@ manage to do this by itself on the MetaArray alone."
 
 (defadvice org-agenda (before persp-org-agenda activate)
   "Switch perspective project before compiling the agenda."
-  (projectile-switch-project-by-name "~/doc"))
+  ;; don't do it if we're already there so that the buffer we're
+  ;; switching from remains top of the buffer list
+  (unless (string= "~/doc/" (abbreviate-file-name (projectile-project-root)))
+    (projectile-switch-project-by-name "~/doc")))
 
 (setq org-agenda-custom-commands
       '(("a" "Primary agenda view"
