@@ -68,7 +68,7 @@
 The purpose of this function is to allow that name easily to have
 spaces in it and to remove any colons."
   (interactive "sTitle: ")
-  (let ((sanitised (replace-regexp-in-string ":" "," name)))
+  (let ((sanitised (replace-regexp-in-string "\?" "" (replace-regexp-in-string ":" "," name))))
     (find-file (expand-file-name
                 (concat sanitised ".org")
                 (f-join org-directory "philos")))
