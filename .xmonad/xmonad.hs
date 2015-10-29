@@ -89,6 +89,10 @@ myPrefixedKeys = [ ("i", spawn "xmousetidy")
 myUnprefixedKeys = [ ("M4-j", windows W.focusDown)
                    , ("M4-k", windows W.focusUp)
 
+                     -- Amazon Basics keyboard
+                   , ("<XF86Tools>", spawn $ inMyTerm "ncmpcpp")
+                   , ("<XF86Explorer>", spawn "thunar")
+
                      -- When locking the screen, also clear out my SSH
                      -- key.  Otherwise it lasts until I log off.  See
                      -- GNOME bugzilla bug #525574.  Note that PGP

@@ -2309,6 +2309,9 @@ ARG, PRED ignored."
 (setq calc-line-numbering nil)
 (put 'narrow-to-region 'disabled nil)
 
+;; on my "Amazon Basics" keyboard
+(bind-key "<XF86Calculator>" 'calc)
+
 ;;; javascript
 
 ;; don't insert a newline after a semicolon
