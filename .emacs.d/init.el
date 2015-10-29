@@ -1772,9 +1772,9 @@ With arg ARG, put shell in current window."
   "Clone current perspective with the name NEW-NAME."
   (interactive "sNew name: \n")
   (make-persp
-    :name new-name
-    :buffers (persp-buffers persp-curr)
-    :window-configuration (current-window-configuration))
+   :name new-name
+   :buffers (persp-buffers persp-curr)
+   :window-configuration (current-window-configuration))
   (persp-switch new-name))
 
 (defun spw/align-dwim ()
@@ -2152,7 +2152,7 @@ Ensures the kill ring entry always ends with a newline."
   (if (equal major-mode 'python-mode)
       `no-indent'
     nil))
-;(add-hook 'electric-indent-functions 'electric-indent-ignore-python)
+;;(add-hook 'electric-indent-functions 'electric-indent-ignore-python)
 
 ;; browser
 (setq browse-url-generic-program "iceweasel"
