@@ -1000,11 +1000,11 @@ manage to do this by itself on the MetaArray alone."
                                    ;; make space work from the agenda to cycle the actual tree in the split
                                    (define-key org-agenda-mode-map " " 'org-agenda-cycle-show)))
 
-(defadvice org-agenda (after spw/open-weekday-schedule)
-  (when (and window-system
-             (not (get-buffer-window "fall_2015_weekday_schedule.org" 0))
-             (y-or-n-p "Also load Fall 2015 weekday schedule?"))
-    (find-file-other-window "~/doc/org/fall_2015_weekday_schedule.org")))
+;; (defadvice org-agenda (after spw/open-weekday-schedule)
+;;   (when (and window-system
+;;              (not (get-buffer-window "fall_2015_weekday_schedule.org" 0))
+;;              (y-or-n-p "Also load Fall 2015 weekday schedule?"))
+;;     (find-file-other-window "~/doc/org/fall_2015_weekday_schedule.org")))
 
 ;; Redefine `org-auto-repeat-maybe' with abo-abo's patch from
 ;; <http://stackoverflow.com/a/18125783> so that when a task is both
