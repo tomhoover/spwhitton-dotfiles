@@ -85,3 +85,6 @@ xpdf*background:        #3a3a3a
 xpdf*urlCommand:        /home/swhitton/bin/ilinks %s
 xpdf*matteColor:        #3a3a3a
 
+! ---- xscreensaver
+
+xscreensaver.timeout: 0:20:00
