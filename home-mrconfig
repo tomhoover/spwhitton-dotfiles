@@ -300,6 +300,11 @@ sync = git annex sync ma
 # instead of 'mr'
 skip = lazy || fast
 
+# --- personal website big files annex
+
+[lib/wikiannex]
+checkout = git clone git@spwhitton.name:wikiannex.git
+
 # --- git annex for use with rtorrent
 
 [lib/rt]
