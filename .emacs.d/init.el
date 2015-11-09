@@ -32,7 +32,7 @@
    (diminish               . "melpa-stable")
    ;; (f                      . "melpa-stable")
    (s                      . "melpa-stable")
-   (dash                   . "melpa-stable")
+   ;; (dash                   . "melpa-stable")
    (expand-region          . "melpa-stable")
    (smartparens            . "melpa-stable")
    (magit                  . "melpa-stable")
