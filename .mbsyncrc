@@ -66,14 +66,18 @@ Slave            :fmmaildir:drafts
 # Master           :fmimap:INBOX/Trash
 # Slave            :fmmaildir:trash
 
-Channel          debian
-Master           :fmimap:INBOX/Lists/Debian
-Slave            :fmmaildir:debian
+# Channel          debian
+# Master           :fmimap:INBOX/Lists/Debian
+# Slave            :fmmaildir:debian
 
-# notes from tablet computer
-Channel          notes
-Master           :fmimap:INBOX/Notes
-Slave            :fmmaildir:notes
+Channel          feeds
+Master           :fmimap:INBOX/Feeds
+Slave            :fmmaildir:feeds
+
+# # notes from tablet computer
+# Channel          notes
+# Master           :fmimap:INBOX/Notes
+# Slave            :fmmaildir:notes
 
 Group            fastmail
 Channel          fmaili
@@ -81,5 +85,6 @@ Channel          fmails
 Channel          fmaild
 # Channel          fmailt
 # Channel          fmaila
-Channel          debian
-Channel          notes
+# Channel          debian
+# Channel          notes
+Channel          feeds
