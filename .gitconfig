@@ -23,18 +23,27 @@
 	pager = 
 	excludesfile = ~/.globgitignore
 
-# my personal repositories cloned via HTTP must be pushed via SSH
-[url "ssh://ma/~/local/git/"]
-     pushInsteadOf = http://spw.sdf.org/git/
-# github pulling and pushing should be correct however I refer to the
-# repo when cloning
+[url "git@spwhitton.name:"]
+     pushInsteadOf = https://git.spwhitton.name/
+     pushInsteadOf = athena:
+[url "https://git.spwhitton.name/"]
+     insteadOf = git://spwhitton.name/
+     insteadOf = athena:
+
 [url "git@github.com:"]
     pushInsteadOf = https://github.com/
     pushInsteadOf = http://github.com/
     pushInsteadOf = git://github.com/
     pushInsteadOf = github:
-[url "git://github.com/"]
+[url "https://github.com/"]
+    insteadOf = https://github.com/
+    insteadOf = http://github.com/
+    insteadOf = git://github.com/
     insteadOf = github:
+
+# temporary redirect
+# [url "git@spwhitton.name:"]
+#      insteadOf = http://spw.sdf.org/git/
 
 # turn colour on in as many places as possible
 [color]
