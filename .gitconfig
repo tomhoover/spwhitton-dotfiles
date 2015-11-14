@@ -41,9 +41,12 @@
     insteadOf = git://github.com/
     insteadOf = github:
 
-# temporary redirect
-# [url "git@spwhitton.name:"]
-#      insteadOf = http://spw.sdf.org/git/
+# temporary redirects
+[url "git@spwhitton.name:dotfiles.git"]
+     insteadOf = https://github.com/spwhitton/dotfiles.git
+     pushInsteadOf = https://github.com/spwhitton/dotfiles.git
+# [url "git@spwhitton.name:propellor.git"]
+#      insteadOf = https://github.com/spwhitton/propellor.git
 
 # turn colour on in as many places as possible
 [color]
