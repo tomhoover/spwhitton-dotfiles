@@ -107,7 +107,7 @@ lib =
         MR_NAME=dotfiles
 
 stowable = true
-checkout = git clone git://github.com/spwhitton/dotfiles.git dotfiles
+checkout = git clone https://git.spwhitton.name/dotfiles.git dotfiles
 update =
     # always make a go of updating master
     branch="$(git rev-parse --abbrev-ref HEAD)"
@@ -250,7 +250,7 @@ pre_stow = mkdir -p ~/.gnupg
 [src/propellor]
 # This URL needs to be one that will work without my ~/.gitconfig
 # insteadOf rewriting rules in place
-checkout = git clone https://github.com/spwhitton/propellor.git propellor --branch spwconf
+checkout = git clone https://git.spwhitton.name/propellor propellor --branch spwconf
 
 # Get a sandbox going.  Dependencies should already be in place with
 # system-wide propellor package.
@@ -349,7 +349,7 @@ chain = ! [ "${MR_FAST}" = "true" ]
 skip = ! [ "$MR_ACTION" = "stowable" ]
 
 [src/srem]
-checkout = git clone github:spwhitton/srem.git srem
+checkout = git clone https://git.spwhitton.name/srem.git srem
 post_checkout = ln -s $HOME/src/srem/dist/build/srem/srem $HOME/local/bin/srem
 skip = lazy
 
