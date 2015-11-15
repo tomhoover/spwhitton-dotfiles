@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # backup to removable, offline media
 
@@ -63,16 +63,25 @@ for repo in $repos; do
     fi
 done
 
+# Stage 1.5 : Backup repos hosted on athena
+
+# TODO: don't use ls here (see http://mywiki.wooledge.org/ParsingLs)
+
+repos=$(ssh athena ls /home/git)
+for repo in $repos; do
+    status processing $repo from athena
+    if [ "$repo" = "priv.git" -o "$repo" = "annex.git" -o "$repo" = "rt.git" ]; then
+        gitbk gcrypt::git@spwhitton.name:${repo%.*} $DEST/athena
+    else
+        gitbk git@spwhitton.name:${repo%.*} $DEST/athena
+    fi
+done
+
 # Stage 2 : Backup some repos hosted on github (the ones I care about).
 
 # TODO: consider using joeyh's github-backup program
 
-githubbk spwhitton/dotfiles.git
 githubbk spwhitton/propellor.git
-githubbk spwhitton/sariulclocks.git
-githubbk spwhitton/srem.git
-githubbk spwhitton/oso2pdf.git
-githubbk spwhitton/pandoc-citeproc-preamble.git
 
 # Stage 3 : Backup other repos ad hoc
 
