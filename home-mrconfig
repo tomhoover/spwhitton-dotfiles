@@ -379,22 +379,6 @@ sync =
         doccheckin && git pull && git push
     fi
 
-# after pulling, update the online copy of my Org-mode agenda
-# currently disabled because it's slow and with a computer at work I've not been checking this online copy
-# post_update = echo -n "Updating web calendar... ";emacs -batch -l ~/.emacs.d/init.el -eval "(org-batch-store-agenda-views)" >/dev/null 2>/dev/null;echo "hopefully done."
-
-[doc/www]
-order = 5
-checkout = git clone 'ssh://ma/~/local/git/doc.www.git' 'www'
-update = git pull "$@"
-skip = ! ( mine || on spw@ma ) || win32
-
-[doc/www/blog]
-order = 6
-checkout = git clone 'ssh://ma/~/local/git/doc.www.blog.git' 'blog'
-update = git pull "$@"
-skip = ! ( mine || on spw@ma ) || win32
-
 # --- static websites
 
 [public_html]
