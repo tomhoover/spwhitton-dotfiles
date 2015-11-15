@@ -395,6 +395,16 @@ checkout = git clone 'ssh://ma/~/local/git/doc.www.blog.git' 'blog'
 update = git pull "$@"
 skip = ! ( mine || on spw@ma ) || win32
 
+# --- static websites
+
+[public_html]
+clone git clone https://git.spwhitton.name/sageweb.git public_html
+skip = ! on spwhitton@sage
+
+[html]
+clone git clone https://git.spwhitton.name/sdfweb.git html
+skip = ! on spw@ma
+
 # --- my offline e-mail (& machine's postfix queue)
 
 [.fmail]
