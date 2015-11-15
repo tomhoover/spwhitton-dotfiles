@@ -71,6 +71,7 @@ repos=$(ssh athena ls /home/git)
 for repo in $repos; do
     status processing $repo from athena
     if [ "$repo" = "priv.git" -o "$repo" = "annex.git" -o "$repo" = "rt.git" ]; then
+        # might need a ssh:// and a /~/ in here to work with gcrypt
         gitbk gcrypt::git@spwhitton.name:${repo%.*} $DEST/athena
     else
         gitbk git@spwhitton.name:${repo%.*} $DEST/athena
