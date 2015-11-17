@@ -82,7 +82,7 @@ lib =
         return 1
     }
     mine() {
-        on swhitton@artemis || on swhitton@zephyr || on swhitton@SPWHITTON
+        on swhitton@artemis || on swhitton@zephyr || on swhitton@SPWHITTON || on swhitton@athena
     }
     gcrypt() {
         which git-remote-gcrypt >/dev/null 2>/dev/null
@@ -212,7 +212,7 @@ pre_unstow = fix_gtk_bookmarks
 pre_restow = fix_gtk_bookmarks
 pre_update = fix_gtk_bookmarks
 
-# --- private dotfiles repository
+# --- private dotfiles repositories
 
 [src/priv]
 lib =
@@ -242,8 +242,21 @@ autoci =
         git add .passwddb.pet .labbook.gpg
         git commit -a -m "auto passwddb and labbook commit on $(hostname -s)" || true
 
-# since dotfiles repo also stows into ~/.gnupg, make the dir first
-pre_stow = mkdir -p ~/.gnupg
+# since dotfiles repo also stows into ~/.gnupg, and athpriv repo stows
+# into ~/.duply, make the dirs first
+pre_stow = mkdir -p ~/.gnupg ~/.duply
+
+[src/athpriv]
+lib =
+        # manually set a variable that aspiers' outdated fork of mr
+        # sets, that his kitenet-mr stow library needs
+        MR_NAME=athpriv
+stowable = true
+checkout = git clone athenap:athpriv athpriv
+skip = ! mine
+
+# since priv repo also stows into ~/.gnupg, make the dir first
+pre_stow = mkdir -p ~/.duply
 
 # --- hosts configuration
 
