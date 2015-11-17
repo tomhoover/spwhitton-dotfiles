@@ -12,6 +12,16 @@ cd $HOME
 # where but I see the output of find failing to find this dir
 mkdir -p $HOME/local/src
 
+# On athena, clone URLs are different as they come from /home/git (and
+# pushInsteadOf won't work because that can't append the required
+# `.git').  So we must change to the athena branch now in order to get
+# a fixed .mrconfig.
+if [ "$(hostname)" = "athena" ]; then
+    cd $HOME/src/dotfiles
+    git checkout athena
+    cd $HOME
+fi
+
 # 1. install our two small helper scripts
 
 if ! which stow >/dev/null; then
