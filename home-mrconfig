@@ -317,6 +317,11 @@ skip = lazy || fast
 
 [lib/wikiannex]
 checkout = git clone git@spwhitton.name:wikiannex.git
+status = git annex status       # direct mode on athena, so status won't work
+post_checkout =
+    if [ "$(hostname -s)" = "athena" ]; then
+       git annex direct
+    fi
 
 # --- git annex for use with rtorrent
 
