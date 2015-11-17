@@ -1,3 +1,6 @@
+#*/15 * * * * chronic doccheckin
+@hourly chronic mbsync fastmail
+
 # ikiwiki midnight maintenance: update day on calendar marked as today, and fix typography
 0 0 * * * ikiwiki --setup /home/swhitton/src/athpriv/spwhitton.setup --refresh --typographyattributes=2
 
