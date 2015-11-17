@@ -49,4 +49,10 @@ case "$(hostname -f)" in
              $HOME/bin/duply artemis-swhitton-home-run backup_purge --force
         fi
         ;;
+    "athena.silentflame.com")
+        # use our own compiled version in order to get --s3-use-ia
+        export PYTHONPATH='/root/local/lib/python2.7/site-packages/'
+	export PATH=/root/local/bin:$PATH
+	duply athena-root-run backup
+        ;;
 esac
