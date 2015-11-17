@@ -23,3 +23,4 @@
 /.config/gtk-3.0/bookmarks
 /.config/systemd/user/default.target.wants/mpd.service
 /.irssi/config
+/.zsh/cache
