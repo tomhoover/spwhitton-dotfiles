@@ -72,6 +72,7 @@ myPrefixedKeys = [ ("i", spawn "xmousetidy")
                  , ("g g", spawn myTerm)
                  -- , ("g m", spawn $ inMyTerm "sh -c 'offline || mbsync fastmail; mutt'")
                  , ("g m", spawn $ inMyTerm "mutt")
+                 , ("g r", spawn $ inMyTerm "mutt -f ~/.fmail/feeds") -- 'r' for 'rss'
                  , ("g t", spawn $ inMyTerm "ii")
                  , ("g c", spawn $ inMyTerm "ncmpcpp") -- 'c' for chaones
                  , ("g v", spawn $ inMyTerm "alsamixer")
