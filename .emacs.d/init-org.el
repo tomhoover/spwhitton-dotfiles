@@ -331,7 +331,7 @@ spaces in it and to remove any colons."
          ((org-agenda-start-with-log-mode nil)
           ;; (org-agenda-tag-filter-preset '("-Sariul"))
           (org-agenda-start-with-follow-mode nil))
-         ("~/lib/fm/dionysus/agenda.html" "/ma:html/day/index.html"))
+         ("/var/www/spw/org/agenda.html"))
         ("A" "Daily planning view"
          ((agenda "day" ((org-agenda-ndays 1)
                          (org-agenda-time-grid nil)
@@ -347,7 +347,9 @@ spaces in it and to remove any colons."
                       (org-agenda-entry-types '(:timestamp :sexp))
                       (org-agenda-show-all-dates nil)
                       (org-agenda-overriding-header "Coming up")
-                      (org-agenda-files (quote ("~/doc/org/diary.org")))))))
+                      (org-agenda-files (quote ("~/doc/org/diary.org"))))))
+         nil
+         ("/var/www/spw/org/full.html"))
         ("#" "Weekly review view"
          ((todo "WAITING" ((org-agenda-todo-ignore-scheduled t)
                            (org-agenda-todo-ignore-deadlines nil)
@@ -378,7 +380,7 @@ spaces in it and to remove any colons."
           (org-agenda-show-all-dates nil)
           (org-agenda-overriding-header "Sean's diary for the next six months")
           (org-agenda-files (quote ("~/doc/org/diary.org"))))
-         ("~/lib/fm/dionysus/diary.html" "/ma:html/cal/index.html"))))
+         ("/var/www/spw/org/diary.html"))))
 
 ;;; sensible automatic tag filtering
 
@@ -707,7 +709,7 @@ spaces in it and to remove any colons."
 ;; following is purely so that we can export my Org files to
 ;; the desktop, not just into ~/doc/org
 (add-to-list 'org-publish-project-alist
-             '("spw-doc"
+             '("doc"
                :base-directory "~/doc/org"
                :base-extension "org"
                :publishing-function org-latex-publish-to-pdf
@@ -726,7 +728,7 @@ spaces in it and to remove any colons."
                :base-directory "~/doc/org/philos"
                :base-extension "org"
                :recursive nil
-               :publishing-directory "~/lib/fm/Philos notes"
+               :publishing-directory "~/lib/fm/dionysus/Philos notes"
                :publishing-function org-html-publish-to-html
                :auto-sitemap t
                :sitemap-filename "index.html"
@@ -741,19 +743,39 @@ spaces in it and to remove any colons."
                             "</style>")))
 
 (add-to-list 'org-publish-project-alist
-             '("spw-wiki"
+             `("org-dav"
                :base-directory "~/doc/org"
                :base-extension "org"
                :recursive nil
-               :publishing-directory "/meta/www/s/spw/wiki"
+               :publishing-directory "~/lib/fm/dionysus/Org docs"
+               :publishing-function org-html-publish-to-html
+               :auto-sitemap t
+               :sitemap-filename "123Index.html"
+               :sitemap-title "Sean's ~/doc"
+               :html-head ,(concat
+                            "<style type=\"text/css\">"
+                            (when (f-exists? "~/doc/org/worg.css")
+                              (with-temp-buffer
+                                (insert-file-contents "~/doc/org/worg.css")
+                                (buffer-string)))
+                            "</style>")
+               :html-head-include-default-style nil
+               :table-of-contents t))
+
+(add-to-list 'org-publish-project-alist
+             '("org-web"
+               :base-directory "~/doc/org"
+               :base-extension "org"
+               :recursive nil
+               :publishing-directory "/var/www/spw/org"
                :publishing-function org-html-publish-to-html
                :auto-sitemap t
                :sitemap-filename "index.html"
                :sitemap-title "Sean's ~/doc"
-               :html-head "<link rel=\"stylesheet\" title=\"Worg\" href=\"/inc/worg.css\" type=\"text/css\">
-<link rel=\"alternate stylesheet\" title=\"Zenburn\" href=\"/inc/worg-zenburn.css\" type=\"text/css\">
-<link rel=\"icon\" href=\"/inc/org-mode-unicorn.ico\" type=\"image/vnd.microsoft.icon\" />
-<link rel=\"SHORTCUT ICON\" href=\"https://spw.sdf.org/inc/org-mode-unicorn.ico\" type=\"image/vnd.microsoft.icon\" />"
+               :html-head "<link rel=\"stylesheet\" title=\"Worg\" href=\"/org/worg.css\" type=\"text/css\">
+<link rel=\"alternate stylesheet\" title=\"Zenburn\" href=\"/org/worg-zenburn.css\" type=\"text/css\">
+<link rel=\"icon\" href=\"/org/org-mode-unicorn.ico\" type=\"image/vnd.microsoft.icon\" />
+<link rel=\"SHORTCUT ICON\" href=\"https://spwhitton.name/org/org-mode-unicorn.ico\" type=\"image/vnd.microsoft.icon\" />"
                :html-preamble "<script type=\"text/javascript\">
     document.addEventListener('DOMContentLoaded',function() {
         document.getElementById(\"table-of-contents\").onclick = function() {
@@ -762,9 +784,17 @@ spaces in it and to remove any colons."
         }
     });
 </script>
-<p><a href=\"/wiki\">Personal wiki index</a> &middot; <a href=\"/wiki/agenda.html\">Daily agenda view</a> &middot; <a href=\"/wiki/cal.html\">Three month diary</a></p>"
+<p><a href=\"/org\">Personal wiki index</a> &middot; <a href=\"/org/agenda.html\">Daily agenda view</a> &middot; <a href=\"/org/full.html\">Full agenda view</a> &middot; <a href=\"/org/diary.html\">Three month diary</a></p>"
                :html-head-include-default-style nil
                :table-of-contents t))
+
+(add-to-list 'org-publish-project-alist
+             '("org-web-static"
+               :base-directory "~/doc/org"
+               :base-extension "css\\|ico"
+               :recursive nil
+               :publishing-directory "/var/www/spw/org"
+               :publishing-function org-publish-attachment))
 
 (defun spw/cleanup-org-pdfs ()
   (interactive)

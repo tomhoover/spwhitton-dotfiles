@@ -1,0 +1,54 @@
+#!/bin/sh
+
+HOME=/home/swhitton
+
+. $HOME/.shenv
+
+# 1. prepare the union mount
+
+if ! [ -d "$HOME/local/src/org-publish/doc" ]; then
+    mkdir -p $HOME/local/src/org-publish
+    git clone /home/git/doc.git $HOME/local/src/org-publish/doc
+else
+    cd $HOME/local/src/org-publish/doc
+    git pull -f
+fi
+if ! mount | grep "lib/fm" >/dev/null; then
+    mount $HOME/lib/fm
+fi
+mkdir -p /var/www/spw/org
+
+#TEMP=$(mktemp -d)
+if [ -e "/tmp/org-work" ]; then
+    # we cannot use our own `mktemp -d' because Org hardcodes paths to
+    # source files in its timestamps cache
+    echo "another instance of the Org publishing script is running or crashed"
+    exit
+else
+    mkdir /tmp/org-work
+    TEMP="/tmp/org-work"
+fi
+unionfs-fuse $HOME/local/src/org-publish=RW:$HOME=RW $TEMP
+
+# 2. change to the union mount and run Emacs
+
+HOME=$TEMP
+export HOME
+lisp=$(cat <<EOF
+(progn
+        (org-batch-store-agenda-views)
+        (org-publish-project "org-web")
+        (org-publish-project "org-web-static")
+        (org-publish-project "org-dav")
+        (org-publish-project "philos"))
+EOF
+    )
+chronic emacs -batch \
+    -l $HOME/.emacs.d/init.el \
+    -l $HOME/.emacs.d/init-org.el \
+    -eval "$lisp"
+
+# 3. cleanup
+
+fusermount -u $TEMP
+rmdir $TEMP
