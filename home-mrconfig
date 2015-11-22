@@ -328,6 +328,7 @@ post_checkout =
     if [ "$(hostname -s)" = "athena" ]; then
        git annex direct
     fi
+skip = ! mine
 
 # --- git annex for use with rtorrent
 
@@ -411,7 +412,7 @@ skip = ! on spwhitton@sage
 
 [html]
 clone = git clone https://git.spwhitton.name/sdfweb html
-skip = ! on spw@ma
+skip = ! on faeroes
 
 # --- my offline e-mail (& machine's postfix queue)
 
