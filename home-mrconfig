@@ -188,8 +188,8 @@ fixups =
 # symlink.  That way Emacs junk that gets dumped in ~/.emacs.d doesn't
 # have to be put into .gitignore.  Similarly the XDG autostart folder,
 # .ssh and lib and more
-pre_stow = $HOME/src/dotfiles/bin/unskel; mkdir -p ~/.emacs.d ~/.config/autostart ~/.ssh ~/lib ~/.cabal ~/.config/xfce4/desktop ~/.config/xfce4/xfconf/xfce-perchannel-xml ~/.gnupg ~/.config/Thunar
-pre_checkout = mkdir -p ~/.emacs.d  ~/.config/autostart ~/.ssh ~/lib ~/.cabal ~/.xmonad ~/.config/xfce4/desktop ~/.config/xfce4/xfconf/xfce-perchannel-xml ~/.gnupg ~/.config/Thunar
+pre_stow = $HOME/src/dotfiles/bin/unskel; mkdir -p ~/.emacs.d ~/.config/autostart ~/.ssh ~/lib ~/.cabal ~/.config/xfce4/desktop ~/.config/xfce4/xfconf/xfce-perchannel-xml ~/.gnupg ~/.config/Thunar ~/.irssi
+pre_checkout = mkdir -p ~/.emacs.d  ~/.config/autostart ~/.ssh ~/lib ~/.cabal ~/.xmonad ~/.config/xfce4/desktop ~/.config/xfce4/xfconf/xfce-perchannel-xml ~/.gnupg ~/.config/Thunar ~/.irssi
 
 # GTK insists on replacing the symlink to its bookmarks file with the
 # actual file even if the bookmarks in that file don't change (XFCE
@@ -256,7 +256,7 @@ checkout = git clone athenap:athpriv athpriv
 skip = ! mine
 
 # since priv repo also stows into ~/.gnupg, make the dir first
-pre_stow = mkdir -p ~/.duply
+pre_stow = mkdir -p ~/.duply ~/.irssi
 
 # --- hosts configuration
 

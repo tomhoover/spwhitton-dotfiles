@@ -2,13 +2,11 @@
 
 . $HOME/.shenv
 
-if [ "$(hostname -f)" = "ma.sdf.org" ]; then
+if [ "$(hostname -f)" = "athena.silentflame.com" ]; then
     # start irssi under dtach if it's not running
     if ! pgrep -u $LOGNAME irssi >/dev/null; then
         rm -f $HOME/local/irssi.dtach.socket
-        bitlbee_startup
-        sleep 10
-        TZ=MST dtach -n $HOME/local/irssi.dtach.socket junest irssi
+        TZ=MST dtach -n $HOME/local/irssi.dtach.socket irssi
     fi
     
     # if we're not at a dumb terminal (so this script can be shoved in a
@@ -20,5 +18,5 @@ if [ "$(hostname -f)" = "ma.sdf.org" ]; then
     fi
 else
     # on a workstation, get connected to ma
-    softbeep ssh -t ma dtach -a local/irssi.dtach.socket
+    softbeep ssh -t athena dtach -a local/irssi.dtach.socket
 fi
