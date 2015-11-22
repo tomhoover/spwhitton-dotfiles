@@ -78,10 +78,7 @@ spaces in it and to remove any colons."
     (yas-next-field)))
 
 (defun spw/fmr-sync-doc ()
-  "Perform `mr sync' command in ~/doc.
-
-When run on the MetaArray, revert all buffers because Emacs doesn't
-manage to do this by itself on the MetaArray alone."
+  "Perform `mr sync' command in ~/doc."
   (interactive)
   (org-save-all-org-buffers)
   (let ((default-directory (expand-file-name "~/doc/"))
@@ -89,9 +86,7 @@ manage to do this by itself on the MetaArray alone."
     (with-current-buffer buffer
       (delete-region (point-min) (point-max)))
     (display-buffer "*mr sync*")
-    (async-shell-command "madocsync" "*mr sync*"))
-  (when (string= (system-name) "ma.sdf.org")
-    (org-revert-all-org-buffers)))
+    (async-shell-command "remdocsync" "*mr sync*")))
 
 
 
