@@ -220,7 +220,7 @@ lib =
         # sets, that his kitenet-mr stow library needs
         MR_NAME=priv
 stowable = true
-checkout = git clone gcrypt::ssh://ma/~/local/git/priv.git priv
+checkout = git clone gcrypt::athenap:priv priv
 
 # this repository can't be checked out until we install
 # git-remote-gcrypt.  And thanks to gcrypt being slow, skip if I run
