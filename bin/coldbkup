@@ -85,6 +85,3 @@ done
 githubbk spwhitton/propellor.git
 
 # Stage 3 : Backup other repos ad hoc
-
-status processing blog comments
-gitbk ma:html/blog/comments $DEST/other
