@@ -1,18 +1,18 @@
 # -*- mode: conf -*-
 
-*/15 * * * * chronic doccheckin
-@hourly chronic mbsync fastmail
+#*/15 * * * * chronic doccheckin
+#@hourly chronic mbsync fastmail
 
 # update Org wiki & philosophy notes at 7am and 2pm MST
-0 14 * * * chronic ma_org_publish
-0 21 * * * chronic ma_org_publish
+#0 14 * * * chronic ma_org_publish
+#0 21 * * * chronic ma_org_publish
 
-0 18 * * * duply-run
-0 3 * * * chronic planetnewspipe
+#0 18 * * * duply-run
+#0 3 * * * chronic planetnewspipe
 
 # @reboot cronjobs don't work on the MetaArray, so check for a reboot
 # every 10 minutes
-*/10 * * * * chronic ma_reboot_check
+#*/10 * * * * chronic ma_reboot_check
 
 @weekly pkg_admin fetch-pkg-vulnerabilities
 @weekly pkg_admin audit
