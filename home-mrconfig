@@ -280,6 +280,12 @@ fixups = if ! [ -L ~/.propellor ]; then ln -sf ~/src/propellor ~/.propellor; fi
 # friends up and running yet (see comproc.org for how to do that).
 skip = (! (on swhitton@artemis || on swhitton@zephyr)) || (! which cabal >/dev/null)
 
+# --- personal website source
+
+[src/wiki]
+checkout = git clone https://git.spwhitton.name/wiki
+skip = ! mine
+
 # --- primary git annex
 
 [lib/annex]
