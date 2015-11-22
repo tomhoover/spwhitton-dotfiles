@@ -13,9 +13,16 @@ if mount | grep -q "/media/${USER}/m3"; then
     status syncing annex content
     # we sync both ma and m3 here so that ma knows everything that got
     # put onto m3
+    cd $HOME/lib/annex
     git annex sync --content ma m3
+    cd $HOME/lib/wikiannex
+    git annex sync --content origin athena m3
+    cd $HOME
 elif mount | grep -q "/media/${USER}/bkupsd"; then
     HDD=/media/${USER}/bkupsd
+    cd $HOME/lib/wikiannex
+    git annex sync --content origin athena bkupsd
+    cd $HOME
 else
     echo "coldbkup: removable media not mounted" >&2
     exit 1

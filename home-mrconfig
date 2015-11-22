@@ -84,6 +84,9 @@ lib =
     mine() {
         on swhitton@artemis || on swhitton@zephyr || on swhitton@SPWHITTON || on swhitton@athena
     }
+    workstation() {
+        on swhitton@artemis || on swhitton@zephyr
+    }
     gcrypt() {
         which git-remote-gcrypt >/dev/null 2>/dev/null
     }
@@ -326,7 +329,11 @@ checkout = git clone git@spwhitton.name:wikiannex.git
 status = git annex status       # direct mode on athena, so status won't work
 post_checkout =
     if [ "$(hostname -s)" = "athena" ]; then
-       git annex direct
+        git annex direct
+    fi
+    if workstation; then
+        git remote add bkupsd /media/${USER}/bkupsd/git/athena/wikiannex.git
+        git remote add m3 /media/${USER}/m3/git/athena/wikiannex.git
     fi
 skip = ! mine
 
