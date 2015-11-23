@@ -81,6 +81,7 @@
 \RequirePackage{amsmath}        % load it before loading fonts
 \RequirePackage{enumitem}
 \RequirePackage[british]{babel}
+\RequirePackage{newtxmath}
 \RequirePackage{newtxtext}      % would be good to use 'osf' option for old style figures: see newtxdoc.pdf
 \RequirePackage[sc,sf,bf,compact,medium]{titlesec}
 \RequirePackage{textcomp}
