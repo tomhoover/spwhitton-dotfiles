@@ -292,7 +292,6 @@ skip = ! mine
 # --- primary git annex
 
 [lib/annex]
-order = 8
 # It's best to get a copy of this repo from e.g. my laptop.  The
 # gcrypt repo can then be activated as a special remote.  This makes
 # more sense because the gcrypt repo on the metaarray is a transitive
@@ -340,7 +339,6 @@ skip = ! mine
 # --- git annex for use with rtorrent
 
 [lib/rt]
-order = 9
 checkout = :
 post_checkout = git remote rm origin
 status = git annex status --fast
@@ -390,7 +388,6 @@ skip = lazy
 # --- automatically pulls and merges.  Skipped on non-local hosts
 
 [doc]
-order = 4
 checkout = git clone 'ssh://ma/~/local/git/doc.git' 'doc'
 update = git pull "$@"
 skip = ! ( mine || on spw@ma )
@@ -424,7 +421,6 @@ skip = ! on faeroes
 # --- my offline e-mail (& machine's postfix queue)
 
 [.fmail]
-order = 10
 sync = movemail
 update = mbsync --quiet fastmail
 push = movemail
