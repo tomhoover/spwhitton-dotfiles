@@ -292,30 +292,26 @@ skip = ! mine
 # --- primary git annex
 
 [lib/annex]
-# It's best to get a copy of this repo from e.g. my laptop.  The
-# gcrypt repo can then be activated as a special remote.  This makes
-# more sense because the gcrypt repo on the metaarray is a transitive
-# repo rather than an authoritative upstream as the other repositories
-# on ma are.
-checkout = :
-post_checkout = git remote rm origin
+checkout = git clone athenap:annex
 
 # basic commands
-update = git annex sync ma
-push = git annex sync --content ma
+update = git annex sync origin ma
+push = git annex sync --content origin ma
 fixups =
     git config push.default matching
     git config remote.ma.gcrypt-publish-participants true
     git config remote.ma.gcrypt-participants 0x3B6D411B
+    git config remote.origin.gcrypt-publish-participants true
+    git config remote.origin.gcrypt-participants 0x3B6D411B
     git config gcrypt.publish-participants true
     git config gcrypt.participants 0x3B6D411B
     git config annex.startupscan false
     git config annex.autocommit false
     # set upstream so that mr can tell when I need to push
-    git branch -u ma/master master
-    git branch -u ma/git-annex git-annex
+    git branch -u origin/master master
+    git branch -u origin/git-annex git-annex
 
-sync = git annex sync ma
+sync = git annex sync origin ma
 
 # manual checkouts only, and skip when we're in a hurry and used 'fmr'
 # instead of 'mr'
