@@ -60,6 +60,10 @@
 #	Gary A. Johnson
 #	<garyjohn@spk.agilent.com>
 #
+# EDIT BY SEAN
+#       Redirect viewer stdout and stderr as soffice pumps junk into
+#       mutt's ncurses display.
+#
 # ACKNOWLEDGEMENTS
 #	My thanks to the people who have commented on this script and
 #	offered solutions to shortcomings and bugs, especially Edmund
@@ -108,7 +112,7 @@ cp "$file" "$tmpfile"
 # Run the viewer in the background and delete the temporary files when done. 
 
 (
-    "$viewer" $options "$tmpfile"
+    "$viewer" $options "$tmpfile" 2>/dev/null >/dev/null
     rm -f "$tmpfile"
     rmdir "$tmpdir"
 ) &
