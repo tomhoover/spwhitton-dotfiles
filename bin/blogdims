@@ -1,0 +1,31 @@
+#!/usr/bin/python
+
+# blog image aspect ratio calculator
+
+from __future__ import division # so that dividing two integers returns a float
+import sys
+import os
+from PIL import Image           # apt-get install python-imaging
+
+def main():
+    if len(sys.argv) < 2:
+        sys.exit('%s: usage: %s IMAGE' % sys.argv[0])
+    if not os.path.exists(sys.argv[1]):
+        sys.exit('%s: file %s not found' % (sys.argv[0], sys.argv[1]))
+
+    img = Image.open(sys.argv[1])
+    img_width, img_height = img.size
+
+    if img_width > img_height:
+        new_width = "500"
+        new_height = (500 / img_width) * img_height
+        new_height = str(round(new_height, 0))[:-2]
+    else:
+        new_height = "500"
+        new_width = (500 / img_height) * img_width
+        new_width = str(round(new_width, 0))[:-2]
+
+    print "[[!img blog/img/" + os.path.basename(sys.argv[1]) + " size=" + new_width + "x" + new_height + "]]"
+
+if __name__ == "__main__":
+    main()
