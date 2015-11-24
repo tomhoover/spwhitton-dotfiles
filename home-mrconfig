@@ -335,17 +335,19 @@ skip = ! mine
 # --- git annex for use with rtorrent
 
 [lib/rt]
-checkout = :
-post_checkout = git remote rm origin
+checkout = git clone gcrypt::athenap:rt
 status = git annex status --fast
-update = git annex sync ma
-push = git annex sync ma
+update = git annex sync origin
+push = git annex sync origin
 autoci = (git annex add . && git commit -m "auto commit on $(hostname -s)") || true
 fixups =
     git config push.default matching
     git config gcrypt.publish-participants true
+    git config remote.origin.gcrypt-publish-participants true
+    git config remote.origin.gcrypt-participants 0x3B6D411B
     git config annex.startupscan false
     git config annex.autocommit false
+    git config remote.origin.annex-ignore true
     if [ -d "$(hostname -s)" ]; then
         mkdir -p $HOME/local/rt
         cd $HOME/local/rt
