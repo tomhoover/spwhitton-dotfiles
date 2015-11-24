@@ -72,6 +72,7 @@ alias mailnow="mbsync -q fastmail && mutt -Z"
 alias mykb="setxkbmap gb; setxkbmap -option ctrl:nocaps"
 alias fixmacs="pkill -USR2 emacs"
 alias myfiles="cadaver https://myfiles.messagingengine.com/"
+alias unstow="stow -D"
 
 # common dotfiles git operations
 alias git-rebase-host-branch="git checkout $(hostname);git rebase master"
