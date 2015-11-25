@@ -74,6 +74,10 @@ Channel          feeds
 Master           :fmimap:INBOX/Feeds
 Slave            :fmmaildir:feeds
 
+Channel          spamtraining
+Master           :fmimap:INBOX/Training/Spam
+Slave            :fmmaildir:spam
+
 # # notes from tablet computer
 # Channel          notes
 # Master           :fmimap:INBOX/Notes
@@ -88,3 +92,4 @@ Channel          fmaild
 # Channel          debian
 # Channel          notes
 Channel          feeds
+Channel          spamtraining

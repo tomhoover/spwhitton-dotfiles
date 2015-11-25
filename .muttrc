@@ -120,7 +120,7 @@ unignore From: Date: User-Agent: X-Mailer: x-oxford-username: Message-Id: To: Cc
 
 # --- mailboxes
 
-mailboxes +inbox +sent +drafts +debian +notes
+mailboxes +inbox +sent +drafts +debian +notes +spam
 
 # --- message part viewing
 
@@ -168,6 +168,9 @@ macro pager <F8> "qFk|~/bin/capture-mail\nj"
 
 # open RSS links in browser
 macro index,pager <F4> "<pipe-message>grep '\^http' | sed 's/\^/-new-tab /' | xargs iceweasel<enter>" "open all URLs at beginning of lines in message in browser tabs"
+
+# train spam filter
+macro index,pager <F3> "s=spam<return>" "mark as spam"
 
 # easier scrolling
 bind pager ] previous-page
