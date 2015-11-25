@@ -91,7 +91,7 @@
   (interactive-haskell-mode)
   (diminish 'interactive-haskell-mode)
   (flymake-mode 0)
-  (smartparens-strict-mode)
+  (smartparens-mode 0)
 
   ;; Turn on hi2 if we're indenting with spaces.
   (add-hook 'hack-local-variables-hook
