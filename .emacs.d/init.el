@@ -10,7 +10,8 @@
 (setq load-prefer-newer t)
 
 (add-to-list 'load-path (concat user-emacs-directory "site-lisp"))
-(add-to-list 'load-path (concat user-emacs-directory "pkg"))
+(let ((default-directory (concat user-emacs-directory "pkg")))
+  (normal-top-level-add-subdirs-to-load-path))
 (require 'use-package)
 
 ;;;; ---- basic settings ----
