@@ -1,0 +1,54 @@
+#!/bin/bash
+
+# emacs-pkg-subtree --- manage Emacs packages as git subtrees in your dotfiles git repo
+
+# Author/maintainer    : Sean Whitton <spwhitton@spwhitton.name>
+# Instructions for use : https://spwhitton.name/blog/entry/emacs-pkg-subtree/
+
+# Copyright (C) 2015  Sean Whitton.  Released under the GNU GPL 3.
+
+DEST="$HOME/src/dotfiles/.emacs.d/pkg"
+
+set -e
+
+if [ "$3" = "" ]; then
+    echo "$(basename $0): usage: $(basename $0) add|pull git_clone_uri ref" >&2
+    exit 1
+fi
+
+cd $DEST
+
+op="$1"
+uri="$2"
+repo="$(basename $2)"
+pkg="${repo%%\.git}"
+ref="$3"
+top="$(git rev-parse --show-toplevel)"
+prefix="${DEST##$top/}/$pkg"
+
+cd $top
+clean="$(git status --porcelain)"
+if [ ! -z "$clean" ]; then
+    echo "commit first" >&2
+    exit 1
+fi
+
+if [ "$op" = "add" ]; then
+    if [ ! -e "$DEST/$pkg" ]; then
+        git subtree add --squash --prefix $prefix $uri $ref
+        echo "$uri $ref" >> $DEST/subtrees
+        git add $DEST/subtrees
+        git commit -m "updated Emacs packages record"
+    else
+        echo "you already have a subtree by that name" >&2
+        exit 1
+    fi
+elif [ "$op" = "pull" ]; then
+    git subtree pull --squash --prefix $prefix $uri $ref
+    sed -i -e "s|^${uri} .*$|${uri} ${ref}|" $DEST/subtrees
+    git add $DEST/subtrees
+    git commit -m "updated Emacs packages record"
+else
+    echo "$(basename $0): usage: $(basename $0) add|pull git_clone_uri ref" >&2
+    exit 1
+fi
