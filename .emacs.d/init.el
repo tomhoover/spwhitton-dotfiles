@@ -10,79 +10,8 @@
 (setq load-prefer-newer t)
 
 (add-to-list 'load-path (concat user-emacs-directory "site-lisp"))
+(add-to-list 'load-path (concat user-emacs-directory "pkg"))
 (require 'use-package)
-(require 'package)
-
-(setq
- package-user-dir "~/local/src/elpa"
- package-archives
- '(("melpa" . "http://melpa.org/packages/")
-   ("melpa-stable" . "http://stable.melpa.org/packages/")
-   ;; ("marmalade" . "http://marmalade-repo.org/packages/")
-   ;; ("org" . "http://orgmode.org/elpa/")
-   ("gnu" . "http://elpa.gnu.org/packages/"))
-
- ;; To take effect, pinned packages must be set *before*
- ;; `package-refresh-contents' is called.  Since use-package.el calls
- ;; `package-refresh-contents' on the very first (use-package)
- ;; declaration, only that one (and it seems not even that one) gets
- ;; pinned.  So just set this myself.
- package-pinned-packages
- '((zenburn-theme          . "melpa-stable")
-   (diminish               . "melpa-stable")
-   ;; (f                      . "melpa-stable")
-   (s                      . "melpa-stable")
-   ;; (dash                   . "melpa-stable")
-   (expand-region          . "melpa-stable")
-   (smartparens            . "melpa-stable")
-   (magit                  . "melpa-stable")
-   (magit-popup            . "melpa-stable")
-   (magit-annex            . "melpa-stable")
-   (rainbow-delimiters     . "melpa-stable")
-   (aggressive-indent      . "melpa-stable")
-   (boxquote               . "melpa-stable")
-   (company                . "melpa-stable")
-   (markdown-mode          . "melpa-stable")
-   (php-mode               . "melpa-stable")
-   ;; (deft                   . "melpa-stable")
-   (flycheck               . "melpa-stable")
-   (ebib                   . "melpa-stable")
-   (projectile             . "melpa-stable")
-   (flx-ido                . "melpa-stable")
-   (ido-ubiquitous         . "melpa-stable")
-   (smex                   . "melpa-stable")
-   (imenu-anywhere         . "melpa-stable")
-   (helm                   . "melpa-stable")
-   (yasnippet              . "melpa-stable")
-   (highlight-indentation  . "melpa-stable")
-   (ace-jump-mode          . "melpa-stable")
-   (avy                    . "melpa-stable")
-   (ace-link               . "melpa-stable")
-   ;; (async                  . "melpa-stable")
-   (hydra                  . "melpa-stable")
-   (nix-mode               . "melpa-stable")
-   (elisp-slime-nav        . "melpa-stable")
-   ;; (haskell-mode           . "melpa-stable")
-   (hi2                    . "melpa-stable")
-   ;; (org-plus-contrib       . "org")
-
-   ;; dependencies
-   (epl                    . "melpa-stable")
-   (pkg-info               . "melpa-stable")
-   (flx                    . "melpa-stable")
-   (git-commit             . "melpa-stable")
-   (git-commit-mode        . "melpa-stable")
-   (git-rebase-mode        . "melpa-stable")
-   (helm-descbinds         . "melpa-stable")
-   (ido-completing-read+   . "melpa-stable")
-   (names                  . "melpa-stable")
-   (names                  . "melpa-stable")
-   (parsebib               . "melpa-stable")))
-
-(package-initialize)
-(unless package-archive-contents
-  (package-refresh-contents))
-(setq package-enable-at-startup nil)
 
 ;;;; ---- basic settings ----
 
@@ -174,17 +103,15 @@
 ;;; zenburn
 
 (use-package zenburn-theme
-  :ensure
   :init (load-theme 'zenburn))
 
 ;;; sexy mode line
 
 (use-package smart-mode-line
-  :ensure
   :disabled t
   :init
-  (use-package powerline :ensure)
-  (use-package smart-mode-line-powerline-theme :ensure)
+  (use-package powerline)
+  (use-package smart-mode-line-powerline-theme)
   (sml/setup)
   (sml/apply-theme 'powerline)
   (setq sml/shorten-directory nil
@@ -215,16 +142,15 @@
 
 ;;; clean up the mode line
 
-(use-package diminish :ensure)
+(use-package diminish)
 
 ;;; libraries of useful lisp functions
 
-(use-package f :ensure) (use-package s :ensure) (use-package dash :ensure)
+(use-package f) (use-package s) (use-package dash)
 
 ;;; instead of vim text objects
 
 (use-package expand-region
-  :ensure
   :bind ("M-i" . er/expand-region)
   :init
   (setq expand-region-contract-fast-key (kbd "o"))
@@ -256,7 +182,6 @@
 ;;; keep parentheses under control: modern replacement for the mighty paredit
 
 (use-package smartparens
-  :ensure
   :bind (("M-J" . sp-join-sexp)
 
          ;; for when I use Emacs via PuTTY
@@ -401,7 +326,6 @@
 ;;; keep pop up windows under control
 
 (use-package popwin
-  :ensure
   :disabled t
   :commands popwin-mode
   :defer 5
@@ -428,7 +352,7 @@
 ;;; fix up whitespace around kill and yanking (package seems to be
 ;;; unavailable for download)
 
-(use-package smart-whitespace-comment-fixup :disabled t :ensure
+(use-package smart-whitespace-comment-fixup :disabled t
   ;; the advice that this package applies to indent-for-tab-command
   ;; uses a function (line-matches) which doesn't seem to exist
   :config (ad-deactivate 'indent-for-tab-command))
@@ -441,7 +365,6 @@
 ;;; OpenWith
 
 (use-package openwith
-  :ensure
   :commands openwith-mode
 
   :demand
@@ -464,7 +387,6 @@
 
 (setq magit-last-seen-setup-instructions "1.4.0")
 (use-package magit
-  :ensure
   :diminish magit-wip-after-save-local-mode
   :demand
   :config
@@ -486,7 +408,7 @@
 
   (bind-key "C-c C-a" 'magit-just-amend magit-status-mode-map)
 
-  (use-package magit-annex :ensure)
+  (use-package magit-annex)
 
   (use-package magit-wip
     ;; :diminish magit-wip-after-save-mode
@@ -497,7 +419,6 @@
 ;;; in more than one window
 
 (use-package pointback
-  :ensure
   :commands global-pointback-mode
   :defer 5
   :config
@@ -507,13 +428,11 @@
 
 (setq-default frame-background-mode 'dark)
 (use-package rainbow-delimiters
-  :ensure
   :commands rainbow-delimiters-mode)
 
 ;;; and colour those colours
 
 (use-package rainbow-mode
-  :ensure
   :commands rainbow-mode
   :init
   (add-hook 'html-mode-hook 'rainbow-mode)
@@ -522,7 +441,6 @@
 ;;; keep reindenting lisp
 
 (use-package aggressive-indent
-  :ensure
   :commands aggressive-indent-mode)
 
 ;;; ElDoc and rainbow delimiters activation
@@ -542,7 +460,6 @@
 ;;; boxquotes
 
 (use-package boxquote
-  :ensure
   :commands (boxquote-title
              boxquote-region
              boxquote-buffer
@@ -568,12 +485,11 @@
 
 ;;; word count in modeline, when I want it
 
-(use-package wc-mode :ensure)
+(use-package wc-mode)
 
 ;;; company-mode for smart and easy completion
 
 (use-package company
-  :ensure
   ;; :commands global-company-mode
   ;; :bind ("<tab>" . company-complete)
   ;; :idle (global-company-mode)
@@ -607,7 +523,6 @@
 
   (use-package anaconda-mode
     :disabled t
-    :ensure
     :config (progn
               (add-hook 'python-mode-hook 'anaconda-mode)
               (add-to-list 'company-backends 'company-anaconda)
@@ -623,7 +538,6 @@
 ;;; Markdown mode
 
 (use-package markdown-mode
-  :ensure
   :mode "\\.md"
 
   :init
@@ -647,16 +561,15 @@
 
 ;;; PHP mode
 
-(use-package php-mode :ensure :mode (("\\.php" .  php-mode)))
+(use-package php-mode :mode (("\\.php" .  php-mode)))
 
 ;;; YAML mode
 
-(use-package yaml-mode :ensure :mode (("\\.yaml" .  yaml-mode)))
+(use-package yaml-mode :mode (("\\.yaml" .  yaml-mode)))
 
 ;;; Deft
 
 (use-package deft
-  :ensure
   :commands deft
   :bind ("C-c f" . deft)
   :init (setq deft-extensions '("org" "mdwn")
@@ -701,17 +614,16 @@
 
 ;;; allow lisp to interact with python
 
-(use-package pymacs :disabled t :ensure)
+(use-package pymacs :disabled t)
 
 ;;; Get Python documentation as info files
 
-(use-package python-info :disabled t :ensure)
+(use-package python-info :disabled t)
 ;;(use-package pydoc-info :ensure)
 
 ;;; flycheck
 
 (use-package flycheck
-  :ensure
   :defer 5
   :init
   ;; try to disable flymake; having both running at the same time is annoying
@@ -723,7 +635,6 @@
 
   ;; special Flycheck for Haskell
   (use-package flycheck-haskell
-    :ensure
     :init
     (add-hook 'flycheck-mode-hook #'flycheck-haskell-setup))
 
@@ -750,7 +661,6 @@
 ;;; ebib for editing BiBTeX databases
 
 (use-package ebib
-  :ensure
   :bind ("C-c g e" . ebib)
   :init
   ;; (defadvice ebib (before spw/persp-ebib activate)
@@ -771,12 +681,11 @@
 (use-package dired-sort-map
   :init (setq dired-listing-switches "--group-directories-first -alh"))
 
-(use-package git-annex :ensure)
+(use-package git-annex)
 
 ;;; simple concept of projects
 
 (use-package projectile
-  :ensure
   :commands projectile-vc
   :bind(("C-c p" . projectile-command-map)
         ("C-c j" . projectile-find-file)
@@ -789,10 +698,9 @@
   (add-to-list 'projectile-globally-ignored-directories ".stack-work")
   (diminish 'projectile-mode))
 
-(use-package persp-projectile :ensure :disabled t)
+(use-package persp-projectile :disabled t)
 
 (use-package perspective
-  :ensure
   :disabled t
   :commands (persp-toggle persp-switch)
   :bind
@@ -907,7 +815,6 @@
 (ido-everywhere 1)
 
 (use-package flx-ido
-  :ensure
   :config
   (flx-ido-mode 1)
   (setq ido-enable-flex-matching t
@@ -916,7 +823,6 @@
         gc-cons-threshold 20000000))
 
 (use-package ido-ubiquitous
-  :ensure
   :config
   (ido-ubiquitous-mode 1))
 
@@ -925,26 +831,23 @@
 ;;   :init (ido-vertical-mode 1))
 
 (use-package smex
-  :ensure
   ;; TODO: get keyboard macro bindings, that vanilla emacs has under
   ;; the prefix C-x C-m, back
   :bind ("C-x C-m" . smex))
 
 ;; imenu
 
-(use-package imenu-anywhere :ensure)
+(use-package imenu-anywhere)
 
 ;;; use Helm for a few things
 
 (use-package helm
-  :ensure
   :disabled
   :defer 5
   :config
   (use-package helm-mode
     :bind ("M-s o" . helm-occur))
   (use-package helm-descbinds
-    :ensure
     :disabled
     :defer 5
     :config
@@ -953,7 +856,6 @@
 ;;; snippets
 
 (use-package yasnippet
-  :ensure
   :diminish yas-minor-mode
 
   ;; :defer 5
@@ -962,7 +864,7 @@
 
 ;;; htmlize for Org HTML export/publishing
 
-(use-package htmlize :ensure)
+(use-package htmlize)
 
 ;;; close old buffers once per day
 
@@ -972,14 +874,12 @@
 ;;; make indentation in python nice and visible
 
 (use-package highlight-indentation
-  :ensure
   :init
   (add-hook 'python-mode-hook 'highlight-indentation-current-column-mode))
 
 ;;; jump around what's visible
 
 (use-package ace-jump-mode
-  :ensure
   ;; :bind ("M-o" . ace-jump-mode)
   ;; :config
 
@@ -994,7 +894,6 @@
   )
 
 (use-package avy
-  :ensure
   :bind ("M-o" . spw/avy-goto-word)
   :config
 
@@ -1018,7 +917,6 @@
 ;;; use ace-jump-mode to move between links in help file
 
 (use-package ace-link
-  :ensure
   :defer 5
   :config
   (ace-link-setup-default))
@@ -1027,7 +925,6 @@
 
 (use-package jabber
   :disabled t
-  :ensure
   :config (progn (when (f-exists? "~/.emacs.d/init-jabber.el")
                    (load-file "~/.emacs.d/init-jabber.el")
                    (jabber-connect-all))
@@ -1046,7 +943,6 @@
 ;;; make dired copy and move asynchronously
 
 (use-package async
-  :ensure
   :init (when (require 'dired-aux)
           (require 'dired-async)))
 
@@ -1059,7 +955,6 @@
 
 (use-package eimp
   :if (executable-find "mogrify")
-  :ensure
   :init (add-hook 'image-mode-hook 'eimp-mode))
 
 ;;; alternative to my old `spw/centre-window'
@@ -1093,18 +988,16 @@
 
 ;;; make Emacs regexps easier
 
-(use-package visual-regexp :ensure)
+(use-package visual-regexp)
 
 ;;; toggle quotes for when I fail to follow the style guidelines
 
 (use-package toggle-quotes
-  :ensure
   :bind ("C-c t '" . toggle-quotes))
 
 ;;; advanced key binding techniques with hydra
 
 (use-package hydra
-  :ensure
   :config
   (setq hydra-windows-config nil)
   (defun spw/maybe-delete-other-windows ()
@@ -1162,7 +1055,7 @@
 
 ;;; edit .nix files
 
-(use-package nix-mode :ensure)
+(use-package nix-mode)
 
 ;;; Haskell (load after packages that it depends on)
 
@@ -1171,7 +1064,6 @@
 ;; key-chord to save my hands
 
 (use-package key-chord
-  :ensure
   :init (key-chord-mode 1)
   :config
   ;; access the C-c keymap with a comfortable key-chord
@@ -1181,7 +1073,6 @@
 
 (use-package god-mode
   :disabled
-  :ensure
   :config
 
   ;; (unless god-global-mode (god-mode))
@@ -1232,7 +1123,6 @@
 ;;; M-. and M-, and C-c C-d [C-]d to describe
 
 (use-package elisp-slime-nav
-  :ensure
   :commands (turn-on-elisp-slime-nav-mode elisp-slime-nav-mode)
   :init (dolist (hook '(emacs-lisp-mode-hook ielm-mode-hook))
           (add-hook hook 'elisp-slime-nav-mode)))
