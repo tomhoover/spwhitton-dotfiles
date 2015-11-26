@@ -18,6 +18,12 @@
         ov = log --graph --full-history -n 30 --decorate --oneline --branches --all --simplify-by-decoration
         co = checkout
 
+        # "git exec blah" runs blah from the root of the worktree since shell
+        # alias are always run from the root of the worktree
+
+        # http://stackoverflow.com/questions/957928/is-there-a-way-to-get-the-git-root-directory-in-one-command#comment9747528_957978
+	exec = "!exec "
+
 [core]
         # no pager thanks
 	pager = 
