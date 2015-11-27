@@ -1107,8 +1107,8 @@
 ;; key-chord to save my hands
 
 (use-package key-chord
-  :init (key-chord-mode 1)
   :config
+  (key-chord-mode 1)
   ;; access the C-c keymap with a comfortable key-chord
   (key-chord-define-global "jk" mode-specific-map))
 
