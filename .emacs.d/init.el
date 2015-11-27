@@ -13,8 +13,9 @@
 
 ;; Add all packages in my git subtrees dir to the load-path.  The
 ;; function `normal-top-level-add-subdirs-to-load-path' fails to add
-;; dirs containing periods, and appends rather than prepends to
-;; `load-path'.  This code is adapted from that function.
+;; dirs containing periods.  This code is adapted from a version of
+;; `normal-top-level-add-subdirs-to-load-path' found at
+;; <https://github.com/hhkbp2/dot-emacs/blob/master/site-lisp/my-subdirs.el>
 
 (let (dirs
       attrs
