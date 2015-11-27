@@ -15,7 +15,12 @@
 ;; function `normal-top-level-add-subdirs-to-load-path' fails to add
 ;; dirs containing periods.  This code is adapted from a version of
 ;; `normal-top-level-add-subdirs-to-load-path' found at
-;; <https://github.com/hhkbp2/dot-emacs/blob/master/site-lisp/my-subdirs.el>
+;; <https://github.com/hhkbp2/dot-emacs/blob/master/site-lisp/my-subdirs.el>.
+
+;; Note that this appends to load-path.  If you want your subtree
+;; packages to override system packages (e.g. a newer version of
+;; Org-mode than Debian's) you will need to prepend to the load path
+;; as I prepended by site-lisp directory above.
 
 (let (dirs
       attrs
