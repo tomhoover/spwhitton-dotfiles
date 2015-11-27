@@ -26,7 +26,6 @@
 ;;; haskell mode does most of our work
 
 (use-package haskell-mode
-  :ensure
   :mode (("\\.hs\\'" . haskell-mode)
          ("\\.cabal\\'" . haskell-cabal-mode)
          ("\\.hcr\\'" . haskell-core-mode))
@@ -139,7 +138,6 @@
 
 (use-package hindent
   :disabled t
-  :ensure
   :diminish hindent-mode
   :init (progn (setq hindent-style "johan-tibell")
                (add-hook 'haskell-mode-hook #'hindent-mode)))
@@ -147,7 +145,6 @@
 ;;; shm^Whi2 for indentation
 
 (use-package hi2
-  :ensure
   ;; :diminish hi2-mode
   :config
   (setq hi2-layout-offset 4
@@ -166,7 +163,6 @@
 
 (use-package shm
   :disabled t
-  :ensure
   :init (progn (setq shm-indent-spaces 4)
                (set-face-background 'shm-current-face "#4F4F4F")
                (add-hook 'haskell-mode-hook 'structured-haskell-mode))
@@ -178,14 +174,12 @@
 
 (use-package ghc
   :disabled t
-  :ensure
   :init (progn
           (add-hook 'haskell-mode-hook 'ghc-init)
 
           ;; completion
 
           (use-package company-ghc
-            :ensure
             :config (progn
                       (add-to-list 'company-backends '(company-ghc :with company-dabbrev-code))
                       (setq company-ghc-show-info t)))))
