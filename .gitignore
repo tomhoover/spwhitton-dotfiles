@@ -24,3 +24,4 @@
 /.config/systemd/user/default.target.wants/mpd.service
 /.irssi/config
 /.zsh/cache
+*.elc
