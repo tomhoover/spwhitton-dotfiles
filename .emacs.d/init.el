@@ -439,7 +439,7 @@
         magit-push-always-verify nil)
 
   ;; avoid a pop up that grabs focus every time we make a commit
-  (setq magit-diff-auto-show '())
+  (setq magit-commit-show-diff nil)
 
   (setq magit-revert-buffers 'silent)
 
