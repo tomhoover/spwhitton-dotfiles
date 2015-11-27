@@ -39,17 +39,16 @@
 ;;; highlight current sentence
 
 (use-package hl-sentence
-  :ensure
   :commands hl-sentence-mode
-  :init (progn
-          (add-hook 'org-mode-hook 'hl-sentence-mode)
-          (set-face-background 'hl-sentence-face "#4F4F4F")))
+  :demand
+  :config
+  (add-hook 'org-mode-hook 'hl-sentence-mode)
+  (set-face-background 'hl-sentence-face "#4F4F4F"))
 
 ;;; graphical calendar
 
 (use-package calfw
   :disabled t
-  :ensure
   :init (load-library "calfw-org"))
 
 (defun spw/org-calfw ()
