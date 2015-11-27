@@ -10,8 +10,47 @@
 (setq load-prefer-newer t)
 
 (add-to-list 'load-path (concat user-emacs-directory "site-lisp"))
-(let ((default-directory (concat user-emacs-directory "pkg")))
-  (normal-top-level-add-subdirs-to-load-path))
+
+;; Add all packages in my git subtrees dir to the load-path.  The
+;; function `normal-top-level-add-subdirs-to-load-path' fails to add
+;; dirs containing periods, and appends rather than prepends to
+;; `load-path'.  This code is adapted from that function.
+
+(let (dirs
+      attrs
+      (pending (list (concat user-emacs-directory "pkg"))))
+  ;; This loop does a breadth-first tree walk on DIR's subtree,
+  ;; putting each subdir into DIRS as its contents are examined.
+  (while pending
+    (push (pop pending) dirs)
+    (let* ((this-dir (car dirs))
+	   (contents (directory-files this-dir))
+	   (default-directory this-dir)
+	   (canonicalized (if (fboundp 'untranslated-canonical-name)
+			      (untranslated-canonical-name this-dir))))
+      ;; The Windows version doesn't report meaningful inode
+      ;; numbers, so use the canonicalized absolute file name of the
+      ;; directory instead.
+      (setq attrs (or canonicalized
+		      (nthcdr 10 (file-attributes this-dir))))
+      (unless (member attrs normal-top-level-add-subdirs-inode-list)
+	(push attrs normal-top-level-add-subdirs-inode-list)
+	(dolist (file contents)
+	  ;; The lower-case variants of RCS and CVS are for DOS/Windows.
+	  (unless (member file '("." ".." "RCS" "CVS" "rcs" "cvs"))
+	    (when (and (string-match "\\`[[:alnum:]]" file)
+		       ;; Avoid doing a `stat' when it isn't necessary
+		       ;; because that can cause trouble when an NFS server
+		       ;; is down.
+		       (file-directory-p file))
+	      (let ((expanded (expand-file-name file)))
+		(unless (file-exists-p (expand-file-name ".nosearch"
+							 expanded))
+		  (setq pending (nconc pending (list expanded)))))))))))
+  (if (equal window-system 'w32)
+      (setq load-path (append (nreverse dirs) load-path))
+    (normal-top-level-add-to-load-path (cdr (nreverse dirs)))))
+
 (require 'use-package)
 
 ;;;; ---- basic settings ----
