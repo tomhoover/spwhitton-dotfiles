@@ -26,8 +26,12 @@
 
 ;;; haskell mode does most of our work
 
+(require 'haskell-mode-autoloads)
+(add-to-list 'Info-default-directory-list "~/.emacs.d/pkg/haskell-mode/")
+
 (use-package haskell-mode
   :mode (("\\.hs\\'" . haskell-mode)
+         ("\\.lhs\\'" . haskell-mode)
          ("\\.cabal\\'" . haskell-cabal-mode)
          ("\\.hcr\\'" . haskell-core-mode))
 
