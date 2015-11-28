@@ -22,6 +22,7 @@
 
 (require 'use-package)
 (require 'bind-key)
+(require 'haskell-tab-indent)
 
 ;;; haskell mode does most of our work
 
@@ -31,6 +32,19 @@
          ("\\.hcr\\'" . haskell-core-mode))
 
   :config
+
+  ;; Turn on an appropriate indentation mode.  Use
+  ;; `haskell-indentation-mode' by default, but if our .dir-locals.el
+  ;; specifies `indent-tabs-mode' we should use my
+  ;; `haskell-tab-indent-mode'.
+  (add-hook 'haskell-mode-hook
+            (lambda ()
+              (add-hook 'hack-local-variables-hook
+                        (lambda ()
+                          (if indent-tabs-mode
+                              (haskell-tab-indent-mode)
+                            (haskell-indentation-mode)))
+                        nil t))) ; local hook
 
   ;; Start up all my usual minor modes and bindings.
   (add-hook 'haskell-mode-hook 'spw/haskell-mode-hook)
@@ -92,11 +106,6 @@
   (flymake-mode 0)
   (smartparens-mode 0)
 
-  ;; Turn on hi2 if we're indenting with spaces.
-  (add-hook 'hack-local-variables-hook
-            (lambda () (unless indent-tabs-mode (hi2-mode)))
-            nil t)                      ; local hook
-
   ;;; make sure haskell-flycheck checker being used?
 
   ;; (when (fboundp 'flycheck-disable-checker)
@@ -141,25 +150,6 @@
   :diminish hindent-mode
   :init (progn (setq hindent-style "johan-tibell")
                (add-hook 'haskell-mode-hook #'hindent-mode)))
-
-;;; shm^Whi2 for indentation
-
-(use-package hi2
-  ;; :diminish hi2-mode
-  :config
-  (setq hi2-layout-offset 4
-	hi2-left-offset 4
-	hi2-show-indentations nil)
-
-  (defun spw/hi2-pipe ()
-    "Newline, pipe char and indent"
-    (interactive)
-    (hi2-newline-and-indent)
-    (insert "|")
-    (indent-for-tab-command)
-    (insert " "))
-
-  (bind-key "C-c |" 'spw/hi2-pipe hi2-mode-map))
 
 (use-package shm
   :disabled t
