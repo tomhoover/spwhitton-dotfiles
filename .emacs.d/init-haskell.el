@@ -145,38 +145,5 @@
              (f-exists? (f-join default-directory "shell.nix")))
     (call-process "/bin/sh" nil t nil "-c" "cabal2nix --shell . > shell.nix")))
 
-;;; hindent for reformatting code
-
-;; can't make this work so using stylish-haskell instead
-
-(use-package hindent
-  :disabled t
-  :diminish hindent-mode
-  :init (progn (setq hindent-style "johan-tibell")
-               (add-hook 'haskell-mode-hook #'hindent-mode)))
-
-(use-package shm
-  :disabled t
-  :init (progn (setq shm-indent-spaces 4)
-               (set-face-background 'shm-current-face "#4F4F4F")
-               (add-hook 'haskell-mode-hook 'structured-haskell-mode))
-  :config (progn
-            (bind-key "C-w" 'spw/backward-delete-word shm-map)
-            (bind-key "C-x C-k" 'shm/kill-region shm-map)))
-
-;;; ghc-mod doesn't work with cabal 1.22 and ghc 7.8.4 atm
-
-(use-package ghc
-  :disabled t
-  :init (progn
-          (add-hook 'haskell-mode-hook 'ghc-init)
-
-          ;; completion
-
-          (use-package company-ghc
-            :config (progn
-                      (add-to-list 'company-backends '(company-ghc :with company-dabbrev-code))
-                      (setq company-ghc-show-info t)))))
-
 (provide 'init-haskell)
 ;;; init-haskell.el ends here
