@@ -184,6 +184,9 @@ fixups =
         cd ~/src/dotfiles/bin
 	cmd "/C win32setup.bat"
     fi
+    # generate haskell-mode autoloads
+    cd $HOME/src/dotfiles/.emacs.d/pkg/haskell-mode
+    make
 
 # Empty out /etc/skel junk (must use full path to this script because
 # it's pre stow!), and create ~/.emacs.d/ before stowing so that the
