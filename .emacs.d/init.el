@@ -2022,6 +2022,9 @@ Ensures the kill ring entry always ends with a newline."
 
 (bind-key "C-c i h" 'add-file-local-variable-prop-line)
 
+;;; Disable C-z as interacts badly with xmonad
+(unbind-key "C-z")
+
 ;;; abbreviations
 
 (setq abbrev-file-name "~/doc/emacs-abbrevs")
