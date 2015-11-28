@@ -169,6 +169,10 @@ macro pager <F8> "qFk|~/bin/capture-mail\nj"
 # open RSS links in browser (fails because for some reason mutt can't bind <f{1--4}>
 macro index,pager <F4> "<pipe-message>grep '\^http' | sed 's/\^/-new-tab /' | xargs iceweasel<enter>" "open all URLs at beginning of lines in message in browser tabs"
 
+# open rss2email source link in browser
+# macro pager <f12> "<pipe-message>grep \"\^URL: http\" | xargs iceweasel -new-tab<enter>" "open rss2email source link"
+macro pager <f12> "<pipe-message>egrep \"X-RSS-URL:\" | cut -d' ' -f2- | xargs iceweasel -new-tab<enter>" "open rss2email source link"
+
 # train spam filter
 macro index,pager <f11> "<save-message>+spam<enter>" "mark as spam"
 
