@@ -5,7 +5,7 @@
 # script should be POSIX.
 
 set -e
-STOWURL="http://ftp.gnu.org/gnu/stow/stow-2.2.0.tar.gz"
+STOWURL="https://ftp.gnu.org/gnu/stow/stow-2.2.0.tar.gz"
 cd $HOME
 
 # seems to be needed for a find command run at some point; not sure
