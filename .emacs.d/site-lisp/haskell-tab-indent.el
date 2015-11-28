@@ -10,37 +10,37 @@
   (save-excursion
     (back-to-indentation)
     (if (looking-at "where")
-	(haskell-tab-indent-where)
-      (haskell-tab-indent-cycle))))
+	(haskell-tab-indent--where)
+      (haskell-tab-indent--cycle))))
 
-(defun haskell-tab-indent-where ()
+(defun haskell-tab-indent--where ()
   ;; `haskell-tab-indent' leaves us just after the indentation
   (delete-region (line-beginning-position) (point))
   (insert "  "))
 
-(defun haskell-tab-indent-cycle ()
-  (let ((previous-line-tabs (haskell-tab-indent-previous-line-tabs))
-        (this-line-tabs (haskell-tab-indent-this-line-tabs)))
+(defun haskell-tab-indent--cycle ()
+  (let ((previous-line-tabs (haskell-tab-indent--previous-line-tabs))
+        (this-line-tabs (haskell-tab-indent--this-line-tabs)))
     (if (= (1+ previous-line-tabs) this-line-tabs)
-        (haskell-tab-indent-reset)
-      (haskell-tab-indent-indent))))
+        (haskell-tab-indent--reset)
+      (haskell-tab-indent--indent))))
 
-(defun haskell-tab-indent-reset ()
+(defun haskell-tab-indent--reset ()
   (save-excursion
     (back-to-indentation)
     (delete-region (line-beginning-position) (point))))
 
-(defun haskell-tab-indent-indent ()
+(defun haskell-tab-indent--indent ()
   (save-excursion
     (back-to-indentation)
     (insert "\t")))
 
-(defun haskell-tab-indent-previous-line-tabs ()
+(defun haskell-tab-indent--previous-line-tabs ()
   (save-excursion
     (forward-line -1)
-    (haskell-tab-indent-this-line-tabs)))
+    (haskell-tab-indent--this-line-tabs)))
 
-(defun haskell-tab-indent-this-line-tabs ()
+(defun haskell-tab-indent--this-line-tabs ()
   (save-excursion
     (save-restriction
       (back-to-indentation)
