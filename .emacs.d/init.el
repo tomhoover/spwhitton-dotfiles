@@ -250,7 +250,8 @@
                   inferior-scheme-mode-hook
                   python-mode-hook
                   minibuffer-setup-hook
-                  haskell-mode-hook))
+                  ;; haskell-mode-hook
+                  ))
     (add-hook hook
               (lambda ()
                 (smartparens-strict-mode 1))))
