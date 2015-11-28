@@ -2022,8 +2022,10 @@ Ensures the kill ring entry always ends with a newline."
 
 (bind-key "C-c i h" 'add-file-local-variable-prop-line)
 
-;;; Disable C-z as interacts badly with xmonad
-(unbind-key "C-z")
+;;; Conditionally disable C-z as interacts badly with xmonad
+(defadvice suspend-frame (around not-if-xmonad activate)
+  (unless window-system
+    ad-do-it))
 
 ;;; abbreviations
 
