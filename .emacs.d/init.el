@@ -128,7 +128,7 @@
 (use-package zenburn-theme
   :init
   (add-to-list 'custom-theme-load-path
-    (concat user-emacs-directory "pkg/zenburn-emacs"))
+               (concat user-emacs-directory "pkg/zenburn-emacs"))
   (load-theme 'zenburn))
 
 ;;; sexy mode line
