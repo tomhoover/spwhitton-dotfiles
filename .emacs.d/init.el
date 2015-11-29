@@ -541,7 +541,10 @@
 (use-package reftex
   :init
   (add-hook 'markdown-mode-hook 'turn-on-reftex)
-  (add-hook 'org-mode-hook 'turn-on-reftex)
+  (defun spw/org-maybe-turn-on-reftex ()
+    (when (string= default-directory (expand-file-name "~/doc/papers/"))
+      (turn-on-reftex)))
+  (add-hook 'org-mode-hook 'spw/org-maybe-turn-on-reftex)
   :config
   ;; This setup binds `C-c [ RET search-string RET' to try to insert a
   ;; citation
