@@ -345,14 +345,6 @@
   (add-hook 'kill-emacs-hook 'save-place-kill-emacs-hook)
   (add-hook 'kill-buffer-hook 'save-place-to-alist))
 
-;;; fix up whitespace around kill and yanking (package seems to be
-;;; unavailable for download)
-
-(use-package smart-whitespace-comment-fixup :disabled t
-  ;; the advice that this package applies to indent-for-tab-command
-  ;; uses a function (line-matches) which doesn't seem to exist
-  :config (ad-deactivate 'indent-for-tab-command))
-
 ;;; more useful unique buffer names
 
 (use-package uniquify
