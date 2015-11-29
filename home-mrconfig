@@ -260,6 +260,22 @@ stowable = true
 checkout = git clone athenap:athpriv athpriv
 skip = ! mine
 
+# rss2email insists on replacing the symlink to its config file with a
+# real file.  Fix this situation in the simplest case to avoid mr
+# restow giving an error.  See fix_gtk_bookmarks above
+lib =
+    fix_r2e_config () {
+            if ! [ -L ~/.config/rss2email.cfg ]; then
+                # file in home directory is not a link
+                if diff -q ~/src/athpriv/.config/rss2email.cfg ~/.config/rss2email.cfg > /dev/null; then
+                    rm ~/.config/rss2email.cfg
+                fi
+            fi
+    }
+pre_unstow = fix_r2e_config
+pre_restow = fix_r2e_config
+pre_update = fix_r2e_config
+
 # since priv repo also stows into ~/.gnupg, make the dir first
 pre_stow = mkdir -p ~/.duply ~/.irssi
 
