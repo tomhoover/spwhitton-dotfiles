@@ -2,7 +2,9 @@
 
 # make haskell-mode autoloads
 (
-    cd $HOME/.emacs.d/pkg/haskell-mode
+    # must cd to inside ~/src/dotfiles.  If change to ~/.emacs.d/blah,
+    # the autoloads are not generated correctly
+    cd $HOME/src/dotfiles/.emacs.d/pkg/haskell-mode
     make
 )
 
