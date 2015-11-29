@@ -377,11 +377,6 @@
 
 ;;; agenda skipping functions
 
-(defun spw/strip-text-properties (txt)
-  "From http://stackoverflow.com/questions/8372722/print-only-text-discarding-text-properties"
-  (set-text-properties 0 (length txt) nil txt)
-  txt)
-
 (defun spw/org-get-todo-keyword ()
   (let ((todo-state (save-match-data (ignore-errors (org-get-todo-state)))))
     (spw/strip-text-properties todo-state)))

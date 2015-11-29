@@ -1699,6 +1699,11 @@ Ensures the kill ring entry always ends with a newline."
   (setq zap-up-to-char-last-arg arg)
   (setq this-command 'zap-up-to-char-repeatable))
 
+(defun spw/strip-text-properties (txt)
+  "From http://stackoverflow.com/questions/8372722/print-only-text-discarding-text-properties"
+  (set-text-properties 0 (length txt) nil txt)
+  txt)
+
 
 
 ;;;; ---- personal settings ----
