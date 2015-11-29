@@ -317,9 +317,9 @@
   ;; (sp-local-pair 'org-mode "+" "+")
   ;; (sp-local-pair 'org-mode "_" "_")
 
-  (defadvice sp--cleanup-after-kill (after haskell-sp-unindent activate)
-    (when hi2-mode
-      (hi2-indent-backwards)))
+  ;; (defadvice sp--cleanup-after-kill (after haskell-sp-unindent activate)
+  ;;   (when hi2-mode
+  ;;     (hi2-indent-backwards)))
   (show-smartparens-global-mode 1))
 
 ;;; Org
