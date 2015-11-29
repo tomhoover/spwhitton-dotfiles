@@ -169,10 +169,10 @@
   ;; lines at either end of it when we're not using
   ;; expand-region but we've activated the mark (but only do
   ;; this once)
-  (defadvice er/expand-region (around fill-out-region activate)
+  (defun er/expand-region--fill-out-region (orig-fun &rest args)
     (if (or (not (region-active-p))
             (eq last-command 'er/expand-region))
-        ad-do-it
+        (apply orig-fun args)
       (if (< (point) (mark))
           (let ((beg (point)))
             (goto-char (mark))
@@ -187,7 +187,8 @@
           (push-mark)
           (goto-char end)
           (end-of-line)
-          (forward-char 1))))))
+          (forward-char 1)))))
+  (advice-add 'er/expand-region :around #'er/expand-region--fill-out-region))
 
 ;;; keep parentheses under control: modern replacement for the mighty paredit
 
