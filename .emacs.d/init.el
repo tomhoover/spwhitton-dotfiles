@@ -1967,7 +1967,7 @@ Ensures the kill ring entry always ends with a newline."
   :mode ("/mutt-.*$" . message-mode)
   :init
 
-  (defun message-newline-and-reformat--delete-superflous-newlines ()
+  (defun message-newline-and-reformat--delete-superflous-newlines (&rest ignore)
     "Have `message-newline-and-reformat' get rid of some more
 superflous blank quoted lines."
     (save-excursion
