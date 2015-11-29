@@ -327,14 +327,6 @@
              spw/new-philos-notes
              spw/fmr-sync-doc))
 
-;;; keep pop up windows under control
-
-(use-package popwin
-  :disabled t
-  :commands popwin-mode
-  :defer 5
-  :config (popwin-mode 1))
-
 ;;; save my places in buffers; this is all the session management I need
 
 (setq recentf-save-file "~/.emacs.d/recentf")
