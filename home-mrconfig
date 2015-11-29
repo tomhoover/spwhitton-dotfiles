@@ -124,19 +124,12 @@ rebase =
     # common rebasing patterns
     branch="$(git rev-parse --abbrev-ref HEAD)"
     if [ "$branch" = "win32" ]; then
-        git checkout win32
         git rebase master
-    # fallback elif to still do something automatic in the simplest case
-    elif [ "$branch" = "$hostname" ]; then
-        # Determine nearest parent branch by
-        # <https://stackoverflow.com/questions/3161204/find-the-parent-branch-of-a-branch#comment35666518_17843908>.
-        # This should always be master per README, but check just in
-        # case.
-        parent="$(git show-branch -a | grep '*' | egrep -v "\[${branch}[0-9^~]*\]" | head -n1 | sed 's/.*\[\(.*\)\].*/\1/' | sed 's/[\^~].*//')"
-        if [ "$parent" = "master" ]; then
-            git checkout $branch
-            git rebase master
-        fi
+    # fallback elif to still do something automatic in the simplest
+    # case: per dotfiles repo policy, this branch will always be based
+    # on master
+    elif [ "$branch" = "$(hostname -s)" ]; then
+        git rebase master
     fi
 # sync = git push origin master
 
