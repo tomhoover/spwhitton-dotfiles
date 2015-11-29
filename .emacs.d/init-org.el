@@ -61,32 +61,6 @@
       (call-interactively 'htmlize-buffer)
       (write-file "~/tmp/calendar.html"))))
 
-(defun spw/new-philos-notes (name)
-  "Create a file NAME.org in my philosophy notes directory.
-
-The purpose of this function is to allow that name easily to have
-spaces in it and to remove any colons."
-  (interactive "sTitle: ")
-  (let ((sanitised (replace-regexp-in-string "\?" "" (replace-regexp-in-string ":" "," name))))
-    (find-file (expand-file-name
-                (concat sanitised ".org")
-                (f-join org-directory "philos")))
-    (insert "philos")
-    (yas-expand)
-    (insert name)
-    (yas-next-field)))
-
-(defun spw/fmr-sync-doc ()
-  "Perform `mr sync' command in ~/doc."
-  (interactive)
-  (org-save-all-org-buffers)
-  (let ((default-directory (expand-file-name "~/doc/"))
-        (buffer (get-buffer-create "*mr sync*")))
-    (with-current-buffer buffer
-      (delete-region (point-min) (point-max)))
-    (display-buffer "*mr sync*")
-    (async-shell-command "remdocsync" "*mr sync*")))
-
 
 
 ;;;; ---- preferences ----
@@ -941,6 +915,32 @@ spaces in it and to remove any colons."
           "[[cite:%l][]]"))))
 
 ;;;; ---- functions ----
+
+(defun spw/new-philos-notes (name)
+  "Create a file NAME.org in my philosophy notes directory.
+
+The purpose of this function is to allow that name easily to have
+spaces in it and to remove any colons."
+  (interactive "sTitle: ")
+  (let ((sanitised (replace-regexp-in-string "\?" "" (replace-regexp-in-string ":" "," name))))
+    (find-file (expand-file-name
+                (concat sanitised ".org")
+                (f-join org-directory "philos")))
+    (insert "philos")
+    (yas-expand)
+    (insert name)
+    (yas-next-field)))
+
+(defun spw/fmr-sync-doc ()
+  "Perform `mr sync' command in ~/doc."
+  (interactive)
+  (org-save-all-org-buffers)
+  (let ((default-directory (expand-file-name "~/doc/"))
+        (buffer (get-buffer-create "*mr sync*")))
+    (with-current-buffer buffer
+      (delete-region (point-min) (point-max)))
+    (display-buffer "*mr sync*")
+    (async-shell-command "remdocsync" "*mr sync*")))
 
 ;;; the default C-c [ and C-c ] expand the directory ~/doc/org in the
 ;;; org-agenda-files variable using the local path,
