@@ -9,54 +9,31 @@
 ;; be sure not to load stale bytecode-compiled lisp
 (setq load-prefer-newer t)
 
+;; this is where all subtree packages are
+(defconst emacs-pkg-dir (concat user-emacs-directory "pkg"))
+
+;; load up f, and its dependencies s and dash, so we can use `f-glob'
+;; and `f-join'
+(dolist (pkg '("f.el" "dash.el" "s.el"))
+  (add-to-list 'load-path (concat emacs-pkg-dir "/" pkg)))
+(require 'f) (require 's) (require 'dash)
+
+;; helper function
+(defun expand-all-globs (root globs)
+  (let ((do-glob (lambda (glob) (f-glob (f-join root glob)))))
+    (apply 'nconc (mapcar do-glob globs))))
+
+;; now add all my pkg lisp directories
+(let* ((globs '("*" "*/lisp"))
+       (dirs (expand-all-globs emacs-pkg-dir globs)))
+  (dolist (dir dirs)
+    (when (file-directory-p dir)
+      (add-to-list 'load-path dir))))
+
+;; finally put my own site-lisp at the front of `load-path'
 (add-to-list 'load-path (concat user-emacs-directory "site-lisp"))
 
-;; Add all packages in my git subtrees dir to the load-path.  The
-;; function `normal-top-level-add-subdirs-to-load-path' fails to add
-;; dirs containing periods.  This code is adapted from a version of
-;; `normal-top-level-add-subdirs-to-load-path' found at
-;; <https://github.com/hhkbp2/dot-emacs/blob/master/site-lisp/my-subdirs.el>.
-
-;; Note that this appends to load-path.  If you want your subtree
-;; packages to override system packages (e.g. a newer version of
-;; Org-mode than Debian's) you will need to prepend to the load path
-;; as I prepended by site-lisp directory above.
-
-(let (dirs
-      attrs
-      (pending (list (concat user-emacs-directory "pkg"))))
-  ;; This loop does a breadth-first tree walk on DIR's subtree,
-  ;; putting each subdir into DIRS as its contents are examined.
-  (while pending
-    (push (pop pending) dirs)
-    (let* ((this-dir (car dirs))
-	   (contents (directory-files this-dir))
-	   (default-directory this-dir)
-	   (canonicalized (if (fboundp 'untranslated-canonical-name)
-			      (untranslated-canonical-name this-dir))))
-      ;; The Windows version doesn't report meaningful inode
-      ;; numbers, so use the canonicalized absolute file name of the
-      ;; directory instead.
-      (setq attrs (or canonicalized
-		      (nthcdr 10 (file-attributes this-dir))))
-      (unless (member attrs normal-top-level-add-subdirs-inode-list)
-	(push attrs normal-top-level-add-subdirs-inode-list)
-	(dolist (file contents)
-	  ;; The lower-case variants of RCS and CVS are for DOS/Windows.
-	  (unless (member file '("." ".." "RCS" "CVS" "rcs" "cvs"))
-	    (when (and (string-match "\\`[[:alnum:]]" file)
-		       ;; Avoid doing a `stat' when it isn't necessary
-		       ;; because that can cause trouble when an NFS server
-		       ;; is down.
-		       (file-directory-p file))
-	      (let ((expanded (expand-file-name file)))
-		(unless (file-exists-p (expand-file-name ".nosearch"
-							 expanded))
-		  (setq pending (nconc pending (list expanded)))))))))))
-  (if (equal window-system 'w32)
-      (setq load-path (append (nreverse dirs) load-path))
-    (normal-top-level-add-to-load-path (cdr (nreverse dirs)))))
-
+;; we will use use-package to load everything else
 (require 'use-package)
 
 ;;;; ---- basic settings ----
