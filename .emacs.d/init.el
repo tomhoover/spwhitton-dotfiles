@@ -641,6 +641,8 @@
 
 (use-package tramp
   :config
+
+  ;; usernames on hosts
   (add-to-list 'tramp-default-user-alist '(nil "sdf" "spw"))
   (add-to-list 'tramp-default-user-alist '("sudo" "localhost" "root"))
   (add-to-list 'tramp-default-user-alist '(nil nil "swhitton") t)
@@ -655,10 +657,7 @@
 
 (use-package ebib
   :bind ("C-c g e" . ebib)
-  :init
-  ;; (defadvice ebib (before spw/persp-ebib activate)
-  ;;   (persp-switch "ebib"))
-  (setq ebib-preload-bib-files '("~/doc/spw.bib")))
+  :init (setq ebib-preload-bib-files '("~/doc/spw.bib")))
 
 ;;; dired enhancements
 
@@ -2034,9 +2033,11 @@ superflous blank quoted lines."
 ;;; javascript
 
 ;; don't insert a newline after a semicolon
-(add-hook 'js-mode-hook (lambda ()
-                          (setq-local electric-layout-rules
-                                      (remove (quote (?\; . after)) electric-layout-rules))))
+(add-hook
+ 'js-mode-hook
+ (lambda ()
+   (setq-local electric-layout-rules
+               (remove (quote (?\; . after)) electric-layout-rules))))
 
 ;;; eshell prompt
 
