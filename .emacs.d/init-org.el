@@ -265,8 +265,10 @@
         (if (not (search-forward file nil t))
             (add-to-list 'org-agenda-text-search-extra-files (concat "~/doc/org/" file)))))))
 
-;; remove my massive archive file; can search that manually if necessary
-(delete "~/doc/org/archive.org" org-agenda-text-search-extra-files)
+;; remove my massive archive files; can search that manually if
+;; necessary
+(dolist (file (f-glob "~/doc/org/archive/archive*.org"))
+  (delete file org-agenda-text-search-extra-files))
 
 ;;; Org habit
 
