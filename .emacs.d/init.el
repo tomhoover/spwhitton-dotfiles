@@ -967,6 +967,12 @@
   ;; only under X11, thanks
   :if (call-process-shell-command "pgrep" nil nil nil "lightdm"))
 
+;;; Documentation browsing
+
+(use-package helm-dash
+  :init (require 'helm-config)
+  :commands (helm-dash helm-dash-at-point))
+
 
 
 ;;;; ---- functions ----

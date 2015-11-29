@@ -8,6 +8,12 @@
     make
 )
 
+# make helm autoloads
+(
+    cd $HOME/src/dotfiles/.emacs.d/pkg/helm
+    make
+)
+
 # byte-compile anything that needs to be
 emacs --batch \
       --eval '(byte-recompile-directory user-emacs-directory 0)' \
