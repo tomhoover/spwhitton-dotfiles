@@ -546,7 +546,8 @@
   ;; This setup binds `C-c [ RET search-string RET' to try to insert a
   ;; citation
   (setq reftex-default-bibliography (quote ("~/doc/spw.bib"))
-        reftex-cite-format '((?\C-m . "[@%l]"))))
+        reftex-cite-format '((?\C-m . "[@%l]")
+                             (?- . "[-@%l]"))))
 
 ;;; PHP mode
 
