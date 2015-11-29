@@ -44,8 +44,8 @@
 (defconst custom-file (concat user-emacs-directory "init-custom.el"))
 (load custom-file 'noerror)
 
-;; when I try do elisp experimentation I use IELM so make scratch
-;; buffer a little more co-operative
+;; when I do elisp experimentation I use IELM, so make scratch buffer
+;; a little more co-operative
 (setq initial-major-mode 'text-mode)
 
 ;;; load terminal fixes
@@ -105,20 +105,21 @@
 ;;     (set-fringe-mode 0))
 
 ;; Terminus
-(if (member "Terminus-11" (font-family-list))
-    (set-default-font "Terminus-11"))
-(add-to-list 'default-frame-alist '(font . "Terminus-11"))
+(when (member "Terminus-11" (font-family-list))
+  (set-frame-font "Terminus-11" nil t))
 
 ;; disable GUI elements
-(if (fboundp 'set-scroll-bar-mode) (set-scroll-bar-mode nil))
-(if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
-(if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
+(when (fboundp 'set-scroll-bar-mode) (set-scroll-bar-mode nil))
+(when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
+(when (fboundp 'menu-bar-mode) (menu-bar-mode -1))
 
 ;;; cursor settings
 
 (setq x-stretch-cursor t)
 (setq-default cursor-type 'box)
-(if (fboundp 'blink-cursor-mode) (blink-cursor-mode 0)) ; turns off blink-cursor-mode if it ended up on
+
+;; turns off blink-cursor-mode if it ended up on
+(when (fboundp 'blink-cursor-mode) (blink-cursor-mode 0))
 
 ;; get the mouse out of the way
 (mouse-avoidance-mode 'exile)
@@ -127,28 +128,15 @@
 
 (use-package zenburn-theme
   :init
-  (add-to-list 'custom-theme-load-path
-               (concat user-emacs-directory "pkg/zenburn-emacs"))
+  (add-to-list
+   'custom-theme-load-path
+   (concat user-emacs-directory "pkg/zenburn-emacs"))
   (load-theme 'zenburn))
-
-;;; sexy mode line
-
-(use-package smart-mode-line
-  :disabled t
-  :init
-  (use-package powerline)
-  (use-package smart-mode-line-powerline-theme)
-  (sml/setup)
-  (sml/apply-theme 'powerline)
-  (setq sml/shorten-directory nil
-        sml/shorten-modes t
-        sml/mode-width 'right
-        sml/vc-mode-show-backend t))
 
 ;;; I'm in Arizona
 
-(if (not (eq system-type 'windows-nt))
-    (set-time-zone-rule "/usr/share/zoneinfo/US/Mountain"))
+(unless (eq system-type 'windows-nt)
+  (set-time-zone-rule "/usr/share/zoneinfo/US/Mountain"))
 
 ;;; be sure to start the server
 
