@@ -1989,8 +1989,7 @@ superflous blank quoted lines."
 (setq dired-omit-files "^\\...+$")
 (setq dired-isearch-filenames 'dwim)
 
-;; dired omit mode mapping conflicts with my ace jump mode
-;; binding
+;; dired omit mode mapping conflicts with my avy binding
 (define-key dired-mode-map (kbd "M-o") 'nil)
 (bind-key "C-c g o" 'dired-omit-mode dired-mode-map)
 
