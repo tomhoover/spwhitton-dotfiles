@@ -541,6 +541,7 @@
 (use-package reftex
   :init
   (add-hook 'markdown-mode-hook 'turn-on-reftex)
+  (add-hook 'org-mode-hook 'turn-on-reftex)
   :config
   ;; This setup binds `C-c [ RET search-string RET' to try to insert a
   ;; citation
