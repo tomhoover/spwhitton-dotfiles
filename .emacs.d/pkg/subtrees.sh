@@ -5,13 +5,13 @@
     # must cd to inside ~/src/dotfiles.  If change to ~/.emacs.d/blah,
     # the autoloads are not generated correctly
     cd $HOME/src/dotfiles/.emacs.d/pkg/haskell-mode
-    make
+    chronic make
 )
 
 # make helm autoloads
 (
     cd $HOME/src/dotfiles/.emacs.d/pkg/helm
-    make
+    chronic make
 )
 
 # byte-compile anything that needs to be
