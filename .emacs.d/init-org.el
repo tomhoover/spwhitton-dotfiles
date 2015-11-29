@@ -6,14 +6,6 @@
 
 ;;;; ---- packages ----
 
-;;; get Org headline completion in helm-mini
-
-;; (use-package helm-org)
-
-;;; my helper functions for blog posts
-
-(use-package spw-pyblosxom)
-
 ;;; with the new exporter in Org version 8, must explicitly require
 ;;; the exporters I want to use
 
