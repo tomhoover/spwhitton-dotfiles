@@ -69,7 +69,11 @@
     ;; Disable haskell-mode's default snippets for now.  We take the
     ;; car of this list because that should be the latest version of
     ;; haskell-mode.
-    (delete (car (f-glob (f-join package-user-dir "haskell-mode-*/snippets"))) yas-snippet-dirs)
+
+    ;; disabled until I can get the autoloads right
+    ;; (delete (car (f-glob (f-join package-user-dir
+    ;; "haskell-mode-*/snippets"))) yas-snippet-dirs)
+
     (setq flymake-allowed-file-name-masks nil)
     (remove-hook 'haskell-mode-hook (lambda ()
                                       (ghc-init)
