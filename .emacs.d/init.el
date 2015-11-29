@@ -219,6 +219,9 @@
 
   :config
 
+  ;; always highlight parens
+  (show-smartparens-global-mode 1)
+
   (require 'smartparens-config)
   (setq sp-navigate-consider-symbols t)
 
@@ -240,30 +243,29 @@
   ;; (bind-key "C-k" 'sp-kill-hybrid-sexp
   ;; emacs-lisp-mode-map)
 
-  (defadvice sp-backward-kill-word (after sp-backward-kill-word-fix-punctuation activate)
-    ;; when killing the first word of a sentence, leave the
-    ;; two spaces after the previous sentence's terminal
-    ;; period
+  ;; when killing the first word of a sentence, leave the
+  ;; two spaces after the previous sentence's terminal
+  ;; period
+  (defun sp-backward-kill-word--fix-punctuation ()
     (save-excursion
       (backward-char 2)
-      (if (and
-           (or
-            (looking-at "\\. ")
-            (looking-at   "! ")
-            (looking-at "\\? "))
-           (not (looking-back "^[1-9]+")))
-          (progn
-            (forward-char 1)
-            (insert " ")))))
+      (when (and (or (looking-at "\\. ")
+                     (looking-at   "! ")
+                     (looking-at "\\? "))
+                 (not (looking-back "^[1-9]+")))
+        (forward-char 1)
+        (insert " "))))
+  (advice-add 'sp-backward-kill-word :after #'sp-backward-kill-word--fix-punctuation)
 
   ;; fix cursor position after M-d at the beginning of a line
-  (defadvice sp-kill-word (after sp-kill-word-beg-of-line-fix activate)
-    (if (looking-back "^[[:space:]]")
-        (backward-char 1)))
+  (defun sp-kill-word--beg-of-line-fix ()
+    (when (looking-back "^[[:space:]]")
+      (backward-char 1)))
+  (advice-add 'sp-kill-word :after #'sp-kill-word--beg-of-line-fix)
 
-  (defadvice sp-backward-delete-char (around sp-backward-delete-char-remove-indentation activate)
-    ;; when after whitespace at the beginning of a line or
-    ;; an Org bullet or heading, delete it all
+  ;; when after whitespace at the beginning of a line or
+  ;; an Org bullet or heading, delete it all
+  (defun sp-backward-delete-char--remove-indentation (orig-fun &rest args)
     (if (and
          ;; do it if we're not at the beginning of the line,
          ;; and there's whitespace: if we're at the
@@ -276,13 +278,13 @@
         (kill-line 0)
       ;; if not after whitespace at the beginning of the
       ;; line, just call as usual
-      ad-do-it))
+      (apply orig-fun args)))
+  (advice-add 'sp-backward-delete-char :around #'sp-backward-delete-char--remove-indentation)
 
-  (defadvice sp-backward-kill-word (around sp-backward-delete-word-remove-indentation activate)
-    ;; when after whitespace at the beginning of a line or
-    ;; an Org bullet or heading, delete it all.  This is
-    ;; more intuitive when C-w is one's main way to delete
-    ;; stuff
+  ;; when after whitespace at the beginning of a line or an Org bullet
+  ;; or heading, delete it all.  This is more intuitive when C-w is
+  ;; one's main way to delete stuff
+  (defun sp-backward-delete-word--remove-indentation (orig-fun &rest args)
     (if (and
          ;; do it if we're not at the beginning of the line,
          ;; and there's whitespace: if we're at the
@@ -295,20 +297,11 @@
         (kill-line 0)
       ;; if not after whitespace at the beginning of the
       ;; line, just call as usual
-      ad-do-it))
+      (apply orig-fun args)))
+  (advice-add 'sp-backward-delete-word :around #'sp-backward-delete-word--remove-indentation)
 
-  ;; define some additional pairings for Org-mode
-  (sp-local-pair 'org-mode "=" "=") ; verbatim
-  ;; (sp-local-pair 'org-mode "*" "*")
-  ;; (sp-local-pair 'org-mode "/" "/")
-  ;; (sp-local-pair 'org-mode "~" "~") ; code
-  ;; (sp-local-pair 'org-mode "+" "+")
-  ;; (sp-local-pair 'org-mode "_" "_")
-
-  ;; (defadvice sp--cleanup-after-kill (after haskell-sp-unindent activate)
-  ;;   (when hi2-mode
-  ;;     (hi2-indent-backwards)))
-  (show-smartparens-global-mode 1))
+  ;; define an additional pairing for Org-mode (verbatim text)
+  (sp-local-pair 'org-mode "=" "="))
 
 ;;; Org
 
