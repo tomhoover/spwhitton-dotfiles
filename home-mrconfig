@@ -123,12 +123,17 @@ push =
 rebase =
     # common rebasing patterns
     branch="$(git rev-parse --abbrev-ref HEAD)"
+    hostname="$(hostname -s)"
     if [ "$branch" = "win32" ]; then
         git rebase master
     # fallback elif to still do something automatic in the simplest
     # case: per dotfiles repo policy, this branch will always be based
     # on master
     elif [ "$branch" = "$(hostname -s)" ]; then
+        git rebase master
+    # final case: if we're on another branch but a host branch exists
+    elif git branch | grep -q "^  $hostname$"; then
+        git checkout $hostname
         git rebase master
     fi
 # sync = git push origin master
