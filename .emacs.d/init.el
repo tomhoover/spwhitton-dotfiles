@@ -969,9 +969,16 @@
 
 ;;; Documentation browsing
 
+(defun spw/helm-dash (arg)
+  (interactive "p")
+  (if arg (helm-dash-at-point) (helm-dash)))
+(bind-key "C-c d" 'spw/helm-dash)
+
 (use-package helm-dash
-  :init (require 'helm-config)
-  :commands (helm-dash helm-dash-at-point))
+  :commands (helm-dash helm-dash-at-point helm-dash-install-docset)
+  :config
+  (use-package helm :init (require 'helm-config))
+  (setq helm-dash-common-docsets (helm-dash-installed-docsets)))
 
 
 
