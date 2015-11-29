@@ -668,12 +668,7 @@
                ("\\subsection{%s}" . "\\subsection*{%s}")
                ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
 
-;;; load up Org publishing settings
-
-(load "~/doc/www/org-publish.el" 'noerror)
-;; (load "~/doc/sf/www/org-publish.el" 'noerror)
-
-;;; set some more Org publishing settings
+;;; Org publishing settings
 
 ;; following is purely so that we can export my Org files to
 ;; the desktop, not just into ~/doc/org
