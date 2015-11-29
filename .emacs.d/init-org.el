@@ -905,6 +905,7 @@
 ;;        (format "\\cite[][\\nopage{%s}]{republic}"
 ;;                  path))))))
 
+;; not calling this function atm
 (defun org-mode-reftex-setup ()
   (load-library "reftex")
   (and (buffer-file-name) (file-exists-p (buffer-file-name))
