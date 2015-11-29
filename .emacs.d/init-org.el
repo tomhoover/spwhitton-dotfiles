@@ -277,7 +277,7 @@
 
 ;;;; ---- agenda and refile ----
 
-(defun org-agenda--switch-projectile-project ()
+(defun org-agenda--switch-projectile-project (&rest ignore)
   "Switch perspective project before compiling the agenda."
   ;; don't do it if we're already there so that the buffer we're
   ;; switching from remains top of the buffer list
@@ -541,7 +541,7 @@
                        " -not -name reading.org"
                        " -not -name archive.org -not -regex '" (expand-file-name org-directory) "/[ABCDEFGHIJKLMNOPQRSTUVWXYZ].*' -exec egrep -nH -e \"\\* \(TODO\|SOMEDAY\|WAITING\|SOONDAY\) \" {} +"))))
 
-(defun org-agenda--run-find-non-agenda-todos ()
+(defun org-agenda--run-find-non-agenda-todos (&rest ignore)
   "Call grep to find Org files that aren't in `org-agenda-files'
   but should be, when opening my agenda for my weekly Org-mode
   review"
