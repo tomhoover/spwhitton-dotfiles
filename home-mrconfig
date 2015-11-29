@@ -342,6 +342,7 @@ post_checkout =
         git remote add bkupsd /media/${USER}/bkupsd/git/athena/wikiannex.git
         git remote add m3 /media/${USER}/m3/git/athena/wikiannex.git
     fi
+update = git annex sync         # no pull in direct mode
 skip = ! mine
 
 # --- git annex for use with rtorrent
