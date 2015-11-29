@@ -620,15 +620,17 @@
   (setq flycheck-emacs-lisp-load-path 'inherit)
 
   ;; disable flycheck in org-mode as it clobbers the important C-c !
-  (defadvice flycheck-mode (around spw/org-disable-flycheck activate)
-    (unless (eq major-mode 'org-mode) ad-do-it))
+  (defun flycheck-mode--org-disable-flycheck (orig-fun &rest args)
+    (unless (eq major-mode 'org-mode)
+      (apply orig-fun args)))
+  (advice-add 'flycheck-mode :around #'flycheck-mode--org-disable-flycheck)
 
   ;; special Flycheck for Haskell
   (use-package flycheck-haskell
-    :init
-    (add-hook 'flycheck-mode-hook #'flycheck-haskell-setup))
+    :init (add-hook 'flycheck-mode-hook #'flycheck-haskell-setup))
 
   :config
+
   ;; don't check too often: brief Emacs lock-ups are annoying
   (setq flycheck-check-syntax-automatically '(mode-enabled save))
 
