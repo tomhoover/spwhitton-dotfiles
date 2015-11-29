@@ -74,7 +74,7 @@
 ;; custom doesn't actually set all the faces it should, so we'll do
 ;; some manually
 ;;(set-face-foreground 'org-hide "#3f3f3f")
-(when (set-default-font "Terminus-11")
+(when (member "Terminus" (font-family-list))
   (set-face-font 'org-hide "Terminus"))
 
 (setq org-alphabetical-lists t
