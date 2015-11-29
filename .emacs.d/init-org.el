@@ -77,182 +77,178 @@
 (when (member "Terminus" (font-family-list))
   (set-face-font 'org-hide "Terminus"))
 
-(setq org-alphabetical-lists t
-      org-startup-indented 1
-      org-indent-indentation-per-level 4
-      org-adapt-indentation nil
-      org-directory "~/doc/org"
+(setq
+ org-alphabetical-lists t
+ org-startup-indented 1
+ org-indent-indentation-per-level 4
+ org-adapt-indentation nil
+ org-directory "~/doc/org"
 
-      org-tag-alist '((:startgroup)
-                      ("@libDASL" . ?l)
-                      ("@Tucson" . ?e)
-                      ("@campus" . ?m)
-                      ("@Sheffield" . ?u)
-                      ("@E5thSt" . ?h)
-                      ("@www" . ?i)
-                      (:endgroup))
+ org-tag-alist '((:startgroup)
+                 ("@libDASL" . ?l)
+                 ("@Tucson" . ?e)
+                 ("@campus" . ?m)
+                 ("@Sheffield" . ?u)
+                 ("@E5thSt" . ?h)
+                 ("@www" . ?i)
+                 (:endgroup))
 
-      ;; enable speed commands and bind N to narrow to subtree
-      org-use-speed-commands t
-      org-speed-commands-user '(("N" . org-narrow-to-subtree)
-                                ("h" . hide-other)
-                                ("k" . org-kill-note-or-show-branches)
-                                ("s" . org-save-all-org-buffers)
-                                ("z" . org-add-note)
-                                ("c" . self-insert-command)
-                                ("C" . self-insert-command)
-                                ("1" . delete-other-windows)
-                                ("2" . split-window-vertically)
-                                ("3" . split-window-horizontally)
-                                ("m" . org-mark-subtree))
-      org-agenda-include-all-todo nil
-      org-agenda-files "~/doc/emacs-org-agenda-files"
-      org-agenda-persistent-filter t
-      org-agenda-diary-file "~/doc/org/refile.org"
-      org-agenda-insert-diary-strategy 'top-level
-      org-goto-auto-isearch t
-      org-goto-interface 'outline
-      org-archive-mark-done nil
-      org-archive-save-context-info '(time file olpath)
-      org-archive-location "~/doc/org/archive/archive.org::* From %s"
-      org-cycle-global-at-bob t
-      org-startup-folded t
+ ;; enable speed commands and bind N to narrow to subtree
+ org-use-speed-commands t
+ org-speed-commands-user '(("N" . org-narrow-to-subtree)
+                           ("h" . hide-other)
+                           ("k" . org-kill-note-or-show-branches)
+                           ("s" . org-save-all-org-buffers)
+                           ("z" . org-add-note)
+                           ("c" . self-insert-command)
+                           ("C" . self-insert-command)
+                           ("1" . delete-other-windows)
+                           ("2" . split-window-vertically)
+                           ("3" . split-window-horizontally)
+                           ("m" . org-mark-subtree))
+ org-agenda-include-all-todo nil
+ org-agenda-files "~/doc/emacs-org-agenda-files"
+ org-agenda-persistent-filter t
+ org-agenda-diary-file "~/doc/org/refile.org"
+ org-agenda-insert-diary-strategy 'top-level
+ org-goto-auto-isearch t
+ org-goto-interface 'outline
+ org-archive-mark-done nil
+ org-archive-save-context-info '(time file olpath)
+ org-archive-location "~/doc/org/archive/archive.org::* From %s"
+ org-cycle-global-at-bob t
+ org-startup-folded t
 
-      ;; using indirect buffers for DnD and for now want them in their own
-      ;; frames (use C-u)
-      org-indirect-buffer-display 'dedicated-frame
-      org-agenda-dim-blocked-tasks nil
-      org-stuck-projects (quote ("" nil nil ""))
-      org-hide-emphasis-markers nil
-      org-use-fast-todo-selection t
-      org-treat-S-cursor-todo-selection-as-state-change nil
-      org-treat-insert-todo-heading-as-state-change t
-      org-fast-tag-selection-include-todo t
-      org-show-entry-below (quote ((default)))
-      org-log-into-drawer nil
-      org-log-state-notes-insert-after-drawers t
-      org-log-states-order-reversed nil
-      org-log-done t
-      ;; org-log-redeadline 'note
-      ;; org-log-reschedule 'time
-      org-log-redeadline nil
-      org-log-reschedule nil
-      ;; org-log-refile 'time
-      org-log-refile nil
-      org-enforce-todo-dependencies t
-      org-cycle-separator-lines 2
-      org-blank-before-new-entry (quote ((heading)
-                                         (plain-list-item)))
-      org-insert-heading-respect-content nil
-      org-reverse-note-order nil
-      org-show-following-heading t
-      org-show-siblings t
-      org-show-hierarchy-above t
-      org-special-ctrl-a/e t
-      org-special-ctrl-k t
-      org-yank-adjusted-subtrees t
-      org-yank-folded-subtrees nil
-      org-id-method (quote uuidgen)
-      org-deadline-warning-days 60
-      org-return-follows-link nil
-      org-display-internal-link-with-indirect-buffer t
-      org-remove-highlights-with-change nil
-      org-M-RET-may-split-line '((default . nil))
-      org-table-export-default-format "orgtbl-to-csv"
-      org-link-frame-setup '((gnus . gnus-other-frame)
-                             (vm . vm-visit-folder-other-frame)
-                             (file . find-file-other-window))
+ ;; using indirect buffers for DnD and for now want them in their own
+ ;; frames (use C-u)
+ org-indirect-buffer-display 'dedicated-frame
+ org-agenda-dim-blocked-tasks nil
+ org-stuck-projects (quote ("" nil nil ""))
+ org-hide-emphasis-markers nil
+ org-use-fast-todo-selection t
+ org-treat-S-cursor-todo-selection-as-state-change nil
+ org-treat-insert-todo-heading-as-state-change t
+ org-fast-tag-selection-include-todo t
+ org-show-entry-below (quote ((default)))
+ org-log-into-drawer nil
+ org-log-state-notes-insert-after-drawers t
+ org-log-states-order-reversed nil
+ org-log-done t
+ ;; org-log-redeadline 'note
+ ;; org-log-reschedule 'time
+ org-log-redeadline nil
+ org-log-reschedule nil
+ ;; org-log-refile 'time
+ org-log-refile nil
+ org-enforce-todo-dependencies t
+ org-cycle-separator-lines 2
+ org-blank-before-new-entry (quote ((heading)
+                                    (plain-list-item)))
+ org-insert-heading-respect-content nil
+ org-reverse-note-order nil
+ org-show-following-heading t
+ org-show-siblings t
+ org-show-hierarchy-above t
+ org-special-ctrl-a/e t
+ org-special-ctrl-k t
+ org-yank-adjusted-subtrees t
+ org-yank-folded-subtrees nil
+ org-id-method (quote uuidgen)
+ org-deadline-warning-days 60
+ org-return-follows-link nil
+ org-display-internal-link-with-indirect-buffer t
+ org-remove-highlights-with-change nil
+ org-M-RET-may-split-line '((default . nil))
+ org-table-export-default-format "orgtbl-to-csv"
+ org-link-frame-setup '((gnus . gnus-other-frame)
+                        (vm . vm-visit-folder-other-frame)
+                        (file . find-file-other-window))
 
-      org-remove-highlights-with-change nil
-      org-read-date-prefer-future t
-      org-file-apps (quote ((auto-mode . emacs)
-                            ("\\.mm\\'" . system)
-                            ("\\.x?html?\\'" . system)
-                            ("\\.pdf\\'" . system)
-                            ("\\.jpg\\'" . "/usr/bin/feh %s")
-                            ("\\.png\\'" . "/usr/bin/feh %s")
-                            ("\\.gif\\'" . "/usr/bin/feh %s")))
-      org-list-demote-modify-bullet (quote (("-" . "+")
-                                            ("+" . "*")
-                                            ("*" . "-")
-                                            ("1." . "-")
-                                            ("1)" . "-")))
-      org-list-use-circular-motion t
-      org-M-RET-may-split-line '((default . t))
-      org-agenda-todo-ignore-with-date nil
-      org-agenda-todo-ignore-deadlines nil
-      org-agenda-todo-ignore-scheduled 'future
-      org-agenda-todo-list-sublevels nil
-      org-agenda-skip-deadline-if-done t
-      org-agenda-skip-scheduled-if-done t
-      org-agenda-skip-scheduled-if-deadline-is-shown 'not-today
-      org-agenda-skip-additional-timestamps-same-entry nil
-      org-agenda-skip-timestamp-if-done t
-      org-agenda-start-on-weekday nil
-      org-tags-match-list-sublevels t
-      org-agenda-persistent-filter t
-      org-agenda-skip-deadline-prewarning-if-scheduled 3
-      org-agenda-window-setup 'current-window
-      org-agenda-entry-text-maxlines 3
+ org-remove-highlights-with-change nil
+ org-read-date-prefer-future t
+ org-file-apps (quote ((auto-mode . emacs)
+                       ("\\.mm\\'" . system)
+                       ("\\.x?html?\\'" . system)
+                       ("\\.pdf\\'" . system)
+                       ("\\.jpg\\'" . "/usr/bin/feh %s")
+                       ("\\.png\\'" . "/usr/bin/feh %s")
+                       ("\\.gif\\'" . "/usr/bin/feh %s")))
+ org-list-demote-modify-bullet (quote (("-" . "+")
+                                       ("+" . "*")
+                                       ("*" . "-")
+                                       ("1." . "-")
+                                       ("1)" . "-")))
+ org-list-use-circular-motion t
+ org-M-RET-may-split-line '((default . t))
+ org-agenda-todo-ignore-with-date nil
+ org-agenda-todo-ignore-deadlines nil
+ org-agenda-todo-ignore-scheduled 'future
+ org-agenda-todo-list-sublevels nil
+ org-agenda-skip-deadline-if-done t
+ org-agenda-skip-scheduled-if-done t
+ org-agenda-skip-scheduled-if-deadline-is-shown 'not-today
+ org-agenda-skip-additional-timestamps-same-entry nil
+ org-agenda-skip-timestamp-if-done t
+ org-agenda-start-on-weekday nil
+ org-tags-match-list-sublevels t
+ org-agenda-persistent-filter t
+ org-agenda-skip-deadline-prewarning-if-scheduled 3
+ org-agenda-window-setup 'current-window
+ org-agenda-entry-text-maxlines 3
 
-      org-todo-keywords
-      '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
-        (sequence "WAITING(w)" "SOMEDAY(s)" "|" "CANCELLED(c)"))
+ org-todo-keywords
+ '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
+   (sequence "WAITING(w)" "SOMEDAY(s)" "|" "CANCELLED(c)"))
 
-      org-todo-keyword-faces '(("SOMEDAY" . (:foreground "#94BFF3" :weight bold)) ; zenburn-blue+1
-                               ("NEXT" . (:foreground "#F0DFAF" :weight bold))) ; zenburn-yellow
+ org-todo-keyword-faces '(("SOMEDAY" . (:foreground "#94BFF3" :weight bold)) ; zenburn-blue+1
+                          ("NEXT" . (:foreground "#F0DFAF" :weight bold))) ; zenburn-yellow
 
-      ;; Include agenda archive files when searching for things
-      org-agenda-text-search-extra-files (quote (agenda-archives))
+ ;; Include agenda archive files when searching for things
+ org-agenda-text-search-extra-files (quote (agenda-archives))
 
-      ;; weekends in a different colour
-      org-agenda-date-weekend t
-      org-default-notes-file (concat org-directory "/refile.org")
-      org-completion-use-ido t
+ ;; weekends in a different colour
+ org-agenda-date-weekend t
+ org-default-notes-file (concat org-directory "/refile.org")
+ org-completion-use-ido t
 
-      ;; Targets include this file and any file contributing to the agenda - up to 5 levels deep
-      org-refile-targets (quote ((org-agenda-files :maxlevel . 5) (nil :maxlevel . 5)))
+ ;; Targets include this file and any file contributing to the agenda - up to 5 levels deep
+ org-refile-targets (quote ((org-agenda-files :maxlevel . 5) (nil :maxlevel . 5)))
 
-      ;; Targets start with the file name - allows creating level 1 tasks
-      org-refile-use-outline-path (quote file)
+ ;; Targets start with the file name - allows creating level 1 tasks
+ org-refile-use-outline-path (quote file)
 
-      ;; This has to be nil to work with helm (http://lists.gnu.org/archive/html/emacs-orgmode/2014-06/msg00846.html)
-      org-outline-path-complete-in-steps nil
+ ;; This has to be nil to work with helm (http://lists.gnu.org/archive/html/emacs-orgmode/2014-06/msg00846.html)
+ ;; org-outline-path-complete-in-steps nil
 
-      ;; Allow refile to create parent tasks with confirmation
-      org-refile-allow-creating-parent-nodes (quote confirm)
+ ;; Allow refile to create parent tasks with confirmation
+ org-refile-allow-creating-parent-nodes (quote confirm)
 
-      ido-enable-tramp-completion t
-      ido-confirm-unique-completion nil
-      ido-show-dot-for-dired nil
-      org-export-with-LaTeX-fragments t
-      ;; org-export-initial-scope 'subtree
-      org-html-inline-images 'maybe ; need this to export images correctly for PyBlosxom
-      ;; doesn't appear to work atm (possibly being cancelled out by
-      ;; org-export-date-timestamp-format)
-      org-html-metadata-timestamp-format "%A %Y-%m-%d"
-      org-latex-pdf-process '("texi2dvi --pdf --clean --batch %f" "rm %f" "rm -rf auto")
-      org-export-date-timestamp-format "%e %B %Y"
-      org-html-footnotes-section "<h3>%s</h3>\n%s"
-      org-export-with-smart-quotes t
-      org-export-htmlize-output-type 'css
+ ido-enable-tramp-completion t
+ ido-confirm-unique-completion nil
+ ido-show-dot-for-dired nil
+ org-export-with-LaTeX-fragments t
+ ;; org-export-initial-scope 'subtree
+ org-html-inline-images 'maybe ; need this to export images correctly for PyBlosxom
+ ;; doesn't appear to work atm (possibly being cancelled out by
+ ;; org-export-date-timestamp-format)
+ org-html-metadata-timestamp-format "%A %Y-%m-%d"
+ org-latex-pdf-process '("texi2dvi --pdf --clean --batch %f" "rm %f" "rm -rf auto")
+ org-export-date-timestamp-format "%e %B %Y"
+ org-html-footnotes-section "<h3>%s</h3>\n%s"
+ org-export-with-smart-quotes t
+ org-export-htmlize-output-type 'css
 
-      org-latex-default-class "wordlike"
+ org-latex-default-class "wordlike"
 
-      org-export-headline-levels 3   ; set to 2 for spwoutline
+ org-export-headline-levels 3   ; set to 2 for spwoutline
 
-      ;; org-export-latex-low-levels '("\\begin{lowitemize}\\setlength{\\parindent}{2em}" "\\end{lowitemize}" "\\item \\textbf{%s}\\indent %s")
+ ;; org-export-latex-low-levels '("\\begin{lowitemize}\\setlength{\\parindent}{2em}" "\\end{lowitemize}" "\\item \\textbf{%s}\\indent %s")
 
-      ;; used after things like e.g. to prevent a double space
-      org-entities-user '(("space" "\\ " nil " " " " " " " "))
+ ;; used after things like e.g. to prevent a double space
+ org-entities-user '(("space" "\\ " nil " " " " " " " "))
 
-      org-export-with-toc nil         ; default to no table of contents
-      org-footnote-section "Notes"
-
-      ;; reftex-default-bibliography
-      ;; (quote
-      ;;  ("~/doc/spw.bib"))
-      )
+ org-export-with-toc nil         ; default to no table of contents
+ org-footnote-section "Notes")
 
 ;; Org setting bookmarks that I never use makes for git merge
 ;; conflicts that I don't need to spend time resolving.  Eventually I
@@ -287,91 +283,95 @@
 
 ;;;; ---- agenda and refile ----
 
-(defadvice org-agenda (before persp-org-agenda activate)
+(defun org-agenda--switch-projectile-project ()
   "Switch perspective project before compiling the agenda."
   ;; don't do it if we're already there so that the buffer we're
   ;; switching from remains top of the buffer list
-  (unless (ignore-errors (string= "~/doc/" (abbreviate-file-name (projectile-project-root))))
+  (unless
+      (ignore-errors (string= "~/doc/" (abbreviate-file-name (projectile-project-root))))
     (projectile-switch-project-by-name "~/doc")))
+(advice-add 'org-agenda :before #'org-agenda--switch-projectile-project)
 
-(setq org-agenda-custom-commands
-      '(("a" "Primary agenda view"
-         ((agenda "day" ((org-agenda-ndays 1)
-                         (org-agenda-overriding-header
-                          "Tasks, appointments and waiting tasks to be chased today")
-                         (org-agenda-include-deadlines nil)
-                         (org-agenda-time-grid nil))))
-         ((org-agenda-start-with-log-mode nil)
-          ;; (org-agenda-tag-filter-preset '("-Sariul"))
-          (org-agenda-start-with-follow-mode nil))
-         ("/var/www/spw/org/agenda.html" "~/lib/fm/dionysus/Agenda/Today's agenda.html"))
-        ("A" "Daily planning view"
-         ((agenda "day" ((org-agenda-ndays 1)
-                         (org-agenda-time-grid nil)
-                         (org-agenda-overriding-header "Plan for today & upcoming deadlines")))
-          (todo "TODO|NEXT" ((org-agenda-todo-ignore-scheduled t)
-                             (org-agenda-todo-ignore-deadlines 'far)
-                             (org-agenda-overriding-header "Unscheduled standalone tasks & project next actions")
-                             (org-agenda-skip-function 'spw/skip-projects-and-non-next-subprojects)))
-          (agenda "" ((org-agenda-ndays 3)
-                      (org-agenda-start-day "+1d")
-                      (org-agenda-time-grid nil)
-                      (org-agenda-repeating-timestamp-show-all t)
-                      (org-agenda-entry-types '(:timestamp :sexp))
-                      (org-agenda-show-all-dates nil)
-                      (org-agenda-overriding-header "Coming up")
-                      (org-agenda-files (quote ("~/doc/org/diary.org"))))))
-         nil
-         ("/var/www/spw/org/full.html" "~/lib/fm/dionysus/Agenda/Day-planning agenda.html"))
-        ("#" "Weekly review view"
-         ((todo "WAITING" ((org-agenda-todo-ignore-scheduled t)
-                           (org-agenda-todo-ignore-deadlines nil)
-                           (org-agenda-todo-ignore-with-date nil)
-                           (org-agenda-overriding-header "Waiting on others & not scheduled to chase up")))
-          (todo "TODO" ((org-agenda-todo-ignore-with-date t)
-                        (org-agenda-overriding-header "Stuck projects")
-                        (org-agenda-skip-function 'spw/skip-non-stuck-projects)))
-          (tags "LEVEL=1+REFILE"
-                ((org-agenda-todo-ignore-with-date nil)
-                 (org-agenda-todo-ignore-deadlines nil)
-                 (org-agenda-todo-ignore-scheduled nil)
-                 (org-agenda-overriding-header "Items to add context and priority, and refile")
-                 (org-agenda-start-with-entry-text-mode t)))
-          (todo "DONE|CANCELLED"
-                ((org-agenda-overriding-header "Tasks to be archived CAREFUL DON'T ARCHIVE SUBTASKS OF INCOMPLETE PROJECTS")
-                 (org-agenda-todo-ignore-scheduled nil)
-                 (org-agenda-todo-ignore-deadlines nil)
-                 (org-agenda-todo-ignore-with-date nil)
-                 (org-agenda-tag-filter-preset '("-APPT"))))))
+(setq
+ org-agenda-custom-commands
+ '(("a" "Primary agenda view"
+    ((agenda "day" ((org-agenda-ndays 1)
+                    (org-agenda-overriding-header
+                     "Tasks, appointments and waiting tasks to be chased today")
+                    (org-agenda-include-deadlines nil)
+                    (org-agenda-time-grid nil))))
+    ((org-agenda-start-with-log-mode nil)
+     ;; (org-agenda-tag-filter-preset '("-Sariul"))
+     (org-agenda-start-with-follow-mode nil))
+    ("/var/www/spw/org/agenda.html" "~/lib/fm/dionysus/Agenda/Today's agenda.html"))
+   ("A" "Daily planning view"
+    ((agenda "day" ((org-agenda-ndays 1)
+                    (org-agenda-time-grid nil)
+                    (org-agenda-overriding-header "Plan for today & upcoming deadlines")))
+     (todo "TODO|NEXT" ((org-agenda-todo-ignore-scheduled t)
+                        (org-agenda-todo-ignore-deadlines 'far)
+                        (org-agenda-overriding-header "Unscheduled standalone tasks & project next actions")
+                        (org-agenda-skip-function 'spw/skip-projects-and-non-next-subprojects)))
+     (agenda "" ((org-agenda-ndays 3)
+                 (org-agenda-start-day "+1d")
+                 (org-agenda-time-grid nil)
+                 (org-agenda-repeating-timestamp-show-all t)
+                 (org-agenda-entry-types '(:timestamp :sexp))
+                 (org-agenda-show-all-dates nil)
+                 (org-agenda-overriding-header "Coming up")
+                 (org-agenda-files (quote ("~/doc/org/diary.org"))))))
+    nil
+    ("/var/www/spw/org/full.html" "~/lib/fm/dionysus/Agenda/Day-planning agenda.html"))
+   ("#" "Weekly review view"
+    ((todo "WAITING" ((org-agenda-todo-ignore-scheduled t)
+                      (org-agenda-todo-ignore-deadlines nil)
+                      (org-agenda-todo-ignore-with-date nil)
+                      (org-agenda-overriding-header "Waiting on others & not scheduled to chase up")))
+     (todo "TODO" ((org-agenda-todo-ignore-with-date t)
+                   (org-agenda-overriding-header "Stuck projects")
+                   (org-agenda-skip-function 'spw/skip-non-stuck-projects)))
+     (tags "LEVEL=1+REFILE"
+           ((org-agenda-todo-ignore-with-date nil)
+            (org-agenda-todo-ignore-deadlines nil)
+            (org-agenda-todo-ignore-scheduled nil)
+            (org-agenda-overriding-header "Items to add context and priority, and refile")
+            (org-agenda-start-with-entry-text-mode t)))
+     (todo "DONE|CANCELLED"
+           ((org-agenda-overriding-header "Tasks to be archived CAREFUL DON'T ARCHIVE SUBTASKS OF INCOMPLETE PROJECTS")
+            (org-agenda-todo-ignore-scheduled nil)
+            (org-agenda-todo-ignore-deadlines nil)
+            (org-agenda-todo-ignore-with-date nil)
+            (org-agenda-tag-filter-preset '("-APPT"))))))
 
-        ("d" "Six-month diary" agenda ""
-         ((org-agenda-ndays 180)
-          ;; (org-agenda-start-on-weekday 1)
-          (org-agenda-time-grid nil)
-          (org-agenda-repeating-timestamp-show-all t)
-          (org-agenda-entry-types '(:timestamp :sexp))
-          (org-agenda-show-all-dates nil)
-          (org-agenda-overriding-header "Sean's diary for the next six months")
-          (org-agenda-files (quote ("~/doc/org/diary.org"))))
-         ("/var/www/spw/org/diary.html" "~/lib/fm/dionysus/Agenda/Six month diary.html"))))
+   ("d" "Six-month diary" agenda ""
+    ((org-agenda-ndays 180)
+     ;; (org-agenda-start-on-weekday 1)
+     (org-agenda-time-grid nil)
+     (org-agenda-repeating-timestamp-show-all t)
+     (org-agenda-entry-types '(:timestamp :sexp))
+     (org-agenda-show-all-dates nil)
+     (org-agenda-overriding-header "Sean's diary for the next six months")
+     (org-agenda-files (quote ("~/doc/org/diary.org"))))
+    ("/var/www/spw/org/diary.html" "~/lib/fm/dionysus/Agenda/Six month diary.html"))))
 
 ;;; sensible automatic tag filtering
 
 (defun org-my-auto-exclude-function (tag)
-  (and (cond
-        ;; tags passed to org-agenda-auto-exclude-function always
-        ;; lower case per version Org 6.34 changelog
-        ((string= tag "@e5thst")
-         (not (string= (system-name) "artemis.silentflame.com")))
-        ((string= tag "@tucson")
-         (not (string= (system-name) "artemis.silentflame.com")))
-        ((string= tag "@sheffield")
-         (not (string= (system-name) "zephyr.silentflame.com")))
-        ((string= tag "@campus")
-         (string= (system-name) "artemis.silentflame.com"))
-        ((string= tag "@libdasl")
-         (not (string= (system-name) "ma.sdf.org"))))
-       (concat "-" tag)))
+  (and
+   (cond
+    ;; tags passed to org-agenda-auto-exclude-function always
+    ;; lower case per version Org 6.34 changelog
+    ((string= tag "@e5thst")
+     (not (string= (system-name) "artemis.silentflame.com")))
+    ((string= tag "@tucson")
+     (not (string= (system-name) "artemis.silentflame.com")))
+    ((string= tag "@sheffield")
+     (not (string= (system-name) "zephyr.silentflame.com")))
+    ((string= tag "@campus")
+     (string= (system-name) "artemis.silentflame.com"))
+    ((string= tag "@libdasl")
+     (not (string= (system-name) "ma.sdf.org"))))
+   (concat "-" tag)))
 
 (setq org-agenda-auto-exclude-function 'org-my-auto-exclude-function)
 
@@ -499,29 +499,30 @@
         next-headline
       nil)))
 
-(setq org-capture-templates
-      '(("t" "Task to be refiled" entry (file "~/doc/org/refile.org")
-         "* TODO %^{Title} %^G
+(setq
+ org-capture-templates
+ '(("t" "Task to be refiled" entry (file "~/doc/org/refile.org")
+    "* TODO %^{Title} %^G
 %?")
-        ("n" "Information to be refiled" entry (file "~/doc/org/refile.org")
-         "* %^{Title}
+   ("n" "Information to be refiled" entry (file "~/doc/org/refile.org")
+    "* %^{Title}
 %?")
-        ("a" "Appointment" entry (file+datetree "~/doc/org/diary.org")
-         "* %^{Time} %^{Title & location}
+   ("a" "Appointment" entry (file+datetree "~/doc/org/diary.org")
+    "* %^{Time} %^{Title & location}
 %^t" :immediate-finish t)
-        ("A" "Appointment (untimed)" entry (file+datetree "~/doc/org/diary.org")
-         "* %^{Title & location}
+   ("A" "Appointment (untimed)" entry (file+datetree "~/doc/org/diary.org")
+    "* %^{Title & location}
 %^t" :immediate-finish t)
-        ("s" "Task for the future to be refiled" entry (file "~/doc/org/refile.org")
-         "* SOMEDAY %^{Title}
+   ("s" "Task for the future to be refiled" entry (file "~/doc/org/refile.org")
+    "* SOMEDAY %^{Title}
 %?")
-        ("d" "Diary entry" entry (file+datetree "~/.labbook.gpg")
-         "* %^{Title}
+   ("d" "Diary entry" entry (file+datetree "~/.labbook.gpg")
+    "* %^{Title}
 %U
 
 %?")
-        ("u" "URI on clipboard" entry (file "~/doc/org/refile.org")
-         "* SOMEDAY [[%^{URI|%x}][%^{Title}]]" :immediate-finish t)))
+   ("u" "URI on clipboard" entry (file "~/doc/org/refile.org")
+    "* SOMEDAY [[%^{URI|%x}][%^{Title}]]" :immediate-finish t)))
 
 ;;; function and advice for my weekly review process (see the
 ;;; docstrings immediately below)
