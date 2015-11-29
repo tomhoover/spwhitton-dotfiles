@@ -105,8 +105,7 @@
 ;;     (set-fringe-mode 0))
 
 ;; Terminus
-(when (member "Terminus-11" (font-family-list))
-  (set-frame-font "Terminus-11" nil t))
+(add-to-list 'default-frame-alist '(font . "Terminus-11"))
 
 ;; disable GUI elements
 (when (fboundp 'set-scroll-bar-mode) (set-scroll-bar-mode nil))
