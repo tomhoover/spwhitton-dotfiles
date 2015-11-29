@@ -170,10 +170,6 @@
 
 (use-package diminish)
 
-;;; libraries of useful lisp functions
-
-(use-package f) (use-package s) (use-package dash)
-
 ;;; instead of vim text objects
 
 (use-package expand-region
