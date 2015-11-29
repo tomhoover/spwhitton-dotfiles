@@ -399,14 +399,9 @@
     (save-window-excursion
       (magit-with-refresh
        (shell-command "git --no-pager commit --amend --reuse-message=HEAD"))))
-
   (bind-key "C-c C-a" 'magit-just-amend magit-status-mode-map)
 
-  (use-package magit-annex)
-
-  (use-package magit-wip
-    ;; :diminish magit-wip-after-save-mode
-    :config (magit-wip-after-save-mode nil)))
+  (use-package magit-annex))
 
 ;;; pointback mode: make sure that point is back where I left it when
 ;;; switching between buffers where at least one buffer is displayed
