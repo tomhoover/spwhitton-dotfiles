@@ -999,18 +999,6 @@ spaces in it and to remove any colons."
 
 (run-at-time "00:59" 3600 'org-save-all-org-buffers)
 
-;;; popwin.el interferes with Org goto: it keeps the help window
-;;; selected.
-(defadvice org-goto (around org-goto-disable-popwin)
-  "Disable popwin around Org-goto"
-  (if popwin-mode
-      (progn
-        (popwin-mode -1)
-        ad-do-it
-        (popwin-mode 1))
-    ad-do-it))
-(ad-activate 'org-goto)
-
 (add-hook 'org-mode-hook '(lambda ()
                             (if window-system
                                 (org-display-inline-images))
