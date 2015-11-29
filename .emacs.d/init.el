@@ -354,7 +354,7 @@
 
 (use-package openwith
   :commands openwith-mode
-
+  ;; I want this immediately
   :demand
   :config (openwith-mode 1))
 
@@ -373,9 +373,10 @@
 
 ;;; magit
 
-(setq magit-last-seen-setup-instructions "1.4.0")
 (use-package magit
   :diminish magit-wip-after-save-local-mode
+  :init
+  (setq magit-last-seen-setup-instructions "1.4.0")
   :demand
   :config
 
@@ -389,12 +390,8 @@
                emacs-version)))
 
   (setq magit-completing-read-function 'magit-ido-completing-read
-        magit-push-always-verify nil)
-
-  ;; avoid a pop up that grabs focus every time we make a commit
-  (setq magit-commit-show-diff nil)
-
-  (setq magit-revert-buffers 'silent)
+        magit-push-always-verify nil
+        magit-revert-buffers 'silent)
 
   ;; C-c C-a to amend without any prompt
   (defun magit-just-amend ()
@@ -423,8 +420,8 @@
 
 ;;; colour those parentheses
 
-(setq-default frame-background-mode 'dark)
 (use-package rainbow-delimiters
+  :init (setq-default frame-background-mode 'dark)
   :commands rainbow-delimiters-mode)
 
 ;;; and colour those colours
@@ -498,8 +495,7 @@
   (defun spw/company-prog-setup ()
     "Setup company mode carefully when its needed, rather than using the brash global-company-mode"
     (company-mode 1)
-    (define-key (current-local-map) (kbd "M-/") 'company-complete)
-    )
+    (define-key (current-local-map) (kbd "M-/") 'company-complete))
   (add-hook 'prog-mode-hook 'spw/company-prog-setup)
   ;; alternative approach: https://github.com/company-mode/company-mode/issues/94#issuecomment-40884387
 
@@ -569,42 +565,36 @@
 (use-package deft
   :commands deft
   :bind ("C-c f" . deft)
-  :init (setq deft-extensions '("org" "mdwn")
-              deft-text-mode 'org-mode
-              deft-directory "~/doc/org/"
-              deft-recursive t
-              deft-use-filename-as-title nil
+  :init
+  (setq deft-extensions '("org" "mdwn")
+        deft-text-mode 'org-mode
+        deft-directory "~/doc/org/"
+        deft-recursive t
+        deft-use-filename-as-title nil
 
-              ;; trying snake_case for now (CamelCase means main
-              ;; agenda files)
-              deft-use-filter-string-for-filename t
-              deft-file-naming-rules '((noslash . "_")
-                                       (nospace . "_")
-                                       (case-fn . downcase))
+        ;; trying snake_case for now (CamelCase means main
+        ;; agenda files)
+        deft-use-filter-string-for-filename t
+        deft-file-naming-rules '((noslash . "_")
+                                 (nospace . "_")
+                                 (case-fn . downcase))
 
-              deft-auto-save-interval 20.0
-              deft-incremental-search t
-              ;; don't just strip the leading hash but the whole #+TITLE:
-              ;; deft-strip-title-regexp "\\(?:\\#\\+TITLE\\: \\|\\#\\+FILETAGS\\: \\|^%+\\|^[#* ]+\\|-\\*-[[:alpha:]]+-\\*-\\|#+$\\)"
-              deft-org-mode-title-prefix t)
+        deft-auto-save-interval 20.0
+        deft-incremental-search t
+        deft-org-mode-title-prefix t)
   :config
   (bind-key "C-w" 'deft-filter-decrement-word deft-mode-map)
-
-  (defadvice deft (before persp-deft disable)
-    (projectile-persp-switch-project "~/doc"))
-
-  (defadvice deft-new-file (after insert-org-TITLE disable)
-    (save-excursion
-      (goto-char (point-min))
-      (insert "#+TITLE: ")))
 
   ;; With my xmonad setup, when `window-width' is x then only x-1
   ;; characters will actually fit in the window.  Advise deft so its
   ;; display doesn't wrap unreadably.
-  (defadvice deft-buffer-setup (around fix-window-width activate)
+  (defun deft-buffer-setup--fix-window-width (orig-fun &rest args)
     (let ((width (window-width)))
-      (flet ((window-width () (- width 1)))
-        ad-do-it))))
+      ;; this is just an flet; see
+      ;; <http://endlessparentheses.com/understanding-letf-and-how-it-replaces-flet.html>
+      (cl-letf (((symbol-function 'window-width) (lambda  () (- width 1))))
+        (apply orig-fun args))))
+  (advice-add 'deft-buffer-setup :around #'deft-buffer-setup--fix-window-width))
 
 ;;; The following two python packages seem to be unavailable for
 ;;; download.  Disable them for now.
@@ -622,7 +612,9 @@
 
 (use-package flycheck
   :defer 5
+
   :init
+
   ;; try to disable flymake; having both running at the same time is annoying
   (setq flymake-allowed-file-name-masks nil)
 
@@ -697,87 +689,18 @@
   (setq projectile-switch-project-action 'projectile-dired
         projectile-completion-system 'ido)
   (add-to-list 'projectile-globally-ignored-directories ".stack-work")
-  (diminish 'projectile-mode))
+  (add-to-list 'projectile-globally-ignored-directories ".git")
+  (add-to-list 'projectile-globally-ignored-directories ".cabal-sandbox"))
 
-(use-package persp-projectile :disabled t)
+;;; completion with ido
 
-(use-package perspective
-  :disabled t
-  :commands (persp-toggle persp-switch)
-  :bind
-  ;; standard bindings reproduced from C-x x map
-  (("C-c q k" . persp-remove-buffer)
-   ("C-c q c" . persp-kill)
-   ("C-c q r" . persp-rename)
-   ("C-c q a" . persp-add-buffer)
-   ("C-c q A" . persp-set-buffer)
-   ("C-c q i" . persp-import)
-   ("C-c q n" . persp-next)
-   ("C-c q <right>" . persp-next)
-   ("C-c q p" . persp-prev)
-   ("C-c q <left>" . persp-prev)
-
-   ;; additional bindings of my own
-   ("C-c q u" . persp-basewc-save)
-   ("C-c q q" . persp-basewc-restore)
-   ("C-c q C" . spw/persp-clone)
-   ("C-c q o" . spw/open-programming-project)
-
-   ;; more personal bindings outside of main persp map
-   ("C-c l" . persp-toggle)
-   ("C-c L" . persp-switch)
-   ;; ("C-c s" . spw/persp-eshell)
-   ("C-c d" . spw/dired-jump))
-
-  :demand
-  :config
-  (setq persp-modestring-dividers '("" "" "|"))
-
-  ;; activate persp mode, but don't activate it if it's
-  ;; already active cos this removes all existing perspectives
-  ;; which is annoying
-  (unless persp-mode
-    (persp-mode))
-
-  (defun persp-toggle (arg)
-    (interactive "P")
-    (if arg (call-interactively 'persp-switch)
-      (persp-switch (persp-find-some))))
-
-  ;; save and restore a base window configuration ala
-  ;; workgroups.el.  Designed to handle the perennial Emacs
-  ;; problem of Emacs totally screwing up your windows in the
-  ;; middle of your work
-  (setq persp-basewcs nil)
-  (defun persp-basewc-save ()
-    (interactive)
-    (let* ((name (persp-name persp-curr))
-           (wc (current-window-configuration))
-           (pair (cons name wc)))
-      (setq persp-basewcs
-            (remove* name persp-basewcs
-                     :test 'equal :key 'car))
-      (add-to-list 'persp-basewcs pair)))
-  ;; Save when opening a perspective.
-  (add-hook 'persp-created-hook 'persp-basewc-save)
-  ;; Also do a save of the basewc after
-  ;; `projectile-persp-switch-project' (I never use
-  ;; `projectile-switch-project' directly) switches to dired
-  ;; as this is a more sensible initial basewc to go back to.
-  (add-hook 'projectile-switch-project-hook 'persp-basewc-save)
-  (defun persp-basewc-restore ()
-    (interactive)
-    (let* ((name (persp-name persp-curr))
-           (pair (assoc name persp-basewcs))
-           (wc (cdr pair)))
-      (set-window-configuration wc))))
-
-;; completion with ido
-
-(add-hook 'ido-setup-hook
-          (lambda () (define-key
-                       ido-completion-map "\C-w"
-                       'ido-delete-backward-word-updir)))
+;; fix C-w
+(add-hook
+ 'ido-setup-hook
+ (lambda ()
+   (define-key
+     ido-completion-map "\C-w"
+     'ido-delete-backward-word-updir)))
 
 ;; override ido-use-filename-at-point for dired buffers
 ;; from http://emacs.stackexchange.com/a/5331
@@ -824,42 +747,24 @@
         gc-cons-threshold 20000000))
 
 (use-package ido-ubiquitous
-  :config
-  (ido-ubiquitous-mode 1))
+  :config (ido-ubiquitous-mode 1))
 
-;; (use-package ido-vertical-mode
-;;   :ensure
-;;   :init (ido-vertical-mode 1))
+(use-package ido-vertical-mode
+  :disabled t
+  :init (ido-vertical-mode 1))
 
 (use-package smex
-  ;; TODO: get keyboard macro bindings, that vanilla emacs has under
-  ;; the prefix C-x C-m, back
   :bind ("C-x C-m" . smex))
 
 ;; imenu
 
 (use-package imenu-anywhere)
 
-;;; use Helm for a few things
-
-(use-package helm
-  :disabled
-  :defer 5
-  :config
-  (use-package helm-mode
-    :bind ("M-s o" . helm-occur))
-  (use-package helm-descbinds
-    :disabled
-    :defer 5
-    :config
-    (helm-descbinds-mode)))
-
 ;;; snippets
 
 (use-package yasnippet
   :diminish yas-minor-mode
-
-  ;; :defer 5
+  :defer 5
   :config
   (yas-global-mode 1))
 
@@ -880,22 +785,15 @@
 
 ;;; jump around what's visible
 
-(use-package ace-jump-mode
-  ;; :bind ("M-o" . ace-jump-mode)
-  ;; :config
+;; ace-jump-mode just as a dependency of ace-link (below)
+(use-package ace-jump-mode)
 
-  ;; make `ace-jump-mode' respect dired-isearch-filenames
-  ;; from https://www.reddit.com/r/emacs/comments/2x3mke/making_acejump_play_nice_with_dired/
-  ;; (add-hook 'dired-mode-hook
-  ;;           (lambda ()
-  ;;             (setq-local ace-jump-search-filter
-  ;;                         (lambda ()
-  ;;                           (get-text-property (point) 'dired-filename)))))
-
-  )
-
+;; do the real work with avy
 (use-package avy
-  :bind ("M-o" . spw/avy-goto-word)
+  :bind (("M-o" . spw/avy-goto-word)
+         ;; if one types numbers, avy-goto-line will switch to old M-g
+         ;; g behaviour so may override default M-g g binding
+         ("M-g g" . avy-goto-line))
   :config
 
   (setq
@@ -915,31 +813,11 @@
     (if arg (avy-goto-char char nil)
       (avy-goto-word-1 char nil))))
 
-;;; use ace-jump-mode to move between links in help file
-
+;; use ace-jump-mode to move between links in help file
 (use-package ace-link
   :defer 5
   :config
   (ace-link-setup-default))
-
-;;; chat on Jabber
-
-(use-package jabber
-  :disabled t
-  :config (progn (when (f-exists? "~/.emacs.d/init-jabber.el")
-                   (load-file "~/.emacs.d/init-jabber.el")
-                   (jabber-connect-all))
-                 (defun spw/persp-jabber ()
-                   (interactive)
-                   (persp-switch "xmpp"))
-                 ;; TODO: when have Emacs 24.4 everywhere, switch this
-                 ;; to nadvice.el macros
-                 (defadvice jabber-activity-switch-to (before spw/persp-jabber activate)
-                   (spw/persp-jabber))
-                 (defadvice jabber-switch-to-roster-buffer (before spw/persp-jabber activate)
-                   (spw/persp-jabber))
-                 (defadvice jabber-chat-with (before spw/persp-jabber activate)
-                   (spw/persp-jabber))))
 
 ;;; make dired copy and move asynchronously
 
@@ -956,25 +834,6 @@
 
 (use-package centered-window-mode :disabled t :commands centered-window-mode)
 
-;;; IRC client, for when I need it
-
-(use-package rcirc
-  :config (progn
-            ;; basic settings
-            (setq rcirc-default-nick "seanw"
-                  rcirc-default-user-name user-login-name
-                  rcirc-default-full-name user-full-name)
-
-            ;; networks and channels
-            (setq rcirc-server-alist nil)
-            (add-to-list 'rcirc-server-alist
-                         '("chat.freenode.net" :port 6697 :encryption tls
-                           :channels ("#freenode-social")))
-
-            ;; authentication data
-            (when (f-exists? "~/.emacs.d/init-rcirc.el")
-              (load-file "~/.emacs.d/init-rcirc.el"))))
-
 ;;; zap-up-to-char is at least as useful as zap-to-char, so load it
 ;;; out of misc.el.
 
@@ -984,11 +843,6 @@
 ;;; make Emacs regexps easier
 
 (use-package visual-regexp)
-
-;;; toggle quotes for when I fail to follow the style guidelines
-
-(use-package toggle-quotes
-  :bind ("C-c t '" . toggle-quotes))
 
 ;;; advanced key binding techniques with hydra
 
@@ -1059,32 +913,6 @@
   (key-chord-mode 1)
   ;; access the C-c keymap with a comfortable key-chord
   (key-chord-define-global "jk" mode-specific-map))
-
-;;; god-mode to maybe save my hands
-
-(use-package god-mode
-  :disabled
-  :config
-
-  ;; (unless god-global-mode (god-mode))
-
-  ;; activate with a key-chord to avoid having to have
-  ;; capslock bound to both escape and control
-  (key-chord-define-global "hj" 'god-mode-all)
-
-  ;; just a little vi in god-mode
-  (define-key god-local-mode-map (kbd ".") 'repeat)
-  (define-key god-local-mode-map (kbd "i") 'god-mode-all)
-
-  ;; change a part of the modeline depending on whether in god-mode
-  (defun spw/god-mode-update-modeline ()
-    (set-face-background 'sml/filename (if god-local-mode
-                                           "red"
-                                         ;; following from smart-mode-line-powerline-theme.el
-                                         (or (face-background 'powerline-active1) "Grey30"))))
-
-  (add-hook 'god-mode-enabled-hook 'spw/god-mode-update-modeline)
-  (add-hook 'god-mode-disabled-hook 'spw/god-mode-update-modeline))
 
 ;; good key chords from
 ;; <http://www.johndcook.com/blog/2015/02/01/rare-bigrams/> via
@@ -1955,20 +1783,20 @@ Ensures the kill ring entry always ends with a newline."
 (bind-key "C-c i h" 'add-file-local-variable-prop-line)
 
 ;;; Conditionally disable C-z as interacts badly with xmonad
-(defadvice suspend-frame (around not-if-xmonad activate)
+(defun suspend-frame--not-if-xmonad (orig-fun &rest args)
   (unless window-system
-    ad-do-it))
+    (apply orig-fun args)))
+(advice-add 'suspend-frame :around #'suspend-frame--not-if-xmonad)
 
 ;;; abbreviations
 
 (setq abbrev-file-name "~/doc/emacs-abbrevs")
 
 ;; turn on for all buffers, if our abbrevs file is checked out
-(if (file-exists-p abbrev-file-name)
-    (progn
-      (setq save-abbrevs t)
-      (setq-default abbrev-mode t)
-      (diminish 'abbrev-mode)))
+(when (file-exists-p abbrev-file-name)
+  (setq save-abbrevs t)
+  (setq-default abbrev-mode t)
+  (diminish 'abbrev-mode))
 
 ;;; bookmarks
 
@@ -1984,14 +1812,16 @@ Ensures the kill ring entry always ends with a newline."
   ;; modifying anything.  So save it, or for the very frequently
   ;; called `kill-buffer', clear modification flag for these bogus
   ;; modifications
-  (defadvice bookmark-write-file (before save-bookmarks-buffer activate)
-    (if (get-buffer "emacs-bookmarks")
-        (with-current-buffer (get-buffer "emacs-bookmarks")
-          (save-buffer))))
-  (defadvice kill-buffer (before kill-buffer-clear-modified activate)
-    (if (get-buffer "emacs-bookmarks")
-        (with-current-buffer (get-buffer "emacs-bookmarks")
-          (set-buffer-modified-p nil)))))
+  (defun bookmark-write-file--save-bookmarks-buffer ()
+    (when (get-buffer "emacs-bookmarks")
+      (with-current-buffer (get-buffer "emacs-bookmarks")
+        (save-buffer))))
+  (advice-add 'bookmark-write-file :before #'bookmark-write-file--save-bookmarks-buffer)
+  (defun kill-buffer--clear-modified (&rest ignore)
+    (when (get-buffer "emacs-bookmarks")
+      (with-current-buffer (get-buffer "emacs-bookmarks")
+        (set-buffer-modified-p nil))))
+  (advice-add 'kill-buffer :before #'kill-buffer--clear-modified))
 
 ;;; miscellaneous personal settings
 
@@ -2085,20 +1915,15 @@ Ensures the kill ring entry always ends with a newline."
 
 ;;; avoid some prompts when saving all buffers
 
-(defun spw/save-org-buffers-first (&optional arg pred)
-  "Save all Org buffers without prompting.
-
-ARG, PRED ignored."
+(defun spw/save-org-buffers-first (&rest ignore)
+  "Save all Org buffers without prompting."
   (when (featurep 'org)
-    ;; gotta remove ourselves since `org-save-all-org-buffers' calls
-    ;; `save-some-buffers'
+    ;; gotta remove this advice first since `org-save-all-org-buffers'
+    ;; calls `save-some-buffers'
     (advice-remove 'save-some-buffers #'spw/save-org-buffers-first)
     (org-save-all-org-buffers)
     (advice-add 'save-some-buffers :before #'spw/save-org-buffers-first)))
-
-;; no `advice-add' on Emcas 24.3 on ma
-(if (fboundp 'advice-add)
-    (advice-add 'save-some-buffers :before #'spw/save-org-buffers-first))
+(advice-add 'save-some-buffers :before #'spw/save-org-buffers-first)
 
 ;;; show column numbers as well as line numbers in the mode line
 
@@ -2120,19 +1945,26 @@ ARG, PRED ignored."
 
 (use-package message
   :mode ("/mutt-.*$" . message-mode)
-  :init (progn
-          (defadvice message-newline-and-reformat (before spw/delete-superflous-newlines activate)
-            "Have `message-newline-and-reformat' get rid of some more superflous blank quoted lines."
-            (save-excursion
-              (beginning-of-line)
-              (when (looking-at ">[[:space:]]*$")
-                (kill-line 1))))
-          (setq mail-header-separator "")
-          (add-hook 'message-mode-hook (lambda ()
-                                         (auto-fill-mode)
-                                         ;; (spw/set-from-address)
-                                         (footnote-mode)
-                                         (message-goto-body)))))
+  :init
+
+  (defun message-newline-and-reformat--delete-superflous-newlines ()
+    "Have `message-newline-and-reformat' get rid of some more
+superflous blank quoted lines."
+    (save-excursion
+      (beginning-of-line)
+      (when (looking-at ">[[:space:]]*$")
+        (kill-line 1))))
+  (advice-add 'message-newline-and-reformat
+              :before #'message-newline-and-reformat--delete-superflous-newlines)
+
+  (setq mail-header-separator "")
+
+  (add-hook 'message-mode-hook
+            (lambda ()
+              (auto-fill-mode)
+              ;; (spw/set-from-address)
+              (footnote-mode)
+              (message-goto-body))))
 
 (defun djcb/snip (b e summ)
   "Replace region B to E with SUMM like this: [snip:summary (n lines)]."
