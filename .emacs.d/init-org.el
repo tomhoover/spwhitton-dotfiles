@@ -551,14 +551,14 @@
                        " -not -name reading.org"
                        " -not -name archive.org -not -regex '" (expand-file-name org-directory) "/[ABCDEFGHIJKLMNOPQRSTUVWXYZ].*' -exec egrep -nH -e \"\\* \(TODO\|SOMEDAY\|WAITING\|SOONDAY\) \" {} +"))))
 
-(defadvice org-agenda (after spw/org-agenda-run-find-non-agenda-todos activate)
+(defun org-agenda--run-find-non-agenda-todos ()
   "Call grep to find Org files that aren't in `org-agenda-files'
   but should be, when opening my agenda for my weekly Org-mode
   review"
-  (if (equal (buffer-name) "*Org Agenda(#)*")
-      (progn
-        (delete-other-windows)
-        (call-interactively 'spw/find-non-agenda-todos))))
+  (when (equal (buffer-name) "*Org Agenda(#)*")
+    (delete-other-windows)
+    (call-interactively 'spw/find-non-agenda-todos)))
+(advice-add 'org-agenda :after #'org-agenda--run-find-non-agenda-todos)
 
 ;;;; ---- export and referencing ----
 
@@ -696,60 +696,63 @@
 ;; published by shell scripts calling `emacs --batch' and then
 ;; sorting out davfs2 or cadaver
 
-(add-to-list 'org-publish-project-alist
-             `("philos"
-               :base-directory "~/doc/org/philos"
-               :base-extension "org"
-               :recursive nil
-               :publishing-directory "~/lib/fm/dionysus/Philos notes"
-               :publishing-function org-html-publish-to-html
-               :auto-sitemap t
-               :sitemap-filename "index.html"
-               :sitemap-title "Sean's reading notes"
-               :table-of-contents t
-               :html-head ,(concat
-                            "<style type=\"text/css\">"
-                            (when (f-exists? "~/doc/org/philos/style1.css")
-                              (with-temp-buffer
-                                (insert-file-contents "~/doc/org/philos/style1.css")
-                                (buffer-string)))
-                            "</style>")))
+(add-to-list
+ 'org-publish-project-alist
+ `("philos"
+   :base-directory "~/doc/org/philos"
+   :base-extension "org"
+   :recursive nil
+   :publishing-directory "~/lib/fm/dionysus/Philos notes"
+   :publishing-function org-html-publish-to-html
+   :auto-sitemap t
+   :sitemap-filename "index.html"
+   :sitemap-title "Sean's reading notes"
+   :table-of-contents t
+   :html-head ,(concat
+                "<style type=\"text/css\">"
+                (when (f-exists? "~/doc/org/philos/style1.css")
+                  (with-temp-buffer
+                    (insert-file-contents "~/doc/org/philos/style1.css")
+                    (buffer-string)))
+                "</style>")))
 
-(add-to-list 'org-publish-project-alist
-             `("org-dav"
-               :base-directory "~/doc/org"
-               :base-extension "org"
-               :recursive nil
-               :publishing-directory "~/lib/fm/dionysus/Org docs"
-               :publishing-function org-html-publish-to-html
-               :auto-sitemap t
-               :sitemap-filename "123Index.html"
-               :sitemap-title "Sean's ~/doc"
-               :html-head ,(concat
-                            "<style type=\"text/css\">"
-                            (when (f-exists? "~/doc/org/worg.css")
-                              (with-temp-buffer
-                                (insert-file-contents "~/doc/org/worg.css")
-                                (buffer-string)))
-                            "</style>")
-               :html-head-include-default-style nil
-               :table-of-contents t))
+(add-to-list
+ 'org-publish-project-alist
+ `("org-dav"
+   :base-directory "~/doc/org"
+   :base-extension "org"
+   :recursive nil
+   :publishing-directory "~/lib/fm/dionysus/Org docs"
+   :publishing-function org-html-publish-to-html
+   :auto-sitemap t
+   :sitemap-filename "123Index.html"
+   :sitemap-title "Sean's ~/doc"
+   :html-head ,(concat
+                "<style type=\"text/css\">"
+                (when (f-exists? "~/doc/org/worg.css")
+                  (with-temp-buffer
+                    (insert-file-contents "~/doc/org/worg.css")
+                    (buffer-string)))
+                "</style>")
+   :html-head-include-default-style nil
+   :table-of-contents t))
 
-(add-to-list 'org-publish-project-alist
-             '("org-web"
-               :base-directory "~/doc/org"
-               :base-extension "org"
-               :recursive nil
-               :publishing-directory "/var/www/spw/org"
-               :publishing-function org-html-publish-to-html
-               :auto-sitemap t
-               :sitemap-filename "index.html"
-               :sitemap-title "Sean's ~/doc"
-               :html-head "<link rel=\"stylesheet\" title=\"Worg\" href=\"/org/worg.css\" type=\"text/css\">
+(add-to-list
+ 'org-publish-project-alist
+ '("org-web"
+   :base-directory "~/doc/org"
+   :base-extension "org"
+   :recursive nil
+   :publishing-directory "/var/www/spw/org"
+   :publishing-function org-html-publish-to-html
+   :auto-sitemap t
+   :sitemap-filename "index.html"
+   :sitemap-title "Sean's ~/doc"
+   :html-head "<link rel=\"stylesheet\" title=\"Worg\" href=\"/org/worg.css\" type=\"text/css\">
 <link rel=\"alternate stylesheet\" title=\"Zenburn\" href=\"/org/worg-zenburn.css\" type=\"text/css\">
 <link rel=\"icon\" href=\"/org/org-mode-unicorn.ico\" type=\"image/vnd.microsoft.icon\" />
 <link rel=\"SHORTCUT ICON\" href=\"https://spwhitton.name/org/org-mode-unicorn.ico\" type=\"image/vnd.microsoft.icon\" />"
-               :html-preamble "<script type=\"text/javascript\">
+   :html-preamble "<script type=\"text/javascript\">
     document.addEventListener('DOMContentLoaded',function() {
         document.getElementById(\"table-of-contents\").onclick = function() {
             var elem = document.getElementById(\"text-table-of-contents\");
@@ -758,16 +761,17 @@
     });
 </script>
 <p><a href=\"/org\">Personal wiki index</a> &middot; <a href=\"/org/agenda.html\">Daily agenda view</a> &middot; <a href=\"/org/full.html\">Full agenda view</a> &middot; <a href=\"/org/diary.html\">Three month diary</a></p>"
-               :html-head-include-default-style nil
-               :table-of-contents t))
+   :html-head-include-default-style nil
+   :table-of-contents t))
 
-(add-to-list 'org-publish-project-alist
-             '("org-web-static"
-               :base-directory "~/doc/org"
-               :base-extension "css\\|ico"
-               :recursive nil
-               :publishing-directory "/var/www/spw/org"
-               :publishing-function org-publish-attachment))
+(add-to-list
+ 'org-publish-project-alist
+ '("org-web-static"
+   :base-directory "~/doc/org"
+   :base-extension "css\\|ico"
+   :recursive nil
+   :publishing-directory "/var/www/spw/org"
+   :publishing-function org-publish-attachment))
 
 (defun spw/cleanup-org-pdfs ()
   (interactive)
@@ -999,18 +1003,22 @@ spaces in it and to remove any colons."
 
 (run-at-time "00:59" 3600 'org-save-all-org-buffers)
 
-(add-hook 'org-mode-hook '(lambda ()
-                            (if window-system
-                                (org-display-inline-images))
-                            (turn-on-auto-fill)
-                            ;; (org-mode-reftex-setup)
-                            (smartparens-mode)))
+(add-hook
+ 'org-mode-hook
+ '(lambda ()
+    ;; (when window-system
+    ;;   (org-display-inline-images))
+    (turn-on-auto-fill)
+    ;; (org-mode-reftex-setup)
+    (smartparens-mode)))
 
-(add-hook 'org-agenda-mode-hook '(lambda ()
-                                   ;; always hilight the current agenda line
-                                   (hl-line-mode 1)
-                                   ;; make space work from the agenda to cycle the actual tree in the split
-                                   (define-key org-agenda-mode-map " " 'org-agenda-cycle-show)))
+(add-hook
+ 'org-agenda-mode-hook
+ '(lambda ()
+    ;; always hilight the current agenda line
+    (hl-line-mode 1)
+    ;; make space work from the agenda to cycle the actual tree in the split
+    (define-key org-agenda-mode-map " " 'org-agenda-cycle-show)))
 
 ;; (defadvice org-agenda (after spw/open-weekday-schedule)
 ;;   (when (and window-system
