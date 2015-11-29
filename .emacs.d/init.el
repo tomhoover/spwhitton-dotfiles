@@ -661,6 +661,10 @@
   ;; try to disable flymake; having both running at the same time is annoying
   (setq flymake-allowed-file-name-masks nil)
 
+  ;; make sure flycheck doesn't complain about our use of `require'
+  ;; (might have to disable this sometimes: see docstring for the var)
+  (setq flycheck-emacs-lisp-load-path 'inherit)
+
   ;; disable flycheck in org-mode as it clobbers the important C-c !
   (defadvice flycheck-mode (around spw/org-disable-flycheck activate)
     (unless (eq major-mode 'org-mode) ad-do-it))
