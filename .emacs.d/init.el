@@ -1149,7 +1149,7 @@ automatically."
     (haskell-mode
      (haskell-mode-stylish-buffer))))
 
-(add-hook 'before-save-hook 'spw/auto-cleanup)
+;; (add-hook 'before-save-hook 'spw/auto-cleanup)
 
 ;;; Typing Hangul
 
