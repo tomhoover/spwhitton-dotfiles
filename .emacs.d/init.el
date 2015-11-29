@@ -983,12 +983,6 @@
 (use-package image-dired
   :init (image-dired-setup-dired-keybindings))
 
-;;; allow Emacs to resize images: keybinding S f
-
-(use-package eimp
-  :if (executable-find "mogrify")
-  :init (add-hook 'image-mode-hook 'eimp-mode))
-
 ;;; alternative to my old `spw/centre-window'
 
 (use-package centered-window-mode :disabled t :commands centered-window-mode)
@@ -1084,10 +1078,6 @@
                '(haskell-left-arrows
                  (regexp . "\\(\\s-+\\)\\(<-\\|←\\)\\s-+")
                  (modes quote (haskell-mode literate-haskell-mode)))))
-
-;;; edit .nix files
-
-(use-package nix-mode)
 
 ;;; Haskell (load after packages that it depends on)
 
