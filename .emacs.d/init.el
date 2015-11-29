@@ -712,7 +712,7 @@
 
 (setq ido-use-filename-at-point 'guess
       ido-create-new-buffer 'always
-      ido-file-extensions-order '(".org" ".tex" ".py" )
+      ido-file-extensions-order '(".org" ".mdwn" ".hs" ".tex" ".py" )
       ido-default-file-method 'selected-window
       ido-max-directory-size 100000
       ido-auto-merge-delay-time 99999 ; only search when I tell you to M-s
