@@ -296,7 +296,7 @@ post_checkout =
              (tab-width . 8)
              (fill-column . 80)))
      ;; Warn about spaces used for indentation:
-     (haskell-mode . ((eval . (highlight-regexp "^ *")))))
+     (haskell-mode . ((eval . (highlight-regexp \"^ *\")))))
     """
     echo ".dir-locals.el" >> .git/info/exclude
 
