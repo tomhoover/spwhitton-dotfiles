@@ -677,6 +677,11 @@
 
 (use-package git-annex)
 
+;;; close old buffers once per day
+
+(use-package midnight
+  :init (midnight-delay-set 'midnight-delay "3am"))
+
 ;;; simple concept of projects
 
 (use-package projectile
@@ -692,7 +697,10 @@
         projectile-completion-system 'ido)
   (add-to-list 'projectile-globally-ignored-directories ".stack-work")
   (add-to-list 'projectile-globally-ignored-directories ".git")
-  (add-to-list 'projectile-globally-ignored-directories ".cabal-sandbox"))
+  (add-to-list 'projectile-globally-ignored-directories ".cabal-sandbox")
+
+  ;; as part of daily cleanup, clean-up projects that no longer exist
+  (add-hook 'midnight-hook 'projectile-cleanup-known-projects))
 
 ;;; completion with ido
 
@@ -773,11 +781,6 @@
 ;;; htmlize for Org HTML export/publishing
 
 (use-package htmlize)
-
-;;; close old buffers once per day
-
-(use-package midnight
-  :init (midnight-delay-set 'midnight-delay "3am"))
 
 ;;; make indentation in python nice and visible
 
