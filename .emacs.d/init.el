@@ -687,9 +687,9 @@
 (use-package projectile
   :commands projectile-vc
   :diminish projectile-mode
-  :bind(("C-c p" . projectile-command-map)
-        ("C-c j" . projectile-find-file)
-        ("C-c v" . projectile-vc))
+  :bind (("C-c p" . projectile-command-map)
+         ("C-c j" . projectile-find-file)
+         ("C-c v" . projectile-vc))
   :demand
   :config
   (projectile-global-mode 1)
