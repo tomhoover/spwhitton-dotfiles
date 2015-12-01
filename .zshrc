@@ -74,6 +74,19 @@ alias fixmacs="pkill -USR2 emacs"
 alias myfiles="cadaver https://myfiles.messagingengine.com/"
 alias unstow="stow -D"
 
+# add a project to projectile's known projects
+projectile () {
+    local dir="$(pwd)"
+    chronic emacsclient -c -n -e "(projectile-switch-project-by-name \"$dir\")"
+}
+
+# clone with git and open in Emacs
+clone () {
+    git clone $1
+    cd $(basename $1)
+    projectile
+}
+
 # common dotfiles git operations
 alias git-rebase-host-branch="git checkout $(hostname);git rebase master"
 alias git-push-host-branch="git push origin master +$(hostname)"
