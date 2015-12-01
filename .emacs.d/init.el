@@ -700,7 +700,10 @@
   (add-to-list 'projectile-globally-ignored-directories ".cabal-sandbox")
 
   ;; as part of daily cleanup, clean-up projects that no longer exist
-  (add-hook 'midnight-hook 'projectile-cleanup-known-projects))
+  (add-hook 'midnight-hook 'projectile-cleanup-known-projects)
+
+  ;; bind opening programming projects (also see projectile() in .zshrc)
+  (bind-key "n" 'spw/open-programming-project projectile-command-map))
 
 ;;; completion with ido
 
