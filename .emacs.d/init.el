@@ -1884,6 +1884,7 @@ Ensures the kill ring entry always ends with a newline."
 ;; re-indent and add newlines automatically, sometimes
 ;; (electric-layout-mode 1)
 (electric-indent-mode 1)
+(electric-pair-mode -1)
 
 ;; templates when creating new files
 ;; (auto-insert-mode 1)
