@@ -246,7 +246,7 @@
   ;; when killing the first word of a sentence, leave the
   ;; two spaces after the previous sentence's terminal
   ;; period
-  (defun sp-backward-kill-word--fix-punctuation ()
+  (defun sp-backward-kill-word--fix-punctuation (&rest ignore)
     (save-excursion
       (backward-char 2)
       (when (and (or (looking-at "\\. ")
