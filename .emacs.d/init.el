@@ -2010,7 +2010,7 @@ superflous blank quoted lines."
 ;;; text mode
 
 (add-hook 'text-mode 'turn-on-auto-fill)
-(add-hook 'text-mode 'refill-mode)
+;; (add-hook 'text-mode 'refill-mode)
 
 ;;; dired
 
