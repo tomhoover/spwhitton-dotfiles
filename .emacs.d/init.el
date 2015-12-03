@@ -99,6 +99,7 @@
 (setq-default visual-line-mode t
               word-wrap t
               wrap-prefix "    ")
+(diminish 'visual-line-mode)
 
 ;; ;; kill the fringes, if we have window system support compiled in
 ;; (if (fboundp 'set-fringe-mode)
@@ -2010,6 +2011,7 @@ superflous blank quoted lines."
 ;;; text mode
 
 (add-hook 'text-mode 'turn-on-auto-fill)
+(diminish 'auto-fill-function)
 ;; (add-hook 'text-mode 'refill-mode)
 
 ;;; dired
