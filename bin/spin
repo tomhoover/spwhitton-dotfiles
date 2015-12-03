@@ -4,6 +4,12 @@
 
 cd $HOME/src/propellor
 
+branch="$(git rev-parse --abbrev-ref HEAD)"
+if [ ! "$branch" = "spwconf" ]; then
+    echo "wrong branch"
+    exit 1
+fi
+
 # This check from <http://unix.stackexchange.com/a/155077>
 if output=$(git status --porcelain) && [ -z "$output" ]; then
     if [ -z "$1" ]; then
