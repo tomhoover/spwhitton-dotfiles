@@ -1,11 +1,52 @@
-;;; haskell-tab-indent --- blah blah
+;;; haskell-tab-indent.el --- tab-based indentation for haskell-mode
+
+;; Copyright (C) 2015  Sean Whitton
+
+;; Author: Sean Whitton <spwhitton@spwhitton.name>
+;; Keywords: indentation haskell
+
+;; This file is NOT part of GNU Emacs.
+
+;; This file is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation; either version 3, or (at your option)
+;; any later version.
+
+;; This file is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ;;; Commentary:
+
+;; This file provides `haskell-tab-indent-mode', a simple indentation
+;; mode for Haskell projects which require tabs for indentation and do
+;; not permit spaces (except for where clauses, as a special case).
+;;
+;; The user may use TAB to cycle between possible indentations.
+;;
+;; Installation:
+;;
+;; If you set `indent-tabs-mode' in the .dir-locals.el file for a
+;; project requiring tabs, you can use something like this in your
+;; init file to enable this mode for such projects:
+;;
+;;    (add-hook 'haskell-mode-hook
+;;                (lambda ()
+;;                  (add-hook 'hack-local-variables-hook
+;;                            (lambda ()
+;;                              (if indent-tabs-mode
+;;                                  (haskell-tab-indent-mode)
+;;                                (haskell-indentation-mode)))
+;;                            nil t))) ; local hook
 
 ;;; Code:
 
 (defun haskell-tab-indent ()
-  "Blah blah."
+  "Auto indentation on TAB for `haskell-tab-indent-mode'."
   (interactive)
   (save-excursion
     (back-to-indentation)
@@ -66,7 +107,10 @@
 
 ;;;###autoload
 (define-minor-mode haskell-tab-indent-mode
-  "Blah blah."
+  "Haskell indentation mode for projects requiring that only tabs
+-- with no spaces -- be used for indentation.
+
+Binds the TAB key to cycle between possible indents."
   :lighter " TabInd"
   (kill-local-variable 'indent-line-function)
   (when haskell-tab-indent-mode
