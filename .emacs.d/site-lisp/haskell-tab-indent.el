@@ -9,9 +9,22 @@
   (interactive)
   (save-excursion
     (back-to-indentation)
+    ;; check for special case of where clause
     (if (looking-at "where")
 	(haskell-tab-indent--where)
-      (haskell-tab-indent--cycle))))
+      ;; check for special case of being called by
+      ;; `newline-and-indent': if the user has `electric-indent-mode'
+      ;; on and RET bound to `newline-and-indent', we'll end up
+      ;; indenting too far
+      (unless (let ((previous-line-tabs (haskell-tab-indent--previous-line-tabs))
+                    (this-line-tabs (haskell-tab-indent--this-line-tabs)))
+                (and (equal this-command 'newline-and-indent)
+                     (= this-line-tabs previous-line-tabs)))
+        (haskell-tab-indent--cycle))))
+  ;; On a line with only indentation, ensure point is at the end of
+  ;; it.
+  (when (save-excursion (beginning-of-line) (looking-at "[[:space:]]*$"))
+    (end-of-line)))
 
 (defun haskell-tab-indent--where ()
   ;; `haskell-tab-indent' leaves us just after the indentation
