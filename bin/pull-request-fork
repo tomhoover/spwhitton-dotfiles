@@ -17,6 +17,6 @@ git push origin github
 
 echo ""
 status Now complete final steps using the GitHub web interface.
-echo Set description to \"Fork for a pull request; please ignore\"
+echo Set description to \"Fork for a pull request\; please ignore\"
 echo Disable wiki and issues.
 echo Set default branch to \"github\".
