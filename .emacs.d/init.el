@@ -1837,7 +1837,8 @@ Ensures the kill ring entry always ends with a newline."
 (when (file-exists-p abbrev-file-name)
   (setq save-abbrevs t)
   (setq-default abbrev-mode t)
-  (diminish 'abbrev-mode))
+  (diminish 'abbrev-mode)
+  (quietly-read-abbrev-file))
 
 ;;; bookmarks
 
