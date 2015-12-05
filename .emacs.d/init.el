@@ -980,15 +980,28 @@
 ;;; Documentation browsing
 
 (defun spw/helm-dash (arg)
-  (interactive "p")
-  (if arg (helm-dash-at-point) (helm-dash)))
+  (interactive "P")
+  (when (eq major-mode 'haskell-mode)
+    (spw/helm-dash-haskell arg)))
 (bind-key "C-c d" 'spw/helm-dash)
 
+;; TODO maybe projectile-project-root instaed?
+(defun spw/helm-dash-haskell (arg)
+  (let ((project-docsets (f-join (magit-toplevel) "docsets/")))
+    (when (f-directory? project-docsets)
+      ;; helm-dash ignores local versions of these variables, so call
+      ;; the function within a let binding
+      (let* ((helm-dash-docsets-path project-docsets)
+             (helm-dash-common-docsets (helm-dash-installed-docsets)))
+        (if arg (helm-dash-at-point) (helm-dash))))))
+
 (use-package helm-dash
-  :commands (helm-dash helm-dash-at-point helm-dash-install-docset)
+  :commands (helm-dash
+             helm-dash-at-point
+             helm-dash-install-docset
+             helm-dash-installed-docsets)
   :config
-  (use-package helm :init (require 'helm-config))
-  (setq helm-dash-common-docsets (helm-dash-installed-docsets)))
+  (use-package helm :init (require 'helm-config)))
 
 
 
