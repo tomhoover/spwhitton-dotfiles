@@ -1,0 +1,9 @@
+#!/bin/sh
+
+mkdir -p $HOME/local/src
+cd $HOME/local/src
+cabal get $1
+cd ${1}*
+touch .duplicity-ignore
+cabal sandbox init
+cabal install
