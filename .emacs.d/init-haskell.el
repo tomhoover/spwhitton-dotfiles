@@ -27,6 +27,9 @@
 
   :config
 
+  (require 'haskell-interactive-mode)
+  (require 'haskell-process)
+
   (setq haskell-indentation-layout-offset 4
         haskell-indentation-left-offset 4
         haskell-indentation-show-indentations nil
@@ -49,13 +52,10 @@
 
   (add-hook 'haskell-mode-hook 'turn-on-haskell-doc)
   (add-hook 'haskell-mode-hook 'capitalized-words-mode)
-  ;; (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
-  ;; (diminish 'interactive-haskell-mode)
-
-  ;; SmartParens interacts badly with haskell-indentation-mode so turn
-  ;; it off for now
-  (add-hook 'haskell-mode-hook 'turn-off-smartparens-mode)
-  (add-hook 'haskell-mode-hook 'electric-pair-mode))
+  (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
+  (add-hook 'haskell-mode-hook (lambda () (diminish 'interactive-haskell-mode)) t)
+  ;; override stack default
+  (add-hook 'haskell-mode-hook (lambda () (flycheck-select-checker 'haskell-ghc))))
 
 ;;; Try to kill off flymake since init.el is starting flycheck.  Also
 ;;; remove a call to flymake-mode (add the call to `ghc-init' back in

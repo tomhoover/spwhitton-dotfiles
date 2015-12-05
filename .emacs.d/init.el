@@ -629,9 +629,13 @@
       (apply orig-fun args)))
   (advice-add 'flycheck-mode :around #'flycheck-mode--org-disable-flycheck)
 
-  ;; special Flycheck for Haskell
   (use-package flycheck-haskell
-    :init (add-hook 'flycheck-mode-hook #'flycheck-haskell-setup))
+    :demand
+    :init
+    (add-hook 'flycheck-mode-hook #'flycheck-haskell-setup)
+    :config
+    ;; override stack defaults
+    (setq flycheck-haskell-runghc-command (list "runghc")))
 
   :config
 
