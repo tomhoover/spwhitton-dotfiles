@@ -11,6 +11,7 @@ if [ ! "$branch" = "spwconf" ]; then
 fi
 
 # revert to system ghc
+# alternatively (TODO?): check that `which ghc` is /usr/bin/ghc
 version="$(ghc --version | awk 'NF{print $NF; exit}')"
 if [ ! "$version" = "7.6.3" ]; then
    PATH=/usr/bin:$PATH
