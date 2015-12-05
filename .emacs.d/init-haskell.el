@@ -35,7 +35,9 @@
         haskell-indentation-show-indentations nil
         haskell-tags-on-save t
         haskell-process-suggest-remove-import-lines t
-        haskell-mode-contextual-import-completion nil)
+        haskell-mode-contextual-import-completion nil
+        haskell-process-log t
+        haskell-process-auto-import-loaded-modules t)
 
   ;; Turn on an appropriate indentation mode.  Use
   ;; `haskell-indentation-mode' by default, but if our .dir-locals.el
@@ -55,7 +57,14 @@
   (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
   (add-hook 'haskell-mode-hook (lambda () (diminish 'interactive-haskell-mode)) t)
   ;; override stack default
-  (add-hook 'haskell-mode-hook (lambda () (flycheck-select-checker 'haskell-ghc))))
+  (add-hook 'haskell-mode-hook (lambda () (flycheck-select-checker 'haskell-ghc)))
+
+  ;; recommended bindings from haskell-mode wiki
+  (define-key haskell-mode-map (kbd "C-c C") 'haskell-process-cabal)
+  (define-key haskell-cabal-mode-map (kbd "C-c C-b") 'haskell-interactive-bring)
+  (define-key haskell-cabal-mode-map (kbd "C-c C-k") 'haskell-interactive-mode-clear)
+  (define-key haskell-cabal-mode-map (kbd "C-c C-c") 'haskell-process-cabal-build)
+  (define-key haskell-cabal-mode-map (kbd "C-c C") 'haskell-process-cabal))
 
 ;;; Try to kill off flymake since init.el is starting flycheck.  Also
 ;;; remove a call to flymake-mode (add the call to `ghc-init' back in
