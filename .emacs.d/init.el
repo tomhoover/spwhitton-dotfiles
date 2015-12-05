@@ -699,6 +699,7 @@
   (add-to-list 'projectile-globally-ignored-directories ".stack-work")
   (add-to-list 'projectile-globally-ignored-directories ".git")
   (add-to-list 'projectile-globally-ignored-directories ".cabal-sandbox")
+  (add-to-list 'projectile-globally-ignored-directories "docsets")
 
   ;; as part of daily cleanup, clean-up projects that no longer exist
   (add-hook 'midnight-hook 'projectile-cleanup-known-projects)
