@@ -8,7 +8,7 @@
 ;; Author: Sebastian Wiesner <swiesner@lunaryorn.com>
 ;; URL: https://github.com/flycheck/flycheck-haskell
 ;; Keywords: tools, convenience
-;; Version: 0.7.2
+;; Version: 0.8-cvs
 ;; Package-Requires: ((emacs "24.1") (flycheck "0.22") (haskell-mode "13.7") (dash "2.4.0") (let-alist "1.0.1"))
 
 ;; This file is not part of GNU Emacs.
@@ -72,12 +72,18 @@
   :group 'flycheck
   :link '(url-link :tag "Github" "https://github.com/flycheck/flycheck-haskell"))
 
-(defcustom flycheck-haskell-runhaskell "runhaskell"
-  "Path to the `runhaskell' executable.
+(defcustom flycheck-haskell-runghc-command
+  (if (executable-find "stack")
+      '("stack" "--verbosity" "silent" "runghc")
+    '("runghc"))
+  "Command for `runghc'.
 
-This library uses `runhaskell' to run various Haskell helper
-scripts to extract information from Cabal files."
-  :type '(file :must-match t)
+This library uses `runghc' to run various Haskell helper scripts
+to extract information from Cabal files.  This option provides
+the command to invoke `runghc'.  The default is to use `stack'
+and otherwise fall back to standard `runghc'."
+  :type '(repeat (string :tag "Command"))
+  :risky t
   :group 'flycheck-haskell)
 
 
@@ -96,21 +102,31 @@ scripts to extract information from Cabal files."
   (expand-file-name "get-flags.hs" flycheck-haskell-directory)
   "The helper to get compiler flags for the Cabal helper.")
 
+(defun flycheck-haskell-runghc-command (args)
+  "Create a runghc command with ARGS.
+
+Take the base command from `flycheck-haskell-runghc-command'."
+  (append flycheck-haskell-runghc-command args nil))
+
 (defun flycheck-haskell--get-flags ()
   "Get GHC flags to run the Cabal helper."
-  (process-lines flycheck-haskell-runhaskell
-                 flycheck-haskell-flags-helper))
+  (ignore-errors
+    (apply #'process-lines
+           (flycheck-haskell-runghc-command
+            (list flycheck-haskell-flags-helper)))))
 
 (defun flycheck-haskell-read-cabal-configuration (cabal-file)
   "Read the Cabal configuration from CABAL-FILE."
-  (let ((args (append (flycheck-haskell--get-flags)
-                      (list flycheck-haskell-helper cabal-file))))
+  (let* ((args (append (flycheck-haskell--get-flags)
+                       (list flycheck-haskell-helper cabal-file)))
+         (command (flycheck-haskell-runghc-command args)))
     (with-temp-buffer
-      (let ((result (apply 'call-process flycheck-haskell-runhaskell
-                           nil t nil args)))
-        (when (= result 0)
-          (goto-char (point-min))
-          (read (current-buffer)))))))
+      (pcase (apply 'call-process (car command) nil t nil (cdr command))
+        (0 (goto-char (point-min))
+           (read (current-buffer)))
+        (retcode (message "Reading Haskell configuration failed with exit code %s and output:\n%s"
+                          retcode (buffer-string))
+                 nil)))))
 
 
 ;;; Cabal configuration caching
