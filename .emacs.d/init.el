@@ -302,7 +302,9 @@
   (advice-add 'sp-backward-delete-word :around #'sp-backward-delete-word--remove-indentation)
 
   ;; define an additional pairing for Org-mode (verbatim text)
-  (sp-local-pair 'org-mode "=" "="))
+  (sp-local-pair 'org-mode "=" "=")
+
+  (sp-local-pair 'markdown-mode "`" "`"))
 
 ;;; Org
 
