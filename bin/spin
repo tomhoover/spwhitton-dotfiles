@@ -10,6 +10,13 @@ if [ ! "$branch" = "spwconf" ]; then
     exit 1
 fi
 
+# revert to system ghc
+version="$(ghc --version | awk 'NF{print $NF; exit}')"
+if [ ! "$version" = "7.6.3" ]; then
+   PATH=/usr/bin:$PATH
+   export PATH
+fi
+
 # This check from <http://unix.stackexchange.com/a/155077>
 if output=$(git status --porcelain) && [ -z "$output" ]; then
     if [ -z "$1" ]; then
