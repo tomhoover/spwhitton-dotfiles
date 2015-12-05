@@ -1,9 +1,11 @@
 #!/bin/sh
 
 mkdir -p $HOME/local/src
-cd $HOME/local/src
-cabal get $1
-cd ${1}*
-touch .duplicity-ignore
-cabal sandbox init
-cabal install
+for var in "$@"; do
+    cd $HOME/local/src
+    cabal get $var
+    cd ${var}*
+    touch .duplicity-ignore
+    cabal sandbox init
+    cabal install
+done
