@@ -479,7 +479,9 @@
 
 ;;; word count in modeline, when I want it
 
-(use-package wc-mode)
+(use-package wc-mode
+  :init
+  (setq wc-modeline-format "%tw words"))
 
 ;;; company-mode for smart and easy completion
 
