@@ -288,6 +288,8 @@ checkout = git clone https://git.spwhitton.name/propellor propellor --branch spw
 # system-wide propellor package.
 post_checkout =
     cd propellor
+    git config propellor.spin-branch spwconf
+    git config propellor.forbid-dirty-spin true
     git remote add -f upstream github:joeyh/propellor.git
     cabal sandbox init
     # from <https://propellor.branchable.com/coding_style/>
