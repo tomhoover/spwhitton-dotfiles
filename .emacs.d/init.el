@@ -226,6 +226,8 @@
   (require 'smartparens-config)
   (setq sp-navigate-consider-symbols t)
 
+  (smartparens-global-mode)
+
   ;; global smartparens bindings
   (sp-use-smartparens-bindings)
   (bind-key "C-w" 'sp-backward-kill-word emacs-lisp-mode-map)
