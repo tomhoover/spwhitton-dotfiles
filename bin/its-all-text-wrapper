@@ -1,0 +1,8 @@
+#!/bin/sh
+
+# It's All Text does not allow one to pass arguments to the editor
+# command, so need this wrapper
+
+. $HOME/.shenv
+
+emacsclient -c $@
