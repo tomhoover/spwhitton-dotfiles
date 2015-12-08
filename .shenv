@@ -88,17 +88,20 @@ fi
 # be setting LC_ALL.  Instead I could set most of LC_* to en_GB.UTF-8,
 # and some e.g. LC_PAPER to en_US.UTF-8.
 
-case " $(echo $(locale -a)) " in
-    *\ en_GB.utf8\ *) LANG=en_GB.utf8 ;;
-    *\ en_GB.UTF-8\ *) LANG=en_GB.UTF-8 ;;
-    *\ C.UTF-8\ *) LANG=C.UTF-8 ;;
-    *\ C.utf8\ *) LANG=C.utf8 ;;
-    *) unset LANG ;;
-esac
+# disabled: propellor setting it system-wide on my machines and that's
+# enough
 
-LC_ALL=$LANG
-export LC_ALL
-export LANG
+# case " $(echo $(locale -a)) " in
+#     *\ en_GB.utf8\ *) LANG=en_GB.utf8 ;;
+#     *\ en_GB.UTF-8\ *) LANG=en_GB.UTF-8 ;;
+#     *\ C.UTF-8\ *) LANG=C.UTF-8 ;;
+#     *\ C.utf8\ *) LANG=C.utf8 ;;
+#     *) unset LANG ;;
+# esac
+
+# LC_ALL=$LANG
+# export LC_ALL
+# export LANG
 
 # ---- further preferences
 
