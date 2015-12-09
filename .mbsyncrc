@@ -66,9 +66,9 @@ Slave            :fmmaildir:drafts
 # Master           :fmimap:INBOX/Trash
 # Slave            :fmmaildir:trash
 
-# Channel          debian
-# Master           :fmimap:INBOX/Lists/Debian
-# Slave            :fmmaildir:debian
+Channel          debian
+Master           :fmimap:INBOX/Lists/Debian
+Slave            :fmmaildir:debian
 
 Channel          feeds
 Master           :fmimap:INBOX/Feeds
@@ -89,7 +89,7 @@ Channel          fmails
 Channel          fmaild
 # Channel          fmailt
 # Channel          fmaila
-# Channel          debian
+Channel          debian
 # Channel          notes
 Channel          feeds
 Channel          spamtraining
