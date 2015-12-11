@@ -92,3 +92,6 @@ done
 githubbk spwhitton/propellor.git
 
 # Stage 3 : Backup other repos ad hoc
+
+gitbk alioth:/git/pkg-emacsen/pkg/aggressive-indent-mode.git $DEST/alioth
+gitbk alioth:/git/pkg-emacsen/pkg/spacemacs.git $DEST/alioth
