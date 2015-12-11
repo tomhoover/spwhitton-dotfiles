@@ -100,7 +100,7 @@
  org-agenda-include-all-todo nil
  org-agenda-files "~/doc/emacs-org-agenda-files"
  org-agenda-persistent-filter t
- org-agenda-diary-file "~/doc/org/refile.org"
+ org-agenda-diary-file "~/.labbook.gpg"
  org-agenda-insert-diary-strategy 'top-level
  org-goto-auto-isearch t
  org-goto-interface 'outline
