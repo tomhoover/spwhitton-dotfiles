@@ -3,9 +3,15 @@
 
 # --- personal settings
 
+# for dch
+export DEBFULLNAME="Sean Whitton"
+export DEBEMAIL="spwhitton@spwhitton.name"
+
+# basic env
 source ~/.shenv
 export GPG_TTY=$(tty)
 
+# colours
 if ! [[ "$TERM" == "dumb" ]]; then
     autoload -U colors; colors
     export PS1="%{$fg[${1:-yellow}]%}%m %{$fg[${1:-green}]%}%~ %{$fg[${1:-blue}]%}%#%{$reset_color%} "
