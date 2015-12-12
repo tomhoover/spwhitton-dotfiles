@@ -2131,5 +2131,13 @@ Replaces parent directories with their initial characters."
          " ")))
 (setq eshell-highlight-prompt nil)
 
+;;; changelogs
+
+(defun spw/change-log-setup ()
+  (setq-local indent-tabs-mode nil)
+  (setq-local left-margin 2)
+  (orgstruct++-mode 1))
+(add-hook 'change-log-mode-hook 'spw/change-log-setup)
+
 (provide 'init)
 ;;; init.el ends here
