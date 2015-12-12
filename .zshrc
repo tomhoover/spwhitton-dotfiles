@@ -87,7 +87,7 @@ alias mykb="setxkbmap gb; setxkbmap -option ctrl:nocaps"
 alias fixmacs="pkill -USR2 emacs"
 alias myfiles="cadaver https://myfiles.messagingengine.com/"
 alias unstow="stow -D"
-alias sid="sudo /usr/local/bin/enter-sid /bin/sh -c \"export DISPLAY=${DISPLAY}; su swhitton\""
+alias sid="sudo /usr/local/bin/enter-sid /bin/sh -c \"export DISPLAY=${DISPLAY}; su - swhitton\""
 
 # add a project to projectile's known projects
 projectile () {
