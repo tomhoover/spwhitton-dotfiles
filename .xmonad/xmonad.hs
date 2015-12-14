@@ -111,10 +111,11 @@ myUnwantedKeys = ["M-e"]
 
 -- hooks
 
-myFloatClasses = ["Gimp"
+myFloatClasses = [ "Gimp"
                  , "feh"
                  , "MPlayer"
-                 , "Xfrun4"]
+                 , "Xfrun4"
+                 ]
 
 myManageHook = composeOne $
                [ checkDock                              -?> doIgnore
