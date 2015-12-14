@@ -6,7 +6,7 @@ if [ "$(hostname -f)" = "athena.silentflame.com" ]; then
     # start irssi under dtach if it's not running
     if ! pgrep -u $LOGNAME irssi >/dev/null; then
         rm -f $HOME/local/irssi.dtach.socket
-        TZ=MST dtach -n $HOME/local/irssi.dtach.socket irssi
+        TERM=xterm TZ=MST dtach -n $HOME/local/irssi.dtach.socket irssi 2>&1 >/tmp/three
     fi
     
     # if we're not at a dumb terminal (so this script can be shoved in a
