@@ -6,6 +6,8 @@ for var in "$@"; do
     cabal get $var
     cd ${var}*
     touch .duplicity-ignore
+    wget https://www.stackage.org/lts/cabal.config
     cabal sandbox init
+    cabal update
     cabal install
 done
