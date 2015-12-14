@@ -1,0 +1,13 @@
+#!/bin/sh
+
+. $HOME/.shenv
+
+for d in $HOME/src/*; do
+    if [ -d "$d" ]; then
+        if ! grep -qe "\[$(basename $d)\]" $HOME/src/.mrconfig; then
+            if ! grep -qe "\[src/$(basename $d)\]" $HOME/.mrconfig; then
+                echo $d
+            fi
+        fi
+    fi
+done
