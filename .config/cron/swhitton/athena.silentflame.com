@@ -5,6 +5,7 @@
 # ^ update daily agendas
 @reboot emacs --daemon
 @reboot ii
+@reboot mount /home/swhitton/lib/fm
 
 # ikiwiki midnight maintenance: update day on calendar marked as
 # today, and fix typography (cannot be @daily as that is not
