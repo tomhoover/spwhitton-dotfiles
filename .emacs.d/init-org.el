@@ -76,17 +76,17 @@
  org-directory "~/doc/org"
 
  org-tag-alist '((:startgroup)
-                 ("@Tucson"       . ?t)
-                 ("@campus"       . ?c)
-                 ("@Sheffield"    . ?s)
-                 ("@E5thSt"       . ?h)
+                 ("@Tucson"       . ?T)
+                 ("@campus"       . ?C)
+                 ("@Sheffield"    . ?S)
+                 ("@E5thSt"       . ?H)
                  (:endgroup)
-                 ("@iPad"         . ?i)
+                 ("@iPad"         . ?I)
                  (:startgroup)
-                 ("@Emacs"        . ?e) ; SSH Emacs only
-                 ("@workstation"  . ?m) ; on my fully set-up personal (m)achine
+                 ("@Emacs"        . ?E) ; SSH Emacs only
+                 ("@workstation"  . ?M) ; on my fully set-up personal (m)achine
                  (:endgroup)
-                 ("UA"            . ?w)) ; academic work
+                 ("UA"            . ?W)) ; academic work
 
  ;; enable speed commands and bind N to narrow to subtree
  org-use-speed-commands t
@@ -192,8 +192,8 @@
  org-agenda-entry-text-maxlines 3
 
  org-todo-keywords
- '((sequence "TODO(T)" "NEXT(N)" "|" "DONE(D)")
-   (sequence "WAITING(W)" "SOMEDAY(S)" "|" "CANCELLED(C)"))
+ '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
+   (sequence "WAITING(w)" "SOMEDAY(s)" "|" "CANCELLED(c)"))
 
  org-todo-keyword-faces '(("SOMEDAY" . (:foreground "#94BFF3" :weight bold)) ; zenburn-blue+1
                           ("NEXT" . (:foreground "#F0DFAF" :weight bold))) ; zenburn-yellow
