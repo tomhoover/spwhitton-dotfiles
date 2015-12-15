@@ -101,7 +101,7 @@
  org-agenda-files "~/doc/emacs-org-agenda-files"
  org-agenda-persistent-filter t
  org-agenda-diary-file "~/.labbook.gpg"
- org-agenda-insert-diary-strategy 'top-level
+ org-agenda-insert-diary-strategy 'date-tree
  org-goto-auto-isearch t
  org-goto-interface 'outline
  org-archive-mark-done nil
