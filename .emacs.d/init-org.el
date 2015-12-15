@@ -76,13 +76,17 @@
  org-directory "~/doc/org"
 
  org-tag-alist '((:startgroup)
-                 ("@libDASL" . ?l)
-                 ("@Tucson" . ?e)
-                 ("@campus" . ?m)
-                 ("@Sheffield" . ?u)
-                 ("@E5thSt" . ?h)
-                 ("@www" . ?i)
-                 (:endgroup))
+                 ("@Tucson"       . ?t)
+                 ("@campus"       . ?c)
+                 ("@Sheffield"    . ?s)
+                 ("@E5thSt"       . ?h)
+                 (:endgroup)
+                 ("@iPad"         . ?i)
+                 (:startgroup)
+                 ("@Emacs"        . ?e) ; SSH Emacs only
+                 ("@workstation"  . ?m) ; on my fully set-up personal (m)achine
+                 (:endgroup)
+                 ("@UA"           . ?w)) ; academic work
 
  ;; enable speed commands and bind N to narrow to subtree
  org-use-speed-commands t
@@ -188,8 +192,8 @@
  org-agenda-entry-text-maxlines 3
 
  org-todo-keywords
- '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
-   (sequence "WAITING(w)" "SOMEDAY(s)" "|" "CANCELLED(c)"))
+ '((sequence "TODO(T)" "NEXT(N)" "|" "DONE(D)")
+   (sequence "WAITING(W)" "SOMEDAY(S)" "|" "CANCELLED(C)"))
 
  org-todo-keyword-faces '(("SOMEDAY" . (:foreground "#94BFF3" :weight bold)) ; zenburn-blue+1
                           ("NEXT" . (:foreground "#F0DFAF" :weight bold))) ; zenburn-yellow
@@ -361,9 +365,10 @@
     ((string= tag "@sheffield")
      (not (string= (system-name) "zephyr.silentflame.com")))
     ((string= tag "@campus")
-     (string= (system-name) "artemis.silentflame.com"))
-    ((string= tag "@libdasl")
-     (not (string= (system-name) "ma.sdf.org"))))
+     (string= (system-name) "athena.silentflame.com"))
+    ((string= tag "@workstation")
+     (or (string= (system-name) "artemis.silentflame.com")
+         (string= (system-name) "zephyr.silentflame.com"))))
    (concat "-" tag)))
 
 (setq org-agenda-auto-exclude-function 'org-my-auto-exclude-function)
@@ -495,7 +500,7 @@
 (setq
  org-capture-templates
  '(("t" "Task to be refiled" entry (file "~/doc/org/refile.org")
-    "* TODO %^{Title} %^G
+    "* TODO %^{Title}
 %?")
    ("n" "Information to be refiled" entry (file "~/doc/org/refile.org")
     "* %^{Title}
