@@ -531,7 +531,7 @@
       (insert-file-contents org-agenda-files)
       (dolist (elt (split-string (buffer-string) "\n" t) args-together)
         (if (not (f-directory? elt))
-            (setq args-together (concat args-together " -not -name " (file-name-nondirectory elt))))))
+            (setq args-together (concat args-together " -not -name '" (file-name-nondirectory elt) "'")))))
     (grep-find (concat "find " org-directory
                        " -regextype posix-egrep -type f"
                        args-together
