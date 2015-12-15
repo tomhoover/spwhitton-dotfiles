@@ -102,11 +102,6 @@ clone () {
     projectile
 }
 
-# common dotfiles git operations
-alias git-rebase-host-branch="git checkout $(hostname);git rebase master"
-alias git-push-host-branch="git push origin master +$(hostname)"
-alias git-dotfiles="git-rebase-host-branch && git-push-host-branch"
-
 # tmux is smart and it detects a changed SSH_AUTH_SOCK and any newly
 # created shells use that.  But not old ones: this should pull the
 # newly detected value into the old sehll.

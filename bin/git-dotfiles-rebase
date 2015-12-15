@@ -1,0 +1,10 @@
+#!/bin/sh
+
+. $HOME/.shenv
+
+set -e
+
+cd $HOME/src/dotfiles
+git checkout $(hostname)
+git rebase master
+git push origin master +$(hostname)

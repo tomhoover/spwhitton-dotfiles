@@ -1751,6 +1751,14 @@ Ensures the kill ring entry always ends with a newline."
   (set-text-properties 0 (length txt) nil txt)
   txt)
 
+(defun spw/dotfiles-rebase ()
+  "Rebase & push dotfiles."
+  (interactive)
+  (let ((default-directory (expand-file-name "~/src/dotfiles/"))
+        (buffer (get-buffer-create "*dotfiles rebase*")))
+    (display-buffer "*dotfiles rebase*")
+    (async-shell-command "git-dotfiles-rebase" "*dotfiles rebase*")))
+
 
 
 ;;;; ---- personal settings ----
@@ -1809,6 +1817,7 @@ Ensures the kill ring entry always ends with a newline."
                        (projectile-persp-switch-project "~/src/dotfiles")
                        (find-file "~/src/dotfiles/.emacs.d/init.el")
                        (eval-buffer)))
+(bind-key "C-c g d" 'spw/dotfiles-rebase)
 
 (bind-key "C-c S l" 'spw/tblesson)
 (bind-key "C-c S S" 'spw/auto-textbook)
