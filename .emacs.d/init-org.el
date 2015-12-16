@@ -1002,7 +1002,8 @@ spaces in it and to remove any colons."
     ;;   (org-display-inline-images))
     (turn-on-auto-fill)
     ;; (org-mode-reftex-setup)
-    (smartparens-mode)))
+    ;; (smartparens-mode)
+    ))
 
 (add-hook
  'org-agenda-mode-hook
