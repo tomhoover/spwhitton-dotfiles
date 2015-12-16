@@ -1157,13 +1157,16 @@ Originally from http://stackoverflow.com/a/2172827"
   (interactive "p")
   (delete-region (point) (progn (forward-word arg) (point))))
 
-(defun spw/backward-delete-word (arg)
-  "Delete characters ARG backward until encountering the end of a word."
+(defun spw/backward-delete-word-dwim (arg)
+  "Delete characters ARG backward until encountering the end of a
+word, unless the region is active, in which case kill it."
   (interactive "p")
-  (spw/delete-word (- arg)))
+  (if (region-active-p)
+      (call-interactively 'kill-region)
+    (spw/delete-word (- arg))))
 
-(bind-key "C-w" 'spw/backward-delete-word)
-(bind-key "C-x C-k" 'kill-region)
+(bind-key "C-w" 'spw/backward-delete-word-dwim)
+;; (bind-key "C-x C-k" 'kill-region)
 ;; (global-set-key "\M-d" 'spw/delete-word)
 
 ;;; my buffer save cleanup functions
@@ -1691,7 +1694,7 @@ Ensures the kill ring entry always ends with a newline."
   (interactive "p")
   (if mark-active
       (call-interactively 'kill-ring-save)
-    (let ((beg (line-beginning-position))
+    (let ((beg (point))
           (end (line-end-position arg)))
       (if (eq last-command 'spw/copy-line)
           (kill-append (buffer-substring beg end) (< end beg))
