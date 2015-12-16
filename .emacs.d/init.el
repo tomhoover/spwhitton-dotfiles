@@ -193,6 +193,7 @@
 ;;; keep parentheses under control: modern replacement for the mighty paredit
 
 (use-package smartparens
+  :disabled t
   :bind (("M-J" . sp-join-sexp)
 
          ;; for when I use Emacs via PuTTY
