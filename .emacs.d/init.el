@@ -190,6 +190,54 @@
           (forward-char 1)))))
   (advice-add 'er/expand-region :around #'er/expand-region--fill-out-region))
 
+;;; sexp management
+
+(defmacro spw/paredit-unsteal (map)
+  "Reclaim core Emacs bindings from Paredit in MAP."
+  `(progn
+     (define-key ,map (kbd "M-s") nil)
+     (define-key ,map (kbd "M-r") nil)
+     (define-key ,map (kbd "M-U") 'paredit-splice-sexp)
+     (define-key ,map (kbd "M-<up>") 'paredit-raise-sexp)))
+
+(use-package paredit
+  :commands paredit-mode
+  :init
+  (dolist
+      (hook
+       '(emacs-lisp-mode-hook
+         lisp-mode-hook
+         lisp-interaction-mode-hook
+         ielm-mode-hook
+         scheme-mode-hook
+         inferior-scheme-mode-hook))
+    (add-hook hook 'paredit-mode))
+
+  (use-package paredit-everywhere
+    :commands paredit-everywhere-mode
+    :init
+    (add-hook 'prog-mode-hook 'paredit-everywhere-mode)
+    (add-hook 'minibuffer-setup-hook 'paredit-everywhere-mode)
+    :config
+    (spw/paredit-unsteal paredit-everywhere-mode-map))
+  :config
+  (spw/paredit-unsteal paredit-mode-map)
+  ;; C-j is useless with `aggressive-indent-mode'
+  (setq )
+  )
+
+(electric-pair-mode 1)
+(show-paren-mode 1)
+
+;; based on http://emacs.stackexchange.com/a/2554/8610
+(defmacro spw/add-mode-pairs (hook pairs)
+  `(add-hook ,hook
+             (lambda ()
+               (setq-local electric-pair-pairs (append electric-pair-pairs ,pairs))
+               (setq-local electric-pair-text-pairs electric-pair-pairs))))
+
+(spw/add-mode-pairs 'emacs-lisp-mode-hook '((?` . ?')))
+
 ;;; keep parentheses under control: modern replacement for the mighty paredit
 
 (use-package smartparens
@@ -539,6 +587,7 @@
   :init
   (add-hook 'markdown-mode-hook 'turn-on-orgstruct)
   (add-hook 'markdown-mode-hook 'turn-on-orgstruct++)
+  (spw/add-mode-pairs 'markdown-mode-hook '((?` . ?`)))
 
   :config
   ;; This binding replaces a `markdown-export'.
@@ -1920,9 +1969,6 @@ Ensures the kill ring entry always ends with a newline."
 ;; re-indent and add newlines automatically, sometimes
 ;; (electric-layout-mode 1)
 (electric-indent-mode 1)
-
-;; explicitly switch this off: using smartparens
-(electric-pair-mode -1)
 
 ;; templates when creating new files
 ;; (auto-insert-mode 1)
