@@ -48,8 +48,23 @@ archivemail \
     --archive-name=sent${suffix} \
     $INPUT/sent
 
-cd $OUTPUT
-git annex add archive${suffix}.gz sent${suffix}.gz
+archivemail \
+    --days=31 \
+    --output-dir=$OUTPUT \
+    --preserve-unread \
+    --archive-name=feeds${suffix} \
+    $INPUT/feeds
 
-status now please inspect,  commit and sync ~/lib/annex
-status and move .mbsyncrc back from .mbsyncrc\~
+archivemail \
+    --days=31 \
+    --output-dir=$OUTPUT \
+    --preserve-unread \
+    --archive-name=debian${suffix} \
+    $INPUT/debian
+
+cd $OUTPUT
+git annex add archive${suffix}.gz sent${suffix}.gz debian${suffix}.gz feeds${suffix}.gz
+
+mv "$HOME/.mbsyncrc~" "$HOME/.mbsyncrc"
+
+status now commit and sync ~/lib/annex
