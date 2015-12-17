@@ -97,6 +97,7 @@ projectile () {
 
 # clone with git and open in Emacs
 clone () {
+    cd $HOME/src
     git clone $1
     cd $(basename $1)
     mr register
