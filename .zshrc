@@ -99,6 +99,7 @@ projectile () {
 clone () {
     git clone $1
     cd $(basename $1)
+    mr register
     projectile
 }
 
