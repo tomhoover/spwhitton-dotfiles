@@ -49,6 +49,11 @@
     insteadOf = git://github.com/
     insteadOf = github:
 
+[url "https://anonscm.debian.org/git/"]
+     insteadOf = alioth:
+[url "spw-guest@git.debian.org:/git/"]
+     pushInsteadOf = alioth:
+
 # temporary redirects
 [url "git@spwhitton.name:dotfiles.git"]
      insteadOf = https://github.com/spwhitton/dotfiles.git
