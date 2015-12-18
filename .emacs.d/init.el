@@ -1064,6 +1064,22 @@
   :config
   (use-package helm :init (require 'helm-config)))
 
+(use-package debpaste
+  :commands (debpaste-display-paste
+             debpaste-paste-region
+             debpaste-paste-buffer
+             debpaste-delete-paste)
+  :init
+  (setq debpaste-user-name "spwhitton")
+  :config
+  ;; Straight from the README
+  (delete 'debpaste-display-received-info-in-minibuffer
+          debpaste-received-filter-functions)
+  (define-key debpaste-command-map "i"
+    'debpaste-display-received-info-in-buffer)
+  (define-key debpaste-command-map "l"
+    'debpaste-display-posted-info-in-buffer))
+
 
 
 ;;;; ---- functions ----
