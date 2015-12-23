@@ -62,6 +62,9 @@ addition="/meta/s/spw/local/src/git-annex.linux"; maybe_add_to_path
 for bindir in $(find ~/local/src -path "*/.cabal-sandbox/bin"); do
     addition="$bindir";                           maybe_add_to_path
 done
+for bindir in $(find ~/src -path "*/.cabal-sandbox/bin"); do
+    addition="$bindir";                           maybe_add_to_path
+done
 
 unset addition
 export PATH
