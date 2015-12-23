@@ -99,7 +99,8 @@ projectile () {
 clone () {
     cd $HOME/src
     git clone $1
-    cd $(basename $1)
+    name=$(basename $1 | cut -d: -f2)
+    cd $name
     mr register
     projectile
 }
