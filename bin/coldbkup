@@ -54,23 +54,14 @@ githubbk ()
     gitbk git@github.com:$1 $DEST/github
 }
 
-# Stage 1 : Backup repos hosted on ma
+# backup a repo from alioth
+aliothbk ()
+{
+    status processing $1 from alioth
+    gitbk alioth:/git/$1 $DEST/alioth
+}
 
-# TODO: don't use ls here (see http://mywiki.wooledge.org/ParsingLs)
-
-repos=$(ssh ma ls \$HOME/local/git)
-for repo in $repos; do
-    status processing $repo from ma
-    # TODO: maybe just move all gcrypt repos into a separate dir and
-    # then loop through them (only have one right now so not worth it)
-    if [ "$repo" = "priv.git" ]; then
-        gitbk gcrypt::ssh://ma/~/local/git/$repo $DEST/ma
-    else
-        gitbk ma:local/git/$repo $DEST/ma
-    fi
-done
-
-# Stage 1.5 : Backup repos hosted on athena
+# Stage 1 : Backup repos hosted on athena
 
 # TODO: don't use ls here (see http://mywiki.wooledge.org/ParsingLs)
 
@@ -85,13 +76,17 @@ for repo in $repos; do
     fi
 done
 
-# Stage 2 : Backup some repos hosted on github (the ones I care about).
+# Stage 2 : Debian repos
 
-# TODO: consider using joeyh's github-backup program
+aliothbk pkg-emacsen/pkg/aggressive-indent-mode.git
+aliothbk pkg-emacsen/pkg/f-el.git
 
-githubbk spwhitton/propellor.git
+# Stage 3 : Starred repos on github
 
-# Stage 3 : Backup other repos ad hoc
+# TODO Commented as downloading so many forks will be slow.  Maybe run
+# it on athena instead?
 
-gitbk alioth:/git/pkg-emacsen/pkg/aggressive-indent-mode.git $DEST/alioth
-gitbk alioth:/git/pkg-emacsen/pkg/spacemacs.git $DEST/alioth
+# (
+#     cd $DEST/github
+#     github-backup spwhitton
+# )
