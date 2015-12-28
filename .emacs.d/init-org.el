@@ -972,22 +972,10 @@ spaces in it and to remove any colons."
 ;; defeat variable-pitch-mode for tables and source blocks, per
 ;; http://stackoverflow.com/a/16819449
 
-(defun my-adjoin-to-list-or-symbol (element list-or-symbol)
-  (let ((list (if (not (listp list-or-symbol))
-                  (list list-or-symbol)
-                list-or-symbol)))
-    (require 'cl-lib)
-    (cl-adjoin element list)))
-
-(mapc
- (lambda (face)
-   (set-face-attribute
-    face nil
-    :inherit
-    (my-adjoin-to-list-or-symbol
-     'fixed-pitch
-     (face-attribute face :inherit))))
- (list 'org-code 'org-block 'org-table 'org-block-background))
+(face-override-variable-pitch 'org-code)
+(face-override-variable-pitch 'org-block)
+(face-override-variable-pitch 'org-table)
+(face-override-variable-pitch 'org-block-background)
 
 ;;;; ---- hooks and keys ----
 

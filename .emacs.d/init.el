@@ -881,7 +881,12 @@
     (interactive (list (read-char "char: ")
                        current-prefix-arg))
     (if arg (avy-goto-char char nil)
-      (avy-goto-word-1 char nil))))
+      (avy-goto-word-1 char nil)))
+
+  (face-override-variable-pitch 'avy-lead-face-0)
+  (face-override-variable-pitch 'avy-lead-face-1)
+  (face-override-variable-pitch 'avy-lead-face-2)
+  (face-override-variable-pitch 'avy-lead-face))
 
 ;; use ace-jump-mode to move between links in help file
 (use-package ace-link
@@ -1827,6 +1832,25 @@ Ensures the kill ring entry always ends with a newline."
         (buffer (get-buffer-create "*dotfiles rebase*")))
     (display-buffer "*dotfiles rebase*")
     (async-shell-command "git-dotfiles-rebase" "*dotfiles rebase*")))
+
+;;; defeat variable-pitch-mode for avy and Org tables and source
+;;; blocks, per http://stackoverflow.com/a/16819449
+
+(defun my-adjoin-to-list-or-symbol (element list-or-symbol)
+  (let ((list (if (not (listp list-or-symbol))
+                  (list list-or-symbol)
+                list-or-symbol)))
+    (require 'cl-lib)
+    (cl-adjoin element list)))
+
+(defun face-override-variable-pitch (face)
+  (set-face-attribute
+   face nil
+   :inherit
+   (my-adjoin-to-list-or-symbol
+    'fixed-pitch
+    (face-attribute face :inherit))))
+
 
 
 
