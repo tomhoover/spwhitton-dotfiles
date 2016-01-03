@@ -3,4 +3,5 @@ PATH=/home/swhitton/local/bin:/home/swhitton/bin:/usr/local/sbin:/usr/local/bin:
 HOME=/home/swhitton
 LOGNAME=swhitton
 
-1	20	duply	duply-run
+# metaarray account will be offline when I boot up zephyr in June
+#1	20	duply	duply-run
