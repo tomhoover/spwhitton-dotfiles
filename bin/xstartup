@@ -48,6 +48,13 @@ gsettings set org.gnome.crypto.cache gpg-cache-method 'timeout'
 pkill -u $USER idlesshclear
 idlesshclear &
 
+# ---- pleasant software beep
+
+xset b on
+xset b 100
+pactl upload-sample /usr/share/sounds/KDE-Im-Low-Priority-Message.ogg bell.ogg
+pactl load-module module-x11-bell display=:0.0 sample=bell.ogg
+
 # ---- screen locking
 
 if [ -e "/etc/systemd/system/goodmorning.timer" ]; then
