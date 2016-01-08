@@ -18,5 +18,5 @@ if [ "$(hostname -f)" = "athena.silentflame.com" ]; then
     fi
 else
     # on a workstation, get connected to ma
-    ssh -t athena dtach -a local/irssi.dtach.socket
+    softbeep ssh -t athena dtach -a local/irssi.dtach.socket
 fi
