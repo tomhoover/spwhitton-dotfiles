@@ -319,6 +319,12 @@ skip = lazy
 checkout = git clone https://git.spwhitton.name/wiki
 skip = ! mine
 
+# --- softbeep
+
+[src/softbeep]
+checkout = git clone https://git.spwhitton.name/softbeep
+skip = ! workstation
+
 # --- primary git annex
 
 [lib/annex]
