@@ -81,7 +81,13 @@ done
 aliothbk pkg-emacsen/pkg/aggressive-indent-mode.git
 aliothbk pkg-emacsen/pkg/f-el.git
 aliothbk pkg-emacsen/pkg/emacs-async.git
+aliothbk pkg-emacsen/pkg/emacs-noflet.git
 aliothbk pkg-emacsen/pkg/perspective-el.git
+aliothbk pkg-emacsen/pkg/helm.git
+aliothbk pkg-emacsen/pkg/epl.git
+aliothbk pkg-emacsen/pkg/pkg-info-el.git
+aliothbk pkg-emacsen/pkg/flx.git
+aliothbk pkg-emacsen/pkg/projectile.git
 
 # Stage 3 : Starred repos on github
 
