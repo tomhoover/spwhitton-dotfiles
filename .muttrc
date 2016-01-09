@@ -144,8 +144,9 @@ macro index,pager <F6> "c=sent<return>" "switch to sent"
 # macro index,pager <F7> "c=archive<return>" "switch to archive"
 bind index,pager <F7> next-unread-mailbox
 
-# limit to the messages I haven't dealt with yet when opening inbox
-folder-hook inbox/$ push <F9>
+# on startup, don't show new messages: distractions
+# works when I type mutt into a terminal, but not if I use xmonad launcher shortcut...
+push "<limit>!~N!~O!~D<enter><last-entry>"
 
 # extract URLS--config from http://www.memoryhole.net/~kyle/extract_url/
 macro index,pager ,b "<enter-command> set my_pdsave=\$pipe_decode<enter>\
