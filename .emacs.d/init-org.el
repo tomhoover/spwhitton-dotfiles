@@ -975,7 +975,7 @@ spaces in it and to remove any colons."
 (face-override-variable-pitch 'org-code)
 (face-override-variable-pitch 'org-block)
 (face-override-variable-pitch 'org-table)
-(face-override-variable-pitch 'org-block-background)
+;;(face-override-variable-pitch 'org-block-background)
 
 ;;;; ---- hooks and keys ----
 
