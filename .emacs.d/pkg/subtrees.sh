@@ -15,6 +15,9 @@
 )
 
 # byte-compile anything that needs to be
+
+# TODO this doesn't follow symbolic link into pkg!
+
 emacs --batch \
       --eval '(byte-recompile-directory user-emacs-directory 0)' \
       2>&1 | tail -n1           # output only the summary line
