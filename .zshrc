@@ -19,11 +19,11 @@ fi
 
 # add newer GHC to PATH if interactive shell (can't just add in .shenv
 # because xmonad needs the old one)
-if [[ $- == *i* ]]; then
-    if [ -d "$HOME/local/stow/ghc/bin" ]; then
-       export PATH=$HOME/local/stow/ghc/bin:$PATH
-    fi
-fi
+# if [[ $- == *i* ]]; then
+#     if [ -d "$HOME/local/stow/ghc/bin" ]; then
+#        export PATH=$HOME/local/stow/ghc/bin:$PATH
+#     fi
+# fi
 
 # --- terminals
 
