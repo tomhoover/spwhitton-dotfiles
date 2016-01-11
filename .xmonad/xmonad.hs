@@ -130,8 +130,8 @@ myManageHook = composeOne $
                , title         =? "ii"                  -?> doShift "comm"
                ] ++ [className =? c -?> doFloat | c <- myFloatClasses]
 
-myLayoutHook = modHost "artemis" (avoidStrutsOn []) $
-               modHost "zephyr" avoidStruts $
+-- old: `modHost "artemis" (avoidStrutsOn []) $ modHost "zephyr" avoidStruts $` instead of just `avoidStruts $`
+myLayoutHook = avoidStruts $
                smartBorders $
                -- layoutHintsWithPlacement (0.5, 0.5) $
                onWorkspace "www" (maximize myWebLayout) $
