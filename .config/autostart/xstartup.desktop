@@ -5,6 +5,7 @@ Type=Application
 Name=xstartup
 Comment=Sean's X session startup script
 Exec=/home/swhitton/bin/xstartup
+OnlyShowIn=XFCE;
 StartupNotify=false
 Terminal=false
 Hidden=false
