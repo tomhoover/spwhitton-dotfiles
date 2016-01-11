@@ -1,7 +1,12 @@
 #!/bin/sh
+
 . $HOME/.shenv
 
 # stuff to start in XFCE or GNOME3
+
+# ---- no bell please
+
+xset b off
 
 # ---- keyboard settings
 
