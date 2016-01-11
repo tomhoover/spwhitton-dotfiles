@@ -1,4 +1,4 @@
-;;; haskell-cabal.el --- Support for Cabal packages
+;;; haskell-cabal.el --- Support for Cabal packages -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2007, 2008  Stefan Monnier
 
@@ -186,14 +186,16 @@ file), then this function returns nil."
           (haskell-cabal-get-setting name))))))
 
 ;;;###autoload
-(defun haskell-cabal-get-dir ()
+(defun haskell-cabal-get-dir (&optional use-defaults)
   "Get the Cabal dir for a new project. Various ways of figuring this out,
    and indeed just prompting the user. Do them all."
   (let* ((file (haskell-cabal-find-file))
-         (dir (when file (file-name-directory file))))
-    (haskell-utils-read-directory-name
-     (format "Cabal dir%s: " (if file (format " (guessed from %s)" (file-relative-name file)) ""))
-     dir)))
+         (dir (if file (file-name-directory file) default-directory)))
+    (if use-defaults
+	dir
+	(haskell-utils-read-directory-name
+	 (format "Cabal dir%s: " (if file (format " (guessed from %s)" (file-relative-name file)) ""))
+	 dir))))
 
 (defun haskell-cabal-compute-checksum (dir)
   "Compute MD5 checksum of package description file in DIR.
@@ -301,12 +303,13 @@ OTHER-WINDOW use `find-file-other-window'."
     "help"
     "run"))
 
-
+;;;###autoload
 (defgroup haskell-cabal nil
   "Haskell cabal files"
   :group 'haskell
 )
 
+;;;###autoload
 (defcustom haskell-cabal-list-comma-position
   'before
   "Where to put the comma in lists"
@@ -441,6 +444,29 @@ OTHER-WINDOW use `find-file-other-window'."
 (defun haskell-cabal-section-data-start-column (section)
   (plist-get section :data-start-column))
 
+(defun haskell-cabal-enum-targets ()
+  "Enumerate .cabal targets."
+  (let ((cabal-file (haskell-cabal-find-file)))
+    (when (and cabal-file (file-readable-p cabal-file))
+      (with-temp-buffer
+	(insert-file-contents cabal-file)
+	(haskell-cabal-mode)
+	(goto-char (point-min))
+	(let ((matches)
+	      (projectName (haskell-cabal-get-setting "name")))
+	  (haskell-cabal-next-section)
+	  (while (not (eobp))
+	    (if (haskell-cabal-source-section-p (haskell-cabal-section))
+		(let ((val (car (split-string
+				 (haskell-cabal-section-value (haskell-cabal-section))))))
+		  (if (or (string= val "")
+			  (string= val "{")
+			  (not val))
+		      (push projectName matches)
+		    (push val matches))))
+	    (haskell-cabal-next-section))
+	  (reverse matches))))))
+
 (defmacro haskell-cabal-with-subsection (subsection replace &rest funs)
   "Copy subsection data into a temporary buffer, save indentation
 and execute FORMS
@@ -456,8 +482,7 @@ resultung buffer-content"
             (,beg (plist-get ,section :beginning))
             (,end (plist-get  ,section :end))
             (,start-col (plist-get  ,section :data-start-column))
-            (,section-data (buffer-substring ,beg ,end))
-            (section-name (plist-get ,section :name )))
+            (,section-data (buffer-substring ,beg ,end)))
        (save-excursion
          (prog1
              (with-temp-buffer
@@ -531,8 +556,7 @@ resultung buffer-content"
   "Strip indentation from each line, execute FORMS and reinstate indentation
    so that the indentation of the FIRST LINE matches"
   (let ((old-l1-indent (make-symbol "new-l1-indent"))
-        (new-l1-indent (make-symbol "old-l1-indent"))
-        (res nil))
+        (new-l1-indent (make-symbol "old-l1-indent")))
     `(let ( (,old-l1-indent (save-excursion
                               (goto-char (point-min))
                               (current-indentation))))
@@ -669,9 +693,9 @@ resultung buffer-content"
   (let ((downcase-name (downcase name)))
     (haskell-cabal-find-subsection-by
      section
-     '(lambda (subsection)
+     `(lambda (subsection)
         (string= (downcase (haskell-cabal-section-name subsection))
-                 downcase-name)))))
+                 ,downcase-name)))))
 
 (defun haskell-cabal-goto-subsection (name)
   (let ((subsection (haskell-cabal-find-subsection (haskell-cabal-section) name)))
@@ -804,7 +828,6 @@ Source names from main-is and c-sources sections are left untouched
         (if (null candidates)
             (let* ((src-dir (haskell-cabal-join-paths base-dir (or (car src-dirs) "")))
                    (newfile (haskell-cabal-join-paths src-dir filename))
-                   (subdir (file-name-directory newfile))
                    (do-create-p (y-or-n-p (format "Create file %s ?" newfile))))
               (when do-create-p
                 (find-file-other-window newfile )))

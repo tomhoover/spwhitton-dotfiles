@@ -1,4 +1,4 @@
-;;; haskell-compile.el --- Haskell/GHC compilation sub-mode
+;;; haskell-compile.el --- Haskell/GHC compilation sub-mode -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2013  Herbert Valerio Riedel
 
@@ -29,11 +29,13 @@
 (require 'compile)
 (require 'haskell-cabal)
 
+;;;###autoload
 (defgroup haskell-compile nil
   "Settings for Haskell compilation mode"
   :link '(custom-manual "(haskell-mode)compilation")
   :group 'haskell)
 
+;;;###autoload
 (defcustom haskell-compile-cabal-build-command
   "cd %s && cabal build --ghc-option=-ferror-spans"
   "Default build command to use for `haskell-cabal-build' when a cabal file is detected.
@@ -41,6 +43,7 @@ The `%s' placeholder is replaced by the cabal package top folder."
   :group 'haskell-compile
   :type 'string)
 
+;;;###autoload
 (defcustom haskell-compile-cabal-build-alt-command
   "cd %s && cabal clean -s && cabal build --ghc-option=-ferror-spans"
   "Alternative build command to use when `haskell-cabal-build' is called with a negative prefix argument.
@@ -48,6 +51,7 @@ The `%s' placeholder is replaced by the cabal package top folder."
   :group 'haskell-compile
   :type 'string)
 
+;;;###autoload
 (defcustom haskell-compile-command
   "ghc -Wall -ferror-spans -fforce-recomp -c %s"
   "Default build command to use for `haskell-cabal-build' when no cabal file is detected.
@@ -55,6 +59,7 @@ The `%s' placeholder is replaced by the current buffer's filename."
   :group 'haskell-compile
   :type 'string)
 
+;;;###autoload
 (defcustom haskell-compile-ghc-filter-linker-messages
   t
   "Filter out unremarkable \"Loading package...\" linker messages during compilation."
@@ -63,7 +68,7 @@ The `%s' placeholder is replaced by the current buffer's filename."
 
 (defconst haskell-compilation-error-regexp-alist
   `((,(concat
-       "^\\(?1:[^ \t\r\n]+?\\):"
+       "^ *\\(?1:[^ \t\r\n]+?\\):"
        "\\(?:"
        "\\(?2:[0-9]+\\):\\(?4:[0-9]+\\)\\(?:-\\(?5:[0-9]+\\)\\)?" ;; "121:1" & "12:3-5"
        "\\|"
@@ -92,7 +97,7 @@ This is a child of `compilation-mode-map'.")
   "Local `compilation-filter-hook' for `haskell-compilation-mode'."
 
   (when haskell-compile-ghc-filter-linker-messages
-    (delete-matching-lines "^Loading package [^ \t\r\n]+ [.]+ linking [.]+ done\\.$"
+    (delete-matching-lines "^ *Loading package [^ \t\r\n]+ [.]+ linking [.]+ done\\.$"
                            (if (boundp 'compilation-filter-start) ;; available since Emacs 24.2
                                (save-excursion (goto-char compilation-filter-start)
                                                (line-beginning-position))

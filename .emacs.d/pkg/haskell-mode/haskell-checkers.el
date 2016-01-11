@@ -1,4 +1,4 @@
-;;; haskell-checkers.el --- Emacs interface to haskell lint and style checkers
+;;; haskell-checkers.el --- Emacs interface to haskell lint and style checkers -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2009-2011  Alex Ott, Liam O'Reilly
 ;;
@@ -27,6 +27,7 @@
 
 (require 'compile)
 
+;;;###autoload
 (defgroup haskell-checkers nil
   "Run HLint as inferior of Emacs, parse error messages."
   :group 'haskell)
@@ -37,31 +38,37 @@
   :type 'string
   :group 'haskell-checkers)
 
+;;;###autoload
 (defcustom haskell-scan-command "scan"
   "The default scan command for \\[haskell-scan]."
   :type 'string
   :group 'haskell-checkers)
 
+;;;###autoload
 (defcustom haskell-scan-options ""
   "The default options for \\[haskell-scan]."
   :type 'string
   :group 'haskell-checkers)
 
+;;;###autoload
 (defcustom haskell-lint-options ""
   "The default options for \\[hlint]."
   :type 'string
   :group 'haskell-checkers)
 
+;;;###autoload
 (defcustom haskell-checkers-save-files t
   "Save modified files when run checker or not (ask user)"
   :type 'boolean
   :group 'haskell-checkers)
 
+;;;###autoload
 (defcustom haskell-checkers-replace-with-suggestions nil
   "Replace user's code with suggested replacements (hlint only)"
   :type 'boolean
   :group 'haskell-checkers)
 
+;;;###autoload
 (defcustom haskell-checkers-replace-without-ask nil
   "Replace user's code with suggested replacements automatically (hlint only)"
   :type 'boolean
@@ -121,13 +128,13 @@
           (when (re-search-forward new-old-code eline t)
             (replace-match new-code nil t)))))))
 
-(defun haskell-lint-finish-hook (buf msg)
+(defun haskell-lint-finish-hook (_buf _msg)
   "Function, that is executed at the end of HLint or scan execution"
   (if haskell-checkers-replace-with-suggestions
       (haskell-lint-replace-suggestions)
     (next-error 1 t)))
 
-(defun haskell-scan-finish-hook (buf msg)
+(defun haskell-scan-finish-hook (_buf _msg)
   "Function, that is executed at the end of haskell-scan execution"
   (next-error 1 t))
 

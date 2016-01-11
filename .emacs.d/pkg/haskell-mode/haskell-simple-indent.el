@@ -1,4 +1,4 @@
-;;; haskell-simple-indent.el --- Simple indentation module for Haskell Mode
+;;; haskell-simple-indent.el --- Simple indentation module for Haskell Mode -*- lexical-binding: t -*-
 
 ;; Copyright (C) 1998  Heribert Schuetz, Graeme E Moss
 
@@ -64,6 +64,7 @@
 
 (require 'haskell-mode)
 
+;;;###autoload
 (defgroup haskell-simple-indent nil
   "Simple Haskell indentation."
   :link '(custom-manual "(haskell-mode)Indentation")
@@ -192,19 +193,18 @@ point beyond the current column, position given by
 (defun haskell-simple-indent-newline-same-col ()
   "Make a newline and go to the same column as the current line."
   (interactive)
-  (let ((point (point)))
-    (let ((start-end
-           (save-excursion
-             (let* ((start (line-beginning-position))
-                    (end (progn (goto-char start)
-                                (search-forward-regexp
-                                 "[^ ]" (line-end-position) t 1))))
-               (when end (cons start (1- end)))))))
-      (if start-end
-          (progn (newline)
-                 (insert (buffer-substring-no-properties
-                          (car start-end) (cdr start-end))))
-        (newline)))))
+  (let ((start-end
+	 (save-excursion
+	   (let* ((start (line-beginning-position))
+		  (end (progn (goto-char start)
+			      (search-forward-regexp
+			       "[^ ]" (line-end-position) t 1))))
+	     (when end (cons start (1- end)))))))
+    (if start-end
+	(progn (newline)
+	       (insert (buffer-substring-no-properties
+			(car start-end) (cdr start-end))))
+        (newline))))
 
 (defun haskell-simple-indent-newline-indent ()
   "Make a newline on the current column and indent on step."
@@ -244,6 +244,9 @@ Runs `haskell-simple-indent-hook' on activation."
   (kill-local-variable 'comment-indent-function)
   (kill-local-variable 'indent-line-function)
   (when haskell-simple-indent-mode
+    (when (and (bound-and-true-p haskell-indentation-mode)
+               (fboundp 'haskell-indentation-mode))
+      (haskell-indentation-mode 0))
     (set (make-local-variable 'comment-indent-function) #'haskell-simple-indent-comment-indent-function)
     (set (make-local-variable 'indent-line-function) 'haskell-simple-indent)
     (run-hooks 'haskell-simple-indent-hook)))
@@ -254,6 +257,9 @@ Runs `haskell-simple-indent-hook' on activation."
   "Turn on function `haskell-simple-indent-mode'."
   (interactive)
   (haskell-simple-indent-mode))
+(make-obsolete 'turn-on-haskell-simple-indent
+               'haskell-simple-indent-mode
+               "2015-07-23")
 
 (defun turn-off-haskell-simple-indent ()
   "Turn off function `haskell-simple-indent-mode'."

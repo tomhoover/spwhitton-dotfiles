@@ -1,4 +1,4 @@
-;;; haskell-font-lock.el --- Font locking module for Haskell Mode
+;;; haskell-font-lock.el --- Font locking module for Haskell Mode -*- lexical-binding: t -*-
 
 ;; Copyright 2003, 2004, 2005, 2006, 2007, 2008  Free Software Foundation, Inc.
 ;; Copyright 1997-1998  Graeme E Moss, and Tommy Thorn
@@ -30,15 +30,17 @@
 (require 'haskell-mode)
 (require 'font-lock)
 
+;;;###autoload
 (defcustom haskell-font-lock-symbols nil
   "Display \\ and -> and such using symbols in fonts.
 
 This may sound like a neat trick, but be extra careful: it changes the
-alignment and can thus lead to nasty surprises w.r.t layout."
+alignment and can thus lead to nasty surprises with regards to layout."
   :group 'haskell
   :type 'boolean)
 
-(defconst haskell-font-lock-symbols-alist
+;;;###autoload
+(defcustom haskell-font-lock-symbols-alist
   '(("\\" . "λ")
     ("not" . "¬")
     ("->" . "→")
@@ -75,7 +77,9 @@ COMPONENTS is a representation specification suitable as an argument to
 `compose-region'.
 PREDICATE if present is a function of one argument (the start position
 of the symbol) which should return non-nil if this mapping should
-be disabled at that position.")
+be disabled at that position."
+  :type '(alist string string)
+  :group 'haskell)
 
 (defun haskell-font-lock-dot-is-not-composition (start)
   "Return non-nil if the \".\" at START is not a composition operator.
@@ -88,11 +92,13 @@ This is the case if the \".\" is part of a \"forall <tvar> . <type>\"."
               (string= " " (string (char-after start)))
               (string= " " (string (char-before start))))))))
 
+;;;###autoload
 (defface haskell-keyword-face
   '((t :inherit font-lock-keyword-face))
   "Face used to highlight Haskell keywords."
   :group 'haskell)
 
+;;;###autoload
 (defface haskell-constructor-face
   '((t :inherit font-lock-type-face))
   "Face used to highlight Haskell constructors."
@@ -109,16 +115,19 @@ This is the case if the \".\" is part of a \"forall <tvar> . <type>\"."
 ;; This is probably just wrong, but it used to use
 ;; `font-lock-function-name-face' with a result that was not consistent with
 ;; other major modes, so I just exchanged with `haskell-definition-face'.
+;;;###autoload
 (defface haskell-operator-face
   '((t :inherit font-lock-variable-name-face))
   "Face used to highlight Haskell operators."
   :group 'haskell)
 
+;;;###autoload
 (defface haskell-pragma-face
   '((t :inherit font-lock-preprocessor-face))
   "Face used to highlight Haskell pragmas."
   :group 'haskell)
 
+;;;###autoload
 (defface haskell-literate-comment-face
   '((t :inherit font-lock-doc-face))
   "Face with which to fontify literate comments.
@@ -333,13 +342,17 @@ that should be commented under LaTeX-style literate scripts."
     ;; This still gets fooled with "'"'"'"'"'"', but ... oh well.
     ("\\Sw\\('\\)\\([^\\'\n]\\|\\\\.[^\\'\n \"}]*\\)\\('\\)" (1 "\"") (3 "\""))
     ;; Deal with instances of `--' which don't form a comment
-    ("[!#$%&*+./:<=>?@^|~\\-]\\{3,\\}" (0 (cond ((or (nth 3 (syntax-ppss)) (numberp (nth 4 (syntax-ppss))))
-                              ;; There are no such instances inside nestable comments or strings
+    ("[!#$%&*+./:<=>?@^|~\\]*--[!#$%&*+./:<=>?@^|~\\-]*" (0 (cond ((or (nth 3 (syntax-ppss)) (numberp (nth 4 (syntax-ppss))))
+                              ;; There are no such instances inside
+                              ;; nestable comments or strings
                               nil)
                              ((string-match "\\`-*\\'" (match-string 0))
-                              ;; Sequence of hyphens.  Do nothing in
+                              ;; Sequence of hyphens. Do nothing in
                               ;; case of things like `{---'.
                               nil)
+                             ((string-match "\\`[^-]+--.*" (match-string 0))
+                              ;; Extra characters before comment starts
+                              ".")
                              (t ".")))) ; other symbol sequence
 
     ;; Implement Haskell Report 'escape' and 'gap' rules. Backslash
@@ -368,7 +381,7 @@ that should be commented under LaTeX-style literate scripts."
     ;; QuasiQuotes opens only when outside of a string or a comment
     ;; and closes only when inside a quasiquote.
     ;;
-    ;; (syntax-ppss) returns list with two imteresting elements:
+    ;; (syntax-ppss) returns list with two interesting elements:
     ;; nth 3. non-nil if inside a string. (it is the character that will
     ;;        terminate the string, or t if the string should be terminated
     ;;        by a generic string delimiter.)
@@ -378,7 +391,7 @@ that should be commented under LaTeX-style literate scripts."
     ;; Note also that we need to do in in a single pass, hence a regex
     ;; that covers both the opening and the ending of a quasiquote.
 
-    ("\\(\\[[[:alnum:]]+\\)?\\(|\\)\\(?:]\\)?"
+    ("\\(\\[[[:alnum:]]+\\)?\\(|\\)\\(]\\)?"
      (2 (save-excursion
           (goto-char (match-beginning 0))
           (if (eq ?\[ (char-after))
@@ -387,10 +400,12 @@ that should be commented under LaTeX-style literate scripts."
                           (nth 4 (syntax-ppss))
                           (member (match-string 1)
                                   '("[e" "[t" "[d" "[p")))
-                "|")
+                "\"")
             ;; closing case
-            (when (eq t (nth 3 (syntax-ppss)))
-              "|")))))
+            (when (and (eq ?| (nth 3 (syntax-ppss)))
+                       (equal "]" (match-string 3))
+                       )
+              "\"")))))
     ))
 
 (defconst haskell-bird-syntactic-keywords

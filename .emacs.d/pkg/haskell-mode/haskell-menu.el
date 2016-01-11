@@ -1,4 +1,4 @@
-;;; haskell-menu.el --- A Haskell sessions menu
+;;; haskell-menu.el --- A Haskell sessions menu -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2013  Chris Done
 
@@ -33,6 +33,7 @@
 (require 'haskell-process)
 (require 'haskell-interactive-mode)
 
+;;;###autoload
 (defcustom haskell-menu-buffer-name "*haskell-menu*"
   "The name of the Haskell session menu buffer"
   :group 'haskell-interactive
@@ -63,7 +64,7 @@ Letters do not insert themselves; instead, they are commands."
 (define-key haskell-menu-mode-map (kbd "p") 'previous-line)
 (define-key haskell-menu-mode-map (kbd "RET") 'haskell-menu-mode-ret)
 
-(defun haskell-menu-revert-function (arg1 arg2)
+(defun haskell-menu-revert-function (_arg1 _arg2)
   "Function to refresh the display."
   (let ((buffer-read-only nil)
         (orig-line (line-number-at-pos))
