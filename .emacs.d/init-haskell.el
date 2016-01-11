@@ -17,8 +17,8 @@
 ;;; newer GHC (cannot add this to PATH in .shenv because xmonad needs
 ;;; the old GHC)
 
-(when (f-directory? "~/local/stow/ghc/bin")
-  (add-to-list 'exec-path (expand-file-name "~/local/stow/ghc/bin")))
+;; (when (f-directory? "~/local/stow/ghc/bin")
+;;   (add-to-list 'exec-path (expand-file-name "~/local/stow/ghc/bin")))
 
 ;;; haskell mode does most of our work
 
