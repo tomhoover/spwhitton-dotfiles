@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t -*-
 ;;; w3m-haddock.el --- Make browsing haddocks with w3m-mode better.
 
 ;; Copyright (C) 2014 Chris Done
@@ -31,11 +32,13 @@
 
 (add-hook 'w3m-display-hook 'w3m-haddock-display)
 
+;;;###autoload
 (defface w3m-haddock-heading-face
-  '((((class color)) :inherit magit-item-highlight))
+  '((((class color)) :inherit highlight))
   "Face for quarantines."
-  :group 'shm)
+  :group 'haskell)
 
+;;;###autoload
 (defcustom haskell-w3m-haddock-dirs
   '("~/.cabal/share/doc/")
   "The path to your cabal documentation dir. It should contain
@@ -47,7 +50,7 @@ You can rebind this if you're using hsenv by adding it to your
     ((haskell-mode . ((haskell-w3m-haddock-dirs . (\"/home/chris/Projects/foobar/.hsenv/cabal/share/doc\")))))
 
 "
-  :group 'shm
+  :group 'haskell
   :type 'list)
 
 (defvar w3m-haddock-entry-regex "^\\(\\(data\\|type\\) \\|[a-z].* :: \\)"
@@ -120,7 +123,7 @@ You can rebind this if you're using hsenv by adding it to your
          (replace-regexp-in-string "docs/.*" "docs/doc-index-All.html" w3m-current-url))
         (search-forward ident)))))
 
-(defun w3m-haddock-display (url)
+(defun w3m-haddock-display (_url)
   "To be ran by w3m's display hook. This takes a normal w3m
   buffer containing hadddock documentation and reformats it to be
   more usable and look like a dedicated documentation page."

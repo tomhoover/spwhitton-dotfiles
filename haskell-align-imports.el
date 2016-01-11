@@ -1,4 +1,4 @@
-;;; haskell-align-imports.el --- Align the import lines in a Haskell file
+;;; haskell-align-imports.el --- Align the import lines in a Haskell file -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2010  Chris Done
 
@@ -108,6 +108,7 @@
           "\\( -- .*\\)?[ ]*$")
   "Regex used for matching components of an import.")
 
+;;;###autoload
 (defcustom haskell-align-imports-pad-after-name
   nil
   "Pad layout after the module name also."

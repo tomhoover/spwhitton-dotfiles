@@ -1,4 +1,4 @@
-;;; haskell-commands.el --- Commands that can be run on the process
+;;; haskell-commands.el --- Commands that can be run on the process -*- lexical-binding: t -*-
 
 ;;; Commentary:
 
@@ -31,13 +31,8 @@
 (require 'haskell-interactive-mode)
 (require 'haskell-session)
 (require 'haskell-presentation-mode)
+(require 'haskell-utils)
 (require 'highlight-uses-mode)
-
-
-(defvar haskell-utils-async-post-command-flag nil
-  "Non-nil means some commands were triggered during async function execution.")
-(make-variable-buffer-local 'haskell-utils-async-post-command-flag)
-
 
 ;;;###autoload
 (defun haskell-process-restart ()
@@ -65,7 +60,7 @@ You can create new session using function `haskell-session-make'."
     (haskell-process-set (haskell-session-process session) 'is-restarting nil)
     (let ((default-directory (haskell-session-cabal-dir session))
           (log-and-command (haskell-process-compute-process-log-and-command session (haskell-process-type))))
-      (haskell-session-pwd session)
+      (haskell-session-prompt-set-current-dir session (not haskell-process-load-or-reload-prompt))
       (haskell-process-set-process
        process
        (progn
@@ -74,7 +69,8 @@ You can create new session using function `haskell-session-make'."
     (progn (set-process-sentinel (haskell-process-process process) 'haskell-process-sentinel)
            (set-process-filter (haskell-process-process process) 'haskell-process-filter))
     (haskell-process-send-startup process)
-    (unless (eq 'cabal-repl (haskell-process-type)) ;; "cabal repl" sets the proper CWD
+    (unless (or (eq 'cabal-repl (haskell-process-type))
+                   (eq 'stack-ghci (haskell-process-type))) ;; Both "cabal repl" and "stack ghci" set the proper CWD.
       (haskell-process-change-dir session
                                   process
                                   (haskell-session-current-dir session)))
@@ -92,9 +88,11 @@ You can create new session using function `haskell-session-make'."
     :state process
 
     :go (lambda (process)
-          (haskell-process-send-string process ":set prompt \"\\4\"")
+          ;; We must set the prompt last, so that this command as a
+          ;; whole produces only one prompt marker as a response.
           (haskell-process-send-string process "Prelude.putStrLn \"\"")
-          (haskell-process-send-string process ":set -v1"))
+          (haskell-process-send-string process ":set -v1")
+          (haskell-process-send-string process ":set prompt \"\\4\""))
 
     :live (lambda (process buffer)
             (when (haskell-process-consume
@@ -148,32 +146,22 @@ If I break, you can:
 Restores -fobject-code after reload finished.
 MODULE-BUFFER is the actual Emacs buffer of the module being loaded."
   (haskell-process-queue-without-filters process ":set -fbyte-code")
-  (haskell-process-touch-buffer process module-buffer)
-  (haskell-process-queue-without-filters process ":reload")
-  (haskell-process-queue-without-filters process ":set -fobject-code"))
-
-;;;###autoload
-(defun haskell-process-touch-buffer (process buffer)
-  "Query PROCESS to `:!touch` BUFFER's file.
-Use to update mtime on BUFFER's file."
-  (interactive)
-  (haskell-process-queue-command
+  ;; We prefix the module's filename with a "*", which asks ghci to
+  ;; ignore any existing object file and interpret the module.
+  ;; Dependencies will still use their object files as usual.
+  (haskell-process-queue-without-filters
    process
-   (make-haskell-command
-    :state (cons process buffer)
-    :go (lambda (state)
-          (haskell-process-send-string
-           (car state)
-           (format ":!%s %s"
-                   "touch"
-                   (shell-quote-argument (buffer-file-name
-                                          (cdr state))))))
-    :complete (lambda (state _)
-                (with-current-buffer (cdr state)
-                  (clear-visited-file-modtime))))))
+   (format ":load \"*%s\""
+           (replace-regexp-in-string
+            "\""
+            "\\\\\""
+            (buffer-file-name module-buffer))))
+  (haskell-process-queue-without-filters process ":set -fobject-code"))
 
 (defvar url-http-response-status)
 (defvar url-http-end-of-headers)
+(defvar haskell-cabal-targets-history nil
+  "History list for session targets.")
 
 (defun haskell-process-hayoo-ident (ident)
   ;; FIXME Obsolete doc string, CALLBACK is not used.
@@ -348,7 +336,7 @@ should be inserted."
           expr))))))
 
 ;;;###autoload
-(defun haskell-mode-jump-to-def-or-tag (&optional next-p)
+(defun haskell-mode-jump-to-def-or-tag (&optional _next-p)
   ;; FIXME NEXT-P arg is not used
   "Jump to the definition.
 Jump to definition of identifier at point by consulting GHCi, or
@@ -367,12 +355,7 @@ position with `xref-pop-marker-stack'."
         (haskell-mode-handle-generic-loc loc)
       (call-interactively 'haskell-mode-tag-find))
     (unless (equal initial-loc (point-marker))
-      (with-current-buffer (marker-buffer initial-loc)
-        (save-excursion
-          (goto-char initial-loc)
-          (set-mark-command nil)
-          ;; Store position for return with `xref-pop-marker-stack'
-          (xref-push-marker-stack))))))
+      (xref-push-marker-stack initial-loc))))
 
 ;;;###autoload
 (defun haskell-mode-goto-loc ()
@@ -518,12 +501,12 @@ Requires the :loc-at command from GHCi."
                              'face 'compilation-error)))))))
 
 ;;;###autoload
-(defun haskell-process-cd (&optional not-interactive)
+(defun haskell-process-cd (&optional _not-interactive)
   ;; FIXME optional arg is not used
   "Change directory."
   (interactive)
   (let* ((session (haskell-interactive-session))
-         (dir (haskell-session-pwd session t)))
+         (dir (haskell-session-prompt-set-current-dir session)))
     (haskell-process-log
      (propertize (format "Changing directory to %s ...\n" dir)
                  'face font-lock-comment-face))
@@ -531,23 +514,25 @@ Requires the :loc-at command from GHCi."
                                 (haskell-interactive-process)
                                 dir)))
 
-(defun haskell-session-pwd (session &optional change)
+(defun haskell-session-buffer-default-dir (session &optional buffer)
+  "Try to deduce a sensible default directory for SESSION and BUFFER,
+of which the latter defaults to the current buffer."
+  (or (haskell-session-get session 'current-dir)
+      (haskell-session-get session 'cabal-dir)
+      (if (buffer-file-name buffer)
+	  (file-name-directory (buffer-file-name buffer))
+	  "~/")))
+
+(defun haskell-session-prompt-set-current-dir (session &optional use-default)
   "Prompt for the current directory.
-Return current working directory for SESSION.
-Optional CHANGE argument makes user to choose new working directory for SESSION.
-In this case new working directory path will be returned."
-  (or (unless change
-        (haskell-session-get session 'current-dir))
-      (progn (haskell-session-set-current-dir
-              session
-              (haskell-utils-read-directory-name
-               (if change "Change directory: " "Set current directory: ")
-               (or (haskell-session-get session 'current-dir)
-                   (haskell-session-get session 'cabal-dir)
-                   (if (buffer-file-name)
-                       (file-name-directory (buffer-file-name))
-                     "~/"))))
-             (haskell-session-get session 'current-dir))))
+Return current working directory for SESSION."
+  (let ((default (haskell-session-buffer-default-dir session)))
+    (haskell-session-set-current-dir
+     session
+     (if use-default
+	 default
+	 (haskell-utils-read-directory-name "Set current directory: " default))))
+  (haskell-session-get session 'current-dir))
 
 (defun haskell-process-change-dir (session process dir)
   "Change SESSION's current directory.
@@ -588,7 +573,7 @@ Query PROCESS to `:cd` to directory DIR."
              (if (string-match "^[A-Za-z_]" (cdr state))
                  (format ":info %s" (cdr state))
                (format ":info (%s)" (cdr state)))))
-      :complete (lambda (state response)
+      :complete (lambda (_state response)
                   (unless (or (string-match "^Top level" response)
                               (string-match "^<interactive>" response))
                     (haskell-mode-message-line response)))))))
@@ -606,7 +591,7 @@ Query PROCESS to `:cd` to directory DIR."
              (if (string-match "^[A-Za-z_]" (cdr state))
                  (format ":type %s" (cdr state))
                (format ":type (%s)" (cdr state)))))
-      :complete (lambda (state response)
+      :complete (lambda (_state response)
                   (unless (or (string-match "^Top level" response)
                               (string-match "^<interactive>" response))
                     (haskell-mode-message-line response)))))))
@@ -620,14 +605,14 @@ default (please follow GHCi-ng README available at URL
 
 \\<haskell-interactive-mode-map>
 To make this function works sometimes you need to load the file in REPL
-first using command `haskell-process-load-or-reload' bound to
-\\[haskell-process-load-or-reload].
+first using command `haskell-process-load-file' bound to
+\\[haskell-process-load-file].
 
 Optional argument INSERT-VALUE indicates that
 recieved type signature should be inserted (but only if nothing
 happened since function invocation)."
   (interactive "P")
-  (let* ((pos (haskell-utils-capture-expr-bounds))
+  (let* ((pos (haskell-command-capture-expr-bounds))
          (req (haskell-utils-compose-type-at-command pos))
          (process (haskell-interactive-process))
          (buf (current-buffer))
@@ -682,7 +667,7 @@ happened since function invocation)."
                              (goto-char min-pos)
                              (insert (concat "(" sig ")"))))
                        ;; Non-region cases
-                       (haskell-utils-insert-type-signature sig))
+                       (haskell-command-insert-type-signature sig))
                    ;; Some commands registered, prevent insertion
                    (let* ((rev (reverse haskell-utils-async-post-command-flag))
                           (cs (format "%s" (cdr rev))))
@@ -693,7 +678,7 @@ happened since function invocation)."
                        cs))))
                ;; Present the result only when response is valid and not asked
                ;; to insert result
-               (haskell-utils-echo-or-present response)))
+               (haskell-command-echo-or-present response)))
 
             (haskell-utils-async-stop-watching-changes init-buffer))))))))
 
@@ -720,16 +705,14 @@ function `xref-find-definitions' after new table was generated."
                (format ":!cd %s && %s | %s"
                        (haskell-session-cabal-dir
                         (haskell-process-session (car state)))
-                       "find . -name '*.hs' -print0 -or -name '*.lhs' -print0 -or -name '*.hsc' -print0"
+                       "find . -type f \\( -name '*.hs' -or -name '*.lhs' -or -name '*.hsc' \\) -not \\( -name '#*' -or -name '.*' \\) -print0"
                        "xargs -0 hasktags -e -x"))))
-      :complete (lambda (state response)
+      :complete (lambda (state _response)
                   (when (cdr state)
-                    (let ((session-tags
-                          (haskell-session-tags-filename
-                           (haskell-process-session (car state)))))
-                      (add-to-list 'tags-table-list session-tags)
-                      (setq tags-file-name nil))
-                    (xref-find-definitions (cdr state)))
+                    (let ((tags-file-name
+                           (haskell-session-tags-filename
+                            (haskell-process-session (car state)))))
+                      (xref-find-definitions (cdr state))))
                   (haskell-mode-message-line "Tags generated."))))))
 
 (defun haskell-process-add-cabal-autogen ()
@@ -776,7 +759,10 @@ inferior GHCi process."
 ;;;###autoload
 (defun haskell-session-change-target (target)
   "Set the build TARGET for cabal REPL."
-  (interactive "sNew build target:")
+  (interactive
+   (list
+     (completing-read "New build target: " (haskell-cabal-enum-targets)
+		      nil nil nil 'haskell-cabal-targets-history)))
   (let* ((session haskell-session)
          (old-target (haskell-session-get session 'target)))
     (when session
@@ -805,9 +791,9 @@ output.  If CMD fails the buffer remains unchanged."
                   (while (string-match "\\`\n+\\|^\\s-+\\|\\s-+$\\|\n+\\'" str)
                     (setq str (replace-match "" t t str)))
                   str))
-         (errout (lambda (fmt &rest args)
-                   (let* ((warning-fill-prefix "    "))
-                     (display-warning cmd (apply 'format fmt args) :warning))))
+         (_errout (lambda (fmt &rest args)
+		    (let* ((warning-fill-prefix "    "))
+		      (display-warning cmd (apply 'format fmt args) :warning))))
          (filename (buffer-file-name (current-buffer)))
          (cmd-prefix (replace-regexp-in-string " .*" "" cmd))
          (tmp-file (make-temp-file cmd-prefix))
@@ -816,9 +802,9 @@ output.  If CMD fails the buffer remains unchanged."
                                      haskell-session)
                                 (haskell-session-cabal-dir haskell-session)
                               default-directory))
-         (errcode (with-temp-file tmp-file
-                    (call-process cmd filename
-                                  (list (current-buffer) err-file) nil)))
+         (_errcode (with-temp-file tmp-file
+		     (call-process cmd filename
+				   (list (current-buffer) err-file) nil)))
          (stderr-output
           (with-temp-buffer
             (insert-file-contents err-file)
@@ -913,7 +899,17 @@ Requires the :uses command from GHCi."
           (error (propertize "No reply. Is :uses supported?"
                              'face 'compilation-error)))))))
 
-(defun haskell-utils-capture-expr-bounds ()
+(defun haskell-command-echo-or-present (msg)
+  "Present message in some manner depending on configuration.
+If variable `haskell-process-use-presentation-mode' is NIL it will output
+modified message MSG to echo area."
+  (if haskell-process-use-presentation-mode
+      (let ((session (haskell-process-session (haskell-interactive-process))))
+        (haskell-presentation-present session msg))
+    (let ((m (haskell-utils-reduce-string msg)))
+      (message m))))
+
+(defun haskell-command-capture-expr-bounds ()
   "Capture position bounds of expression at point.
 If there is an active region then it returns region
 bounds.  Otherwise it uses `haskell-spanable-pos-at-point` to
@@ -926,25 +922,7 @@ to point."
       (haskell-spanable-pos-at-point)
       (cons (point) (point))))
 
-(defun haskell-utils-compose-type-at-command (pos)
-  "Prepare :type-at command to be send to haskell process.
-POS is a cons cell containing min and max positions, i.e. target
-expression bounds."
-  (replace-regexp-in-string
-   "\n$"
-   ""
-   (format ":type-at %s %d %d %d %d %s"
-           (buffer-file-name)
-           (progn (goto-char (car pos))
-                  (line-number-at-pos))
-           (1+ (current-column))
-           (progn (goto-char (cdr pos))
-                  (line-number-at-pos))
-           (1+ (current-column))
-           (buffer-substring-no-properties (car pos)
-                                           (cdr pos)))))
-
-(defun haskell-utils-insert-type-signature (signature)
+(defun haskell-command-insert-type-signature (signature)
   "Insert type signature.
 In case of active region is present, wrap it by parentheses and
 append SIGNATURE to original expression.  Otherwise tries to
@@ -959,73 +937,6 @@ newlines and extra whitespace in signature before insertion."
       (let ((col (current-column)))
         (insert sig "\n")
         (indent-to col)))))
-
-(defun haskell-utils-echo-or-present (msg)
-  "Present message in some manner depending on configuration.
-If variable `haskell-process-use-presentation-mode' is NIL it will output
-modified message MSG to echo area."
-  (if haskell-process-use-presentation-mode
-      (let ((session (haskell-process-session (haskell-interactive-process))))
-        (haskell-present session msg))
-    (let ((m (haskell-utils-reduce-string msg)))
-      (message m))))
-
-(defun haskell-utils-async-update-post-command-flag ()
-  "A special hook which collects triggered commands during async execution.
-This hook pushes value of variable `this-command' to flag variable
-`haskell-utils-async-post-command-flag'."
-  (let* ((cmd this-command)
-         (updated-flag (cons cmd haskell-utils-async-post-command-flag)))
-    (setq haskell-utils-async-post-command-flag updated-flag)))
-
-(defun haskell-utils-async-watch-changes ()
-  "Watch for triggered commands during async operation execution.
-Resets flag variable
-`haskell-utils-async-update-post-command-flag' to NIL.  By chanhges it is
-assumed that nothing happened, e.g. nothing was inserted in
-buffer, point was not moved, etc.  To collect data `post-command-hook' is used."
-  (setq haskell-utils-async-post-command-flag nil)
-  (add-hook
-   'post-command-hook #'haskell-utils-async-update-post-command-flag nil t))
-
-(defun haskell-utils-async-stop-watching-changes (buffer)
-  "Clean up after async operation finished.
-This function takes care about cleaning up things made by
-`haskell-utils-async-watch-changes'.  The BUFFER argument is a buffer where
-`post-command-hook' should be disabled.  This is neccessary, because
-it is possible that user will change buffer during async function
-execusion."
-  (with-current-buffer buffer
-    (setq haskell-utils-async-post-command-flag nil)
-    (remove-hook
-     'post-command-hook #'haskell-utils-async-update-post-command-flag t)))
-
-(defun haskell-utils-reduce-string (s)
-  "Remove newlines ans extra whitespace from S.
-Removes all extra whitespace at the beginning of each line leaving
-only single one.  Then removes all newlines."
-  (let ((s_ (replace-regexp-in-string "^\s+" " " s)))
-    (replace-regexp-in-string "\n" "" s_)))
-
-(defun haskell-utils-parse-repl-response (r)
-  "Parse response R from REPL and return special kind of result.
-The result is response string itself with speacial property
-response-type added.
-
-This property could be of the following:
-
-+ unknown-command
-+ option-missing
-+ interactive-error
-+ success"
-  (let ((first-line (car (split-string r "\n"))))
-    (cond
-     ((string-match-p "^unknown command" first-line) 'unknown-command)
-     ((string-match-p "^Couldn't guess that module name. Does it exist?"
-                      first-line)
-      'option-missing)
-     ((string-match-p "^<interactive>:" first-line) 'interactive-error)
-     (t 'success))))
 
 (provide 'haskell-commands)
 ;;; haskell-commands.el ends here
