@@ -88,6 +88,7 @@ aliothbk pkg-emacsen/pkg/epl.git
 aliothbk pkg-emacsen/pkg/pkg-info-el.git
 aliothbk pkg-emacsen/pkg/flx.git
 aliothbk pkg-emacsen/pkg/projectile.git
+aliothbk pkg-mozext/ublock-origin.git
 
 # Stage 3 : Starred repos on github
 
