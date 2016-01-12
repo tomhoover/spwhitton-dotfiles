@@ -668,8 +668,7 @@
 ;;; flycheck
 
 (use-package flycheck
-  :defer 5
-
+  :demand
   :init
 
   ;; try to disable flymake; having both running at the same time is annoying
