@@ -977,9 +977,14 @@
                  (regexp . "\\(\\s-+\\)\\(<-\\|←\\)\\s-+")
                  (modes quote (haskell-mode literate-haskell-mode)))))
 
-;;; Haskell (load after packages that it depends on)
+;;; Load up Haskell mode settings if Debian haskell-mode package
+;;; installed (and load here as after other packages these settings
+;;; depend on)
 
-(load "~/.emacs.d/init-haskell.el")
+(when (fboundp 'haskell-mode)
+  ;; Fix broken lack of ghc-init.
+  (defun ghc-init () t)
+  (load "~/.emacs.d/init-haskell.el"))
 
 ;; key-chord to save my hands
 

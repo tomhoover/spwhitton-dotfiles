@@ -22,15 +22,10 @@
 
 ;;; haskell mode does most of our work
 
-(require 'haskell-mode-autoloads)
-(add-to-list 'Info-default-directory-list "~/.emacs.d/pkg/haskell-mode/")
+;; (require 'haskell-mode-autoloads)
+;; (add-to-list 'Info-default-directory-list "~/.emacs.d/pkg/haskell-mode/")
 
 (use-package haskell-mode
-  :mode (("\\.hs\\'" . haskell-mode)
-         ("\\.lhs\\'" . haskell-mode)
-         ("\\.cabal\\'" . haskell-cabal-mode)
-         ("\\.hcr\\'" . haskell-core-mode))
-
   :config
 
   (require 'haskell-interactive-mode)
@@ -63,7 +58,7 @@
   (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
   (add-hook 'haskell-mode-hook (lambda () (diminish 'interactive-haskell-mode)) t)
   ;; override stack default
-  (add-hook 'haskell-mode-hook (lambda () (flycheck-select-checker 'haskell-ghc)))
+  ;; (add-hook 'haskell-mode-hook (lambda () (flycheck-select-checker 'haskell-ghc)))
 
   ;; recommended bindings from haskell-mode wiki
   (define-key haskell-mode-map (kbd "C-c C") 'haskell-process-cabal)
@@ -78,21 +73,21 @@
 
 ;; Needs emacs 24.4 for with-eval-after-load
 
-(when (and (=  emacs-major-version 24)
-           (>= emacs-minor-version 4))
-  (with-eval-after-load "haskell-mode"
-    ;; Disable haskell-mode's default snippets for now.  We take the
-    ;; car of this list because that should be the latest version of
-    ;; haskell-mode.
+;; (when (and (=  emacs-major-version 24)
+;;            (>= emacs-minor-version 4))
+;;   (with-eval-after-load "haskell-mode"
+;;     ;; Disable haskell-mode's default snippets for now.  We take the
+;;     ;; car of this list because that should be the latest version of
+;;     ;; haskell-mode.
 
-    ;; disabled until I can get the autoloads right
-    ;; (delete (car (f-glob (f-join package-user-dir
-    ;; "haskell-mode-*/snippets"))) yas-snippet-dirs)
+;;     ;; disabled until I can get the autoloads right
+;;     ;; (delete (car (f-glob (f-join package-user-dir
+;;     ;; "haskell-mode-*/snippets"))) yas-snippet-dirs)
 
-    (setq flymake-allowed-file-name-masks nil)
-    (remove-hook 'haskell-mode-hook (lambda ()
-                                      (ghc-init)
-                                      (flymake-mode)))))
+;;     (setq flymake-allowed-file-name-masks nil)
+;;     (remove-hook 'haskell-mode-hook (lambda ()
+;;                                       (ghc-init)
+;;                                       (flymake-mode)))))
 
 (provide 'init-haskell)
 ;;; init-haskell.el ends here
