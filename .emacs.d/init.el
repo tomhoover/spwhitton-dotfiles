@@ -1089,6 +1089,7 @@
   (define-key debpaste-command-map "l"
     'debpaste-display-posted-info-in-buffer))
 
+(package-initialize)
 (when (fboundp 'pdf-tools-install)
   (pdf-tools-install))
 
