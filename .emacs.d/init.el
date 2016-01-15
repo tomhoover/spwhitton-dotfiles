@@ -1868,7 +1868,6 @@ Ensures the kill ring entry always ends with a newline."
     'fixed-pitch
     (face-attribute face :inherit))))
 
-
 
 
 ;;;; ---- personal settings ----
