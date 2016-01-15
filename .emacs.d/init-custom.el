@@ -71,9 +71,7 @@
  '(mairix-search-file "mairixresults")
  '(openwith-associations
    (quote
-    (("\\.pdf\\'" "evince"
-      (file))
-     ("\\.\\(ogg\\|mp3\\|flac\\)\\'" "vlc"
+    (("\\.\\(ogg\\|mp3\\|flac\\)\\'" "vlc"
       (file))
      ("\\.\\(doc\\|docx\\|xls\\|xlsx\\)\\'" "soffice"
       (file))
