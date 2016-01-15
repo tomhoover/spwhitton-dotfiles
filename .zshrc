@@ -88,6 +88,7 @@ alias fixmacs="pkill -USR2 emacs"
 alias myfiles="cadaver https://myfiles.messagingengine.com/"
 alias unstow="stow -D"
 alias sid="sudo /usr/local/bin/enter-sid /bin/sh -c \"export DISPLAY=${DISPLAY}; su - swhitton\""
+alias uavpn="pkill rtorrent && sudo openconnect https://vpn.arizona.edu/ && TERM=dumb rt"
 
 # add a project to projectile's known projects
 projectile () {
