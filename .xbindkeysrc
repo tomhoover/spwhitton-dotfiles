@@ -32,3 +32,6 @@ keystate_numlock = enable
 
 # "sonata --toggle"
 #   Shift + F9
+
+"thunar"
+  XF86HomePage
