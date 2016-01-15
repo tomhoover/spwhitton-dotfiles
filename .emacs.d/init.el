@@ -1091,7 +1091,16 @@
 
 (package-initialize)
 (when (fboundp 'pdf-tools-install)
-  (pdf-tools-install))
+  (pdf-tools-install)
+
+
+  (defun spw/highlight-and-tidy ()
+    "Highlight current selection and tidy mouse pointer away."
+    (interactive)
+    (call-interactively 'pdf-annot-add-highlight-markup-annotation)
+    (call-process "xmousetidy"))
+
+  (bind-key (kbd "<XF86Launch7>") 'spw/highlight-and-tidy pdf-view-mode-map))
 
 
 
