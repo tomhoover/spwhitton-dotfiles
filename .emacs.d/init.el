@@ -2117,6 +2117,35 @@ Ensures the kill ring entry always ends with a newline."
   :mode ("/mutt-.*$" . message-mode)
   :init
 
+  (defun spw/thanks-email ()
+    (interactive)
+    (message-goto-to)
+    (message-beginning-of-line)
+    (let* ((beg (point))
+           (end (progn (forward-word 1) (point)))
+           (name (filter-buffer-substring beg end)))
+      (message-goto-body)
+      (insert (concat "Dear " name ",
+
+Thank you for your e-mail.
+
+"))
+      )
+    (save-excursion
+      (end-of-buffer)
+      (insert "
+-- 
+Sean")
+      )
+    (forward-paragraph 2)
+    )
+
+  (defun spw/message-newline (&rest ignore)
+    (save-excursion
+      (newline)))
+
+  (advice-add 'message-kill-to-signature :after #'spw/message-newline)
+
   (defun message-newline-and-reformat--delete-superflous-newlines (&rest ignore)
     "Have `message-newline-and-reformat' get rid of some more
 superflous blank quoted lines."
