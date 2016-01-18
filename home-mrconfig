@@ -332,7 +332,7 @@ checkout = git clone athenap:annex
 
 # basic commands
 update = git annex sync origin ma
-push = git annex sync --content origin ma
+push = git annex sync --content origin
 fixups =
     git config push.default matching
     git config remote.ma.gcrypt-publish-participants true
