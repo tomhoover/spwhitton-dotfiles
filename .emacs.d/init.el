@@ -2117,28 +2117,17 @@ Ensures the kill ring entry always ends with a newline."
   :mode ("/mutt-.*$" . message-mode)
   :init
 
-  (defun spw/thanks-email ()
-    (interactive)
-    (message-goto-to)
-    (message-beginning-of-line)
-    (let* ((beg (point))
-           (end (progn (forward-word 1) (point)))
-           (name (filter-buffer-substring beg end)))
-      (message-goto-body)
-      (insert (concat "Dear " name ",
-
-Thank you for your e-mail.
-
-"))
-      )
+  (defun spw/recipient-first-name ()
     (save-excursion
-      (end-of-buffer)
-      (insert "
--- 
-Sean")
-      )
-    (forward-paragraph 2)
-    )
+      (message-goto-to)
+      (message-beginning-of-line)
+      ;; handle Microsoft Exchange
+      (when (looking-at "\"")
+        (forward-word 1)
+        (forward-char 2))
+      (let ((beg (point))
+            (end (progn (forward-word 1) (point))))
+        (filter-buffer-substring beg end))))
 
   (defun spw/message-newline (&rest ignore)
     (save-excursion
