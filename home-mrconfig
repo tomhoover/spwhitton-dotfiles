@@ -331,7 +331,7 @@ skip = ! workstation
 checkout = git clone athenap:annex
 
 # basic commands
-update = git annex sync origin ma
+update = git annex sync origin
 push = git annex sync --content origin
 fixups =
     git config push.default matching
