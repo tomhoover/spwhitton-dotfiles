@@ -2153,7 +2153,6 @@ superflous blank quoted lines."
               (auto-fill-mode)
               ;; (spw/set-from-address)
               (footnote-mode)
-              (message-insert-signature)
               (message-goto-body))))
 
 (defun djcb/snip (b e summ)

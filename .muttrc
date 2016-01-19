@@ -36,7 +36,6 @@ set tmpdir="~/local/mutt"
 set resolve = yes
 set noconfirmappend
 set abort_unmodified = yes
-unset signature
 set mark_old = no                  # better with mbsync
 set editor = "emacsclient -t -a \"zile -f auto-fill-mode +8\""
 #set editor="switch-to-emacsclient"
