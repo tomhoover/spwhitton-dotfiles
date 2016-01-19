@@ -2148,6 +2148,11 @@ superflous blank quoted lines."
 
   (setq mail-header-separator "")
 
+  (bind-key "C-c C-c" (lambda ()
+                        (interactive)
+                        (save-buffer)
+                        (delete-frame)) message-mode-map)
+
   (add-hook 'message-mode-hook
             (lambda ()
               (auto-fill-mode)
