@@ -2117,6 +2117,7 @@ Ensures the kill ring entry always ends with a newline."
   :mode ("/mutt-.*$" . message-mode)
   :init
 
+  ;; used in message-mode yasnippets
   (defun spw/recipient-first-name ()
     (save-excursion
       (message-goto-to)
@@ -2129,10 +2130,10 @@ Ensures the kill ring entry always ends with a newline."
             (end (progn (forward-word 1) (point))))
         (filter-buffer-substring beg end))))
 
+  ;; slightly modify C-c C-z behaviour
   (defun spw/message-newline (&rest ignore)
     (save-excursion
       (newline)))
-
   (advice-add 'message-kill-to-signature :after #'spw/message-newline)
 
   (defun message-newline-and-reformat--delete-superflous-newlines (&rest ignore)
@@ -2152,6 +2153,7 @@ superflous blank quoted lines."
               (auto-fill-mode)
               ;; (spw/set-from-address)
               (footnote-mode)
+              (message-insert-signature)
               (message-goto-body))))
 
 (defun djcb/snip (b e summ)

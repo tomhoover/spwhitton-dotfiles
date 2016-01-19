@@ -1,4 +1,4 @@
-Dear ${1:`(progn (message-insert-signature) (spw/recipient-first-name))`},
+Dear ${1:`(spw/recipient-first-name)`},
 
 Thank you for your e-mail.
 
