@@ -2152,6 +2152,13 @@ superflous blank quoted lines."
             (lambda ()
               (auto-fill-mode)
               ;; (spw/set-from-address)
+              (save-excursion
+                (message-goto-signature)
+                (previous-line 1)
+                (beginning-of-line)
+                ;; signature actually present
+                (when (looking-at "-- ")
+                  (open-line 1)))
               (footnote-mode)
               (message-goto-body))))
 
