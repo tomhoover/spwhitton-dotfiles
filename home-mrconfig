@@ -104,7 +104,7 @@ lib =
     homedir_mkdirs() {
         (
             cd $HOME
-            mkdir -p
+            mkdir -p \
                 .emacs.d \
                 tmp \
                 src \
