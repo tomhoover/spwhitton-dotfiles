@@ -2130,11 +2130,29 @@ Ensures the kill ring entry always ends with a newline."
             (end (progn (forward-word 1) (point))))
         (filter-buffer-substring beg end))))
 
-  ;; slightly modify C-c C-z behaviour
-  (defun spw/message-newline (&rest ignore)
-    (save-excursion
-      (newline)))
-  (advice-add 'message-kill-to-signature :after #'spw/message-newline)
+  (defun spw/fix-initial-signature (&rest ignore)
+    "Ensure enough space above signature to type."
+    (when (looking-at "
+-- ")
+      (open-line 1)))
+  (defun spw/fix-signature-kill (&rest ignore)
+    "Ensure enough space above signature to type."
+    (unless (looking-back "
+
+")
+      (newline))
+    (unless (looking-back "
+
+")
+      (newline))
+    (spw/fix-initial-signature)
+    )
+
+  ;; slightly modify C-c C-z behaviour: fix Mutt and Emacs which both
+  ;; think that there doesn't need to be a newline before the
+  ;; signature dashes
+  (add-hook 'message-mode-hook 'spw/fix-initial-signature)
+  (advice-add 'message-kill-to-signature :after #'spw/fix-signature-kill)
 
   (defun message-newline-and-reformat--delete-superflous-newlines (&rest ignore)
     "Have `message-newline-and-reformat' get rid of some more
@@ -2157,13 +2175,6 @@ superflous blank quoted lines."
             (lambda ()
               (auto-fill-mode)
               ;; (spw/set-from-address)
-              (save-excursion
-                (message-goto-signature)
-                (previous-line 1)
-                (beginning-of-line)
-                ;; signature actually present
-                (when (looking-at "-- ")
-                  (open-line 1)))
               (footnote-mode)
               (message-goto-body))))
 
