@@ -307,7 +307,7 @@ fixups = if ! [ -L ~/.propellor ]; then ln -sf ~/src/propellor ~/.propellor; fi
 checkout = git clone https://git.spwhitton.name/wiki
 skip = ! mine
 
-# --- softbeep
+# --- softbeep Debian package
 
 [src/softbeep]
 checkout = git clone https://git.spwhitton.name/softbeep
@@ -318,7 +318,6 @@ skip = ! workstation
 [lib/annex]
 checkout = git clone athenap:annex
 
-# basic commands
 update = git annex sync origin
 push = git annex sync --content origin
 fixups =
@@ -431,7 +430,7 @@ sync =
         doccheckin && git pull && git push
     fi
 
-# --- static websites
+# --- static websites on web host boxes
 
 [public_html]
 clone = git clone https://git.spwhitton.name/sageweb public_html
