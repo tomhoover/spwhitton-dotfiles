@@ -12,6 +12,7 @@ jobs = 1
 # actions to be configured per repository
 git_sync = :
 git_rebase = :
+git_autoci = :
 
 # In general, I don't want merge commits to be made en masse by mr
 git_update = git pull --ff-only "$@"
