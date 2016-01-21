@@ -92,7 +92,60 @@ lib =
         which git-remote-gcrypt >/dev/null 2>/dev/null
     }
 
+# --- standard procedures
+
 lib =
+    # Make a lot of dirs that stow will symlink dotfiles into.  If we
+    # don't make these dirs, stow will just symlink the whole dir
+    # which means that various temporary files that programs dump into
+    # the dirs will end up part of the dotfiles repo.  Further, more
+    # than one repo might try to stow files in the dir and this can
+    # only succeed if the dirs already exist.
+    homedir_mkdirs() {
+        (
+            cd $HOME
+            mkdir -p
+                .emacs.d \
+                tmp \
+                src \
+                lib \
+                .ssh \
+                .gnupg \
+                .duply \
+                .config/xfce4/xfconf/xfce-perchannel-xml \
+                .config/autostart \
+                .config/Thunar \
+                .irssi \
+                .cabal \
+                .xmonad \
+                local/mutt \
+                local/mpd \
+                local/anacron/spool \
+                local/src \
+                local/bin \
+                local/big \
+                local/lib \
+                local/pub
+            touch local/big/.duplicity-ignore
+        )
+    }
+    # GTK and others insist on replacing the symlink to its bookmarks
+    # file with the actual file even if the bookmarks in that file
+    # don't change (XFCE only replaces symlinks to its config files if
+    # its changed them).  Fix this situation in the simplest case to
+    # avoid mr restow giving an error.  Don't try anything fancy if
+    # the files are different; let the restow command give an error
+    # and the user fix it.
+    fix_overwritten_symlink () {
+        local file=$1
+        if ! win32; then
+            if ! [ -L $HOME/$file ]; then
+                # file in home directory is not a link
+                if diff -q $HOME/src/dotfiles/$file ~/$file > /dev/null; then
+                    rm $HOME/$file
+                fi
+            fi
+        fi
     }
 
 # --- primary dotfiles repository
@@ -115,99 +168,63 @@ push =
     # always make a go of pushing master
     git push origin master
 rebase =
-    # common rebasing patterns
+    # usual rebasing pattern.  Per dotfiles repo policy (excluding
+    # win32 case), the branch being rebased will always be rebaseable
+    # on master, since it is only checked out and committed to on this
+    # host
     branch="$(git rev-parse --abbrev-ref HEAD)"
     hostname="$(hostname -s)"
-    if [ "$branch" = "win32" ]; then
+    if [ "$branch" = "win32" -o "$branch" = "$(hostname -s)" ]; then
         git rebase master
-    # fallback elif to still do something automatic in the simplest
-    # case: per dotfiles repo policy, this branch will always be based
-    # on master
-    elif [ "$branch" = "$(hostname -s)" ]; then
-        git rebase master
-    # final case: if we're on another branch but a host branch exists
+    # fallback case: if we're on another branch but a host branch exists
     elif git branch | grep -q "^  $hostname$"; then
         git checkout $hostname
         git rebase master
     fi
-# sync = git push origin master
 
-# skip this repository if stow is not installed, and we're not on
-# Windows where we don't use stow.  This should be a prompt to
-# download a tarball, and do
-#       ./configure --prefix=$HOME/local && make install
-skip = ! which stow >/dev/null && ! win32
-
-# stow won't overwrite a real ~/.mrconfig with a symlink to the
-# version in my dotfiles repository.  Cannot just delete .mrconfig
-# before a stow, because then mr can't tell stow what to do.  So just
-# do it with manual fixup and have stow ignore this file.  Name is
-# different to avoid mr trying to chain load it at any point
-
-# similarly for .stow-global-ignore
 fixups =
-    if ! win32; then
-        ln -sf $HOME/src/dotfiles/home-mrconfig $HOME/.mrconfig
-        ln -sf $HOME/src/dotfiles/.stow-global-ignore $HOME
-        mkdir -p $HOME/local/mutt $HOME/.ssh $HOME/local/mpd $HOME/local/anacron/spool
-        mkdir -p $HOME/tmp $HOME/src $HOME/local/src $HOME/local/bin $HOME/local/big $HOME/local/lib $HOME/local/pub
-        # set up auth info folder: the "|| true" is because if the
-        # folder is empty the final recursive chmod will fail
-        mkdir -p $HOME/local/auth && chmod 700 $HOME/local/auth && chmod -R 600 $HOME/local/auth/* 2>/dev/null || true
-        touch $HOME/local/big/.duplicity-ignore
-        touch $HOME/.ssh/known_hosts
-        chmod 600 $HOME/.msmtprc
-    fi
     # we don't want git doing any automated merges of master, or other
     # intermediate branches.  mr is configured not to do this (see
     # redefinition of git_update at top of this file) but I often run
     # git pull in this repo myself
     git config branch.master.rebase true
     git config branch.autosetuprebase always
-    # update crontab
+    # stow won't overwrite a real ~/.mrconfig with a symlink to the
+    # version in my dotfiles repository.  Cannot just delete .mrconfig
+    # before a stow, because then mr can't tell stow what to do.  So
+    # just do it with manual fixup and have stow ignore this file.
+    # Name is different to avoid mr trying to chain load it at any
+    # point.  Similarly for .stow-global-ignore
     if ! win32; then
+        ln -sf $HOME/src/dotfiles/home-mrconfig $HOME/.mrconfig
+        ln -sf $HOME/src/dotfiles/.stow-global-ignore $HOME
+        homedir_mkdirs
+        # set up auth info folder: the "|| true" is because if the
+        # folder is empty the final recursive chmod will fail
+        mkdir -p $HOME/local/auth && chmod 700 $HOME/local/auth && chmod -R 600 $HOME/local/auth/* 2>/dev/null || true
+        touch $HOME/local/big/.duplicity-ignore
+        touch $HOME/.ssh/known_hosts
+        chmod 600 $HOME/.msmtprc
         # use absolute path because maybe we only just stowed so this
         # shell doesn't have $PATH setup by .shenv
         $HOME/bin/loadcron || true
         $HOME/bin/loadsshkeys || true
         $HOME/bin/mkcabalc
-    fi
-    if win32; then
+    else                        # win32
         cd ~/src/dotfiles/bin
 	cmd "/C win32setup.bat"
     fi
     # set up Emacs packages
     $HOME/.emacs.d/pkg/subtrees.sh
 
-# Empty out /etc/skel junk (must use full path to this script because
-# it's pre stow!), and create ~/.emacs.d/ before stowing so that the
-# files inside are symlinks, rather than the whole dir being a
-# symlink.  That way Emacs junk that gets dumped in ~/.emacs.d doesn't
-# have to be put into .gitignore.  Similarly the XDG autostart folder,
-# .ssh and lib and more
-pre_stow = $HOME/src/dotfiles/bin/unskel; mkdir -p ~/.emacs.d  ~/.config/xfce4 ~/.ssh ~/lib ~/.cabal ~/.config/xfce4/xfconf/xfce-perchannel-xml ~/.gnupg ~/.config/Thunar ~/.irssi
-pre_checkout = mkdir -p ~/.emacs.d  ~/.config/xfce4 ~/.config/autostart ~/.ssh ~/lib ~/.cabal ~/.xmonad ~/.config/xfce4/xfconf/xfce-perchannel-xml ~/.gnupg ~/.config/Thunar ~/.irssi
+# clean-ups so that initial stow will be successful
+pre_stow =
+    homedir_mkdirs
+    $HOME/src/dotfiles/bin/unskel
 
-# GTK insists on replacing the symlink to its bookmarks file with the
-# actual file even if the bookmarks in that file don't change (XFCE
-# only replaces symlinks to its config files if its changed them).
-# Fix this situation in the simplest case to avoid mr restow giving an
-# error.  Don't try anything fancy if the files are different; let the
-# restow command give an error and the user fix it.
-lib =
-    fix_gtk_bookmarks () {
-        if ! win32; then
-            if ! [ -L ~/.gtk-bookmarks ]; then
-                # file in home directory is not a link
-                if diff -q ~/src/dotfiles/.gtk-bookmarks ~/.gtk-bookmarks > /dev/null; then
-                    rm ~/.gtk-bookmarks
-                fi
-            fi
-        fi
-    }
-pre_unstow = fix_gtk_bookmarks
-pre_restow = fix_gtk_bookmarks
-pre_update = fix_gtk_bookmarks
+pre_unstow = fix_overwritten_symlink .gtk-bookmarks
+pre_restow = fix_overwritten_symlink .gtk-bookmarks
+pre_update = fix_overwritten_symlink .gtk-bookmarks
 
 # --- private dotfiles repositories
 
@@ -241,7 +258,7 @@ autoci =
 
 # since dotfiles repo also stows into ~/.gnupg, and athpriv repo stows
 # into ~/.duply, make the dirs first
-pre_stow = mkdir -p ~/.gnupg ~/.duply
+pre_stow = homedir_mkdirs
 
 [src/athpriv]
 lib =
@@ -254,22 +271,13 @@ skip = ! mine
 
 # rss2email insists on replacing the symlink to its config file with a
 # real file.  Fix this situation in the simplest case to avoid mr
-# restow giving an error.  See fix_gtk_bookmarks above
-lib =
-    fix_r2e_config () {
-            if ! [ -L ~/.config/rss2email.cfg ]; then
-                # file in home directory is not a link
-                if diff -q ~/src/athpriv/.config/rss2email.cfg ~/.config/rss2email.cfg > /dev/null; then
-                    rm ~/.config/rss2email.cfg
-                fi
-            fi
-    }
-pre_unstow = fix_r2e_config
-pre_restow = fix_r2e_config
-pre_update = fix_r2e_config
+# restow giving an error
+pre_unstow = fix_overwritten_symlink .config/rss2email.cfg
+pre_restow = fix_overwritten_symlink .config/rss2email.cfg
+pre_update = fix_overwritten_symlink .config/rss2email.cfg
 
 # since priv repo also stows into ~/.gnupg, make the dir first
-pre_stow = mkdir -p ~/.duply ~/.irssi
+pre_stow = homedir_mkdirs
 
 # --- hosts configuration
 
