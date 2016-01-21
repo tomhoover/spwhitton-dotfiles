@@ -15,7 +15,7 @@ git_rebase = :
 git_autoci = :
 
 # In general, I don't want merge commits to be made en masse by mr
-git_update = git pull --ff-only "$@"
+git_update = git remote update; git pull --ff-only "$@"
 
 # --- Adam Spiers' plugin for managing dotfile symlinks with mr
 
