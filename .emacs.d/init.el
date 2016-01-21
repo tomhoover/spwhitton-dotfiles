@@ -2285,5 +2285,7 @@ Replaces parent directories with their initial characters."
   (orgstruct++-mode 1))
 (add-hook 'change-log-mode-hook 'spw/change-log-setup)
 
+(setq debian-changelog-mailing-address "spwhitton@spwhitton.name")
+
 (provide 'init)
 ;;; init.el ends here
