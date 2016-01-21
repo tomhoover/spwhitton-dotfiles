@@ -92,14 +92,7 @@ lib =
         which git-remote-gcrypt >/dev/null 2>/dev/null
     }
 
-# --- A function for enabling Emacs mode for calling `git wip' on file
-# --- save.  Warning: removes any other magit extensions enabled.  So
-# --- be sure to add those to this function somehow if I ever start
-# --- using any.
 lib =
-    wip() {
-        git config --remove-section magit
-        git config --add magit.extension wip-save
     }
 
 # --- primary dotfiles repository
