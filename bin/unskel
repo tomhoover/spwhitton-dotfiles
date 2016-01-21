@@ -15,5 +15,5 @@ for skelfile in $(find $SKEL -type f | sed -e "s|${SKEL}/||"); do
 done
 
 if ! [ "$torm" = "" ]; then
-   rm -r $torm
+   rm -rf $torm
 fi
