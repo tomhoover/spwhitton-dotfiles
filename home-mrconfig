@@ -291,10 +291,7 @@ post_checkout =
     git config propellor.spin-branch spwconf
     git config propellor.forbid-dirty-spin true
     git remote add -f upstream github:joeyh/propellor.git
-    cabal sandbox init
-    # Since we're using GHC 7.10.2 in my home directory, we need to
-    # install newer versions of Propellor's dependencies
-    cabal install --only-dependencies
+    which cabal && cabal sandbox init
     # from <https://propellor.branchable.com/coding_style/>
     echo >.dir-locals.el """
     ((nil . ((indent-tabs-mode . t)
@@ -310,9 +307,6 @@ post_update = git fetch upstream
 # check that the link isn't already in place before making the link
 # because otherwise we get an infinite loop of links that breaks propellor
 fixups = if ! [ -L ~/.propellor ]; then ln -sf ~/src/propellor ~/.propellor; fi
-
-# skip until I've installed a new version of GHC into my home directory
-skip = lazy
 
 # --- personal website source
 
