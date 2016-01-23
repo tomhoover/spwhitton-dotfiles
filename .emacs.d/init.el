@@ -2145,14 +2145,13 @@ Ensures the kill ring entry always ends with a newline."
 
 ")
       (newline))
-    (spw/fix-initial-signature)
-    )
+    (spw/fix-initial-signature))
 
   ;; slightly modify C-c C-z behaviour: fix Mutt and Emacs which both
   ;; think that there doesn't need to be a newline before the
   ;; signature dashes
   (add-hook 'message-mode-hook 'spw/fix-initial-signature)
-  (advice-add 'message-kill-to-signature :after #'spw/fix-signature-kill)
+  ;; (advice-add 'message-kill-to-signature :after #'spw/fix-signature-kill)
 
   (defun message-newline-and-reformat--delete-superflous-newlines (&rest ignore)
     "Have `message-newline-and-reformat' get rid of some more
