@@ -222,9 +222,9 @@ pre_stow =
     homedir_mkdirs
     $HOME/src/dotfiles/bin/unskel
 
-pre_unstow = fix_overwritten_symlink .gtk-bookmarks
-pre_restow = fix_overwritten_symlink .gtk-bookmarks
-pre_update = fix_overwritten_symlink .gtk-bookmarks
+pre_unstow = fix_overwritten_symlink .gtk-bookmarks; fix_overwritten_symlink .config/xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml
+pre_restow = fix_overwritten_symlink .gtk-bookmarks; fix_overwritten_symlink .config/xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml
+pre_update = fix_overwritten_symlink .gtk-bookmarks; fix_overwritten_symlink .config/xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml
 
 # --- private dotfiles repositories
 
