@@ -24,8 +24,10 @@ lsusb | grep -q "Chicony Electronics Co., Ltd" \
     && numlockx on
 
 # disable built-in laptop keyboard if US usb keyboard plugged in :)
-[ "$(hostname -s)" = "artemis" ] \
-    && laptopinput --maybe-disable
+# turn this off for now since lid closed anyway and laptopinput script
+# broken
+# [ "$(hostname -s)" = "artemis" ] \
+#     && laptopinput --maybe-disable
 
 # settings for (currently out of action) Apple USB keyboard
 
