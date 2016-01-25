@@ -1,0 +1,24 @@
+#!/bin/sh
+
+EXT="VGA-1"
+INT="LVDS-1"
+EXTW="1680"
+EXTH="1050"
+INTW="1280"
+INTH="800"
+EXTL="us"
+INTL="gb"
+
+if xrandr -q | grep "$EXT connected"; then
+    xrandr --output $INT --off
+    xrandr --output $EXT --off
+    xrandr --output $EXT --mode $EXTW"x"$EXTH
+    setxkbmap -layout $EXTL -option ctrl:nocaps
+else
+    xrandr --output $INT --off
+    xrandr --output $EXT --off
+    xrandr --output $INT --mode $INTW"x"$INTH
+    setxkbmap -layout $INTL -option ctrl:nocaps
+fi
+
+xfce4-panel --restart
