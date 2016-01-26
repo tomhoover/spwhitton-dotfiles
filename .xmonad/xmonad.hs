@@ -52,7 +52,7 @@ myMod        = mod4Mask
 myTerm       = "urxvtcd"
 myEditor     = "emacscd"
 myBrowser    = "iceweasel"
-myWorkspaces = ["ops", "conn", "www", "comm", "view", "tail"]
+myWorkspaces = ["one", "two", "three", "www", "comm", "view", "tail"]
 
 -- key bindings
 
