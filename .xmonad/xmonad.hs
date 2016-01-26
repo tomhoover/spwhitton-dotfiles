@@ -14,7 +14,6 @@ import           XMonad.Util.EZConfig        (additionalKeysP, removeKeysP)
 import           XMonad.Actions.CycleWS      (toggleWS)
 import           XMonad.Actions.RotSlaves
 import           XMonad.Actions.Submap
-import           XMonad.Hooks.InsertPosition
 import           XMonad.Hooks.ManageDocks
 import           XMonad.Hooks.ManageHelpers
 
@@ -42,14 +41,9 @@ main = xmonad $ addMyKeys $ xfceConfig
     , borderWidth        = 1
     , modMask            = myMod
     , workspaces         = myWorkspaces
-
--- I would prefer to have newly created windows always inserted at the
--- top of the non-master area.  But insertPosition doesn't support
--- that so let's always put them at the end.
-    , manageHook         = insertPosition End Newer
-                           <+> myManageHook
+    , manageHook         = myManageHook
                            <+> manageHook xfceConfig
-    , layoutHook = myLayoutHook
+    , layoutHook         = myLayoutHook
     }
 
 -- basic preferences
