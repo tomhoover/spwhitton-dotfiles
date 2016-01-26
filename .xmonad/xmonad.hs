@@ -9,28 +9,23 @@
 import           XMonad
 import           XMonad.Config.Xfce
 import qualified XMonad.StackSet             as W
-import           XMonad.Util.EZConfig        (additionalKeysP, removeKeysP)
+import           XMonad.Util.EZConfig        (additionalKeysP)
 
 import           XMonad.Actions.CycleWS      (toggleWS)
 import           XMonad.Actions.RotSlaves
-import           XMonad.Actions.Submap
 import           XMonad.Hooks.ManageDocks
 import           XMonad.Hooks.ManageHelpers
 
 import           XMonad.Layout.Dishes
-import           XMonad.Layout.FixedColumn
+-- import           XMonad.Layout.FixedColumn
 import           XMonad.Layout.Grid
 import           XMonad.Layout.LayoutHints
 import           XMonad.Layout.LimitWindows
-import           XMonad.Layout.Magnifier
+-- import           XMonad.Layout.Magnifier
 import           XMonad.Layout.Maximize
 import           XMonad.Layout.NoBorders
 import           XMonad.Layout.PerWorkspace
-import           XMonad.Layout.ResizeScreen
-
-import           Control.Arrow               hiding ((<+>), (|||))
-import           Data.Bits
-import qualified Data.Map                    as M
+-- import           XMonad.Layout.ResizeScreen
 
 main = xmonad $ xfceConfig
 
