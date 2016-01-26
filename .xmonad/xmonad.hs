@@ -61,6 +61,7 @@ myKeys = [ ("M4-h", spawn "xmousetidy")
            -- launchers
          , ("M4-g t", spawn $ inMyTerm "ii")
          , ("M4-g e", spawn myEditor)
+         , ("M4-g w", spawn myBrowser)
          , ("M4-g c", spawn $ inMyTerm "ncmpcpp") -- 'c' for chaones
          , ("M4-g v", spawn $ inMyTerm "alsamixer")
          , ("M4-g j", spawn "thunar")
