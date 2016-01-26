@@ -25,7 +25,6 @@ import           XMonad.Layout.LimitWindows
 import           XMonad.Layout.Magnifier
 import           XMonad.Layout.Maximize
 import           XMonad.Layout.NoBorders
-import           XMonad.Layout.OnHost
 import           XMonad.Layout.PerWorkspace
 import           XMonad.Layout.ResizeScreen
 
@@ -117,16 +116,13 @@ myLayoutHook = avoidStruts $
 -- magnification setting of 1.31 allows slave mutt windows to display
 -- their 90 columns properly on artemis' 1280x screen.
 
-myEditing = modHost "zephyr" (limitWindows 7) $
-            modHost "artemis" (limitWindows 5) $
-            modHost "artemis" (magnifiercz' 1.31) $
-            onHost "artemis" (FixedColumn 1 20 90 10) $
+myEditing = limitWindows 7 $
+            -- small screens: magnifiercz' 1.31 $
+            -- alt: FixedColumn 1 20 90 10
             Tall 1 0.03 0.55
 
-myReadWriting = modHost "zephyr" (resizeHorizontal 600) $
-                modHost "zephyr" (resizeHorizontalRight 600) $
-                modHost "artemis" (resizeHorizontal 300) $
-                modHost "artemis" (resizeHorizontalRight 300) $
+myReadWriting = resizeHorizontal 600 $
+                resizeHorizontalRight 600 $
                 limitWindows 3 $
                 Dishes 1 (1/6)
 

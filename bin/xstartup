@@ -76,7 +76,4 @@ redshift-gtk -l 53.57:1.5 -t 6500:3700 &
 
 # ---- fire up my window manager
 
-# XMonad.Layout.OnHost looks at $HOST which doesn't seem to be
-# available in this environment
-
-HOST=$(cat /etc/hostname) xmonad --replace
+xmonad --replace
