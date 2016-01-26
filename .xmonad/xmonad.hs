@@ -19,11 +19,11 @@ import           XMonad.Hooks.ManageDocks
 import           XMonad.Hooks.ManageHelpers
 
 import           XMonad.Layout.Dishes
-import           XMonad.Layout.FixedColumn
+-- import           XMonad.Layout.FixedColumn
 import           XMonad.Layout.Grid
 -- import           XMonad.Layout.LayoutHints
 import           XMonad.Layout.LimitWindows
-import           XMonad.Layout.Magnifier
+-- import           XMonad.Layout.Magnifier
 import           XMonad.Layout.Maximize
 import           XMonad.Layout.NoBorders
 import           XMonad.Layout.OnHost
@@ -31,9 +31,7 @@ import           XMonad.Layout.PerWorkspace
 import           XMonad.Layout.ResizeScreen
 
 import           Control.Arrow               hiding ((<+>), (|||))
-import           Control.Monad               (liftM2)
 import           Data.Bits
-import           Data.List                   (isInfixOf)
 import qualified Data.Map                    as M
 
 main = xmonad $ addMyKeys $ xfceConfig
