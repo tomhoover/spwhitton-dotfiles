@@ -72,6 +72,8 @@ myKeys = [ ("M4-h", spawn "xmousetidy")
          , ("M4-'", withFocused (sendMessage . maximizeRestore))
          , ("M4-;", toggleWS)
          , ("M4-S-i", kill)
+         , ("M1-<Tab>", rotSlavesDown)
+         , ("M1-S-<Tab>", rotSlavesUp)
 
            -- When locking the screen, also clear out my SSH key.
            -- Otherwise it lasts until I log off.  See GNOME bugzilla
