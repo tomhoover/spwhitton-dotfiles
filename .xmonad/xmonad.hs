@@ -20,7 +20,7 @@ import           XMonad.Hooks.ManageHelpers
 import           XMonad.Layout.Dishes
 import           XMonad.Layout.FixedColumn
 import           XMonad.Layout.Grid
--- import           XMonad.Layout.LayoutHints
+import           XMonad.Layout.LayoutHints
 import           XMonad.Layout.LimitWindows
 import           XMonad.Layout.Magnifier
 import           XMonad.Layout.Maximize
@@ -107,14 +107,15 @@ myManageHook = composeOne $
                , title         =? "ii"                  -?> doShift "comm"
                ] ++ [className =? c -?> doFloat | c <- myFloatClasses]
 
--- old: `modHost "artemis" (avoidStrutsOn []) $ modHost "zephyr" avoidStruts $` instead of just `avoidStruts $`
-myLayoutHook = avoidStruts $
+myLayoutHook = avoidStruts $    -- small screens: avoidStrutsOn []
                smartBorders $
-               -- layoutHintsWithPlacement (0.5, 0.5) $
-               onWorkspace "www" (maximize myWebLayout) $
+               layoutHintsWithPlacement (0.5, 0.5) $
+               onWorkspace "www" myWebLayout $
+               onWorkspace "comm" myWebLayout $
                onWorkspace "tail" (myDish ||| Full) $
-               onWorkspace "view" (Grid ||| Full) $
-               maximize myEditing ||| maximize Grid ||| myReadWriting ||| Full -- default for other workspaces
+               onWorkspace "view" (Full ||| Grid) $
+               -- default for other workspaces:
+               myEditing ||| maximize Grid ||| Full
 
 -- custom layouts
 
@@ -123,20 +124,21 @@ myLayoutHook = avoidStruts $
 -- magnification setting of 1.31 allows slave mutt windows to display
 -- their 90 columns properly on artemis' 1280x screen.
 
-myEditing = limitWindows 7 $
+myEditing = maximize $
+            limitWindows 7 $
             -- small screens: magnifiercz' 1.31 $
             -- alt: FixedColumn 1 20 90 10
             Tall 1 0.03 0.55
 
-myReadWriting = resizeHorizontal 600 $
-                resizeHorizontalRight 600 $
-                limitWindows 3 $
-                Dishes 1 (1/6)
+-- myReadWriting = resizeHorizontal 600 $
+--                 resizeHorizontalRight 600 $
+--                 limitWindows 3 $
+--                 Dishes 1 (1/6)
 
-myWebLayout = Mirror $ Tall 1 0.03 0.8
+myWebLayout = maximize $ Mirror $ Tall 1 0.03 0.7
 
 -- logs, compiles, tails etc.
-myDish = limitWindows 5 $ Dishes 1 (1/5)
+myDish = maximize $ limitWindows 5 $ Dishes 1 (1/5)
 
 -- helper functions
 
