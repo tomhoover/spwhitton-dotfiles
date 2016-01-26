@@ -98,7 +98,7 @@ myManageHook = composeOne $
                [ checkDock                              -?> doIgnore
                , isDialog                               -?> doFloat
                , className     =? "Iceweasel"           -?> doShift "www"
-               , className     =? "libreoffice-impress" -?> doShift "view"
+               , className     =? "LibreOffice 5.0"     -?> doShift "view"
                , className     =? "Vlc"                 -?> doShift "view"
                , className     =? "Evince"              -?> doShift "view"
                , title         =? "Dominion"            -?> doShift "view"
