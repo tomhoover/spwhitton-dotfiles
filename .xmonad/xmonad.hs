@@ -18,11 +18,11 @@ import           XMonad.Hooks.ManageDocks
 import           XMonad.Hooks.ManageHelpers
 
 import           XMonad.Layout.Dishes
--- import           XMonad.Layout.FixedColumn
+import           XMonad.Layout.FixedColumn
 import           XMonad.Layout.Grid
 -- import           XMonad.Layout.LayoutHints
 import           XMonad.Layout.LimitWindows
--- import           XMonad.Layout.Magnifier
+import           XMonad.Layout.Magnifier
 import           XMonad.Layout.Maximize
 import           XMonad.Layout.NoBorders
 import           XMonad.Layout.OnHost
