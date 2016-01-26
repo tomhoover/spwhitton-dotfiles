@@ -42,6 +42,12 @@ main = xmonad $ xfceConfig
     , workspaces         = myWorkspaces
     , manageHook         = myManageHook
                            <+> manageHook xfceConfig
+                           -- A more nuanced version of
+                           -- XMonad.Hooks.InsertPosition: avoid the
+                           -- master for non-dialogs, and ensure
+                           -- dialogs appear on top of everything else.
+                           <+> (not <$> isDialog --> doF avoidMaster)
+                           <+> (isDialog --> doF W.shiftMaster)
     , layoutHook         = myLayoutHook
     } `additionalKeysP` myKeys
 
@@ -134,4 +140,9 @@ myDish = limitWindows 5 $ Dishes 1 (1/5)
 -- helper functions
 
 inMyTerm     :: String -> String
-inMyTerm cmd = unwords $ [myTerm, "-e", cmd]
+inMyTerm cmd = unwords [myTerm, "-e", cmd]
+
+avoidMaster :: W.StackSet i l a s sd -> W.StackSet i l a s sd
+avoidMaster = W.modify' $ \c -> case c of
+    W.Stack t [] (r:rs) -> W.Stack t [r] rs
+    _                   -> c
