@@ -33,7 +33,7 @@ import           Control.Arrow               hiding ((<+>), (|||))
 import           Data.Bits
 import qualified Data.Map                    as M
 
-main = xmonad $ addMyKeys $ xfceConfig
+main = xmonad $ xfceConfig
 
     { terminal           = myTerm
     , normalBorderColor  = "#656555"
@@ -44,7 +44,7 @@ main = xmonad $ addMyKeys $ xfceConfig
     , manageHook         = myManageHook
                            <+> manageHook xfceConfig
     , layoutHook         = myLayoutHook
-    }
+    } `additionalKeysP` myKeys
 
 -- basic preferences
 
@@ -56,51 +56,30 @@ myWorkspaces = ["ops", "conn", "www", "comm", "view", "tail"]
 
 -- key bindings
 
-myPrefixedKeys = [ ("i", spawn "xmousetidy")
+myKeys = [ ("M4-h", spawn "xmousetidy")
 
-                   -- launchers
-                 , ("g w", spawn myBrowser) -- could use `XMonad.Actions.WindowGo (runOrRaise)' here
-                 , ("g e", spawn myEditor)
-                 , ("g g", spawn myTerm)
-                 -- , ("g m", spawn $ inMyTerm "sh -c 'offline || mbsync fastmail; mutt'")
-                 , ("g m", spawn $ inMyTerm "mutt")
-                 , ("g r", spawn $ inMyTerm "mutt -f ~/.fmail/feeds") -- 'r' for 'rss'
-                 , ("g t", spawn $ inMyTerm "ii")
-                 , ("g c", spawn $ inMyTerm "ncmpcpp") -- 'c' for chaones
-                 , ("g v", spawn $ inMyTerm "alsamixer")
-                 -- , ("g f", spawn "sh -c 'wmctrl -a Messenger || messengerfordesktop'")
+           -- launchers
+         , ("M4-g t", spawn $ inMyTerm "ii")
+         , ("M4-g c", spawn $ inMyTerm "ncmpcpp") -- 'c' for chaones
+         , ("M4-g v", spawn $ inMyTerm "alsamixer")
+         , ("M4-g j", spawn "thunar")
 
-                   -- window management
-                 , ("o", windows W.focusDown)
-                 , ("S-o", windows W.focusUp)
-                 , (";", withFocused (sendMessage . maximizeRestore))
+           -- special keyboard keys
+         , ("<XF86Tools>", spawn $ inMyTerm "ncmpcpp")
+         , ("<XF86HomePage>", spawn "thunar")
 
-                   -- workspaces
-                 , ("C-i", toggleWS)
-                 ]
+           -- window & workspace management
+         , ("M4-'", withFocused (sendMessage . maximizeRestore))
+         , ("M4-;", toggleWS)
 
-myUnprefixedKeys = [ ("M4-j", windows W.focusDown)
-                   , ("M4-k", windows W.focusUp)
-                   , ("M4-S-i", kill)
+           -- When locking the screen, also clear out my SSH key.
+           -- Otherwise it lasts until I log off.  See GNOME bugzilla
+           -- bug #525574.  Note that PGP keys may be set to timeout,
+           -- but SSH keys can't be.
+         , ("M4-l", spawn "sh -c 'ssh-add -D && xscreensaver-command -lock'")
 
-                     -- Amazon Basics keyboard
-                   , ("<XF86Tools>", spawn $ inMyTerm "ncmpcpp")
-                   , ("<XF86Explorer>", spawn "thunar")
-
-                     -- When locking the screen, also clear out my SSH
-                     -- key.  Otherwise it lasts until I log off.  See
-                     -- GNOME bugzilla bug #525574.  Note that PGP
-                     -- keys may be set to timeout, but SSH keys can't
-                     -- be.
-                   , ("M4-l", spawn "sh -c 'ssh-add -D && xscreensaver-command -lock'")
-
-                   , ("M4-S-j", windows W.swapDown)
-                   , ("M4-S-k", windows W.swapUp)
-                   , ("M1-<Tab>", rotSlavesDown)
-                   , ("M1-S-<Tab>", rotSlavesUp)
-                   ]
-
-myUnwantedKeys = ["M-e"]
+           -- TODO restore M4-l shrink keybinding to M4-S-l or something
+         ]
 
 -- hooks
 
@@ -160,19 +139,3 @@ myDish = limitWindows 5 $ Dishes 1 (1/5)
 
 inMyTerm     :: String -> String
 inMyTerm cmd = unwords $ [myTerm, "-e", cmd]
-
-addMyKeys                   = addMyUnprefixed . prefixMainMap . addMyPrefixed . removeSomeDefaults
-  where
-    removeSomeDefaults conf = conf `removeKeysP` myUnwantedKeys
-    addMyPrefixed conf      = conf `additionalKeysP` myPrefixedKeys
-    prefixMainMap conf      = conf { keys = addPrefix
-                                            (controlMask, xK_i)
-                                            (keys conf) }
-    addMyUnprefixed conf    = conf `additionalKeysP` myUnprefixedKeys
-
--- from <http://kojevnikov.com/xmonad-metacity-gnome.html>
-addPrefix p ms conf =
-    M.singleton p . submap $ M.mapKeys (first chopMod) (ms conf)
-  where
-    mod     = modMask conf
-    chopMod = (.&. complement mod)
