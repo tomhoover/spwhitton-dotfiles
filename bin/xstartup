@@ -73,6 +73,7 @@ fi
 # ---- other stuff to launch
 
 redshift-gtk -l 53.57:1.5 -t 6500:3700 &
+caffeine-indicator &
 
 # ---- fire up my window manager
 
