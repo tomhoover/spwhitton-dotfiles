@@ -13,6 +13,7 @@ xset b off
 setxkbmap -option ctrl:nocaps
 setxkbmap -option "compose:ralt"
 setxkbmap -layout gb
+xmodmap ~/.Xmodmap
 xbindkeys
 
 # set US layout if my US usb keyboard is plugged in :(

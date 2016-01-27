@@ -21,4 +21,5 @@ else
     setxkbmap -layout $INTL -option ctrl:nocaps
 fi
 
+xmodmap ~/.Xmodmap
 xfce4-panel --restart
