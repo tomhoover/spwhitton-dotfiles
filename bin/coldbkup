@@ -39,7 +39,7 @@ gitbk ()
     local dest=$2
     if [ -e "$dest/$short" ]; then
         cd $dest/$short
-        git fetch origin "+refs/heads/*:refs/heads/*" --prune
+        git fetch origin "+refs/heads/*:refs/heads/*" --prune --tags
     else
         mkdir -p $dest
         cd $dest
