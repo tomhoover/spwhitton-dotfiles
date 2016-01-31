@@ -12,6 +12,7 @@ if pgrep mbsync >/dev/null; then
     exit 1
 fi
 
+mbsync --quiet fastmail
 mv "$HOME/.mbsyncrc" "$HOME/.mbsyncrc~"
 
 # 2. set constants
