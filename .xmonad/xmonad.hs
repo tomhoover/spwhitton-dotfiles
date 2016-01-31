@@ -56,7 +56,7 @@ myWorkspaces = ["one", "two", "three", "www", "comm", "view", "tail"]
 
 -- key bindings
 
-myKeys = [ ("M4-H", spawn "xmousetidy")
+myKeys = [ ("M4-/", spawn "xmousetidy")
 
            -- launchers
          , ("M4-g t", spawn $ inMyTerm "ii")
@@ -81,7 +81,7 @@ myKeys = [ ("M4-H", spawn "xmousetidy")
            -- Otherwise it lasts until I log off.  See GNOME bugzilla
            -- bug #525574.  Note that PGP keys may be set to timeout,
            -- but SSH keys can't be.
-         , ("C-M4-l", spawn "sh -c 'ssh-add -D && xscreensaver-command -lock'")
+         , ("M4-S-l", spawn "sh -c 'ssh-add -D && xscreensaver-command -lock'")
 
            -- TODO restore M4-l shrink keybinding to M4-S-l or something
          ]
