@@ -75,6 +75,7 @@ fi
 
 redshift-gtk -l 53.57:1.5 -t 6500:3700 &
 caffeine-indicator &
+workrave &
 
 # ---- fire up my window manager
 
