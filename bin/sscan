@@ -198,19 +198,19 @@ def doScan(scanimage, filedir, filename):
     # dev = '/dev/bus/usb/' + match.group(1) + '/' + match.group(2)
     # subprocess.call(['usbreset', dev])
 
-    # Debian Jessie's version of scanimage doesn't tend to work unless
-    # we first call "scanimage -T" (which is oddly noisy).  xsane,
-    # though, seems to work right off the bat.  Sometimes the scanner
-    # gets caught up and xsane must be run to reset it (when it shows
-    # a red LED and doesn't move).  Possibly a hardware fault while
-    # scanner has been in storage as sound it makes while scanning has
-    # also changed.
-    global WARMED
-    if not WARMED:
-        print "\nPlease wait, warming up the scanner for first scan ..."
-        subprocess.call(["scanimage", "-T"], stdout = None, stderr = None)
-        WARMED = True
-        print "... done\n"
+    # # Debian Jessie's version of scanimage doesn't tend to work unless
+    # # we first call "scanimage -T" (which is oddly noisy).  xsane,
+    # # though, seems to work right off the bat.  Sometimes the scanner
+    # # gets caught up and xsane must be run to reset it (when it shows
+    # # a red LED and doesn't move).  Possibly a hardware fault while
+    # # scanner has been in storage as sound it makes while scanning has
+    # # also changed.
+    # global WARMED
+    # if not WARMED:
+    #     print "\nPlease wait, warming up the scanner for first scan ..."
+    #     subprocess.call(["scanimage", "-T"], stdout = None, stderr = None)
+    #     WARMED = True
+    #     print "... done\n"
 
     tiff = open(filedir + '/' + filename, 'w')
     subprocess.call(scanimage, stdout = tiff)
