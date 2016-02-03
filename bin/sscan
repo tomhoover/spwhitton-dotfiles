@@ -190,13 +190,13 @@ def scan(outdir, dpi = 300, multi = False, colour = False, gray = False, ocr = F
 
 def doScan(scanimage, filedir, filename):
 
-    # work around genesys bug by resetting scanner, rather than physically replugging it
-    # the following code only required when connected via a USB 3.0 port
-    print "\nResetting scanner's USB connection ..."
-    lsusb = subprocess.check_output(['lsusb'])
-    match = re.search('Bus ([0-9]+) Device ([0-9]+): ID 04a9:190a Canon, Inc. CanoScan LiDE 210', lsusb)
-    dev = '/dev/bus/usb/' + match.group(1) + '/' + match.group(2)
-    subprocess.call(['usbreset', dev])
+    # # work around genesys bug by resetting scanner, rather than physically replugging it
+    # # the following code only required when connected via a USB 3.0 port
+    # print "\nResetting scanner's USB connection ..."
+    # lsusb = subprocess.check_output(['lsusb'])
+    # match = re.search('Bus ([0-9]+) Device ([0-9]+): ID 04a9:190a Canon, Inc. CanoScan LiDE 210', lsusb)
+    # dev = '/dev/bus/usb/' + match.group(1) + '/' + match.group(2)
+    # subprocess.call(['usbreset', dev])
 
     # Debian Jessie's version of scanimage doesn't tend to work unless
     # we first call "scanimage -T" (which is oddly noisy).  xsane,
