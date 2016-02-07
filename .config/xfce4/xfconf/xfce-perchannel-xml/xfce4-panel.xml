@@ -35,12 +35,13 @@
     <property name="plugin-6" type="string" value="systray">
       <property name="names-visible" type="array">
         <value type="string" value="vlc"/>
-        <value type="string" value="networkmanager applet"/>
-        <value type="string" value="xfce4-power-manager"/>
         <value type="string" value="redshift-gtk"/>
         <value type="string" value="caffeine-indicator"/>
+        <value type="string" value="networkmanager applet"/>
         <value type="string" value="ibus panel"/>
-        <value type="string" value="scim-panel-gtk"/>
+        <value type="string" value="workrave tray icon"/>
+        <value type="string" value="xfce4-power-manager"/>
+        <value type="string" value="workrave"/>
       </property>
     </property>
     <property name="plugin-7" type="string" value="power-manager-plugin"/>
