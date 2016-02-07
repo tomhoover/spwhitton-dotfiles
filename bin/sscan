@@ -106,7 +106,9 @@ def scan(outdir, dpi = 300, multi = False, colour = False, gray = False, ocr = F
     # build the command
     scanimage = ["scanimage", "-vp", "--format=tiff"]
     scanimage.append("--resolution=" + str(dpi))
-    scanimage.append("--depth=" + str(depth))
+    # Canon scanner doesn't support specifying depth, so comment out for now
+    # TODO global var setting this
+    # scanimage.append("--depth=" + str(depth))
     if colour:
         scanimage.append("--mode=Color")
     elif gray:
@@ -161,7 +163,7 @@ def scan(outdir, dpi = 300, multi = False, colour = False, gray = False, ocr = F
 
         if ocr:
             # https://github.com/gkovacs/pdfocr
-            # consider running unpaper before pdfocr to improve ocr performance
+            # TODO consider running unpaper before pdfocr to improve ocr performance
             subprocess.call(['pdfocr', '-t', '-i', output, '-o', workdir + '/process.pdf'])
             shutil.move(workdir + '/process.pdf', output)
         else:
