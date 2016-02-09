@@ -167,8 +167,10 @@ def scan(outdir, dpi = 300, multi = False, colour = False, gray = False, ocr = F
         shutil.move(workdir + '/process.pdf', output)
 
         if ocr:
+            print "commencing OCR; please be patient ...",
             subprocess.call(['ocrmypdf', '-c', '-i', output, workdir + '/process.pdf'])
             shutil.move(workdir + '/process.pdf', output)
+            print " done"
         else:
             # compress PDF by flattening it
             # more aggressive compression is possible: http://stackoverflow.com/questions/5296667/pdftk-compression-option
