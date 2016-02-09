@@ -19,6 +19,10 @@ INCOMINGDIR = "/home/swhitton/lib/annex/doc/incoming"
 global WARMED
 WARMED = True
 
+# Epson scanner in Tucson doesn't support --depth
+global SCANNER_SUPPORTS_DEPTH
+SCANNER_SUPPORTS_DEPTH = True
+
 # from: http://stackoverflow.com/questions/510357/python-read-a-single-character-from-the-user
 def getch():
     fd = sys.stdin.fileno()
@@ -106,9 +110,10 @@ def scan(outdir, dpi = 300, multi = False, colour = False, gray = False, ocr = F
     # build the command
     scanimage = ["scanimage", "-vp", "--format=tiff"]
     scanimage.append("--resolution=" + str(dpi))
-    # Canon scanner doesn't support specifying depth, so comment out for now
-    # TODO global var setting this
-    # scanimage.append("--depth=" + str(depth))
+
+    if SCANNER_SUPPORTS_DEPTH:
+        scanimage.append("--depth=" + str(depth))
+
     if colour:
         scanimage.append("--mode=Color")
     elif gray:
