@@ -2153,6 +2153,15 @@ Ensures the kill ring entry always ends with a newline."
   (add-hook 'message-mode-hook 'spw/fix-initial-signature)
   ;; (advice-add 'message-kill-to-signature :after #'spw/fix-signature-kill)
 
+  (defun spw/debbugs-no-ack ()
+    (save-excursion
+      (message-goto-to)
+      (when (looking-back ".*bugs\.debian\.org.*")
+        (message-carefully-insert-headers (list (cons 'X-Debbugs-No-Ack "thanks"))))
+      (message-goto-cc)
+      (when (looking-back ".*bugs\.debian\.org.*")
+        (message-carefully-insert-headers (list (cons 'X-Debbugs-No-Ack "thanks"))))))
+
   (defun message-newline-and-reformat--delete-superflous-newlines (&rest ignore)
     "Have `message-newline-and-reformat' get rid of some more
 superflous blank quoted lines."
@@ -2175,6 +2184,7 @@ superflous blank quoted lines."
               (auto-fill-mode)
               ;; (spw/set-from-address)
               (footnote-mode)
+              (spw/debbugs-no-ack)
               (message-goto-body))))
 
 (defun djcb/snip (b e summ)
