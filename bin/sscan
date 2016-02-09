@@ -59,8 +59,8 @@ def main():
                           ("Multi-page B&W PDF", '2'),
                           ("Single page colour PDF", '3'),
                           ("Multi-page colour PDF", '4'),
-                          ("Single page OCR'd PDF", '5'), # greyscale 400dpi best for ocr http://web.archive.org/web/20080529012847/http://groundstate.ca/ocr
-                          ("Multi-page OCR'd PDF", '6'),
+                          ("Single page OCR'd PDF, letter size", '5'), # greyscale 400dpi best for ocr http://web.archive.org/web/20080529012847/http://groundstate.ca/ocr
+                          ("Multi-page OCR'd PDF, letter size", '6'),
                           ("Standard dpi full colour scan to PNG, autocrop", '7'),
                           ("High dpi full colour scan to PNG, cropped to printed photo size", '8'),
                           ("Single page colour PDF, letter size", '9'),
@@ -99,9 +99,9 @@ def main():
         elif operation == '7':
             scan(outdir, colour = True, crop = 0)
         elif operation == '5':
-            scan(outdir, gray = True, crop = 1, ocr = True)
+            scan(outdir, gray = True, ocr = True, crop = 3)
         elif operation == '6':
-            scan(outdir, gray = True, crop = 1, ocr = True, multi = True)
+            scan(outdir, gray = True, ocr = True, crop = 3, multi = True)
 
 def scan(outdir, dpi = 300, multi = False, colour = False, gray = False, ocr = False, depth = 8, crop = 1, lineartFilter = "None"):
     workdir = tempfile.mkdtemp()
