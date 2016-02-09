@@ -167,15 +167,13 @@ def scan(outdir, dpi = 300, multi = False, colour = False, gray = False, ocr = F
         shutil.move(workdir + '/process.pdf', output)
 
         if ocr:
-            # https://github.com/gkovacs/pdfocr
-            # TODO consider running unpaper before pdfocr to improve ocr performance
-            subprocess.call(['pdfocr', '-t', '-i', output, '-o', workdir + '/process.pdf'])
+            subprocess.call(['ocrmypdf', '-c', '-i', output, workdir + '/process.pdf'])
             shutil.move(workdir + '/process.pdf', output)
         else:
             # compress PDF by flattening it
             # more aggressive compression is possible: http://stackoverflow.com/questions/5296667/pdftk-compression-option
 
-            # pdfocr Ruby script does its own flattening
+            # (ocrmypdf does this for us, hence wrapped in else clause)
             subprocess.call(['qpdf', '--linearize', output, output + '~'])
             shutil.move(output + '~', output)
     else:                       # single image output
