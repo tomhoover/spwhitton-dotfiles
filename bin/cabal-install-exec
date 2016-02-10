@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# TODO need to put cabal.config constraints in before downloading or
+# the version that `cabal get` installs might not itself be
+# installable
 mkdir -p $HOME/local/src
 for var in "$@"; do
     cd $HOME/local/src
