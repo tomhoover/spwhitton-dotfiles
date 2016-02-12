@@ -45,9 +45,7 @@ case "$(hostname -f)" in
         ;;
     "artemis.silentflame.com")
         cd $HOME
-        if [ -e "$HOME/.ssh/id_duply" ]; then
-             offline || $HOME/bin/duply artemis-swhitton-home-run backup_purge --force
-        fi
+        offline || duply artemis-swhitton-home backup_purge --force
         ;;
     "athena.silentflame.com")
         # use our own compiled version in order to get --s3-use-ia
