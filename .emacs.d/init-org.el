@@ -366,6 +366,8 @@
      (not (string= (system-name) "zephyr.silentflame.com")))
     ((string= tag "@campus")
      (string= (system-name) "athena.silentflame.com"))
+    ((string= tag "ua")
+     (= (calendar-day-of-week (calendar-current-date)) 6))
     ((string= tag "@workstation")
      (or (string= (system-name) "artemis.silentflame.com")
          (string= (system-name) "zephyr.silentflame.com"))))
