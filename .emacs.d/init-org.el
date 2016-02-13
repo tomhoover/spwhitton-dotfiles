@@ -369,8 +369,8 @@
     ((string= tag "ua")
      (= (calendar-day-of-week (calendar-current-date)) 6))
     ((string= tag "@workstation")
-     (or (string= (system-name) "artemis.silentflame.com")
-         (string= (system-name) "zephyr.silentflame.com"))))
+     (not (or (string= (system-name) "artemis.silentflame.com")
+              (string= (system-name) "zephyr.silentflame.com")))))
    (concat "-" tag)))
 
 (setq org-agenda-auto-exclude-function 'org-my-auto-exclude-function)
