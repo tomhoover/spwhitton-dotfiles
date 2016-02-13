@@ -21,6 +21,7 @@ if mount | grep -q "/media/${USER}/m3"; then
 elif mount | grep -q "/media/${USER}/bkupsd"; then
     HDD=/media/${USER}/bkupsd
     cd $HOME/lib/wikiannex
+    status syncing wikiannex content
     git annex sync --content origin athena bkupsd
     cd $HOME
 else
