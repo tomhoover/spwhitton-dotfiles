@@ -14,6 +14,7 @@ shell.nix
 TAGS
 dist
 docsets
+.ruffus_history.sqlite
 
 # now ignoring LaTeX junk because I'm not going to check it in anymore
 *.aux
