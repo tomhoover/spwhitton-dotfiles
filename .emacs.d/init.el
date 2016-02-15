@@ -1713,7 +1713,10 @@ Generates calls to pandoc that look like this: pandoc -s --filter pandoc-citepro
        "pandoc" nil "*pandoc output*" nil
        "-s" "--filter" "pandoc-citeproc"
        ;; (concat "--bibliography=" (expand-file-name "~/doc/spw.bib"))
-       "--filter" "pandoc-citeproc-preamble"
+
+       ;; pandoc-citeproc-preamble broken atm
+       ;; "--filter" "pandoc-citeproc-preamble"
+
        "--template" "pessay" "-V" "documentclass=pessay"
        (buffer-file-name) "-o" output-file)
       (find-file output-file))))
