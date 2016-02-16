@@ -44,7 +44,12 @@ def main():
                                              + ' minute break')
                 count_down(BREAK_MINUTES, 'rest')
                 spw.try_audible_notification('Time to start working again')
+                t0 = time.time()
                 move_on_wait()
+                t1 = time.time()
+                # accidental longer break
+                if t1 - t0 > 1200:
+                    pomodoros_completed = 0
         else:
             spw.try_audible_notification(str(LONG_BREAK_MINUTES)
                                          + ' minute break.'
