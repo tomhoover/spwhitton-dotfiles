@@ -35,6 +35,8 @@ def print_same_line(line=''):
     sys.stdout.write(line + '\r')
     sys.stdout.flush()
 
+# TODO: better: http://stackoverflow.com/a/6599414
+# avoids spinning in a tight loop making the CPU run wild
 def getch():
     """Get a single char from the keyboard without curses library.  From
     the Python manual's Library and Extension FAQ

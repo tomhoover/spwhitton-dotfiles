@@ -69,30 +69,8 @@ def count_down(total_minutes, kind):
             sys.exit()
 
 def move_on_wait():
-    """Wait for user to type y and then return."""
-    char = ''
-    # detect The Emacs Shell
-    eshell = True if os.environ['TERM'] == 'vt100' else False
-
-    if eshell:
-        spw.print_same_line('Are you ready to move on?  (hit return)')
-    else:
-        spw.print_same_line('Are you ready to move on?  (y/n)')
-    while True:
-        try:
-            if eshell:
-                raw_input()
-                # once it gives the enter key press, Emacs won't erase
-                # the preceding line content, so just start a new line
-                print '\n',
-                char = 'y'
-            else:
-                char = spw.getch()
-        except KeyboardInterrupt:
-            spw.print_same_line()
-            sys.exit()
-        if char == 'y':
-            break
+    raw_input("Press enter when you are ready to move on")
+    sys.stdout.write("\033[F")
 
 if __name__ == "__main__":
     main()
