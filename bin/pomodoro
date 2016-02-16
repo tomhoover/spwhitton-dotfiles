@@ -29,6 +29,7 @@ POMODOROS_BLOCK = 4
 
 def main():
     """Pomodoro technique loop"""
+    os.system('clear')
     pomodoros_completed = 0
 
     while True:
