@@ -31,6 +31,7 @@ def main():
     """Pomodoro technique loop"""
     os.system('clear')
     pomodoros_completed = 0
+    move_on_wait()
 
     while True:
         if pomodoros_completed < POMODOROS_BLOCK:
