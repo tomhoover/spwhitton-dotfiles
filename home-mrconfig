@@ -355,6 +355,7 @@ checkout = git clone git@spwhitton.name:wikiannex.git
 status = git annex status       # direct mode on athena, so status won't work
 post_checkout =
     if [ "$(hostname -s)" = "athena" ]; then
+    # TODO what if not yet init'd?
         git annex direct
     fi
     if workstation; then
