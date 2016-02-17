@@ -88,3 +88,5 @@ xpdf*matteColor:        #3a3a3a
 ! ---- xscreensaver
 
 xscreensaver.timeout: 0:20:00
+xscreensaver.lock: True
+xscreensaver.lockTimeout: 0:00:00
