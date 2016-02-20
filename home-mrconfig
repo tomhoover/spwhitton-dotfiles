@@ -118,6 +118,7 @@ lib =
                 .irssi \
                 .cabal \
                 .xmonad \
+                .recoll \
                 local/mutt \
                 local/mpd \
                 local/anacron/spool \

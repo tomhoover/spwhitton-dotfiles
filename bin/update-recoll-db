@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# we need to index webdav space
+offline && exit 0
+
+if mount | grep -q lib/fm; then
+    RCLCRON_RCLINDEX= RECOLL_CONFDIR="$HOME/.recoll/" recollindex
+else
+    mount $HOME/lib/fm
+    RCLCRON_RCLINDEX= RECOLL_CONFDIR="$HOME/.recoll/" recollindex
+    umount $HOME/lib/fm
+fi
