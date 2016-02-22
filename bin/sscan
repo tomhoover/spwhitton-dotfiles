@@ -159,23 +159,25 @@ def scan(outdir, dpi = 300, multi = False, colour = False, gray = False, ocr = F
         # if output TIFF isn't in monochrome, try first mogrify -monochrome file.png
         subprocess.call(['convert'] + pages + [output])
 
-        # set PDF metadata
-        metadata = workdir + '/metadata'
-        metadataf = open(metadata, 'w')
-        metadataf.write("InfoKey: Title\nInfoValue: scan of "
-                        + datetime.datetime.now().strftime("%Y-%b-%d").lower()
-                        + "\nInfoKey: Author\nInfoValue: spw\n")
-        metadataf.close()
-        subprocess.call(['pdftk', output, 'update_info', metadata, 'output', workdir + '/process.pdf'])
-        shutil.move(workdir + '/process.pdf', output)
-
         if ocr:
             print "commencing OCR; please be patient ...",
             subprocess.call(['ocrmypdf', '-c', '-i', '-r',
+                             '--title', 'scan of ' + datetime.datetime.now().strftime("%Y-%b-%d").lower(),
+                             '--author', 'spw',
                              output, workdir + '/process.pdf'])
             shutil.move(workdir + '/process.pdf', output)
             print " done"
         else:
+            # set PDF metadata
+            metadata = workdir + '/metadata'
+            metadataf = open(metadata, 'w')
+            metadataf.write("InfoKey: Title\nInfoValue: scan of "
+                            + datetime.datetime.now().strftime("%Y-%b-%d").lower()
+                            + "\nInfoKey: Author\nInfoValue: spw\n")
+            metadataf.close()
+            subprocess.call(['pdftk', output, 'update_info', metadata, 'output', workdir + '/process.pdf'])
+            shutil.move(workdir + '/process.pdf', output)
+
             # compress PDF by flattening it
             # more aggressive compression is possible: http://stackoverflow.com/questions/5296667/pdftk-compression-option
 
