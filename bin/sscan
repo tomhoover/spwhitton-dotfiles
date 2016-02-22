@@ -168,7 +168,8 @@ def scan(outdir, dpi = 300, multi = False, colour = False, gray = False, ocr = F
 
         if ocr:
             print "commencing OCR; please be patient ...",
-            subprocess.call(['ocrmypdf', '-c', '-i', output, workdir + '/process.pdf'])
+            subprocess.call(['ocrmypdf', '-c', '-i', '-r',
+                             output, workdir + '/process.pdf'])
             shutil.move(workdir + '/process.pdf', output)
             print " done"
         else:
