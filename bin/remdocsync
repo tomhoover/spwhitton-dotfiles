@@ -11,6 +11,6 @@ else
     cd $HOME/doc
     mr sync
     ssh athena 'cd $HOME/doc && . $HOME/.shenv && mr sync'
-    cd $HOME/dionysus
+    cd $HOME/lib/dionysus
     mr sync
 fi
