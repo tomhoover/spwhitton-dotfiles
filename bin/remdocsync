@@ -13,4 +13,5 @@ else
     ssh athena 'cd $HOME/doc && . $HOME/.shenv && mr sync'
     cd $HOME/lib/dionysus
     mr sync
+    ssh athena 'cd $HOME/lib/dionysus && . $HOME/.shenv && git annex sync'
 fi
