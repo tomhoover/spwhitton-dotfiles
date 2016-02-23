@@ -300,7 +300,7 @@
     ((org-agenda-start-with-log-mode nil)
      ;; (org-agenda-tag-filter-preset '("-Sariul"))
      (org-agenda-start-with-follow-mode nil))
-    ("/var/www/spw/org/agenda.html" "~/lib/fm/dionysus/Agenda/Today's agenda.html"))
+    ("/var/www/spw/org/agenda.html" "/tmp/dionysus/Agenda/Today's agenda.html"))
    ("A" "Daily planning view"
     ((agenda "day" ((org-agenda-ndays 1)
                     (org-agenda-time-grid nil)
@@ -318,7 +318,7 @@
                  (org-agenda-overriding-header "Coming up")
                  (org-agenda-files (quote ("~/doc/org/diary.org"))))))
     nil
-    ("/var/www/spw/org/full.html" "~/lib/fm/dionysus/Agenda/Day-planning agenda.html"))
+    ("/var/www/spw/org/full.html" "/tmp/dionysus/Agenda/Day-planning agenda.html"))
    ("#" "Weekly review view"
     ((todo "WAITING" ((org-agenda-todo-ignore-scheduled t)
                       (org-agenda-todo-ignore-deadlines nil)
@@ -349,7 +349,7 @@
      (org-agenda-show-all-dates nil)
      (org-agenda-overriding-header "Sean's diary for the next six months")
      (org-agenda-files (quote ("~/doc/org/diary.org"))))
-    ("/var/www/spw/org/diary.html" "~/lib/fm/dionysus/Agenda/Six month diary.html"))))
+    ("/var/www/spw/org/diary.html" "/tmp/dionysus/Agenda/Six month diary.html"))))
 
 ;;; sensible automatic tag filtering
 

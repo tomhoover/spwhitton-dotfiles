@@ -16,7 +16,7 @@ fi
 if ! mount | grep "lib/fm" >/dev/null; then
     mount $HOME/lib/fm
 fi
-mkdir -p /var/www/spw/org
+mkdir -p /var/www/spw/org /tmp/dionysus/Agenda "/tmp/dionysus/Org docs" "/tmp/dionysus/Philos notes"
 
 #TEMP=$(mktemp -d)
 if [ -e "/tmp/org-work" ]; then
