@@ -12,5 +12,4 @@
 # semantically guaranteed to be at midnight)
 0 0 * * * ikiwiki --setup /home/swhitton/src/athpriv/spwhitton.setup --refresh --typographyattributes=2
 
-# git-annex if the repo has already been checked out (for automatic git-annex merge)
-@reboot test -d /home/swhitton/lib/wikiannex/.git && git annex assistant --autostart
+@reboot cd /home/swhitton/lib/dionysus && git annex watch

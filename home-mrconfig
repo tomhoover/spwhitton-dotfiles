@@ -366,6 +366,13 @@ post_checkout =
 update = git annex sync         # no pull in direct mode
 skip = ! mine
 
+# --- git annex for university stuff
+checkout = git clone swhitton@athena.silentflame.com:lib/dionysus
+sync = git annex sync --content
+
+# setup not yet solidified
+skip = lazy
+
 # --- git annex for use with rtorrent
 
 [lib/rt]
