@@ -367,6 +367,8 @@ update = git annex sync         # no pull in direct mode
 skip = ! mine
 
 # --- git annex for university stuff
+
+[lib/dionysus]
 checkout = git clone swhitton@athena.silentflame.com:lib/dionysus
 sync = git annex sync --content
 
