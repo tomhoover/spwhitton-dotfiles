@@ -693,7 +693,7 @@
    :base-directory "~/doc/org/philos"
    :base-extension "org"
    :recursive nil
-   :publishing-directory "~/lib/fm/dionysus/Philos notes"
+   :publishing-directory "/tmp/dionysus/Philos notes"
    :publishing-function org-html-publish-to-html
    :auto-sitemap t
    :sitemap-filename "index.html"
@@ -709,11 +709,11 @@
 
 (add-to-list
  'org-publish-project-alist
- `("org-dav"
+ `("org-tmp"
    :base-directory "~/doc/org"
    :base-extension "org"
    :recursive nil
-   :publishing-directory "~/lib/fm/dionysus/Org docs"
+   :publishing-directory "/tmp/dionysus/Org docs"
    :publishing-function org-html-publish-to-html
    :auto-sitemap t
    :sitemap-filename "123Index.html"

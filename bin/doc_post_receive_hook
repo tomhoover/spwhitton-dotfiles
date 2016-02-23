@@ -39,7 +39,7 @@ lisp=$(cat <<EOF
         (org-batch-store-agenda-views)
         (org-publish-project "org-web")
         (org-publish-project "org-web-static")
-        (org-publish-project "org-dav")
+        (org-publish-project "org-tmp")
         (org-publish-project "philos"))
 EOF
     )
