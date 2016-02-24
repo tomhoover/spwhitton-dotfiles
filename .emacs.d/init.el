@@ -1696,7 +1696,7 @@ Passes ARG to `projectile-switch-project-by-name'."
 
 If ARG, put into my annex instead.
 
-Lightweight alternative to both pandoc-mode ox-pandoc.el.
+Lightweight alternative to both pandoc-mode and ox-pandoc.el.
 
 Generates calls to pandoc that look like this: pandoc -s --filter pandoc-citeproc --bibliography=$HOME/doc/spw.bib --filter pandoc-citeproc-preamble --template pessay -V documentclass=pessay input.[md|org] -o output.pdf"
   (interactive "P")
@@ -1712,11 +1712,8 @@ Generates calls to pandoc that look like this: pandoc -s --filter pandoc-citepro
       (call-process-shell-command
        "pandoc" nil "*pandoc output*" nil
        "-s" "--filter" "pandoc-citeproc"
-       ;; (concat "--bibliography=" (expand-file-name "~/doc/spw.bib"))
-
-       ;; pandoc-citeproc-preamble broken atm
-       ;; "--filter" "pandoc-citeproc-preamble"
-
+       (concat "--bibliography=" (expand-file-name "~/doc/spw.bib"))
+       "--filter" "pandoc-citeproc-preamble"
        "--template" "pessay" "-V" "documentclass=pessay"
        (buffer-file-name) "-o" output-file)
       (find-file output-file))))
