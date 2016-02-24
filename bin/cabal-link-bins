@@ -1,0 +1,9 @@
+#!/bin/sh
+
+if ! [ -d .cabal-sandbox/bin ]; then
+    echo >&2 "$(basename $0): looks like you don't have a cabal sandbox yet"
+    exit 1
+fi
+
+mkdir -p $HOME/local/bin
+ln -rfs -t $HOME/local/bin .cabal-sandbox/bin/*
