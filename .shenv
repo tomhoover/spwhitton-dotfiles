@@ -58,14 +58,6 @@ addition="$HOME/.cabal/bin";                      maybe_add_to_path
 addition="$HOME/.local/bin";                      maybe_add_to_path
 addition="/meta/s/spw/local/src/git-annex.linux"; maybe_add_to_path
 
-# now add places where there might be an exe made by cabal-install
-for bindir in $(find ~/local/src -path "*/.cabal-sandbox/bin"); do
-    addition="$bindir";                           maybe_add_to_path
-done
-for bindir in $(find ~/src -path "*/.cabal-sandbox/bin"); do
-    addition="$bindir";                           maybe_add_to_path
-done
-
 unset addition
 export PATH
 

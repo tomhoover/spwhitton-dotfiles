@@ -1,16 +1,16 @@
 #!/bin/sh
 
-# TODO need to put cabal.config constraints in before downloading or
-# the version that `cabal get` installs might not itself be
-# installable
-mkdir -p $HOME/local/src
+cabal --no-require-sandbox update
 for var in "$@"; do
-    cd $HOME/local/src
-    cabal get $var
-    cd ${var}*
-    touch .duplicity-ignore
-    wget https://www.stackage.org/lts/cabal.config
-    cabal sandbox init
-    cabal update
-    cabal install
+    if [ -d "$HOME/local/src/${var}"]; then
+        echo >&2 "$(basename $0): a version of $var is already installed; skipping"
+    else
+        mkdir -p $HOME/local/src/${var}
+        cd $HOME/local/src/${var}
+        touch .duplicity-ignore
+        cabal sandbox init
+        wget https://www.stackage.org/lts/cabal.config
+        cabal install $var
+        cabal-link-bins
+    fi
 done
