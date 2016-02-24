@@ -95,6 +95,8 @@ aliothbk pkg-emacsen/pkg/paredit-el.git
 aliothbk pkg-mozext/ublock-origin.git
 aliothbk pkg-mozext/y-u-no-validate.git
 aliothbk pkg-mozext/classic-theme-restorer.git
+aliothbk pkg-emacsen/pkg/flycheck.git
+aliothbk pkg-mozext/keysnail.git
 
 # Stage 3 : Starred repos on github
 
