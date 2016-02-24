@@ -12,4 +12,4 @@
 0 3 * * * chronic update-recoll-db
 
 @reboot rt
-@reboot cd /home/swhitton/lib/dionysus && git annex watch
+
