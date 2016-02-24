@@ -1,5 +1,7 @@
 #!/bin/sh
 
+. $HOME/.shenv
+
 # we need to index webdav space
 offline && exit 0
 
