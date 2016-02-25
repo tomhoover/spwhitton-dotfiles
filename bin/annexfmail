@@ -63,8 +63,8 @@ archivemail \
     --archive-name=debian${suffix} \
     $INPUT/debian
 
-cd $OUTPUT
-git annex add archive${suffix}.gz sent${suffix}.gz debian${suffix}.gz feeds${suffix}.gz
+# cd $OUTPUT
+# git annex add archive${suffix}.gz sent${suffix}.gz debian${suffix}.gz feeds${suffix}.gz
 
 mv "$HOME/.mbsyncrc~" "$HOME/.mbsyncrc"
 
