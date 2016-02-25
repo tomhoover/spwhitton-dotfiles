@@ -936,7 +936,7 @@ spaces in it and to remove any colons."
     (with-current-buffer buffer
       (delete-region (point-min) (point-max)))
     (display-buffer "*mr sync*")
-    (async-shell-command "remdocsync" "*mr sync*")))
+    (async-shell-command "sync-for-dionysus" "*mr sync*")))
 
 ;;; the default C-c [ and C-c ] expand the directory ~/doc/org in the
 ;;; org-agenda-files variable using the local path,

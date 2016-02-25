@@ -1,0 +1,27 @@
+#!/bin/sh
+
+. $HOME/.shenv
+
+athena_cmd () {
+    # here we rely on the fact that ssh already passes argument
+    # through `/bin/sh -c' (note use of single-quotes in this
+    # function)
+    local dir=$1
+    local cmd=$2
+    ssh athena 'cd $HOME/'"$1"' && . $HOME/.shenv && '"$2"
+}
+
+if [ "$(hostname -f)" = "athena.silentflame.com" ]; then
+    cd $HOME/doc
+    mr sync
+    cd $HOME/lib/dionysus
+    git annex merge
+else
+    cd $HOME/lib/dionysus
+    git annex sync --content athena
+    athena_cmd lib/dionysus "git annex merge"
+    athena_cmd doc "mr sync"
+    cd $HOME/doc
+    mr sync
+    athena_cmd doc "mr sync"
+fi
