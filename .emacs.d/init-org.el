@@ -333,12 +333,21 @@
             (org-agenda-todo-ignore-scheduled nil)
             (org-agenda-overriding-header "Items to add context and priority, and refile")
             (org-agenda-start-with-entry-text-mode t)))
+
+     ;; This view shows *only top-level* TODOs (i.e. projects) that
+     ;; are complete (and that, for safety, contain no incomplete
+     ;; (sub)projects or tasks).  Sometimes I want to archive complete
+     ;; subprojects of very large projects that are not yet complete,
+     ;; but I don't want to have to make that decision when looking at
+     ;; my review agenda.  I can archive these as required.
      (todo "DONE|CANCELLED"
-           ((org-agenda-overriding-header "Tasks to be archived CAREFUL DON'T ARCHIVE SUBTASKS OF INCOMPLETE PROJECTS")
+           ((org-agenda-overriding-header "Tasks to be archived")
             (org-agenda-todo-ignore-scheduled nil)
             (org-agenda-todo-ignore-deadlines nil)
             (org-agenda-todo-ignore-with-date nil)
-            (org-agenda-tag-filter-preset '("-APPT"))))))
+            (org-agenda-tag-filter-preset '("-APPT"))
+            (org-agenda-skip-function
+             'spw/skip-incomplete-projects-and-all-subprojects)))))
 
    ("d" "Six-month diary" agenda ""
     ((org-agenda-ndays 180)
@@ -473,6 +482,19 @@
               (setq has-next-subproject t)))))
     has-next-subproject))
 
+(defun spw/has-incomplete-subproject-or-task-p ()
+  "A task that has an incomplete subproject or task."
+  (let (has-incomplete-subproject)
+    (save-excursion
+      (save-restriction
+        (org-narrow-to-subtree)
+        (while (ignore-errors (outline-next-heading))
+          (unless
+              (or (string= (spw/org-get-todo-keyword) "DONE")
+                  (string= (spw/org-get-todo-keyword) "CANCELLED"))
+            (setq has-incomplete-subproject t)))))
+    has-incomplete-subproject))
+
 (defun spw/skip-projects-with-scheduled-or-deadlined-subprojects ()
   "Skip projects that have subtasks, where at least one of those
   is scheduled or deadlined"
@@ -496,6 +518,14 @@
     (if (or (bh/is-task-p)
             (spw/has-scheduled-or-deadlined-subproject-p)
             (spw/has-next-action-p))
+        next-headline
+      nil)))
+
+(defun spw/skip-incomplete-projects-and-all-subprojects ()
+  "Skip all subprojects and projects with subprojects not yet completed."
+  (let ((next-headline (save-excursion (outline-next-heading))))
+    (if (or (bh/is-subproject-p)
+            (spw/has-incomplete-subproject-or-task-p))
         next-headline
       nil)))
 
