@@ -27,8 +27,7 @@ status and it has not been unexpectedly rebooted recently
 status Or hit C-c and deal with the situation
 read _
 
-try ssh -t athena sudo apt-get update
-try ssh -t athena sudo apt-get upgrade
+try ssh -t athena "sudo apt-get update && sudo apt-get upgrade"
 
 status running src-unregistered check
 status unregistered repos need to have 'mr register' run in them
