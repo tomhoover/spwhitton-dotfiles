@@ -90,6 +90,8 @@ aliothbk pkg-emacsen/pkg/pkg-info-el.git
 aliothbk pkg-emacsen/pkg/flx.git
 aliothbk pkg-emacsen/pkg/projectile.git
 aliothbk pkg-emacsen/pkg/let-alist.git
+aliothbk pkg-emacsen/pkg/seq-el.git
+aliothbk pkg-emacsen/pkg/shut-up.git
 aliothbk pkg-emacsen/pkg/popup-el.git
 aliothbk pkg-emacsen/pkg/paredit-el.git
 aliothbk pkg-mozext/ublock-origin.git
