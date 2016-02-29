@@ -1,0 +1,39 @@
+#!/bin/sh
+
+. "$HOME/.shenv"
+. "$HOME/lib/try.sh"
+. "$HOME/lib/tputfs.sh"
+
+if ! mount | grep -q bkupsd && ! mount | grep -q m3; then
+    echo >&2 "$(basename $0): plug in and mount a cold backup drive"
+    exit 1
+fi
+
+cd "$HOME"
+
+zero ls "$HOME/tmp"
+zero ls /tmp/debuild
+zero ls ssh athena ls tmp
+mount "$HOME/lib/fm" || true
+zero ls "$HOME/lib/fm/tmp"
+
+status running src-unregistered check
+status unregistered repos need to have 'mr register' run in them
+status "(and tracking branches set up, and new alioth repos added to coldbkup script)"
+status periodically remove old projects from ~/src
+zero src-unregistered
+
+status "running restow operation: failures indicate symlinks replaced by updated files"
+status "move these into the relevant stow'd repository"
+try mr -ms restow
+
+try mr -ms autoci
+zero mr -ms status
+try mr -ms up
+try mr -ms push origin --tags :
+try coldbkup
+
+try sudo apt-get update
+try sudo apt-get upgrade
+try sudo apt-get dist-upgrade
+try git-pbuilder update --override-config
