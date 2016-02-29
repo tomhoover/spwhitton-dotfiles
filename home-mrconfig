@@ -375,6 +375,8 @@ skip = ! mine
 [lib/dionysus]
 checkout = git clone swhitton@athena.silentflame.com:lib/dionysus
 status = git annex status
+update = git annex sync athena
+push = git annex sync --content athena
 sync = git annex sync --content
 isclean = test -z $(git annex status)
 
