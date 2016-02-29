@@ -370,6 +370,7 @@ skip = ! mine
 
 [lib/dionysus]
 checkout = git clone swhitton@athena.silentflame.com:lib/dionysus
+status = git annex status
 sync = git annex sync --content
 
 # setup not yet solidified
