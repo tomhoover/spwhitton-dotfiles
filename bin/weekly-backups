@@ -41,9 +41,12 @@ status "move these into the relevant stow'd repository"
 try mr -ms restow
 
 try mr -ms autoci
-zero mr -ms status
+# `mr -ms isclean` checks for stuff to be checked in ...
+zero mr -ms isclean
 try mr -ms up
 try mr -ms push origin --tags :
+# ... then `mr -ms status` finds unpushed branches
+zero mr -ms status
 try coldbkup
 
 try sudo apt-get update

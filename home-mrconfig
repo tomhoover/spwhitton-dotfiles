@@ -17,6 +17,10 @@ git_autoci = :
 # In general, I don't want merge commits to be made en masse by mr
 git_update = git remote update; git pull --ff-only "$@"
 
+# `mr -ms status` is a great way to check for unpushed branches and
+# unchecked in files, but what about checking only for the latter?
+git_isclean = git diff-index --quiet --cached HEAD && git diff-files --quiet || git status --porcelain
+
 # --- Adam Spiers' plugin for managing dotfile symlinks with mr
 
 include =
@@ -372,6 +376,7 @@ skip = ! mine
 checkout = git clone swhitton@athena.silentflame.com:lib/dionysus
 status = git annex status
 sync = git annex sync --content
+isclean = test -z $(git annex status)
 
 # setup not yet solidified
 skip = lazy
