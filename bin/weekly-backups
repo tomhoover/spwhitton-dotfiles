@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# the idea is that if this script dies it can be safely be re-run from the beginning
+
 . "$HOME/.shenv"
 . "$HOME/lib/try.sh"
 . "$HOME/lib/tputfs.sh"
@@ -13,9 +15,20 @@ cd "$HOME"
 
 zero ls "$HOME/tmp"
 zero ls /tmp/debuild
-zero ls ssh athena ls tmp
+zero ssh athena ls tmp
 mount "$HOME/lib/fm" || true
 zero ls "$HOME/lib/fm/tmp"
+
+# TODO: write a file to ~/.cache and if that file was edited today, skip these
+ssh athena df -h
+ssh athena uptime
+status Press enter to confirm that athena has enough free disc space
+status and it has not been unexpectedly rebooted recently
+status Or hit C-c and deal with the situation
+read _
+
+try ssh -t athena sudo apt-get update
+try ssh -t athena sudo apt-get upgrade
 
 status running src-unregistered check
 status unregistered repos need to have 'mr register' run in them
