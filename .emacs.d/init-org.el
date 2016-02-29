@@ -518,7 +518,12 @@
     (if (or (bh/is-task-p)
             (spw/has-scheduled-or-deadlined-subproject-p)
             (spw/has-next-action-p))
-        next-headline
+        ;; THEN: skip, and handle special case of the final entry in a
+        ;; buffer which cannot be a stuck project and so should always
+        ;; be skipped, but which won't be since `next-headline' will
+        ;; be nil
+        (if next-headline next-headline (point-max))
+      ;; ELSE: don't skip
       nil)))
 
 (defun spw/skip-incomplete-projects-and-all-subprojects ()
