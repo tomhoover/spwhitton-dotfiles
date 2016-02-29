@@ -7,7 +7,7 @@
 
 # alarm clock: artemis is always turned on at present and I can't get
 # joeyh's systemd alarm clock working.  Fifteen minutes after sunrise
-0 7 * * * chronic goodmorning
+30 6 * * * chronic goodmorning
 
 0 3 * * * chronic update-recoll-db
 
