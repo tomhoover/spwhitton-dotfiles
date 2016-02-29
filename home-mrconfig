@@ -131,7 +131,7 @@ lib =
                 local/big \
                 local/lib \
                 local/pub
-            touch local/big/.duplicity-ignore
+            touch local/big/.duplicity-ignore src/.mrconfig
         )
     }
     # GTK and others insist on replacing the symlink to its bookmarks
