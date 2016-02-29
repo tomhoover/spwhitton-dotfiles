@@ -10,15 +10,19 @@ EXTL="us"
 INTL="gb"
 
 if xrandr -q | grep "$EXT connected"; then
+    # desk mode
     xrandr --output $INT --off
     xrandr --output $EXT --off
     xrandr --output $EXT --mode $EXTW"x"$EXTH
     setxkbmap -layout $EXTL -option ctrl:nocaps
+    numlockx on
 else
+    # laptop mode
     xrandr --output $INT --off
     xrandr --output $EXT --off
     xrandr --output $INT --mode $INTW"x"$INTH
     setxkbmap -layout $INTL -option ctrl:nocaps
+    numlockx off
 fi
 
 xmodmap ~/.Xmodmap
