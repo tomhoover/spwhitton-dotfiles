@@ -66,6 +66,7 @@ def main():
                           ("Single page colour PDF, letter size", '9'),
                           ("Multi-page colour PDF, letter size", '0'),
                           ("Single-page colour 300 dpi to PNG", 'a'),
+                          ("Multi-page gray 150 dpi to PDF, no OCR, letter size (for handwritten notes)", 'h'),
                           ("Toggle save location (currently: " + savestr + ")", 'd'),
                           ("Quit", 'q')])
 
@@ -85,23 +86,25 @@ def main():
         elif operation == '2':
             scan(outdir, 150, True)
         elif operation == '3':
-            scan(outdir, colour = True)
+            scan(outdir, colour=True)
         elif operation == '4':
-            scan(outdir, colour = True, multi = True)
+            scan(outdir, colour=True, multi=True)
         elif operation == '9':
-            scan(outdir, colour = True, crop = 3)
+            scan(outdir, colour=True, crop=3)
         elif operation == '0':
-            scan(outdir, colour = True, multi = True, crop = 3)
+            scan(outdir, colour=True, multi=True, crop=3)
         elif operation == 'a':
-            scan(outdir, colour = True, multi = False, crop = 4)
+            scan(outdir, colour=True, multi=False, crop=4)
         elif operation == '8':
-            scan(outdir, dpi = 600, multi = False, colour = True, depth = 16, crop = 2)
+            scan(outdir, dpi=600, multi=False, colour=True, depth=16, crop=2)
         elif operation == '7':
-            scan(outdir, colour = True, crop = 0)
+            scan(outdir, colour=True, crop=0)
         elif operation == '5':
-            scan(outdir, gray = True, ocr = True, crop = 3)
+            scan(outdir, gray=True, ocr=True, crop=3)
         elif operation == '6':
-            scan(outdir, gray = True, ocr = True, crop = 3, multi = True)
+            scan(outdir, gray=True, ocr=True, crop=3, multi=True)
+        elif operation == 'h':
+            scan(outdir, gray=True, ocr=False, crop=3, multi=True, dpi=75)
 
 def scan(outdir, dpi = 300, multi = False, colour = False, gray = False, ocr = False, depth = 8, crop = 1, lineartFilter = "None"):
     workdir = tempfile.mkdtemp()
