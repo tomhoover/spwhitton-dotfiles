@@ -18,7 +18,7 @@ if [ "$(hostname -f)" = "athena.silentflame.com" ]; then
     git annex merge
 else
     # try to sync nickflash first
-    cd /media/swhitton/SPWHITTON/doc && git annex sync --content || true
+    cd /media/swhitton/SPWHITTON/doc && git annex add && git annex sync --content || true
     cd $HOME/lib/dionysus
     git annex sync --content athena
     # try to sync nickflash again
