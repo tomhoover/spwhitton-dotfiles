@@ -1,32 +1,31 @@
 #!/bin/sh
 
-. $HOME/.shenv
+. "$HOME/.shenv"
 
 athena_cmd () {
     # here we rely on the fact that ssh already passes argument
     # through `/bin/sh -c' (note use of single-quotes in this
     # function)
-    local dir=$1
-    local cmd=$2
+    # local dir=$1
+    # local cmd=$2
     ssh athena 'cd $HOME/'"$1"' && . $HOME/.shenv && '"$2"
 }
 
 if [ "$(hostname -f)" = "athena.silentflame.com" ]; then
-    cd $HOME/doc
+    cd "$HOME/doc"
     mr sync
-    cd $HOME/lib/dionysus
+    cd "$HOME/lib/dionysus"
     git annex merge
 else
     # try to sync nickflash first
-    cd /media/swhitton/SPWHITTON/doc && git annex add && git annex sync --content || true
-    cd $HOME/lib/dionysus
-    git annex sync --content athena
+    cd /media/swhitton/SPWHITTON/doc 2>/dev/null && git annex add && git annex sync --content || true
+    cd "$HOME/lib/dionysus" && git annex add && git annex sync --content athena
     # try to sync nickflash again
-    cd /media/swhitton/SPWHITTON/doc && git annex sync --content || true
-    sudo umount /media/swhitton/SPWHITTON || true
+    cd /media/swhitton/SPWHITTON/doc 2>/dev/null && git annex sync ---content && sudo umount /media/swhitton/SPWHITTON || true
     athena_cmd lib/dionysus "git annex merge"
+
     athena_cmd doc "mr sync"
-    cd $HOME/doc
+    cd "$HOME/doc"
     mr sync
     athena_cmd doc "mr sync"
 fi
