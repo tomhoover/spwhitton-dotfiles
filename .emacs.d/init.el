@@ -24,11 +24,20 @@
     (apply 'nconc (mapcar do-glob globs))))
 
 ;; now add all my pkg lisp directories
+
+;; As of Mar-16 we're appending rather than prepending to the
+;; load-path so that any installed Debian ELPA packages take
+;; precedence over those in `emacs-pkg-dir'.
+
+;; If I want some lisp in `emacs-pkg-dir' to take precedence over
+;; system-wide lisp, I should create a file ~/.emacs.d/pkg/overrides
+;; and have the following code prepend a directory to the load path if
+;; it is listed in that file.
 (let* ((globs '("*" "*/lisp"))
        (dirs (expand-all-globs emacs-pkg-dir globs)))
   (dolist (dir dirs)
     (when (file-directory-p dir)
-      (add-to-list 'load-path dir))))
+      (add-to-list 'load-path dir t))))
 
 ;; finally put my own site-lisp at the front of `load-path'
 (add-to-list 'load-path (concat user-emacs-directory "site-lisp"))
