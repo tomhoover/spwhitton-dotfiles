@@ -14,8 +14,11 @@
 
 ;; load up f, and its dependencies s and dash, so we can use `f-glob'
 ;; and `f-join'
-(dolist (pkg '("f.el" "dash.el" "s.el"))
-  (add-to-list 'load-path (concat emacs-pkg-dir "/" pkg)))
+(dolist (pkg '(("f" . "f.el")
+               ("dash" . "dash.el")
+               ("s" . "s.el")))
+  (unless (locate-library (car pkg))
+    (add-to-list 'load-path (concat emacs-pkg-dir "/" (cdr pkg)))))
 (require 'f) (require 's) (require 'dash)
 
 ;; helper function
