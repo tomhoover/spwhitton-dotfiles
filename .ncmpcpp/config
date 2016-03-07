@@ -3,3 +3,4 @@ playlist_editor_display_mode = "columns"
 search_engine_display_mode = "columns"
 browser_display_mode = "columns"
 playlist_display_mode = "columns"
+ask_before_clearing_playlists = no
