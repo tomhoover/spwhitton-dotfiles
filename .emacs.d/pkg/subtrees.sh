@@ -5,13 +5,14 @@ if [ "$1" = "--clear-elc" ]; then
     exit 0
 fi
 
-# make haskell-mode autoloads
-(
-    # must cd to inside ~/src/dotfiles.  If change to ~/.emacs.d/blah,
-    # the autoloads are not generated correctly
-    cd $HOME/src/dotfiles/.emacs.d/pkg/haskell-mode
-    chronic make
-)
+# commented out: haskell-mode removed and relying on Debian package
+# # make haskell-mode autoloads
+# (
+#     # must cd to inside ~/src/dotfiles.  If change to ~/.emacs.d/blah,
+#     # the autoloads are not generated correctly
+#     cd $HOME/src/dotfiles/.emacs.d/pkg/haskell-mode
+#     chronic make
+# )
 
 # make helm autoloads
 (
@@ -21,6 +22,8 @@ fi
 
 # byte-compile anything that needs to be
 
+# TODO This doesn't actually work.  It might need to load my init.el?
+
 emacs --batch \
-      --eval '(byte-recompile-directory "$HOME/src/dotfiles/.emacs.d" 0)' \
+      --eval "(byte-recompile-directory \"$HOME/src/dotfiles/.emacs.d\" 0)" \
       2>&1 | tail -n1           # output only the summary line
