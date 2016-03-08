@@ -1,8 +1,24 @@
+[DEFAULT]
+run_lintian = 1
+
+[dom]
+fqdn           = debomatic-amd64.debian.net
+incoming       = /srv/debomatic-amd64
+login          = debomatic
+method         = scp
+allow_unsigned_uploads  = 0
+allow_dcut     = 1
+scp_compress   = 1
+# WIP package might not be Lintian-clean
+run_lintian = 0
+# Allow uploads for UNRELEASED packages
+allowed_distributions = .*
+distributions = unstable,experimental,jessie-backports,xenial
+
 [mentors]
 fqdn = mentors.debian.net
 incoming = /upload
 method = http
 allow_unsigned_uploads = 0
 progress_indicator = 2
-# Allow uploads for UNRELEASED packages
-allowed_distributions = .*
+distributions = unstable,jessie-backports
