@@ -1,0 +1,4 @@
+soundDirectory="/home/swhitton/lib/annex/doc/sounds/"
+soundCmd="aplay -q"
+Bell() "beep.wav"
+

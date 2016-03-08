@@ -4,9 +4,10 @@
 
 # stuff to start in XFCE or GNOME3
 
-# ---- no bell please
+# ---- audible bell please
 
 xset b off
+xkbevd -bg
 
 # ---- keyboard settings
 
