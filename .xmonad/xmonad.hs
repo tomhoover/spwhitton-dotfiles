@@ -59,7 +59,7 @@ myWorkspaces = ["one", "two", "three", "www", "comm", "view", "tail"]
 myKeys = [ ("M4-/", spawn "xmousetidy")
 
            -- launchers
-         , ("M4-g t"
+         , ("M4-g t"            -- see urxvt-bell-command(1)
            , spawn "urxvtcd --bell-command \"aplay /home/swhitton/lib/annex/doc/sounds/beep.wav\" -e ii")
          , ("M4-S-;", spawn myEditor)
          , ("M4-g w", spawn myBrowser)
