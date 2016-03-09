@@ -59,7 +59,8 @@ myWorkspaces = ["one", "two", "three", "www", "comm", "view", "tail"]
 myKeys = [ ("M4-/", spawn "xmousetidy")
 
            -- launchers
-         , ("M4-g t", spawn $ inMyTerm "ii")
+         , ("M4-g t"
+           , spawn "urxvtcd --bell-command \"aplay /home/swhitton/lib/annex/doc/sounds/beep.wav\" -e ii")
          , ("M4-S-;", spawn myEditor)
          , ("M4-g w", spawn myBrowser)
          , ("M4-g c", spawn $ inMyTerm "ncmpcpp") -- 'c' for chaones
