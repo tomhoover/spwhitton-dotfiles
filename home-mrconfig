@@ -20,10 +20,14 @@ git_update = git remote update; git pull --ff-only "$@"
 # `mr -ms status` is a great way to check for unpushed branches and
 # unchecked in files, but what about checking only for the latter?
 git_isclean =
-    (git diff-index --quiet --cached HEAD \ # check HEAD versus index
-         && git diff-files --quiet \ # index versus working tree
-         && [ -z "$(git status --porcelain)" ]) \ # untracked files
-     || (git status --porcelain && exit 1)
+    (
+     # 1st line: check HEAD versus index
+     # 2nd line: index versus working tree
+     # 3rd line: untracked files
+        git diff-index --quiet --cached HEAD && \
+            git diff-files --quiet && \
+            test -z "$(git status --porcelain)"
+    ) || (git status --porcelain && exit 1)
 
 # --- Adam Spiers' plugin for managing dotfile symlinks with mr
 
