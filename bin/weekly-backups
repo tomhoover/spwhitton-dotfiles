@@ -41,7 +41,7 @@ try mr -ms restow
 
 try mr -ms autoci
 # `mr -ms isclean` checks for stuff to be checked in ...
-zero mr -ms isclean
+try mr -ms isclean
 try mr -s up
 try mr -s push origin --tags :
 # ... then `mr -ms status` finds unpushed branches
