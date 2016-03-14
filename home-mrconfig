@@ -260,9 +260,9 @@ skip = (! gcrypt) || lazy || fast
 fixups =
         chmod 600 .passwddb.pet .s3ql/authinfo2 .gnupg/*.gpg
         git config remote.origin.gcrypt-publish-participants true
-        git config remote.origin.gcrypt-participants 0x3B6D411B
+        git config remote.origin.gcrypt-participants 0x0F56D0553B6D411B
         git config gcrypt.publish-participants true
-        git config gcrypt.participants 0x3B6D411B
+        git config gcrypt.participants 0x0F56D0553B6D411B
 pre_update =
         git add .passwddb.pet .labbook.gpg
         git commit -a -m "auto passwddb and labbook commit on $(hostname -s)" || true
@@ -345,11 +345,11 @@ push = git annex sync --content origin
 fixups =
     git config push.default matching
     git config remote.ma.gcrypt-publish-participants true
-    git config remote.ma.gcrypt-participants 0x3B6D411B
+    git config remote.ma.gcrypt-participants 0x0F56D0553B6D411B
     git config remote.origin.gcrypt-publish-participants true
-    git config remote.origin.gcrypt-participants 0x3B6D411B
+    git config remote.origin.gcrypt-participants 0x0F56D0553B6D411B
     git config gcrypt.publish-participants true
-    git config gcrypt.participants 0x3B6D411B
+    git config gcrypt.participants 0x0F56D0553B6D411B
     git config annex.startupscan false
     git config annex.autocommit false
     # set upstream so that mr can tell when I need to push
@@ -404,7 +404,7 @@ fixups =
     git config push.default matching
     git config gcrypt.publish-participants true
     git config remote.origin.gcrypt-publish-participants true
-    git config remote.origin.gcrypt-participants 0x3B6D411B
+    git config remote.origin.gcrypt-participants 0x0F56D0553B6D411B
     git config annex.startupscan false
     git config annex.autocommit false
     git config remote.origin.annex-ignore true
