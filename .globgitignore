@@ -32,3 +32,4 @@ docsets
 debian/files
 *.debhelper
 *.substvars
+\.pc
