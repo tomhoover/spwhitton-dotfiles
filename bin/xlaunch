@@ -3,7 +3,7 @@
 
 case $1 in
     www)
-        wmctrl -a Iceweasel || iceweasel &
+        wmctrl -a Firefox || firefox &
         ;;
     emacs)
         if ! pgrep emacs; then

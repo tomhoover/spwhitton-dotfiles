@@ -1,4 +1,4 @@
-COMMAND iceweasel
+COMMAND firefox
 DEFAULT_VIEW context
 HTML_TAGS a
 IGNORE_EMPTY_TAGS

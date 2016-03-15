@@ -116,7 +116,7 @@ GTK_IM_MODULE=xim
 export GTK_IM_MODULE
 QT_IM_MODULE=xim
 export QT_IM_MODULE
-BROWSER="iceweasel"
+BROWSER="firefox"
 export BROWSER
 TERMCMD="urxvt"
 export TERMCMD

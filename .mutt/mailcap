@@ -1,4 +1,4 @@
-text/html; iceweasel %s; test=test -n "$DISPLAY"; nametemplate=%s.html
+text/html; firefox %s; test=test -n "$DISPLAY"; nametemplate=%s.html
 text/html; w3m -I %{charset} -T text/html; copiousoutput;
 application/pdf; mutt_bgrun evince '%s'; test=test -n "$DISPLAY"; nametemplate=%s.pdf
 image/jpeg; feh %s

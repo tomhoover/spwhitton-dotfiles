@@ -51,7 +51,7 @@ main = xmonad $ xfceConfig
 myMod        = mod4Mask
 myTerm       = "urxvtcd"
 myEditor     = "emacscd"
-myBrowser    = "iceweasel"
+myBrowser    = "firefox"
 myWorkspaces = ["one", "two", "three", "www", "comm", "view", "tail"]
 
 -- key bindings
@@ -98,7 +98,7 @@ myFloatClasses = [ "Gimp"
 myManageHook = composeOne $
                [ checkDock                              -?> doIgnore
                , isDialog                               -?> doFloat
-               , className     =? "Iceweasel"           -?> doShift "www"
+               , className     =? "Firefox"             -?> doShift "www"
                , className     =? "LibreOffice 5.0"     -?> doShift "view"
                , className     =? "Vlc"                 -?> doShift "view"
                , className     =? "Evince"              -?> doShift "view"

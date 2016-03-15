@@ -2056,7 +2056,7 @@ Ensures the kill ring entry always ends with a newline."
 ;;(add-hook 'electric-indent-functions 'electric-indent-ignore-python)
 
 ;; browser
-(setq browse-url-generic-program "iceweasel"
+(setq browse-url-generic-program "firefox"
       browse-url-browser-function 'browse-url-generic)
 
 ;; clipboard & primary selection: see https://www.gnu.org/software/emacs/manual/html_node/emacs/Clipboard.html
@@ -2247,7 +2247,7 @@ superflous blank quoted lines."
 (setq TeX-output-view-style
       (quote
        (("^pdf$" "." "evince %o")
-        ("^html?$" "." "iceweasel %o"))))
+        ("^html?$" "." "firefox %o"))))
 
 ;;; fixes for exporting from Org-mode
 
