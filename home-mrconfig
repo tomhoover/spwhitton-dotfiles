@@ -309,39 +309,41 @@ skip = ! mine
 
 # --- primary git annex
 
+# TODO: consider using /usr/share/mr/git-annex helper to simplify this
+# configuration (override its update definition to avoid --content)
+# (and isclean defn can be generalised)
+
 [lib/annex]
 checkout = git clone athenap:annex
+post_checkout =
+    git remote rm origin
+    git annex init
+    git annex enableremote origin gitrepo=athenap:annex
+skip = (! workstation) || fast
 
 update = git annex sync origin
 push = git annex sync --content origin
 fixups =
     git config push.default matching
-    git config remote.ma.gcrypt-publish-participants true
-    git config remote.ma.gcrypt-participants 0x0F56D0553B6D411B
     git config remote.origin.gcrypt-publish-participants true
     git config remote.origin.gcrypt-participants 0x0F56D0553B6D411B
     git config gcrypt.publish-participants true
     git config gcrypt.participants 0x0F56D0553B6D411B
     git config annex.startupscan false
-    git config annex.autocommit false
+    git config annex.autocommit true
     # set upstream so that mr can tell when I need to push
     git branch -u origin/master master
     git branch -u origin/git-annex git-annex
-
-sync = git annex sync origin ma
-
-# manual checkouts only, and skip when we're in a hurry and used 'fmr'
-# instead of 'mr'
-skip = lazy || fast
+sync = git annex sync origin
 
 # --- personal website big files annex
 
 [lib/wikiannex]
-checkout = git clone git@spwhitton.name:wikiannex.git
+checkout = git clone athena:wikiannex.git
 status = git annex status       # direct mode on athena, so status won't work
 post_checkout =
+    git annex init
     if [ "$(hostname -s)" = "athena" ]; then
-    # TODO what if not yet init'd?
         git annex direct
     fi
     if workstation; then
@@ -378,7 +380,7 @@ fixups =
     git config remote.origin.gcrypt-publish-participants true
     git config remote.origin.gcrypt-participants 0x0F56D0553B6D411B
     git config annex.startupscan false
-    git config annex.autocommit false
+    git config annex.autocommit true
     git config remote.origin.annex-ignore true
     if [ -d "$(hostname -s)" ]; then
         mkdir -p $HOME/local/rt
@@ -393,9 +395,7 @@ fixups =
         fi
     fi
 
-# manual checkouts only, and skip when we're in a hurry and used 'fmr'
-# instead of 'mr'
-skip = lazy || fast
+skip = (! workstation) || fast
 
 # --- source code repositories registered to their own mr config file
 
