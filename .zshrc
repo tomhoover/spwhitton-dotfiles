@@ -59,7 +59,8 @@ alias ll="ls -al"
 alias g="git"
 alias ga="git annex"
 alias gs="git status"
-alias pg="ps auxxxxxxxxxxxxxxxxxxx | grep"
+# better: pa fax | grep
+# alias pg="ps auxxxxxxxxxxxxxxxxxxx | grep"
 alias fmr="MR_FAST=true mr"
 alias d="emacsclient -c -n -e '(dired \".\")'"
 alias mg=$EDITOR
