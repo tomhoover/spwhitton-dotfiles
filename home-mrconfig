@@ -31,6 +31,11 @@ git_isclean =
 
 # --- Adam Spiers' plugin for managing dotfile symlinks with mr
 
+# To make this work we must set the variable MR_NAME for each
+# repository that we want to stow.  Adam Spiers' fork of mr
+# ("kitenet-mr") sets this, but we don't want to use that outdated
+# fork
+
 include =
     if [ -e ~/lib/mr/stow ]; then
         cat ~/lib/mr/stow
@@ -57,18 +62,10 @@ lib =
 
 lib =
     fast() {
-        if [ "${MR_FAST}" = "true" ]; then
-            return 0
-        else
-            return 1
-        fi
+        test "${MR_FAST}" = "true"
     }
     win32() {
-        if [ "$(perl -e 'print $^O')" = "msys" ]; then
-            return 0
-        else
-            return 1
-        fi
+        test "$(perl -e 'print $^O')" = "msys"
     }
     if win32; then
        hostname=$(hostname)
@@ -155,7 +152,7 @@ lib =
         if ! win32; then
             if ! [ -L $HOME/$file ]; then
                 # file in home directory is not a link
-                if diff -q $HOME/src/dotfiles/$file ~/$file > /dev/null; then
+                if diff -q $HOME/src/dotfiles/$file ~/$file 2>&1 >/dev/null; then
                     rm $HOME/$file
                 fi
             fi
@@ -165,13 +162,10 @@ lib =
 # --- primary dotfiles repository
 
 [src/dotfiles]
-lib =
-        # manually set a variable that aspiers' outdated fork of mr
-        # sets, that his kitenet-mr stow library needs
-        MR_NAME=dotfiles
-
-stowable = true
 checkout = git clone https://git.spwhitton.name/dotfiles.git dotfiles
+lib = MR_NAME=dotfiles
+stowable = true
+
 update =
     # always make a go of updating master
     branch="$(git rev-parse --abbrev-ref HEAD)"
@@ -243,44 +237,34 @@ pre_update = fix_overwritten_symlink .gtk-bookmarks; fix_overwritten_symlink .co
 # --- private dotfiles repositories
 
 [src/priv]
-lib =
-        # manually set a variable that aspiers' outdated fork of mr
-        # sets, that his kitenet-mr stow library needs
-        MR_NAME=priv
-stowable = true
 checkout = git clone gcrypt::athenap:priv priv
+lib = MR_NAME=priv
+stowable = true
 
 # this repository can't be checked out until we install
 # git-remote-gcrypt.  And thanks to gcrypt being slow, skip if I run
 # via fmr.
-skip = (! gcrypt) || lazy || fast
+skip = (! gcrypt) || (! workstation) || fast
 
-# convenience automatic permission setting and checking in of
-# frequently changed files
 fixups =
         chmod 600 .passwddb.pet .s3ql/authinfo2 .gnupg/*.gpg
         git config remote.origin.gcrypt-publish-participants true
         git config remote.origin.gcrypt-participants 0x0F56D0553B6D411B
         git config gcrypt.publish-participants true
         git config gcrypt.participants 0x0F56D0553B6D411B
-pre_update =
-        git add .passwddb.pet .labbook.gpg
-        git commit -a -m "auto passwddb and labbook commit on $(hostname -s)" || true
 autoci =
         git add .passwddb.pet .labbook.gpg
         git commit -a -m "auto passwddb and labbook commit on $(hostname -s)" || true
+pre_update = mr autoci
 
 # since dotfiles repo also stows into ~/.gnupg, and athpriv repo stows
 # into ~/.duply, make the dirs first
 pre_stow = homedir_mkdirs
 
 [src/athpriv]
-lib =
-        # manually set a variable that aspiers' outdated fork of mr
-        # sets, that his kitenet-mr stow library needs
-        MR_NAME=athpriv
-stowable = true
 checkout = git clone athenap:athpriv athpriv
+lib = MR_NAME=athpriv
+stowable = true
 skip = ! mine
 
 # rss2email insists on replacing the symlink to its config file with a
@@ -296,15 +280,9 @@ pre_stow = homedir_mkdirs
 # --- hosts configuration
 
 [src/propellor]
-# This URL needs to be one that will work without my ~/.gitconfig
-# insteadOf rewriting rules in place
-checkout = git clone https://git.spwhitton.name/propellor propellor --branch spwconf
-
-# Get a sandbox going
+checkout = git clone athena:propellor propellor --branch spwconf
 post_checkout =
     cd propellor
-    git config propellor.spin-branch spwconf
-    git config propellor.forbid-dirty-spin true
     git remote add -f upstream github:joeyh/propellor.git
     which cabal && cabal sandbox init || true
     # from <https://propellor.branchable.com/coding_style/>
@@ -316,24 +294,18 @@ post_checkout =
      (haskell-mode . ((eval . (highlight-regexp \"^ *\")))))
     """
     echo ".dir-locals.el" >> .git/info/exclude
-
-post_update = git fetch upstream
-
-# check that the link isn't already in place before making the link
-# because otherwise we get an infinite loop of links that breaks propellor
-fixups = [ -L ~/.propellor ] || ln -sf ~/src/propellor ~/.propellor
+fixups =
+    # check that the link isn't already in place before making the link
+    # because otherwise we get an infinite loop of links that breaks propellor
+    [ -L ~/.propellor ] || ln -sf ~/src/propellor ~/.propellor
+    git config propellor.spin-branch spwconf
+    git config propellor.forbid-dirty-spin true
 
 # --- personal website source
 
 [src/wiki]
 checkout = git clone https://git.spwhitton.name/wiki
 skip = ! mine
-
-# --- softbeep Debian package
-
-[src/softbeep]
-checkout = git clone https://git.spwhitton.name/softbeep
-skip = ! workstation
 
 # --- primary git annex
 
