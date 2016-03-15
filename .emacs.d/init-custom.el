@@ -44,6 +44,7 @@
  '(fci-rule-color "#383838")
  '(footnote-narrow-to-footnotes-when-editing t)
  '(footnote-section-tag "")
+ '(frames-only-mode-use-window-functions (quote (calendar dired-other-window)))
  '(gnus-alias-add-identity-menu nil)
  '(gnus-alias-allow-forward-as-reply t)
  '(gnus-alias-default-identity "Nucifera")
