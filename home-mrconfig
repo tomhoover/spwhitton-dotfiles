@@ -357,6 +357,9 @@ skip = ! mine
 
 [lib/dionysus]
 checkout = git clone swhitton@athena.silentflame.com:lib/dionysus
+post_checkout =
+    git annex init
+    git annex direct
 status = git annex status
 update = git annex sync athena
 push = git annex sync --content athena
@@ -370,6 +373,7 @@ skip = lazy
 
 [lib/rt]
 checkout = git clone gcrypt::athenap:rt
+post_checkout = git annex init
 status = git annex status --fast
 update = git annex sync origin
 push = git annex sync origin
