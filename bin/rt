@@ -5,6 +5,7 @@
 
 if [ ! -e "$HOME/local/rt/watch" -o ! -d "$HOME/local/rt/session" -o ! -d "$HOME/local/rt/incomplete" -o ! -e "$HOME/local/rt/complete" ]; then
     echo "I was asked to start rtorrent, but one of the dirs in ~/local/rt is missing" >&2
+    echo "(myrepos fixups should do it)" >&2
     exit 1
 fi
 
