@@ -23,6 +23,7 @@ else
     xrandr --output $INT --mode $INTW"x"$INTH
     setxkbmap -layout $INTL -option ctrl:nocaps
     numlockx off
+    echo 13 | sudo tee /sys/class/backlight/acpi_video0/brightness
 fi
 
 xmodmap ~/.Xmodmap
