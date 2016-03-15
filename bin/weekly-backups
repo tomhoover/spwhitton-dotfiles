@@ -51,4 +51,5 @@ try coldbkup
 try sudo apt-get update
 try sudo apt-get upgrade
 try sudo apt-get dist-upgrade
+try sudo apt-get autoremove
 try git-pbuilder update --override-config
