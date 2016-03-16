@@ -2,7 +2,7 @@
 
 cabal --no-require-sandbox update
 for var in "$@"; do
-    if [ -d "$HOME/local/src/${var}"]; then
+    if [ -d "$HOME/local/src/${var}" ]; then
         echo >&2 "$(basename $0): a version of $var is already installed; skipping"
     else
         mkdir -p $HOME/local/src/${var}
