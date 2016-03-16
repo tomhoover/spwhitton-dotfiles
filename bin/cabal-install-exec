@@ -10,7 +10,7 @@ for var in "$@"; do
         touch .duplicity-ignore
         cabal sandbox init
         wget https://www.stackage.org/lts/cabal.config
-        cabal install $var
+        cabal install $var --force-reinstalls
         cabal-link-bins
     fi
 done
