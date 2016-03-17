@@ -1,0 +1,19 @@
+#!/bin/sh
+
+# pull requests to update READMEs
+
+set -e
+
+repo=$(echo $1 | cut -d'/' -f2)
+cd $HOME/tmp
+clean-github-pr.py $1
+git clone github:spwhitton/$repo
+cd $repo
+git checkout -b apt-get origin/master
+$EDITOR README*
+git commit -am "Debian and Ubuntu installation instructions
+
+This ELPA package is now available from the Debian and Ubuntu package repositories."
+git push origin +apt-get
+cd ..
+rm -rf $repo
