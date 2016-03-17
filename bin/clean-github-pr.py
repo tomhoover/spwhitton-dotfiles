@@ -78,7 +78,7 @@ def main():
         f.write("This repository is just a fork made in order to submit a pull request; please ignore.")
     subprocess.call(["git", "add", "README.md"])
     subprocess.call(["git", "commit", "-m", "fork for a pull request; please ignore"])
-    subprocess.call(["git", "push", "origin", "github"])
+    subprocess.call(["git", "push", "origin", "+github"])
     os.chdir(user_work_dir)
     shutil.rmtree(work_area)
 
