@@ -158,6 +158,21 @@ lib =
             fi
         fi
     }
+    # For the case where the updated file overwrites the symlink (this
+    # is for ~/src/priv which is not checked out on win32 so skip that
+    # check)
+    fix_overwritten_symlink_aggressive () {
+        local file=$1
+        if [ ! -L "$HOME/$file" \
+            -a "$HOME/$file" -nt "$HOME/src/priv/$file" ]; then
+            mv "$HOME/$file" "$HOME/src/priv/$file"
+        fi
+    }
+
+# TODO: have a variable "unstowable" listing the files in a repo that
+# should be fixed by the above code, and incorporate into mr stow
+# library.  Similarly set MR_NAME as a variable or something (should
+# work on that library)
 
 # --- primary dotfiles repository
 
@@ -260,6 +275,10 @@ pre_update = mr autoci
 # since dotfiles repo also stows into ~/.gnupg, and athpriv repo stows
 # into ~/.duply, make the dirs first
 pre_stow = homedir_mkdirs
+
+pre_unstow = fix_overwritten_symlink_aggressive .gnupg/pubring.gpg; fix_overwritten_symlink_aggressive .gnupg/secring.gpg; fix_overwritten_symlink_aggressive .gnupg/trustdb.gpg;
+pre_restow = fix_overwritten_symlink_aggressive .gnupg/pubring.gpg; fix_overwritten_symlink_aggressive .gnupg/secring.gpg; fix_overwritten_symlink_aggressive .gnupg/trustdb.gpg;
+pre_update = fix_overwritten_symlink_aggressive .gnupg/pubring.gpg; fix_overwritten_symlink_aggressive .gnupg/secring.gpg; fix_overwritten_symlink_aggressive .gnupg/trustdb.gpg;
 
 [src/athpriv]
 checkout = git clone athenap:athpriv athpriv
