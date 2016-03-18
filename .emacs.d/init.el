@@ -855,7 +855,9 @@
   :diminish yas-minor-mode
   :defer 5
   :config
-  (yas-global-mode 1))
+  (yas-global-mode 1)
+  (when (f-exists? "/usr/share/yasnippet-snippets")
+    (add-to-list 'yas-snippet-dirs "/usr/share/yasnippet-snippets" t)))
 
 ;;; htmlize for Org HTML export/publishing
 
