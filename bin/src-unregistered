@@ -1,15 +1,21 @@
-#!/bin/sh
+#!/bin/bash
 
 . $HOME/.shenv
 
+exceptions="$HOME/src/hscripts $HOME/src/build-area"
+
 for d in $HOME/src/*; do
-    if [ -d "$d" -a ! "$d" = "$HOME/src/hscripts" ]; then
-        if ! grep -qe "\[$(basename $d)\]" $HOME/src/.mrconfig; then
-            if ! grep -qe "\[src/$(basename $d)\]" $HOME/.mrconfig; then
-                if [ ! "$d" = "$HOME/src/build-area" ]; then
+    if [[ ! "$exceptions" =~ (^| )$d($| ) ]]; then
+        # 1. Unregistered repos
+        if [ -d "$d" ]; then
+            if ! grep -qe "\[$(basename $d)\]" $HOME/src/.mrconfig; then
+                if ! grep -qe "\[src/$(basename $d)\]" $HOME/.mrconfig; then
                     echo $d
                 fi
             fi
+        # 2. Regular files
+        else
+            echo $d
         fi
     fi
 done
