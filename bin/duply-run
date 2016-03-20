@@ -12,9 +12,10 @@ unset SSH_AUTH_SOCK
 export SSH_AGENT_PID
 export SSH_AUTH_SOCK
 
-# we want python 2 not python 3
-PATH=/usr/bin:$PATH
-export PATH
+# no longer on MetaArray
+# # we want python 2 not python 3
+# PATH=/usr/bin:$PATH
+# export PATH
 
 case "$(hostname -f)" in
     "ma.sdf.org")
@@ -48,9 +49,10 @@ case "$(hostname -f)" in
         offline || duply artemis-swhitton-home backup_purge --force
         ;;
     "athena.silentflame.com")
-        # use our own compiled version in order to get --s3-use-ia
-        export PYTHONPATH='/root/local/lib/python2.7/site-packages/'
-	export PATH=/root/local/bin:$PATH
+        # now available from backports
+        # # use our own compiled version in order to get --s3-use-ia
+        # export PYTHONPATH='/root/local/lib/python2.7/site-packages/'
+	# export PATH=/root/local/bin:$PATH
 	duply athena-root-run backup
         ;;
 esac
