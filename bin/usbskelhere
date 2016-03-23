@@ -1,4 +1,5 @@
 #!/bin/bash
+
 . $HOME/.shenv
 
 skelhere ()
@@ -6,9 +7,9 @@ skelhere ()
     usbpubkeys
     mkdir -p doc bin lib
     cp -RLf ~/lib/annex/big/skel/usb/* .
-    cp ~/bin/{apple,dasl}-setup.sh bin
+    cp ~/bin/{apple-setup.sh,dasl-setup.bat} bin
     cp -L ~/lib/pro.terminal lib
-    cp -L "~/lib/annex/doc/sounds/Rainy Mood pomodoro.mp3" lib
+    cp -L "$HOME/lib/annex/doc/sounds/Rainy Mood pomodoro.mp3" lib
     zip -j lib/spwhitton.zip  lib/*.reg bin/*
 }
 
