@@ -1,6 +1,6 @@
 #!/bin/sh
 
-VOLUME=60                      # lid closed!
+VOLUME=70                      # lid closed!
 SONG="/home/swhitton/lib/annex/music/Soundtracks/Cardcaptor Sakura/Cardcaptor Sakura OST/2-4-32 - Yokoku BGM (BGM for Preview).mp3"
 
 # dow=$(date +%u)
