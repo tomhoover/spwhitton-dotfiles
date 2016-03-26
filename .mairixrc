@@ -7,3 +7,4 @@ database=~/local/mairixdb
 omit=spam*
 omit=*Junk Mail*
 omit=*Trash*
+follow_mbox_symlinks
