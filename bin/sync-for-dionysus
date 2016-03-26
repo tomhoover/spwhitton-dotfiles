@@ -21,7 +21,7 @@ else
     cd /media/swhitton/SPWHITTON/doc 2>/dev/null && git annex add && git annex sync --content || true
     cd "$HOME/lib/dionysus" && git annex add && git annex sync --content athena
     # try to sync nickflash again
-    cd /media/swhitton/SPWHITTON/doc 2>/dev/null && git annex sync --content && sudo umount /media/swhitton/SPWHITTON || true
+    cd /media/swhitton/SPWHITTON/doc 2>/dev/null && git annex sync --content && kill-ssh-and-umount /media/swhitton/SPWHITTON || true
     athena_cmd lib/dionysus "git annex merge"
 
     athena_cmd doc "mr sync"
