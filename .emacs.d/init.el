@@ -899,6 +899,8 @@
     (if arg (avy-goto-char char nil)
       (avy-goto-word-1 char nil)))
 
+  ;; TODO: prevent this from having any effect when
+  ;; variable-pitch-mode is off (probs. using advice)
   (face-override-variable-pitch 'avy-lead-face-0)
   (face-override-variable-pitch 'avy-lead-face-1)
   (face-override-variable-pitch 'avy-lead-face-2)

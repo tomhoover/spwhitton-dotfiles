@@ -219,6 +219,7 @@ fixups =
     # just do it with manual fixup and have stow ignore this file.
     # Name is different to avoid mr trying to chain load it at any
     # point.  Similarly for .stow-global-ignore
+    # TODO rm ~/.mrconfig using pre_stow?  But then running mr from within ~/src/dotfiles might go wrong..  Or boostrap script writes ~/.mrconfig including ~/src/dotfiles/home-mrconfig
     if ! win32; then
         ln -sf $HOME/src/dotfiles/home-mrconfig $HOME/.mrconfig
         ln -sf $HOME/src/dotfiles/.stow-global-ignore $HOME
