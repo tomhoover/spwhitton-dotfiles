@@ -376,7 +376,7 @@ skip = ! mine
 # --- git annex for university stuff
 
 [lib/dionysus]
-checkout = git clone swhitton@athena.silentflame.com:lib/dionysus
+checkout = git clone athenah:lib/dionysus
 post_checkout =
     git annex init
     git annex direct
