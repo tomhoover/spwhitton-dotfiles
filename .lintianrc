@@ -1,3 +1,5 @@
+fail-on-warnings=yes
+
 # from mapreri on #debian-mentors
 info=yes
 display-info=yes
