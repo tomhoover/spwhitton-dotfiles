@@ -74,6 +74,7 @@
 # push strategy
 [push]
 	default = current
+	followTags = true
 
 # how to use git-send-email:
 # <http://www.freedesktop.org/wiki/Software/PulseAudio/HowToUseGitSendEmail/>
