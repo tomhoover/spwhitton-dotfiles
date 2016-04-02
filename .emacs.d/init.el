@@ -2316,6 +2316,19 @@ Replaces parent directories with their initial characters."
          " ")))
 (setq eshell-highlight-prompt nil)
 
+;;; Perl
+
+;; cperl-mode doesn't try to indent POD lines; that's good enough for
+;; me o/
+
+(add-to-list 'auto-mode-alist '("\\.\\([pP][Llm]\\|al\\)\\'" . cperl-mode))
+(add-to-list 'interpreter-mode-alist '("perl" . cperl-mode))
+(add-to-list 'interpreter-mode-alist '("perl5" . cperl-mode))
+(add-to-list 'interpreter-mode-alist '("miniperl" . cperl-mode))
+
+(setq cperl-indent-level 4)
+(setq cperl-indent-wrt-brace t)
+
 ;;; changelogs
 
 (defun spw/change-log-setup ()
