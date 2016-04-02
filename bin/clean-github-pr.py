@@ -82,6 +82,9 @@ def main():
     os.chdir(user_work_dir)
     shutil.rmtree(work_area)
 
+    # make sure the branch has been pushed
+    time.sleep(5)
+
     # set clean repository settings
     r.edit(fork,
            has_wiki=False,
