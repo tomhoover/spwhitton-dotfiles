@@ -606,7 +606,7 @@
 
   :config
   ;; This binding replaces a `markdown-export'.
-  (bind-key "C-c M-e" 'spw/pandoc-paper-compile markdown-mode-map))
+  (bind-key "<f9>" 'spw/pandoc-paper-compile markdown-mode-map))
 
 ;;; RefTeX
 
