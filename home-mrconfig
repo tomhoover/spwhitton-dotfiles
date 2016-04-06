@@ -31,11 +31,6 @@ git_isclean =
 
 # --- Adam Spiers' plugin for managing dotfile symlinks with mr
 
-# To make this work we must set the variable MR_NAME for each
-# repository that we want to stow.  Adam Spiers' fork of mr
-# ("kitenet-mr") sets this, but we don't want to use that outdated
-# fork
-
 include =
     if [ -e ~/lib/mr/stow ]; then
         cat ~/lib/mr/stow
@@ -49,13 +44,6 @@ include =
     elif [ -e ~/local/lib/stow ]; then
         cat ~/local/lib/stow
     fi
-lib =
-    # reimplement kitenet-mr stow library function which relies on mr
-    # "-r" parameter which is only present in aspiers' outdated fork
-    is_stowable () {
-            [ -z "$MR_DISABLE_STOW" ] &&
-            ( mr stowable >/dev/null 2>&1 )
-    }
 
 # --- joeyh's code for specifying what machine we're on for repo skip
 # --- tests, plus my code for detecting Git-on-Windows
@@ -179,7 +167,6 @@ lib =
 
 [src/dotfiles]
 checkout = git clone https://git.spwhitton.name/dotfiles.git dotfiles
-lib = MR_NAME=dotfiles
 stowable = true
 
 update =
@@ -255,7 +242,6 @@ pre_update = fix_overwritten_symlink .gtk-bookmarks; fix_overwritten_symlink .co
 
 [src/priv]
 checkout = git clone gcrypt::athenap:priv priv
-lib = MR_NAME=priv
 stowable = true
 
 # this repository can't be checked out until we install
@@ -284,7 +270,6 @@ pre_update = fix_overwritten_symlink_aggressive .gnupg/pubring.gpg; fix_overwrit
 
 [src/athpriv]
 checkout = git clone athenap:athpriv athpriv
-lib = MR_NAME=athpriv
 stowable = true
 skip = ! mine
 

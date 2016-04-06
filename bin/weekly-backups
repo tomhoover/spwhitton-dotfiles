@@ -35,9 +35,10 @@ status "(and tracking branches set up, and new alioth repos added to coldbkup sc
 status periodically remove old projects from ~/src
 zero src-unregistered
 
-status "running restow operation: failures indicate symlinks replaced by updated files"
-status "move these into the relevant stow'd repository"
-try mr -ms restow
+# status "running restow operation: failures indicate symlinks replaced by updated files"
+# status "move these into the relevant stow'd repository"
+# try mr -ms restow
+zero mr -ms misstowed           # use 'mr adopt' on the result
 
 try mr -ms autoci
 # `mr -ms isclean` checks for stuff to be checked in ...
