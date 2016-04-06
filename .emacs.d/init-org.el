@@ -112,7 +112,7 @@
  org-archive-save-context-info '(time file olpath)
  org-archive-location "~/doc/org/archive/archive.org::* From %s"
  org-cycle-global-at-bob t
- org-startup-folded t
+ org-startup-folded nil
 
  ;; using indirect buffers for DnD and for now want them in their own
  ;; frames (use C-u)
