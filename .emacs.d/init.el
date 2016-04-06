@@ -2328,6 +2328,8 @@ Replaces parent directories with their initial characters."
 
 (setq cperl-indent-level 4)
 (setq cperl-indent-wrt-brace t)
+(setq cperl-lineup-step 1)
+;; (setq cperl-continued-statement-offset 4)
 
 ;;; changelogs
 
