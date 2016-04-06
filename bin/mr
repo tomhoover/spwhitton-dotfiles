@@ -267,6 +267,11 @@ of its parent directories.
 Force mr to act on repositories that would normally be skipped due to their
 configuration.
 
+=item --force-env
+
+Force mr to execute even though potentially dangerous environment variables
+are set.
+
 =item -v
 
 =item --verbose
@@ -595,6 +600,7 @@ my $minimal=0;
 my $quiet=0;
 my $stats=0;
 my $force=0;
+my $force_env=0;
 my $insecure=0;
 my $interactive=0;
 my $max_depth;
@@ -603,6 +609,7 @@ my $jobs=1;
 my $trust_all=0;
 my $directory=getcwd();
 my $terminal=-t STDOUT && eval{require IO::Pty::Easy;IO::Pty::Easy->import();1;};
+my $erase_line=$terminal && eval{require Term::Cap;my $t=Term::Cap->Tgetent();$t->Tputs('ce');};
 
 my $HOME_MR_CONFIG = "$ENV{HOME}/.mrconfig";
 $ENV{MR_CONFIG}=find_mrconfig();
@@ -751,27 +758,46 @@ sub terminal_friendly_spawn {
 	my $sh = shift;
 	my $quiet = shift;
 	my $minimal = shift;
+	my $jobs = shift;
+	my $continuous = !$quiet && $minimal && 1 == $jobs;
 	my $output = "";
+	my $continuous_output = 0;
 	if ($terminal) {
 		my $pty = IO::Pty::Easy->new;
 		$pty->spawn($sh);
-		while ($pty->is_active) {
-			my $data = $pty->read();
-			$output .= $data if defined $data;
+		if ($continuous) {
+			$| = 1;
+			print "$actionmsg$erase_line\r" if $actionmsg;
+			while ($pty->is_active) {
+				my $data = $pty->getline();
+				if (defined $data && $data ne '') {
+					print "\n" if ($actionmsg && !$continuous_output);
+					$continuous_output = 1;
+					print $data;
+				}
+			}
+		}
+		else {
+			while ($pty->is_active) {
+				my $data = $pty->read();
+				$output .= $data if defined $data;
+			}
 		}
 		$pty->close;
-	} else {
+	}
+	else {
 		$output = qx/$sh 2>&1/;
 	}
 	my $ret = $?;
 	if ($quiet && $ret != 0) {
 		print "$actionmsg\n" if $actionmsg;
 		print STDERR $output;
-	} elsif (!$quiet && (!$minimal || $output)) {
+	}
+	elsif (!$quiet && (!$minimal || $output)) {
 		print "$actionmsg\n" if $actionmsg;
 		print $output;
 	}
-	return ($ret, $output ? 1 : 0);
+	return ($ret, ($output || $continuous_output) ? 1 : 0);
 }
 
 sub action {
@@ -867,7 +893,7 @@ sub action {
 			$s=~s/^\Q$fulldir\E\/?//;
 			$actionmsg="mr $action: $fulldir (in subdir $s)";
 		}
-		print "$actionmsg\n" unless $quiet || $minimal;
+		print "$actionmsg\n" unless !$jobs || $jobs > 1 || $quiet || $minimal;
 
 		my ($hookret, $hook_out)=hook("pre_$action", $topdir, $subdir);
 		return $hookret if $hookret != OK;
@@ -876,7 +902,7 @@ sub action {
 			$command, \@ARGV, sub {
 				my $sh=shift;
 				if (!$jobs || $jobs > 1 || $quiet || $minimal) {
-					return terminal_friendly_spawn($actionmsg, $sh, $quiet, $minimal);
+					return terminal_friendly_spawn($actionmsg, $sh, $quiet, $minimal, $jobs);
 				}
 				else {
 					system($sh);
@@ -941,7 +967,7 @@ sub hook {
 	my ($ret,$out)=runsh $hook, $topdir, $subdir, $command, [], sub {
 			my $sh=shift;
 			if (!$jobs || $jobs > 1 || $quiet || $minimal) {
-				return terminal_friendly_spawn(undef, $sh, $quiet, $minimal);
+				return terminal_friendly_spawn(undef, $sh, $quiet, $minimal, $jobs);
 			}
 			else {
 				system($sh);
@@ -1114,13 +1140,14 @@ sub repolist {
 	} @list;
 }
 
-sub repodir {
+sub absrepodir {
 	my $repo=shift;
 	my $topdir=$repo->{topdir};
 	my $subdir=$repo->{subdir};
 	my $ret=($subdir =~/^\//) ? $subdir : $topdir.$subdir;
 	$ret=~s/\/\.$//;
-	return $ret;
+	my $absret=safe_abs_path($ret);
+	return (defined $absret ? $absret : $ret);
 }
 
 # Figure out which repos to act on.  Returns a list of array refs
@@ -1134,7 +1161,7 @@ sub selectrepos {
 		my $subdir=$repo->{subdir};
 
 		next if $subdir eq 'DEFAULT';
-		my $dir=repodir($repo);
+		my $dir=absrepodir($repo);
 		my $d=$directory;
 		$dir.="/" unless $dir=~/\/$/;
 		$d.="/" unless $d=~/\/$/;
@@ -1154,7 +1181,7 @@ sub selectrepos {
 			my $subdir=$repo->{subdir};
 			
 			next if $subdir eq 'DEFAULT';
-			my $dir=repodir($repo);
+			my $dir=absrepodir($repo);
 			my $d=$directory;
 			$dir.="/" unless $dir=~/\/$/;
 			$d.="/" unless $d=~/\/$/;
@@ -1185,7 +1212,7 @@ sub is_trusted_config {
 	my $config=shift; # must be abs_pathed already
 
 	# We always trust ~/.mrconfig.
-	return 1 if $config eq abs_path($HOME_MR_CONFIG);
+	return 1 if $config eq safe_abs_path($HOME_MR_CONFIG);
 
 	return 1 if $trust_all;
 
@@ -1197,7 +1224,7 @@ sub is_trusted_config {
 			while (<TRUST>) {
 				chomp;
 				s/^~\//$ENV{HOME}\//;
-				my $d=abs_path($_);
+				my $d=safe_abs_path($_);
 				$trusted{$d}=1 if defined $d;
 			}
 			close TRUST;
@@ -1301,7 +1328,7 @@ sub loadconfig {
 		$trusted=1;
 	}
 	else {
-		my $absf=abs_path($f);
+		my $absf=safe_abs_path($f);
 		if ($loaded{$absf}) {
 			return;
 		}
@@ -1316,7 +1343,7 @@ sub loadconfig {
 			}
 		}
 
-		$dir=abs_path($dir)."/";
+		$dir=safe_abs_path($dir)."/";
 		
 		if (! exists $configfiles{$dir}) {
 			$configfiles{$dir}=$f;
@@ -1655,29 +1682,10 @@ sub dispatch {
 }
 
 sub help {
-	my $help=q#
-		if [ ! -e "$MR_PATH" ]; then
-			error "cannot find program path"
-		fi
-		tmp=$(mktemp -t mr.XXXXXXXXXX) || error "mktemp failed"
-		trap "rm -f $tmp" exit
-		pod2man -c mr "$MR_PATH" > "$tmp" || error "pod2man failed"
-		showman() {
-			case `uname -s` in
-				SunOS)
-				man -f "$tmp"
-				;;
-				OpenBSD)
-				mandoc "$tmp" | ${PAGER:-more}
-				;;
-				*)
-				man "$tmp"
-				;;
-			esac
-		}
-		showman "$tmp" || error "man failed"
-	#;
-	exec($help) || die "exec: $!";
+	if (! -e "$ENV{MR_PATH}") {
+		die "cannot find the program path";
+	}
+	exec("perldoc", $ENV{MR_PATH}) || die "exec perldoc: $!";
 }
 
 sub config {
@@ -1688,7 +1696,7 @@ sub config {
 	if ($section=~/^\//) {
 		# try to convert to a path relative to the config file
 		my ($dir)=$ENV{MR_CONFIG}=~/^(.*\/)[^\/]+$/;
-		$dir=abs_path($dir);
+		$dir=safe_abs_path($dir);
 		$dir.="/" unless $dir=~/\/$/;
 		if ($section=~/^\Q$dir\E(.*)/) {
 			$section=$1;
@@ -1722,7 +1730,7 @@ sub register {
 	if ($config_overridden) {
 		# Find the directory that the specified config file is
 		# located in.
-		($directory)=abs_path($ENV{MR_CONFIG})=~/^(.*\/)[^\/]+$/;
+		($directory)=safe_abs_path($ENV{MR_CONFIG})=~/^(.*\/)[^\/]+$/;
 	}
 	else {
 		# Find the closest known mrconfig file to the current
@@ -1796,12 +1804,14 @@ sub bootstrap {
 	elsif ($src eq '-') {
 		# Config file is read from stdin.
 		copy(\*STDIN, $tmpconfig) || die "stdin: $!";
+		seek $tmpconfig, 0, 0;
 	}
 	else {
 		# Config file is local.
 		die "mr bootstrap: cannot read file '$src'"
 			unless -r $src;
 		copy($src, $tmpconfig) || die "copy: $!";
+		seek $tmpconfig, 0, 0;
 	}
 
 	# Sanity check on destination directory.
@@ -1812,7 +1822,7 @@ sub bootstrap {
 
 	# Special case to handle checkout of the "." repo, which 
 	# would normally be skipped.
-	my $topdir=abs_path(".")."/";
+	my $topdir=safe_abs_path(".")."/";
 	my @repo=($topdir, $topdir, ".");
 	loadconfig($tmpconfig, $topdir, $src);
 	record(\@repo, action("checkout", @repo, 1))
@@ -1830,7 +1840,7 @@ sub bootstrap {
 	startingconfig();
 	loadconfig(".mrconfig");
 	dispatch("checkout");
-	@skipped=grep { abs_path($_) ne abs_path($topdir) } @skipped;
+	@skipped=grep { safe_abs_path($_) ne safe_abs_path($topdir) } @skipped;
 	showstats("bootstrap");
 	exitstats();
 }
@@ -1874,10 +1884,11 @@ sub getopts {
 	my @saved=@ARGV;
 	Getopt::Long::Configure("bundling", "no_permute");
 	my $result=GetOptions(
-		"d|directory=s" => sub { $directory=abs_path($_[1]) },
+		"d|directory=s" => sub { $directory=safe_abs_path($_[1]) },
 		"c|config=s" => sub { $ENV{MR_CONFIG}=$_[1]; $config_overridden=1 },
 		"p|path" => sub { }, # now default, ignore
 		"f|force" => \$force,
+		"force-env" => \$force_env,
 		"v|verbose" => \$verbose,
 		"m|minimal" => \$minimal,
 		"q|quiet" => \$quiet,
@@ -1901,6 +1912,7 @@ sub getopts {
 }
 
 sub check {
+	return if $force_env;
 	my @env = qw(GIT_DIR GIT_INDEX_FILE GIT_OBJECT_DIRECTORY GIT_WORK_TREE VCSH_COMMAND VCSH_DIRECTORY VCSH_REPO_NAME);
 	my $error;
 	foreach (@env) {
@@ -1915,6 +1927,7 @@ sub check {
 
 sub init {
 	$SIG{INT}=sub {
+		print STDERR "$erase_line" if defined $erase_line && $terminal && !$quiet && $minimal && 1 == $jobs;
 		print STDERR "mr: interrupted\n";
 		exit 2;
 	};
@@ -1943,6 +1956,19 @@ sub exitstats {
 	}
 	else {
 		exit 0;
+	}
+}
+
+# abs_path crashes on windows and some other platforms when given a file
+# that does not exist.
+sub safe_abs_path {
+	my $f=shift;
+	my $p=eval { abs_path($f) };
+	if ($@) {
+		return $f;
+	}
+	else {
+		return $p;
 	}
 }
 
@@ -2049,10 +2075,10 @@ fossil_update = fossil pull "$@"
 vcsh_update = vcsh run "$MR_REPO" git pull "$@"
 veracity_update = vv pull "$@" && vv update "$@"
 
-git_fetch = git fetch --all --prune --tags
-git_svn_fetch = git svn fetch
-darcs_fetch = darcs fetch
-hg_fetch = hg pull
+git_fetch = git fetch --all --prune --tags "$@"
+git_svn_fetch = git svn fetch "$@"
+darcs_fetch = darcs fetch "$@"
+hg_fetch = hg pull "$@"
 
 svn_clean = 
 	if [ "x$1" = x-f ] ; then
@@ -2113,7 +2139,7 @@ vcsh_clean =
 	fi
 
 svn_status = svn status "$@"
-git_status = git status -s "$@" || true; git --no-pager log --branches --not --remotes --simplify-by-decoration --decorate --oneline || true
+git_status = git status -s "$@" || true; git --no-pager log --branches --not --remotes --simplify-by-decoration --decorate --oneline || true; git stash list
 bzr_status = bzr status --short "$@"; bzr missing
 cvs_status = cvs -q status | grep -E '^(File:.*Status:|\?)' | grep -v 'Status: Up-to-date'
 hg_status  = hg status "$@"; hg summary --quiet | grep -v 'parent: 0:'
@@ -2154,7 +2180,7 @@ svn_push = :
 git_push = git push "$@"
 bzr_push = bzr push "$@"
 cvs_push = :
-hg_push = hg push "$@"
+hg_push = hg push "$@" || if [ "$?" -eq "255" ] ; then exit 1; else exit 0; fi
 darcs_push = darcs push -a "$@"
 fossil_push = fossil push "$@"
 vcsh_push = vcsh run "$MR_REPO" git push "$@"
