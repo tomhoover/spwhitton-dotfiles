@@ -1,8 +1,7 @@
 */15 * * * * chronic doccheckin
 @hourly chronic mbsync fastmail
 @daily r2e run
-@daily chronic doc_post_receive_hook
-# ^ update daily agendas
+@daily chronic athena-publish-org-docs
 @reboot emacs --daemon
 @reboot ii
 @reboot mount /home/swhitton/lib/fm
