@@ -1,6 +1,10 @@
 #!/bin/sh
 
 . "$HOME/.shenv"
+. "$HOME/lib/tputfs.sh"
+
+LOCAL="$HOME/lib/dionysus"
+FLASH="/media/swhitton/SPWHITTON/doc"
 
 athena_cmd () {
     # here we rely on the fact that ssh already passes argument
@@ -12,20 +16,33 @@ athena_cmd () {
 }
 
 if [ "$(hostname -f)" = "athena.silentflame.com" ]; then
-    cd "$HOME/doc"
-    mr sync
-    cd "$HOME/lib/dionysus"
-    git annex merge
+    cd "$HOME/doc" && mr sync
+    cd "$HOME/lib/dionysus" && git annex add && git annex sync
 else
-    # try to sync nickflash first
-    cd /media/swhitton/SPWHITTON/doc 2>/dev/null && git annex add && git annex sync --content || true
-    cd "$HOME/lib/dionysus" && git annex add && git annex sync --content athena
-    # try to sync nickflash again
-    cd /media/swhitton/SPWHITTON/doc 2>/dev/null && git annex sync --content && kill-ssh-and-umount /media/swhitton/SPWHITTON || true
+    if [ -d "$FLASH" ]; then
+        status adding new content on nickflash
+        cd $FLASH && git annex add
+    fi
+    
+    status running main sync from ~/lib/dionysus
+    if [ -d "$FLASH" ]; then
+        cd "$HOME/lib/dionysus" && git annex add && git annex sync --content athena nickflash
+    else
+        cd "$HOME/lib/dionysus" && git annex add && git annex sync --content athena
+    fi
+    
+    if [ -d "$FLASH" ]; then
+        status ensuring that new files on nickflash checked out
+        cd $FLASH && git annex sync
+        status attempting to unmount nickflash
+        kill-ssh-and-umount /media/swhitton/SPWHITTON || true
+    fi
+    
+    status ensuring that new files on athena checked out
     athena_cmd lib/dionysus "git annex merge"
 
+    status syncing ~/doc
     athena_cmd doc "mr sync"
-    cd "$HOME/doc"
-    mr sync
+    cd "$HOME/doc" && mr sync
     athena_cmd doc "mr sync"
 fi

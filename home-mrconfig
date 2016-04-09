@@ -369,7 +369,7 @@ post_checkout =
 status = git annex status
 update = git annex sync athena
 push = git annex sync --content athena
-sync = git annex sync --content
+sync = sync-for-dionysus
 isclean = test -z $(git annex status)
 
 # setup not yet solidified
@@ -437,6 +437,8 @@ autoci = doccheckin || true
 
 # quick syncs
 sync =
+    pgrep -u $USER emacs >/dev/null && \
+        emacsclient -e '(org-save-all-org-buffers)'
     if win32; then
         cmd "/C doccheckin.bat" && git pull && git push
     else

@@ -962,17 +962,6 @@ spaces in it and to remove any colons."
     (insert name)
     (yas-next-field)))
 
-(defun spw/fmr-sync-doc ()
-  "Perform `mr sync' command in ~/doc."
-  (interactive)
-  (org-save-all-org-buffers)
-  (let ((default-directory (expand-file-name "~/doc/"))
-        (buffer (get-buffer-create "*mr sync*")))
-    (with-current-buffer buffer
-      (delete-region (point-min) (point-max)))
-    (display-buffer "*mr sync*")
-    (async-shell-command "sync-for-dionysus" "*mr sync*")))
-
 ;;; the default C-c [ and C-c ] expand the directory ~/doc/org in the
 ;;; org-agenda-files variable using the local path,
 ;;; e.g. /meta/s/spw/doc/org, which is not good when init-custom.el is

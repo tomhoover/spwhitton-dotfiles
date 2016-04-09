@@ -389,15 +389,13 @@
          ("C-c o a" . org-agenda)
          ("C-c o [" . spw/org-agenda-file-to-front)
          ("C-c o ]" . spw/org-remove-file)
-         ("C-c o n" . spw/new-philos-notes)
-         ("C-c o s" . spw/fmr-sync-doc))
+         ("C-c o n" . spw/new-philos-notes))
   :commands (org-capture
              org-store-link
              org-agenda
              spw/org-agenda-file-to-front
              spw/org-remove-file
-             spw/new-philos-notes
-             spw/fmr-sync-doc))
+             spw/new-philos-notes))
 
 ;;; save my places in buffers; this is all the session management I need
 
