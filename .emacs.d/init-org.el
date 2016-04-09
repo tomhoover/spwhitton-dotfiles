@@ -125,8 +125,8 @@
  org-treat-insert-todo-heading-as-state-change t
  org-fast-tag-selection-include-todo t
  org-show-entry-below (quote ((default)))
- org-log-into-drawer nil
- org-log-state-notes-insert-after-drawers t
+ org-log-into-drawer t
+ ;; org-log-state-notes-insert-after-drawers t
  org-log-states-order-reversed nil
  org-log-done t
  ;; org-log-redeadline 'note
