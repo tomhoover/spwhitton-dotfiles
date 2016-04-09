@@ -213,7 +213,10 @@
      (define-key ,map (kbd "M-s") nil)
      (define-key ,map (kbd "M-r") nil)
      (define-key ,map (kbd "M-U") 'paredit-splice-sexp)
-     (define-key ,map (kbd "M-<up>") 'paredit-raise-sexp)))
+     (define-key ,map (kbd "M-<up>") 'paredit-raise-sexp)
+     ;; purpose of unstealing RET is to fix ielm -- there might be a
+     ;; better approach
+     (define-key ,map (kbd "RET") nil)))
 
 (use-package paredit
   :commands paredit-mode
@@ -2218,7 +2221,7 @@ superflous blank quoted lines."
 
 ;;; IELM
 
-(setq ielm-dynamic-return nil)
+;; (setq ielm-dynamic-return nil)
 
 ;;; text mode
 
