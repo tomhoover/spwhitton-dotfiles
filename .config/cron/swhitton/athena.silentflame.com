@@ -6,9 +6,9 @@
 @reboot ii
 @reboot mount /home/swhitton/lib/fm
 
-# ikiwiki midnight maintenance: update day on calendar marked as
-# today, and fix typography (cannot be @daily as that is not
-# semantically guaranteed to be at midnight)
-0 0 * * * ikiwiki --setup /home/swhitton/src/athpriv/spwhitton.setup --refresh --typographyattributes=2
+# ikiwiki midnight maintenance: update day on calendar marked as today
+# (cannot be @daily as that is not semantically guaranteed to be at
+# midnight)
+0 0 * * * ikiwiki --setup /home/swhitton/src/athpriv/spwhitton.setup --refresh
 
 @reboot cd /home/swhitton/lib/dionysus && git annex watch
