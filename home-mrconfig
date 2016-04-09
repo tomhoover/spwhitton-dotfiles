@@ -89,6 +89,16 @@ lib =
         which git-remote-gcrypt >/dev/null 2>/dev/null
     }
 
+# --- run a command on athena in a sane environment
+
+lib =
+    athena_cmd () {
+        # here we rely on the fact that ssh already passes argument
+        # through `/bin/sh -c' (note use of single-quotes in this
+        # function)
+        ssh athena 'cd $HOME/'"$1"' && . $HOME/.shenv && '"$2"
+    }
+
 # --- standard procedures
 
 lib =
@@ -442,7 +452,9 @@ sync =
     if win32; then
         cmd "/C doccheckin.bat" && git pull && git push
     else
+        athena_cmd doc "mr sync"
         doccheckin && git pull && git push
+        athena_cmd doc "mr sync"
     fi
 
 # --- static websites on web host boxes

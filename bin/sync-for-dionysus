@@ -10,14 +10,11 @@ athena_cmd () {
     # here we rely on the fact that ssh already passes argument
     # through `/bin/sh -c' (note use of single-quotes in this
     # function)
-    # local dir=$1
-    # local cmd=$2
     ssh athena 'cd $HOME/'"$1"' && . $HOME/.shenv && '"$2"
 }
 
 if [ "$(hostname -f)" = "athena.silentflame.com" ]; then
-    cd "$HOME/doc" && mr sync
-    cd "$HOME/lib/dionysus" && git annex add && git annex sync
+    cd "$LOCAL" && git annex add && git annex sync
 else
     if [ -d "$FLASH" ]; then
         status adding new content on nickflash
@@ -26,23 +23,18 @@ else
     
     status running main sync from ~/lib/dionysus
     if [ -d "$FLASH" ]; then
-        cd "$HOME/lib/dionysus" && git annex add && git annex sync --content athena nickflash
+        cd "$LOCAL" && git annex add && git annex sync --content athena nickflash
     else
-        cd "$HOME/lib/dionysus" && git annex add && git annex sync --content athena
+        cd "$LOCAL" && git annex add && git annex sync --content athena
     fi
     
     if [ -d "$FLASH" ]; then
         status ensuring that new files on nickflash checked out
         cd $FLASH && git annex sync
         status attempting to unmount nickflash
-        kill-ssh-and-umount /media/swhitton/SPWHITTON || true
+        kill-ssh-and-umount /media/swhitton/SPWHITTON # TODO use $FLASH
     fi
     
     status ensuring that new files on athena checked out
     athena_cmd lib/dionysus "git annex merge"
-
-    status syncing ~/doc
-    athena_cmd doc "mr sync"
-    cd "$HOME/doc" && mr sync
-    athena_cmd doc "mr sync"
 fi
