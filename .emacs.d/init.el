@@ -2199,7 +2199,8 @@ superflous blank quoted lines."
               (auto-fill-mode)
               ;; (spw/set-from-address)
               (footnote-mode)
-              (spw/debbugs-no-ack)
+              ;; annoying for WNPP; I want the bug number
+              ;; (spw/debbugs-no-ack)
               (message-goto-body))))
 
 (defun djcb/snip (b e summ)
