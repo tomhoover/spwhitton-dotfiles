@@ -451,9 +451,14 @@ sync =
         emacsclient -e '(org-save-all-org-buffers)'
     if win32; then
         cmd "/C doccheckin.bat" && git pull && git push
+    elif on athena; then
+         doccheckin && git pull && git push
     else
+        echo ">> syncing on athena"
         athena_cmd doc "mr sync"
+        echo ">> syncing locally"
         doccheckin && git pull && git push
+        echo ">> syncing on athena again"
         athena_cmd doc "mr sync"
     fi
 
