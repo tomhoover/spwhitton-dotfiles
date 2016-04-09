@@ -2194,11 +2194,6 @@ superflous blank quoted lines."
 
   (setq mail-header-separator "")
 
-  (bind-key "C-c C-c" (lambda ()
-                        (interactive)
-                        (save-buffer)
-                        (delete-frame)) message-mode-map)
-
   (add-hook 'message-mode-hook
             (lambda ()
               (auto-fill-mode)
@@ -2216,6 +2211,22 @@ superflous blank quoted lines."
                     (if (= 0 (length summ)) "" (concat ": " summ))
                     n
                     (if (= 1 n) "" "s")))))
+
+;;; C-c C-c to save-and-exit emacsclient (like <esc>ZZ in vim)
+
+;; hopefully won't interact badly with major mode C-c C-c binding;
+;; might need to change the map this gets bound into
+
+(add-hook 'server-switch-hook
+          (lambda ()
+            (when (current-local-map)
+              (use-local-map (copy-keymap (current-local-map))))
+            (when server-buffer-clients
+              (local-set-key (kbd "C-c C-c")
+                             (lambda ()
+                               (interactive)
+                               (save-buffer)
+                               (server-edit))))))
 
 ;;; IELM
 
