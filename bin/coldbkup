@@ -7,6 +7,9 @@
 
 set -e
 
+# TODO syncing annexes should be more systematic.  This first part of
+# the script is the worst
+
 # determine removable media available and if it's m3, sync annex content
 if mount | grep -q "/media/${USER}/m3"; then
     HDD=/media/${USER}/m3
@@ -17,11 +20,19 @@ if mount | grep -q "/media/${USER}/m3"; then
     git annex sync --content origin m3
     cd $HOME/lib/wikiannex
     git annex sync --content origin athena m3
+    # TODO
+    # cd $HOME/lib/dionysus
+    # git annex sync --content m3
     cd $HOME
 elif mount | grep -q "/media/${USER}/bkupsd"; then
     HDD=/media/${USER}/bkupsd
-    cd $HOME/lib/wikiannex
+
     status syncing wikiannex content
+    cd $HOME/lib/wikiannex
+    git annex sync --content origin athena bkupsd
+
+    status syncing dionysus annex content
+    cd $HOME/lib/dionysus
     git annex sync --content origin athena bkupsd
     cd $HOME
 else

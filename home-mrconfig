@@ -372,7 +372,7 @@ skip = ! mine
 # --- git annex for university stuff
 
 [lib/dionysus]
-checkout = git clone athenah:lib/dionysus
+checkout = git clone athena:lib/dionysus
 post_checkout =
     git annex init
     git annex direct
@@ -382,8 +382,17 @@ push = git annex sync --content athena
 sync = sync-for-dionysus
 isclean = test -z $(git annex status)
 
-# setup not yet solidified
-skip = lazy
+# origin remote is just for keeping a backup copy of metadata.  athena
+# remote, in $HOME on athena, contains a copy of content.  At present,
+# origin remote only updated by weekly coldbkup script
+fixups =
+    git config push.default matching
+    git config annex.startupscan false
+    git config annex.autocommit true
+    git config remote.origin.annex-ignore true
+
+# only using this in Tucson atm
+skip = ! on artemis && ! on athena
 
 # --- git annex for use with rtorrent
 
