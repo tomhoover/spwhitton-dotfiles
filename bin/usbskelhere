@@ -11,6 +11,7 @@ skelhere ()
     cp -L ~/lib/pro.terminal lib
     cp -L "$HOME/lib/annex/doc/sounds/Rainy Mood pomodoro.mp3" lib
     zip -j lib/spwhitton.zip  lib/*.reg bin/*
+    status now you might want to clone ~/lib/dionysus; see comproc.org
 }
 
 while true; do
