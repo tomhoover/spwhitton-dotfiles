@@ -20,7 +20,7 @@ if [ "$(hostname -f)" = "athena.silentflame.com" ]; then
 else
     if [ -d "$FLASH" ]; then
         status adding new content on nickflash
-        cd $FLASH && git annex add && git commit -m "add"
+        cd $FLASH && git annex add && git annex sync --no-pull --no-push --message=add
     fi
     
     status running main sync from ~/lib/dionysus
