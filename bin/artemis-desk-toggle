@@ -13,7 +13,8 @@ if xrandr -q | grep "$EXT connected"; then
     # desk mode
     xrandr --output $INT --off
     xrandr --output $EXT --off
-    xrandr --output $EXT --mode $EXTW"x"$EXTH
+    xrandr --output $EXT --primary --mode $EXTW"x"$EXTH \
+           --output $INT --noprimary --mode $INTW"x"$INTH --pos 1680x250
     setxkbmap -layout $EXTL -option ctrl:nocaps
     numlockx on
 else
