@@ -380,7 +380,7 @@ status = git annex status
 update = git annex sync athena
 push = git annex sync --content athena
 sync = sync-for-dionysus
-isclean = test -z "$(git annex status)"
+isclean = test -z "$(git annex status)" || (git annex status && exit 1)
 
 # origin remote is just for keeping a backup copy of metadata.  athena
 # remote, in $HOME on athena, contains a copy of content.  At present,
