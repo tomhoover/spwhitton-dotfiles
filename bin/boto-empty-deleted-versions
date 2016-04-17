@@ -1,16 +1,17 @@
 #!/usr/bin/env python
 
-"""emptys3versions -- delete all versions of deleted files from an s3 bucket"""
-
-BUCKET = "vpsathena"
+"""boto-empty-deleted-versions -- delete all versions of deleted files from an s3 bucket"""
 
 import boto
 from boto.s3 import deletemarker
 
 def main():
     """Main procedure"""
+
+    bucket = sys.argv[1]
+
     connection = boto.connect_s3()
-    bucket = connection.get_bucket(BUCKET)
+    bucket = connection.get_bucket(bucket)
 
     files_to_delete = []
     for version in bucket.list_versions():
