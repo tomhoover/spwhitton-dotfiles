@@ -54,3 +54,5 @@ try sudo apt-get upgrade
 try sudo apt-get dist-upgrade
 try sudo apt-get autoremove
 try git-pbuilder update --override-config
+
+zero check-mailqs
