@@ -22,6 +22,10 @@ else
         status adding new content on nickflash
         cd $FLASH && git annex add && git annex sync --no-pull --no-push --message=add
     fi
+
+    status adding and syncing on athena
+    athena_cmd lib/dionysus "git annex add"
+    athena_cmd lib/dionysus "git annex sync"
     
     status running main sync from ~/lib/dionysus
     if [ -d "$FLASH" ]; then
