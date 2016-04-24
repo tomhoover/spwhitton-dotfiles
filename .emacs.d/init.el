@@ -1935,6 +1935,8 @@ Ensures the kill ring entry always ends with a newline."
 ;; don't need default M-m binding as have smarter C-a
 (bind-key "M-m" 'zap-up-to-char-repeatable)
 
+(bind-key "C-c ." 'repeat)
+
 ;;; launching
 
 (bind-key "C-c g g" 'spw/open-term-here)
