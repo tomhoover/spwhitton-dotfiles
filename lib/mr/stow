@@ -1,10 +1,13 @@
 # Plug-in to use GNU Stow to manage symlinks whose targets lie in a
 # repository managed with myrepos
 #
-# Original author:
+# The standard use case is for managing dotfiles inside one's home
+# directory.
+#
+# Original author (2011):
 # Adam Spiers <mr@adamspiers.org>
 #
-# This version reworked & maintained by:
+# This version reworked (2016) & maintained by:
 # Sean Whitton <spwhitton@spwhitton.name>
 
 # BASIC USAGE INSTRUCTIONS
@@ -36,8 +39,8 @@
 #
 # Some programs will replace a symlink to a stowed file with a regular
 # copy of the file, and a subset of these will do this even if they
-# haven't edited the file.  There are two actions designed to deal
-# with this:
+# haven't edited the file.  This will cause stow operations to fail.
+# There are two actions designed to deal with this:
 #
 # - 'cd ~/stowed && mr adopt ~/foo' will replace ~/stowed/foo with
 #   ~/foo so that when you restow, ~/foo is once again a symlink
@@ -49,16 +52,31 @@
 #
 # - If you pass '--delete-unmodified' to 'mr misstowed', it will
 #   additionally delete all symlink targets that have been replaced
-#   with *unmodified* regular files
+#   with *unmodified* regular files.
+#
+# - If you pass '--delete-all' to 'mr misstowed' it will delete all
+#   symlink targets that have been replaced with regular files.
 #
 # The recommended workflow is:
 #
 # 1. Run 'mr misstowed', look for files whose modifications you want
 #    to keep, and run 'mr adopt' on them.
+
+# 2. Run 'mr misstowed --delete-all' to clean up files whose
+#    modifications you don't want to keep.
 #
-# 2. Run 'mr restowover' to replace unmodified regular files, or
-#    regular files whose modifications you want to discard, with
-#    symlinks once again.
+# 3. Run 'mr restow' to restore all symlinks.
+#
+# FOLDING
+#
+# By default, this library passes --no-folding to stow.  This allows
+# you to have more than one repository stowing files into a single
+# subdirectory in your home directory.  For example, you might have a
+# private and a public git repo both stowing into ~/.gnupg.  If you
+# don't want this behaviour, set MR_FOLD.  For example, in a
+# repository's myrepos config section or in [DEFAULT]:
+#
+#    lib = MR_FOLD=
 #
 # FIXUPS THAT CREATE FILES TO BE STOWED
 #
@@ -144,7 +162,7 @@ lib =
         if [ -n "$MR_STOW_OVER" ]; then
             stow_common_opts="$stow_common_opts --override=$MR_STOW_OVER"
         fi
-        if [ -z "$MR_FOLD" ]; then
+        if ! (: "${MR_FOLD?}") 2>/dev/null; then
             stow_common_opts="$stow_common_opts --no-folding"
         fi
     }
@@ -255,7 +273,10 @@ lib =
             # this 'if' is executed if the file IS different from the repository version
             if ! diff -q "$dest" "$file" >/dev/null 2>&1; then
                 echo "$file"
-            elif [ "$1" = "--delete-unmodified" ]; then
+                if [ "$1" = "--delete-all" ]; then
+                    rm "$file"
+                fi
+            elif [ "$1" = "--delete-unmodified" -o "$1" = "--delete-all" ]; then
                 rm "$file"
             fi
         done
