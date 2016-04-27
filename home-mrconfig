@@ -102,31 +102,13 @@ lib =
 # --- standard procedures
 
 lib =
-    # Make a lot of dirs that stow will symlink dotfiles into.  If we
-    # don't make these dirs, stow will just symlink the whole dir
-    # which means that various temporary files that programs dump into
-    # the dirs will end up part of the dotfiles repo.  Further, more
-    # than one repo might try to stow files in the dir and this can
-    # only succeed if the dirs already exist.
     homedir_mkdirs() {
         (
             cd $HOME
             mkdir -p \
-                .emacs.d \
                 tmp \
                 src \
                 lib \
-                .ssh \
-                .gnupg \
-                .duply \
-                .config/xfce4/xfconf/xfce-perchannel-xml \
-                .config/autostart \
-                .config/Thunar \
-                .irssi \
-                .cabal \
-                .xmonad \
-                .recoll \
-                .caff/gnupghome \
                 local/mutt \
                 local/mpd \
                 local/anacron/spool \
@@ -139,40 +121,6 @@ lib =
             [ -L "src/build-area" ] || ln -s -T /tmp/debuild src/build-area
         )
     }
-    # GTK and others insist on replacing the symlink to its bookmarks
-    # file with the actual file even if the bookmarks in that file
-    # don't change (XFCE only replaces symlinks to its config files if
-    # its changed them).  Fix this situation in the simplest case to
-    # avoid mr restow giving an error.  Don't try anything fancy if
-    # the files are different; let the restow command give an error
-    # and the user fix it.
-    fix_overwritten_symlink () {
-        local file=$1
-        if ! win32; then
-            if ! [ -L $HOME/$file ]; then
-                # file in home directory is not a link
-                if diff -q $HOME/src/dotfiles/$file ~/$file 2>&1 >/dev/null; then
-                    rm $HOME/$file
-                fi
-            fi
-        fi
-    }
-    # For the case where the updated file overwrites the symlink (this
-    # is for ~/src/priv which is not checked out on win32 so skip that
-    # check)
-    fix_overwritten_symlink_aggressive () {
-        local file=$1
-        if [ ! -L "$HOME/$file" \
-            -a "$HOME/$file" -nt "$HOME/src/priv/$file" ]; then
-            mv "$HOME/$file" "$HOME/src/priv/$file"
-        fi
-    }
-
-# TODO: have a variable "unstowable" listing the files in a repo that
-# should be fixed by the above code, and incorporate into mr stow
-# library.  Similarly set MR_NAME as a variable or something (should
-# work on that library)
-
 # --- primary dotfiles repository
 
 [src/dotfiles]
@@ -244,10 +192,6 @@ pre_stow =
     homedir_mkdirs
     $HOME/src/dotfiles/bin/unskel
 
-pre_unstow = fix_overwritten_symlink .gtk-bookmarks; fix_overwritten_symlink .config/xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml
-pre_restow = fix_overwritten_symlink .gtk-bookmarks; fix_overwritten_symlink .config/xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml
-pre_update = fix_overwritten_symlink .gtk-bookmarks; fix_overwritten_symlink .config/xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml
-
 # --- private dotfiles repositories
 
 [src/priv]
@@ -274,21 +218,10 @@ pre_update = mr autoci
 # into ~/.duply, make the dirs first
 pre_stow = homedir_mkdirs
 
-pre_unstow = fix_overwritten_symlink_aggressive .gnupg/pubring.gpg; fix_overwritten_symlink_aggressive .gnupg/secring.gpg; fix_overwritten_symlink_aggressive .gnupg/trustdb.gpg;
-pre_restow = fix_overwritten_symlink_aggressive .gnupg/pubring.gpg; fix_overwritten_symlink_aggressive .gnupg/secring.gpg; fix_overwritten_symlink_aggressive .gnupg/trustdb.gpg;
-pre_update = fix_overwritten_symlink_aggressive .gnupg/pubring.gpg; fix_overwritten_symlink_aggressive .gnupg/secring.gpg; fix_overwritten_symlink_aggressive .gnupg/trustdb.gpg;
-
 [src/athpriv]
 checkout = git clone athenap:athpriv athpriv
 stowable = true
 skip = ! mine
-
-# rss2email insists on replacing the symlink to its config file with a
-# real file.  Fix this situation in the simplest case to avoid mr
-# restow giving an error
-pre_unstow = fix_overwritten_symlink .config/rss2email.cfg
-pre_restow = fix_overwritten_symlink .config/rss2email.cfg
-pre_update = fix_overwritten_symlink .config/rss2email.cfg
 
 # since priv repo also stows into ~/.gnupg, make the dir first
 pre_stow = homedir_mkdirs
