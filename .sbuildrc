@@ -112,6 +112,11 @@
 # Directory for writing build statistics to
 #$stats_dir = "$HOME/stats";
 
+# the following are also added
+
+#>$build_source = 1;
+$build_arch_all = 1;
+
 # the following are from wiki.d.o/sbuild
 # TODO detect or specify in a var at top of file the architecture in the following
 
