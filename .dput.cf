@@ -2,8 +2,8 @@
 run_lintian = 1
 
 [dom]
-fqdn           = debomatic-amd64.debian.net
-incoming       = /srv/debomatic-amd64
+fqdn           = debomatic-i386.debian.net
+incoming       = /srv/debomatic-i386
 login          = debomatic
 method         = scp
 allow_unsigned_uploads  = 0
