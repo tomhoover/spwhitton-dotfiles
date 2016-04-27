@@ -11,8 +11,8 @@ allow_dcut     = 1
 scp_compress   = 1
 # WIP package might not be Lintian-clean
 run_lintian = 0
-# Allow uploads for UNRELEASED packages
-allowed_distributions = .*
+# Disallow uploads for UNRELEASED packages: dom doesn't support them
+allowed_distributions = (?!UNRELEASED)
 distributions = unstable,experimental,jessie-backports,xenial
 
 [mentors]
@@ -21,4 +21,6 @@ incoming = /upload
 method = http
 allow_unsigned_uploads = 0
 progress_indicator = 2
-distributions = unstable,jessie-backports
+
+allowed_distributions = (?!UNRELEASED)
+distributions = unstable,experimental,jessie-backports
