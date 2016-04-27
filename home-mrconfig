@@ -5,20 +5,19 @@
 [DEFAULT]
 git_gc = git gc "$@"
 
-# Just a single job for now because otherwise sometimes hangs due to
-# SSH connection sharing.
+# avoid hangs due to SSH connection sharing
 jobs = 1
 
-# actions to be configured per repository
+# custom actions to be configured repository-by-repository
 git_sync = :
 git_rebase = :
 git_autoci = :
 
-# In general, I don't want merge commits to be made en masse by mr
+# avoid en masse merge commits
 git_update = git remote update; git pull --ff-only "$@"
 
-# `mr -ms status` is a great way to check for unpushed branches and
-# unchecked in files, but what about checking only for the latter?
+# `mr -ms status` checks for unpushed branches and files not checked
+# in.  `mr -ms isclean` checks for files not checked in alone
 git_isclean =
     (
      # 1st line: check HEAD versus index
@@ -32,17 +31,10 @@ git_isclean =
 # --- Adam Spiers' plugin for managing dotfile symlinks with mr
 
 include =
-    if [ -e ~/lib/mr/stow ]; then
-        cat ~/lib/mr/stow
-    # If the stow mr library gets included on Windows then we'll get errors on
-    # e.g. mr update because mr'll try to call stow but it's not installed.
-    # This second if clause will find the library on Windows, so check for
-    # that.  We can't do this with my win32 command because inside include= is
-    # a subshell that can't access stuff defined in mr config lib= directives.
-    elif [ -e ~/src/dotfiles/lib/mr/stow -a ! "$(perl -e 'print $^O')" = "msys" ]; then
+    # stow is not available on Windows
+    if [ -e ~/src/dotfiles/lib/mr/stow \
+         -a ! "$(perl -e 'print $^O')" = "msys" ]; then
         cat ~/src/dotfiles/lib/mr/stow
-    elif [ -e ~/local/lib/stow ]; then
-        cat ~/local/lib/stow
     fi
 
 # --- joeyh's code for specifying what machine we're on for repo skip
@@ -55,16 +47,17 @@ lib =
     win32() {
         test "$(perl -e 'print $^O')" = "msys"
     }
+    #
     if win32; then
        hostname=$(hostname)
     else
        hostname=$(hostname -s)
     fi
+    #
     whoami="$(whoami)"
-    # cut off the machine name from whoami on Windows
-    if win32; then
-        whoami=${whoami##*\\}
-    fi
+    # cut off the machine name on Windows
+    win32 && whoami=${whoami##*\\}
+    #
     on() {
         for host in $@; do
             if [ "${host%@*}" != "${host#*@}" ]; then
