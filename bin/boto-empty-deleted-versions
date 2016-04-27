@@ -4,6 +4,7 @@
 
 import boto
 from boto.s3 import deletemarker
+import sys
 
 def main():
     """Main procedure"""
