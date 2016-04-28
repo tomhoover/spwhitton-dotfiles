@@ -36,11 +36,11 @@ HOME=$TEMP
 export HOME
 lisp=$(cat <<EOF
 (progn
-        (org-batch-store-agenda-views)
-        (org-publish-project "org-web")
-        (org-publish-project "org-web-static")
-        (org-publish-project "org-tmp")
-        (org-publish-project "philos"))
+        (ignore-errors (org-batch-store-agenda-views))
+        (ignore-errors (org-publish-project "org-web"))
+        (ignore-errors (org-publish-project "org-web-static"))
+        (ignore-errors (org-publish-project "org-tmp"))
+        (ignore-errors (org-publish-project "philos")))
 EOF
     )
 chronic emacs -batch \
