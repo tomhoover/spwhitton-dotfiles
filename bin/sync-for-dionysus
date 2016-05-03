@@ -25,7 +25,7 @@ else
 
     status adding and syncing on athena
     athena_cmd lib/dionysus "git annex add"
-    athena_cmd lib/dionysus "git annex sync"
+    athena_cmd lib/dionysus "git annex sync origin"
     
     status running main sync from ~/lib/dionysus
     # if [ -d "$FLASH" ]; then
@@ -43,5 +43,5 @@ else
     
     status ensuring that new files on athena checked out
     # athena_cmd lib/dionysus "git annex merge"
-    athena_cmd lib/dionysus "git annex sync"
+    athena_cmd lib/dionysus "git annex sync origin"
 fi
