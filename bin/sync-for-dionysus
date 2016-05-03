@@ -31,7 +31,7 @@ else
     # if [ -d "$FLASH" ]; then
     #     cd "$LOCAL" && git annex add && git annex sync --content athena nickflash
     # else
-        cd "$LOCAL" && git annex add && git annex sync --content athena
+        cd "$LOCAL" && git annex add && git annex sync --content
     # fi
     
     # if [ -d "$FLASH" ]; then
