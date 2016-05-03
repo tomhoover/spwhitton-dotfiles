@@ -18,29 +18,30 @@ athena_cmd () {
 if [ "$(hostname -f)" = "athena.silentflame.com" ]; then
     cd "$LOCAL" && git annex add && git annex sync
 else
-    if [ -d "$FLASH" ]; then
-        status adding new content on nickflash
-        cd $FLASH && git annex add && git annex sync --no-pull --no-push --message=add
-    fi
+    # if [ -d "$FLASH" ]; then
+    #     status adding new content on nickflash
+    #     cd $FLASH && git annex add && git annex sync --no-pull --no-push --message=add
+    # fi
 
     status adding and syncing on athena
     athena_cmd lib/dionysus "git annex add"
     athena_cmd lib/dionysus "git annex sync"
     
     status running main sync from ~/lib/dionysus
-    if [ -d "$FLASH" ]; then
-        cd "$LOCAL" && git annex add && git annex sync --content athena nickflash
-    else
+    # if [ -d "$FLASH" ]; then
+    #     cd "$LOCAL" && git annex add && git annex sync --content athena nickflash
+    # else
         cd "$LOCAL" && git annex add && git annex sync --content athena
-    fi
+    # fi
     
-    if [ -d "$FLASH" ]; then
-        status ensuring that new files on nickflash checked out
-        cd $FLASH && git annex sync
-        status attempting to unmount nickflash
-        kill-ssh-and-umount /media/swhitton/SPWHITTON # TODO use $FLASH
-    fi
+    # if [ -d "$FLASH" ]; then
+    #     status ensuring that new files on nickflash checked out
+    #     cd $FLASH && git annex sync
+    #     status attempting to unmount nickflash
+    #     kill-ssh-and-umount /media/swhitton/SPWHITTON # TODO use $FLASH
+    # fi
     
     status ensuring that new files on athena checked out
-    athena_cmd lib/dionysus "git annex merge"
+    # athena_cmd lib/dionysus "git annex merge"
+    athena_cmd lib/dionysus "git annex sync"
 fi

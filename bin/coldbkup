@@ -14,7 +14,7 @@ set -e
 # a lot of annex setting up (maybe a function: gitannexbk, or just
 # auto-detect (better)).  We can init the annex and put it in the
 # archive or backup group so we get a sensible default preferred
-# content expression
+# content expression (and need to git remote add in $HOME)
 
 # determine removable media available and if it's m3, sync annex content
 # TODO do this by looking at size of removable media?
@@ -40,7 +40,7 @@ elif mount | grep -q "/media/${USER}/bkupsd"; then
 
     status syncing dionysus annex content
     cd $HOME/lib/dionysus
-    git annex sync --content origin athena bkupsd
+    git annex sync --content # origin athena bkupsd
     cd $HOME
 else
     echo "coldbkup: removable media not mounted" >&2

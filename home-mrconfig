@@ -298,13 +298,13 @@ skip = ! mine
 # --- git annex for university stuff
 
 [lib/dionysus]
-checkout = git clone athena:lib/dionysus
+checkout = git clone athenap:dionysus
 post_checkout =
     git annex init
     git annex direct
 status = git annex status
-update = git annex sync athena
-push = git annex sync --content athena
+update = git annex sync
+push = git annex sync --content
 sync = sync-for-dionysus
 isclean = test -z "$(git annex status)" || (git annex status && exit 1)
 
