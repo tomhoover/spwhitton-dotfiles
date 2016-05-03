@@ -11,4 +11,4 @@
 # midnight)
 0 0 * * * ikiwiki --setup /home/swhitton/src/athpriv/spwhitton.setup --refresh
 
-@reboot cd /home/swhitton/lib/dionysus && git annex watch
+#@reboot cd /home/swhitton/lib/dionysus && git annex watch
