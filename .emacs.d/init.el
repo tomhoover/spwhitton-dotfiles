@@ -141,6 +141,7 @@
 
 ;;; zenburn
 
+(package-initialize)
 (use-package zenburn-theme
   :init
   (add-to-list
@@ -1109,18 +1110,18 @@
   (define-key debpaste-command-map "l"
     'debpaste-display-posted-info-in-buffer))
 
-(package-initialize)
-(when (fboundp 'pdf-tools-install)
-  (pdf-tools-install)
+;; (package-initialize)
+;; (when (fboundp 'pdf-tools-install)
+;;   (pdf-tools-install)
 
 
-  (defun spw/highlight-and-tidy ()
-    "Highlight current selection and tidy mouse pointer away."
-    (interactive)
-    (call-interactively 'pdf-annot-add-highlight-markup-annotation)
-    (call-process "xmousetidy"))
+;;   (defun spw/highlight-and-tidy ()
+;;     "Highlight current selection and tidy mouse pointer away."
+;;     (interactive)
+;;     (call-interactively 'pdf-annot-add-highlight-markup-annotation)
+;;     (call-process "xmousetidy"))
 
-  (bind-key (kbd "<XF86Launch7>") 'spw/highlight-and-tidy pdf-view-mode-map))
+;;   (bind-key (kbd "<XF86Launch7>") 'spw/highlight-and-tidy pdf-view-mode-map))
 
 
 
