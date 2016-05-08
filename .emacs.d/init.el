@@ -901,12 +901,14 @@
     (if arg (avy-goto-char char nil)
       (avy-goto-word-1 char nil)))
 
-  ;; TODO: prevent this from having any effect when
-  ;; variable-pitch-mode is off (probs. using advice)
-  (face-override-variable-pitch 'avy-lead-face-0)
-  (face-override-variable-pitch 'avy-lead-face-1)
-  (face-override-variable-pitch 'avy-lead-face-2)
-  (face-override-variable-pitch 'avy-lead-face))
+  ;; TODO: can this be buffer local?  Then I could use it only for
+  ;; variable-pitch-mode.  Disabled because outside of that mode it's
+  ;; annoying
+  ;; (face-override-variable-pitch 'avy-lead-face-0)
+  ;; (face-override-variable-pitch 'avy-lead-face-1)
+  ;; (face-override-variable-pitch 'avy-lead-face-2)
+  ;; (face-override-variable-pitch 'avy-lead-face)
+  )
 
 ;; use ace-jump-mode to move between links in help file
 (use-package ace-link
