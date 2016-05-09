@@ -614,6 +614,13 @@
 
 (use-package reftex
   :init
+  ;; If we set this var then `define-globalized-minor-mode' will not
+  ;; activate ws-butler-mode in markdown-mode buffers.  That means it
+  ;; won't strip spaces in lines like "# " which I use in writing
+  ;; essays, and it won't strip newlines that indicate paragraph flow
+  ;; (obscure Markdown feature)
+  (add-hook 'markdown-mode-hook (lambda () (setq ws-butler-mode-set-explicitly t)))
+
   (add-hook 'markdown-mode-hook 'turn-on-reftex)
   (defun spw/org-maybe-turn-on-reftex ()
     (when (string= default-directory (expand-file-name "~/doc/papers/"))
