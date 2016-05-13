@@ -48,6 +48,10 @@ case "$(hostname -f)" in
         cd $HOME
         offline || duply artemis-swhitton-home backup_purge --force
         ;;
+    "hephaestus.silentflame.com")
+        cd $HOME
+        duply hephaestus-spwhitton-home backup_purge --force
+        ;;
     "athena.silentflame.com")
         # now available from backports
         # # use our own compiled version in order to get --s3-use-ia
