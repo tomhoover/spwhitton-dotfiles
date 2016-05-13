@@ -260,6 +260,7 @@ skip = ! mine
 [lib/annex]
 checkout = git clone athenap:annex
 post_checkout =
+    cd annex
     git remote rm origin
     git annex init
     git annex enableremote origin gitrepo=athenap:annex
@@ -286,7 +287,10 @@ sync = git annex sync origin
 checkout = git clone athena:wikiannex.git
 status = git annex status       # direct mode on athena, so status won't work
 post_checkout =
+    cd wikiannex
     git annex init
+    git config remote.origin.annex-ignore false
+    # ^ the git-annex-init sets this wrong
     if [ "$(hostname -s)" = "athena" ]; then
         git annex direct
     fi
@@ -302,6 +306,7 @@ skip = ! mine
 [lib/dionysus]
 checkout = git clone athenap:dionysus
 post_checkout =
+    cd dionysus
     git annex init
     git annex direct
 status = git annex status
@@ -320,13 +325,13 @@ fixups =
     git config remote.origin.annex-ignore true
 
 # only using this in Tucson atm
-skip = ! on artemis && ! on athena
+skip = ! on swhitton@artemis && ! on swhitton@athena && ! on spwhitton@hephaestus
 
 # --- git annex for use with rtorrent
 
 [lib/rt]
 checkout = git clone gcrypt::athenap:rt
-post_checkout = git annex init
+post_checkout = cd rt && git annex init
 status = git annex status --fast
 update = git annex sync origin
 push = git annex sync origin
