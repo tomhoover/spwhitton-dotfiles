@@ -129,10 +129,10 @@ set mailcap_path = ~/.mutt/mailcap
 
 # --- addresses
 
-set alias_file=~/.mutt/aliases  # this is the main alias file
-source ~/.mutt/aliases
-source ~/.mutt/groups           # keep shortcut groups in a separate
-                                # file for simplicity
+set alias_file=~/doc/mutt-aliases  # this is the main alias file
+source ~/doc/mutt-aliases
+source ~/doc/mutt-groups           # keep shortcut groups in a separate
+                                   # file for simplicity
 # --- key bindings
 
 # filtering function keys, some from Jonathan
