@@ -72,11 +72,11 @@ lib =
         done
         return 1
     }
-    mine() {
-        on swhitton@artemis || on swhitton@zephyr || on swhitton@athena
-    }
     workstation() {
-        on swhitton@artemis || on swhitton@zephyr
+        on swhitton@artemis || on swhitton@zephyr || on spwhitton@hephaestus
+    mine() {
+        workstation || on swhitton@athena
+    }
     }
     gcrypt() {
         which git-remote-gcrypt >/dev/null 2>/dev/null
