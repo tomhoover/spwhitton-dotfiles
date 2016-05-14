@@ -23,7 +23,7 @@ zero ls "$HOME/lib/fm/tmp"
 ssh athena df -h
 ssh athena uptime
 status Press enter to confirm that athena has enough free disc space
-status and it has not been unexpectedly rebooted recently
+status and it has not been unexpectedly rebooted recently \(see RepeatedTasks.org\)
 status Or hit C-c and deal with the situation
 read _
 
