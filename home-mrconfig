@@ -74,9 +74,9 @@ lib =
     }
     workstation() {
         on swhitton@artemis || on swhitton@zephyr || on spwhitton@hephaestus
+    }
     mine() {
         workstation || on swhitton@athena
-    }
     }
     gcrypt() {
         which git-remote-gcrypt >/dev/null 2>/dev/null
