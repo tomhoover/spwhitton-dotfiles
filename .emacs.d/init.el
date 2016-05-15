@@ -1726,6 +1726,9 @@ Passes ARG to `projectile-switch-project-by-name'."
                                      (spw/get-programming-projects programming-projects-dir))))
     (projectile-switch-project-by-name project-dir arg)))
 
+;;; TODO <F9> bound to this or `spw/pandoc-presentation-compile'
+;;; depending on pwd
+
 (defun spw/pandoc-paper-compile (arg)
   "Compile a paper to PDF with pandoc into ~/tmp.
 
@@ -1752,6 +1755,36 @@ Generates calls to pandoc that look like this: pandoc -s --filter pandoc-citepro
        "--template" "pessay" "-V" "documentclass=pessay"
        (buffer-file-name) "-o" output-file)
       (find-file output-file))))
+
+(defun spw/pandoc-presentation-compile ()
+  "Compile a presentation to PDF and HTML with pandoc into ~/tmp.
+
+If ARG, put into my annex instead.
+
+Lightweight alternative to both pandoc-mode and ox-pandoc.el.
+
+Generates calls to pandoc that look like this: TODO"
+  (interactive)
+  (when (and (string= default-directory (expand-file-name "~/doc/pres/"))
+             (eq major-mode 'markdown-mode))
+    (let* ((pdf-output-file (f-join "~/tmp"
+                                    (f-filename (f-swap-ext (buffer-file-name) "pdf"))))
+           (html-output-file (f-swap-ext pdf-output-file "html")))
+
+      (call-process-shell-command
+       "pandoc" nil "*pandoc pdf output*" nil
+       "-s" "-t" "beamer"
+       (shell-quote-argument (buffer-file-name))
+       "-o" (shell-quote-argument pdf-output-file))
+
+      (call-process-shell-command
+       "pandoc" nil "*pandoc html output*" nil
+       "-s" "-t" "dzslides"
+       "--self-contained" "-i"
+       (shell-quote-argument (buffer-file-name))
+       "-o" (shell-quote-argument html-output-file))
+
+      )))
 
 ;; Move lines around smartly.  Originally from
 ;; <http://emacswiki.org/emacs/CopyingWholeLines>.
