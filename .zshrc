@@ -92,6 +92,9 @@ alias sid="sudo /usr/local/bin/enter-sid /bin/sh -c \"export DISPLAY=${DISPLAY};
 alias uavpn="pkill rtorrent && sudo openconnect https://vpn.arizona.edu/ && TERM=dumb rt"
 alias loungempd="ssh TallGeese /Applications/VLC.app/Contents/MacOS/VLC -I rc --loop http://192.168.1.236:8000"
 
+# cd to top of git checkout
+alias cg='cd $(git rev-parse --show-toplevel)'
+
 # try to stop dpkg-buildpackage from invoking gpg2 and thereby messing
 # with ~/.gnupg
 alias dpkg-buildpackage="dpkg-buildpackage -pgpg"
