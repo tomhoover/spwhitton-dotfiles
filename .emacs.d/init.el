@@ -1773,13 +1773,13 @@ Generates calls to pandoc that look like this: TODO"
 
       (call-process-shell-command
        "pandoc" nil "*pandoc pdf output*" nil
-       "-s" "-t" "beamer"
+       "-s" "-t" "beamer" "-i"
        (shell-quote-argument (buffer-file-name))
        "-o" (shell-quote-argument pdf-output-file))
 
       (call-process-shell-command
        "pandoc" nil "*pandoc html output*" nil
-       "-s" "-t" "dzslides"
+       "-s" "-t" "slidy"
        "--self-contained" "-i"
        (shell-quote-argument (buffer-file-name))
        "-o" (shell-quote-argument html-output-file))
