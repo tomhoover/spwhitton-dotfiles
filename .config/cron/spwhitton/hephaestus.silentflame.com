@@ -2,4 +2,4 @@
 */30 * * * * chronic mbsync fastmail
 
 @reboot rt
-@reboot mount /home/spwhitton/lib/fm 2>/dev/null || true
+@reboot sleep 120 ; mount /home/spwhitton/lib/fm
