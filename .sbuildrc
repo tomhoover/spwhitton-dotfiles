@@ -12,13 +12,9 @@ $lintian_opts = ['--allow-root', '--color=always']; # might also pass: +EIL +ped
 $run_piuparts = 1;
 $piuparts_opts = [
     '--schroot',
-    'unstable-i386-sbuild',
+    'unstable-i386-piuparts',
     '--fail-if-inadequate',
     '--fail-on-broken-symlinks',
-
-    # eatmydata is in the schroot's command-prefix so stop piuparts
-    # trying to wrap another eatmydata around that (it fails)
-    '--no-eatmydata'
     ];
 
 $external_commands = {
