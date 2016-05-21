@@ -24,16 +24,7 @@ $piuparts_opts = [
 $external_commands = {
   'post-build-commands' => [
     [
-      'adt-run',
-      '--changes', '%c',
-      '---',
-      'schroot', 'unstable-i386-sbuild;',
-
-      # if adt-run's exit code is 8 then the package had no tests but
-      # this isn't a failure, so catch it
-      'adtexit=$?;',
-      'if', 'test', '$adtexit', '=', '8;', 'then',
-      'exit', '0;', 'else', 'exit', '$adtexit;', 'fi'
+      'adt-run-sbuild', '%c', 'unstable-i386-sbuild'
     ],
   ],
 };
