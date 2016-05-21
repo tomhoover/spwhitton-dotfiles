@@ -10,7 +10,16 @@ $lintian_opts = ['--allow-root', '--color=always']; # might also pass: +EIL +ped
 
 # TODO detect or specify in a var at top of file the architecture in the following
 $run_piuparts = 1;
-$piuparts_opts = ['--schroot', '/srv/chroot/unstable-i386'];
+$piuparts_opts = [
+    '--schroot',
+    'unstable-i386-sbuild',
+    '--fail-if-inadequate',
+    '--fail-on-broken-symlinks',
+
+    # eatmydata is in the schroot's command-prefix so stop piuparts
+    # trying to wrap another eatmydata around that (it fails)
+    '--no-eatmydata'
+    ];
 
 $external_commands = {
   'post-build-commands' => [
@@ -18,7 +27,13 @@ $external_commands = {
       'adt-run',
       '--changes', '%c',
       '---',
-      'schroot', 'unstable-i386-sbuild',
+      'schroot', 'unstable-i386-sbuild;',
+
+      # if adt-run's exit code is 8 then the package had no tests but
+      # this isn't a failure, so catch it
+      'adtexit=$?;',
+      'if', 'test', '$adtexit', '=', '8;', 'then',
+      'exit', '0;', 'else', 'exit', '$adtexit;', 'fi'
     ],
   ],
 };
