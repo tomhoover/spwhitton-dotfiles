@@ -3,7 +3,7 @@
 $pgp_options = ['-us', '-uc'];
 $build_source = 1;
 $build_arch_all = 1;
-#$distribution = 'unstable';
+$distribution = 'unstable';
 
 $run_lintian = 1;
 $lintian_opts = ['--allow-root', '--color=always']; # might also pass: +EIL +pedantic
