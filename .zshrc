@@ -91,6 +91,7 @@ alias unstow="stow -D"
 alias sid="sudo /usr/local/bin/enter-sid /bin/sh -c \"export DISPLAY=${DISPLAY}; su - swhitton\""
 alias uavpn="pkill rtorrent && sudo openconnect https://vpn.arizona.edu/ && TERM=dumb rt"
 alias loungempd="ssh TallGeese /Applications/VLC.app/Contents/MacOS/VLC -I rc --loop http://192.168.1.236:8000"
+alias sid-build-deps="sudo mk-build-deps -irt 'apt-get -o Debug::pkgProblemResolver=yes -t sid --no-install-recommends'"
 
 # cd to top of git checkout
 alias cg='cd $(git rev-parse --show-toplevel)'
