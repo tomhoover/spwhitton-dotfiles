@@ -1,7 +1,9 @@
 # -*- Perl -*-
 
 $pgp_options = ['-us', '-uc'];
-$build_source = 1;
+
+# `dht make-all` doesn't like this
+#$build_source = 1;
 $build_arch_all = 1;
 $distribution = 'unstable';
 
