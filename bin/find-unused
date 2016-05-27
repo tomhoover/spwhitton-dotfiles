@@ -1,0 +1,12 @@
+#!/bin/bash
+
+while read l; do
+    n=$(echo $l | awk '{print $1}')
+    f=$(echo $l | awk '{print $2}')
+    echo
+    echo "===== unused file number $n: ====="
+    echo "  $f"
+    echo "  $(git annex contentlocation $f)"
+    echo
+    git log --stat -S"$f" | sed 's/^/  /'
+done < <(git annex unused | egrep "\w+[0-9]+\w+")
