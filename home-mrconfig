@@ -5,6 +5,9 @@
 [DEFAULT]
 git_gc = git gc "$@"
 
+# alias
+unmod = mr misstowed --delete-unmodified && mr restow
+
 # avoid hangs due to SSH connection sharing
 jobs = 1
 
