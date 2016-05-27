@@ -1,0 +1,17 @@
+#!/usr/bin/perl
+
+# Cold (offline) backups & other elements in a weekly maintenance routine
+
+# The idea is that if this script dies it can be safely be re-run from the beginning
+
+use strict;
+use warnings;
+use lib "$ENV{HOME}/lib/perl5";
+use ShellSequence;
+
+my $seq = ShellSequence->new();
+
+$seq->add_should_succeed("false");
+$seq->add_should_zero("echo foo");
+
+$seq->run();
