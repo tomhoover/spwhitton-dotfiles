@@ -107,6 +107,7 @@ if ( defined $loc ) {
 
     # ---- athena repos
 
+
     # ---- misc. repos
 
 }
@@ -167,5 +168,23 @@ sub find_dirty_src {
                 print "$f\n";
             }
         }
+    }
+}
+
+sub backup_repo {
+    my ( $long, $dest ) = @_;
+    my $short = basename $long;
+    $short = "$short.git" unless $short =~ /\.git$/;
+    $dest = "$loc/gitbk/$dest";
+    my $dir = "$dest/$short";
+    if ( -e $dir ) {
+        local $CWD = $dir;
+        # we could --prune here, but for backup purposes just pull
+        # them all in
+        system "git fetch origin '+refs/heads/*:refs/heads/*' --tags"
+    } else {
+        mkdir "$dest 2>/dev/null" || 1;
+        local $CWD = $dest;
+        system "git clone --mirror $long $short"
     }
 }
