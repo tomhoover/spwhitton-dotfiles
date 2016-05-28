@@ -52,6 +52,7 @@ if (@ARGV) {
 $seq->add_should_zero("ls tmp");
 $seq->add_should_zero("ssh athena ls tmp");
 $seq->add_should_zero("ls lib/fm/tmp");
+$seq->run();
 
 status "cleaning up ~/src";
 # we retain orig tarballs
