@@ -15,7 +15,8 @@ use ScriptStatus;
 use File::Grep "fgrep";
 use File::Basename;
 use File::chdir;
-use Capture::Tiny 'capture_merged';
+use Capture::Tiny qw/capture_merged capture/;
+use List::MoreUtils "apply";
 
 my $seq = ShellSequence->new();
 my $term = Term::ReadLine->new('brand');
@@ -94,6 +95,7 @@ $seq->run();
 
 # ---- backup to offline media ("coldbkup" was old script name)
 
+# TODO error handling here: since we're not using $seq for everything
 if ( defined $loc ) {
 
     # ---- github-backup
@@ -101,14 +103,50 @@ if ( defined $loc ) {
         mkdir "$loc/gitbk/github 2>/dev/null" || 1;
         local $CWD = "$loc/gitbk/github";
         $seq->add_should_succeed("github-backup spwhitton");
+        $seq->run();
     }
 
     # ---- annexes
 
-    # ---- athena repos
 
+    # ---- athena repos
+    my @gcrypt_repos = qw/priv.git annex.git rt.git/;
+    my $athena_repos = capture {
+        system 'ssh athena \'for d in /home/git/*; do echo $d; done\'';
+    };
+    my @athena_repos = split /^/, $athena_repos;
+    @athena_repos = apply { s|/home/git/|| } @athena_repos;
+    foreach my $repo ( @athena_repos ) {
+        # TODO detect gcrypt repo down in backup_repo function (only
+        # need to detect on clone, not update)
+        if ( $repo ~~ @gcrypt_repos ) {
+            backup_repo("gcrypt::git\@spwhitton.name:$repo", "athena");
+        } else {
+            backup_repo("git\@spwhitton.name:$repo", "athena");
+        }
+    }
 
     # ---- misc. repos
+    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/aggressive-indent-mode.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/f-el.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/emacs-async.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/emacs-noflet.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/perspective-el.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/helm.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/epl.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/pkg-info-el.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/flx.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/projectile.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/let-alist.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/seq-el.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/shut-up.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/popup-el.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/paredit-el.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/pkg-mozext/ublock-origin.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/pkg-mozext/y-u-no-validate.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/pkg-mozext/classic-theme-restorer.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/flycheck.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/pkg-mozext/keysnail.git", "alioth");
 
 }
 
@@ -177,6 +215,7 @@ sub backup_repo {
     $short = "$short.git" unless $short =~ /\.git$/;
     $dest = "$loc/gitbk/$dest";
     my $dir = "$dest/$short";
+    status "backing up repo $long to $dir";
     if ( -e $dir ) {
         local $CWD = $dir;
         # we could --prune here, but for backup purposes just pull
