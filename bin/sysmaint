@@ -24,22 +24,27 @@ my $term = Term::ReadLine->new('brand');
 
 chdir $ENV{HOME};
 system "mount lib/fm 2>/dev/null" || 1;
+my $loc;
 
-die "provide a location to back-up to" unless @ARGV;
-my $loc = shift @ARGV;
-die "$loc is not a directory" unless ( -d $loc );
-
-if ( ! -d "$loc/gitbk" ) {
-    status "it looks like you haven't backed up to this media before";
-    my $create = $term->ask_yn(
-                  prompt => "Create a new backup repository at $loc/gitbk?",
-                  default => 'y',
-                              );
-    if ($create) {
-        mkdir "$loc/gitbk";
-    } else {
-        exit 1;
+if (@ARGV) {
+    $loc = shift @ARGV;
+    die "$loc is not a directory" unless ( -d $loc );
+    if ( ! -d "$loc/gitbk" ) {
+        status "it looks like you haven't backed up to this media before";
+        my $create = $term->ask_yn(prompt => "Create a new backup repository at $loc/gitbk?");
+        if ($create) {
+            mkdir "$loc/gitbk";
+        } else {
+            exit 1;
+        }
     }
+} else {
+    status "you didn't specify a drive to perform a coldbkup to as a command";
+    status "line argument to this script";
+    exit unless $term->ask_yn(
+                              prompt => "Continue sysmaint without coldbkup?",
+                              default => 'y',
+                             );
 }
 
 # ---- pre-backup cleanup tasks
@@ -86,11 +91,18 @@ $seq->add_should_zero("mr -ms status");
 
 $seq->run();
 
-# ---- backup to offline media
+# ---- backup to offline media ("coldbkup" was old script name)
 
-# TODO
+if (defined $loc) {
+    # TODO
+}
 
 # ---- remote system maintenance
+
+exit unless $term->ask_yn(
+                          prompt =>
+                          "Backups complete.  Perform remote & local system maintainance?"
+                         );
 
 status "checking athena's storage";
 system "ssh athena df -h";
