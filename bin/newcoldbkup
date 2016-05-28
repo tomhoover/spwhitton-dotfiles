@@ -60,7 +60,7 @@ unlink glob "src/*.debian.tar.*";
 while (42) {
     my $output = capture_merged { find_dirty_src() };
     if (length $output) {
-        status "the following files in ~/src should be cleaned up:";
+        status "the following files/repos in ~/src should be cleaned up:";
         print $output;
         my $again = $term->ask_yn(
                                   prompt => "Check for files in ~/src again?",
