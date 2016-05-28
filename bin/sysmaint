@@ -94,8 +94,21 @@ $seq->run();
 
 # ---- backup to offline media ("coldbkup" was old script name)
 
-if (defined $loc) {
-    # TODO
+if ( defined $loc ) {
+
+    # ---- github-backup
+    {
+        mkdir "$loc/gitbk/github 2>/dev/null" || 1;
+        local $CWD = "$loc/gitbk/github";
+        $seq->add_should_succeed("github-backup spwhitton");
+    }
+
+    # ---- annexes
+
+    # ---- athena repos
+
+    # ---- misc. repos
+
 }
 
 # ---- remote system maintenance
