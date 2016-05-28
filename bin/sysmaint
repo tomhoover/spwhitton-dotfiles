@@ -106,16 +106,14 @@ if ( defined $loc ) {
         $seq->run();
     }
 
-    # ---- annexes
-
-
     # ---- athena repos
+    my $git = "/home/git";
     my @gcrypt_repos = qw/priv.git annex.git rt.git/;
     my $athena_repos = capture {
-        system 'ssh athena \'for d in /home/git/*; do echo $d; done\'';
+        system "ssh athena 'for d in $git/*; do echo \$d; done'";
     };
     my @athena_repos = split /^/, $athena_repos;
-    @athena_repos = apply { s|/home/git/|| } @athena_repos;
+    @athena_repos = apply { s|$git|| } @athena_repos;
     foreach my $repo ( @athena_repos ) {
         # TODO detect gcrypt repo down in backup_repo function (only
         # need to detect on clone, not update)
@@ -124,6 +122,26 @@ if ( defined $loc ) {
         } else {
             backup_repo("git\@spwhitton.name:$repo", "athena");
         }
+    }
+
+    # ---- try to pair and sync (personal) annexes
+
+    # find the annexes
+    my @annexes;
+    foreach my $repo ( @athena_repos ) {
+        ( my $output, my $exit ) = capture {
+            system "ssh athena ls $git/$repo/annex";
+        };
+        $exit = $exit >> 8;
+        push @annexes, $repo if ( $exit == 0 );
+    }
+
+    foreach my $annex ( @annexes ) {
+        # init them and ensure sane config
+
+        # try to add local remote
+
+        # finally, sync content
     }
 
     # ---- misc. repos
