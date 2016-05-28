@@ -271,5 +271,16 @@ sub backup_repo {
 }
 
 sub find_host_annex {
+    my $annex = shift;
+    $annex =~ s|\.git$||;
 
+    # parse output of `mr list`
+    my @my_repos = split /^/, `mr -d $ENV{HOME} list`;
+    @my_repos = apply { s/mr list:// } @my_repos;
+    @my_repos = apply { $_ =~ s/^\s+|\s+$//g } @my_repos;
+    @my_repos = grep { /^\// } @my_repos;
+
+    # TODO check if they have any commits in common
+    my @found = grep { $_ =~ /\/$annex$/ } @my_repos;
+    return $found[0] if ( scalar @found == 1 );
 }
