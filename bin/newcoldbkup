@@ -84,6 +84,8 @@ $seq->add_should_succeed("mr -s push origin --tags :");
 # ... then `mr -ms status` finds unpushed branches
 $seq->add_should_zero("mr -ms status");
 
+$seq->run();
+
 # ---- backup to offline media
 
 # TODO
@@ -116,8 +118,6 @@ $seq->add_should_succeed("sudo apt-get dist-upgrade");
 $seq->add_should_succeed("sudo apt-get autoremove");
 
 $seq->add_should_zero("check-mailqs");
-
-# ---- run the above
 
 $seq->run();
 
