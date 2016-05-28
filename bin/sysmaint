@@ -149,18 +149,16 @@ if ( defined $loc ) {
         system "git annex init '$drive_name'";
         system "git config annex.diskreserve '2GB'";
 
-        # only set preferred content settings and add local remote on
-        # a first init, so that the user can override for this
-        # particular backup drive
+        # only set preferred content settings on a first init, so that
+        # the user can override for this particular backup drive
         unless ( $exists ) {
-            my $host = hostname;
-
             system "git annex wanted . standard";
             system "git annex group . incrementalbackup";
+        }
 
-            if ( my $host_repo = find_host_annex($annex) ) {
-                system "git remote add $host $host_repo";
-            }
+        my $host = hostname;
+        if ( my $host_repo = find_host_annex($annex) ) {
+            system "git remote add $host $host_repo 2>/dev/null" || 1;
         }
 
         # finally, sync content
