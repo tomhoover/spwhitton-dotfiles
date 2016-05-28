@@ -17,6 +17,7 @@ use File::Basename;
 use File::chdir;
 use Capture::Tiny qw/capture_merged capture/;
 use List::MoreUtils "apply";
+use File::Spec::Functions "rel2abs";
 
 my $seq = ShellSequence->new();
 my $term = Term::ReadLine->new('brand');
@@ -25,11 +26,15 @@ my $term = Term::ReadLine->new('brand');
 
 chdir $ENV{HOME};
 system "mount lib/fm 2>/dev/null" || 1;
-my $loc;
+my ($loc, $drive_name);
 
 if (@ARGV) {
-    $loc = shift @ARGV;
+    $loc = rel2abs(shift @ARGV);
     die "$loc is not a directory" unless ( -d $loc );
+    my @mountpoints = split /^/, `mount | cut -d' ' -f1`;
+    die "$loc is not a removable drive" unless ( $loc ~~ @mountpoints );
+    $drive_name = basename $loc;
+
     if ( ! -d "$loc/gitbk" ) {
         status "it looks like you haven't backed up to this media before";
         my $create = $term->ask_yn(prompt => "Create a new backup repository at $loc/gitbk?");
@@ -137,7 +142,9 @@ if ( defined $loc ) {
     }
 
     foreach my $annex ( @annexes ) {
+        local $CWD = "$loc/gitbk/athena/$annex";
         # init them and ensure sane config
+        system "git annex init '$drive_name'";
 
         # try to add local remote
 
@@ -167,6 +174,8 @@ if ( defined $loc ) {
     backup_repo("https://anonscm.debian.org/git/pkg-mozext/keysnail.git", "alioth");
 
 }
+
+system "sudo umount $loc";
 
 # ---- remote system maintenance
 
