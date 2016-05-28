@@ -117,7 +117,8 @@ $seq->add_should_succeed("sudo apt-get upgrade");
 $seq->add_should_succeed("sudo apt-get dist-upgrade");
 $seq->add_should_succeed("sudo apt-get autoremove");
 
-$seq->add_should_zero("check-mailqs");
+$seq->add_should_zero("mailq | grep -v 'Mail queue is empty'");
+$seq->add_should_zero("ssh athena mailq | grep -v 'Mail queue is empty'");
 
 $seq->run();
 
