@@ -108,14 +108,14 @@ my $athena_rebooted = $term->ask_yn(
                                    );
 die "perform athena reboot procedure" if $athena_rebooted;
 
-$seq->add_should_succeed("ssh -t athena 'sudo apt-get update && sudo apt-get upgrade'");
+$seq->add_should_succeed("ssh -t athena 'sudo apt-get update && sudo apt-get upgrade && sudo apt-get autoremove && sudo apt-get autoclean'");
 
 # ---- local system maintenance
 
 $seq->add_should_succeed("sudo apt-get update");
 $seq->add_should_succeed("sudo apt-get upgrade");
 $seq->add_should_succeed("sudo apt-get dist-upgrade");
-$seq->add_should_succeed("sudo apt-get autoremove");
+$seq->add_should_succeed("sudo apt-get -y autoremove");
 
 $seq->add_should_zero("mailq | grep -v 'Mail queue is empty'");
 $seq->add_should_zero("ssh athena mailq | grep -v 'Mail queue is empty'");
