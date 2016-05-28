@@ -116,7 +116,7 @@ lib =
                 local/pub \
                 local/auth
             touch local/big/.duplicity-ignore src/.mrconfig
-            [ -L "src/build-area" ] || ln -s -T /tmp/debuild src/build-area
+            # [ -L "src/build-area" ] || ln -s -T /tmp/debuild src/build-area
         )
     }
 # --- primary dotfiles repository

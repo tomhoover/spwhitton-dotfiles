@@ -7,11 +7,138 @@
 use strict;
 use warnings;
 use lib "$ENV{HOME}/lib/perl5";
+no warnings "experimental::smartmatch";
+
+use Term::UI;
 use ShellSequence;
+use ScriptStatus;
+use File::Grep "fgrep";
+use File::Basename;
+use File::chdir;
+use Capture::Tiny 'capture_merged';
 
 my $seq = ShellSequence->new();
+my $term = Term::ReadLine->new('brand');
 
-$seq->add_should_succeed("false");
-$seq->add_should_zero("echo foo");
+# ---- prep
+
+chdir $ENV{HOME};
+system "mount lib/fm 2>/dev/null" || 1;
+
+die "provide a location to back-up to" unless @ARGV;
+my $loc = shift @ARGV;
+die "$loc is not a directory" unless ( -d $loc );
+
+if ( ! -d "$loc/gitbk" ) {
+    status "it looks like you haven't backed up to this media before";
+    my $create = $term->ask_yn(
+                  prompt => "Create a new backup repository at $loc/gitbk?",
+                  default => 'y',
+                              );
+    if ($create) {
+        mkdir "$loc/gitbk";
+    } else {
+        exit 1;
+    }
+}
+
+# ---- pre-backup cleanup tasks
+
+$seq->add_should_zero("ls tmp");
+$seq->add_should_zero("ssh athena ls tmp");
+$seq->add_should_zero("ls lib/fm/tmp");
+
+status "cleaning up ~/src";
+# we retain orig tarballs
+unlink glob "src/*.dsc";
+unlink glob "src/*.upload";
+unlink glob "src/*.changes";
+unlink glob "src/*.deb";
+unlink glob "src/*.build";
+unlink glob "src/*.debian.tar.*";
+
+while (42) {
+    my $output = capture_merged { find_dirty_src() };
+    if (length $output) {
+        status "the following files in ~/src should be cleaned up:";
+        print $output;
+        my $again = $term->ask_yn(
+                                  prompt => "Check for files in ~/src again?",
+                                  default => 'y',
+                                 );
+        last unless $again;
+    } else {
+        last;
+    }
+}
+
+# ---- standard backup procedure
+
+$seq->add_should_zero("mr -ms misstowed --delete-unmodified");
+$seq->add_should_succeed("mr -ms restow");
+$seq->add_should_succeed("mr -ms autoci");
+# `mr -ms isclean` checks for stuff to be checked in ...
+$seq->add_should_succeed("mr -ms isclean");
+$seq->add_should_succeed("mr -s up");
+$seq->add_should_succeed("mr -s push origin --tags :");
+# ... then `mr -ms status` finds unpushed branches
+$seq->add_should_zero("mr -ms status");
+
+# ---- backup to offline media
+
+# TODO
+
+# ---- remote system maintenance
+
+status "checking athena's storage";
+system "ssh athena df -h";
+my $disc_space_okay = $term->ask_yn(
+                                    prompt => "Does athena have enough free disc space?",
+                                    default => 'y',
+                                   );
+die "deal with athena's low free disc space" unless $disc_space_okay;
+
+status "checking athena's uptime";
+system "ssh athena uptime";
+my $athena_rebooted = $term->ask_yn(
+                                    prompt => "Was athena rebooted?",
+                                    default => 'n',
+                                   );
+die "perform athena reboot procedure" if $athena_rebooted;
+
+$seq->add_should_succeed("ssh -t athena 'sudo apt-get update && sudo apt-get upgrade'");
+
+# ---- local system maintenance
+
+$seq->add_should_succeed("sudo apt-get update");
+$seq->add_should_succeed("sudo apt-get upgrade");
+$seq->add_should_succeed("sudo apt-get dist-upgrade");
+$seq->add_should_succeed("sudo apt-get autoremove");
+
+$seq->add_should_zero("check-mailqs");
+
+# ---- run the above
 
 $seq->run();
+
+# ---- subroutines
+
+sub find_dirty_src {
+    my @src_exceptions = qw/hscripts/;
+    foreach my $f ( glob "src/*" ) {
+        my $short = basename($f);
+        unless ( (-f $f && $f =~ /orig\.tar/)
+                 || $short ~~ @src_exceptions
+                 || (-d "$f/.git"
+                     && ((fgrep { /^\[$short\]$/ } "src/.mrconfig")
+                         || (fgrep { /^\[$f\]$/ } ".mrconfig")))) {
+            if (-d "$f/.git") {
+                local $CWD = $f;
+                system "mr register >/dev/null";
+                print "$f\n" if ($? >> 8 != 0);
+            } else {
+                print "$f\n";
+            }
+        }
+    }
+}
