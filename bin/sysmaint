@@ -18,6 +18,7 @@ use File::chdir;
 use Capture::Tiny qw/capture_merged capture/;
 use List::MoreUtils "apply";
 use File::Spec::Functions "rel2abs";
+use Sys::Hostname;
 
 my $seq = ShellSequence->new();
 my $term = Term::ReadLine->new('brand');
@@ -143,12 +144,27 @@ if ( defined $loc ) {
 
     foreach my $annex ( @annexes ) {
         local $CWD = "$loc/gitbk/athena/$annex";
+        my $exists = -d "annex";
         # init them and ensure sane config
         system "git annex init '$drive_name'";
+        system "git config annex.diskreserve '2GB'";
 
-        # try to add local remote
+        # only set preferred content settings and add local remote on
+        # a first init, so that the user can override for this
+        # particular backup drive
+        unless ( $exists ) {
+            my $host = hostname;
+
+            system "git annex wanted . standard";
+            system "git annex group . incrementalbackup";
+
+            if ( my $host_repo = find_host_annex($annex) ) {
+                system "git remote add $host $host_repo";
+            }
+        }
 
         # finally, sync content
+        system "git annex sync --content";
     }
 
     # ---- misc. repos
@@ -253,4 +269,8 @@ sub backup_repo {
         local $CWD = $dest;
         system "git clone --mirror $long $short"
     }
+}
+
+sub find_host_annex {
+
 }
