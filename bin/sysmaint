@@ -143,6 +143,7 @@ if ( defined $loc ) {
     }
 
     foreach my $annex ( @annexes ) {
+        status "pairing & syncing $annex annex";
         local $CWD = "$loc/gitbk/athena/$annex";
         my $exists = -d "annex";
         # init them and ensure sane config
