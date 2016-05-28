@@ -32,9 +32,9 @@ my ($loc, $drive_name);
 if (@ARGV) {
     $loc = rel2abs(shift @ARGV);
     die "$loc is not a directory" unless ( -d $loc );
-    my @mountpoints = split /^/, `mount | cut -d' ' -f1`;
-    die "$loc is not a removable drive" unless ( $loc ~~ @mountpoints );
+    my @mountpoints = split /^/, `mount | cut -d' ' -f3`;
     $drive_name = dirname $loc;
+    die "$loc is not on a removable drive" unless ( $drive_name ~~ @mountpoints );
 
     if ( ! -d "$loc/gitbk" ) {
         status "it looks like you haven't backed up to this media before";
