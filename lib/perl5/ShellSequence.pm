@@ -5,19 +5,9 @@ use warnings;
 
 use Capture::Tiny 'tee_stdout';
 use Array::Iterator;
-use Term::ANSIColor;
-use File::Basename;
 use Term::UI;
 use Term::ReadLine;
-
-sub status;
-sub status {
-    my $me = basename($0);
-    print "[";
-    print colored("$me", 'yellow');
-    print "] ";
-    print colored(@_, 'bright_white'), "\n";
-}
+use ScriptStatus;
 
 sub new {
     my $class = shift;
