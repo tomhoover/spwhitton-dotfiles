@@ -76,6 +76,7 @@ unlink glob "src/*.changes";
 unlink glob "src/*.deb";
 unlink glob "src/*.build";
 unlink glob "src/*.debian.tar.*";
+system "clean-patch-queues -y";
 
 while (42) {
     my $output = capture_merged { find_dirty_src() };

@@ -3,10 +3,12 @@
 . "$HOME/.shenv"
 . "$HOME/lib/tputfs.sh"
 
-status Are you sure you want to delete ALL git branches matching
-status "patch-queue/* in all git repos matching ~/src/* ?"
-status Press enter to confirm or hit C-c to abort
-read _
+if [ ! "$1" = "-y" ]; then
+    status Are you sure you want to delete ALL git branches matching
+    status "patch-queue/* in all git repos matching ~/src/* ?"
+    status Press enter to confirm or hit C-c to abort
+    read _
+fi
 
 for repo in $HOME/src/*; do
     if [ -d "$repo/.git" ]; then
