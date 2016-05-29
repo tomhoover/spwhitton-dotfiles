@@ -236,7 +236,7 @@ sub backup_repo {
     # affect the commands we run both to clone and to update
     # TODO generalise this to work for non-athena annexes
     my $annex = 0;
-    if ( $dest eq "athena" ) {
+    if ( $dest eq "$loc/gitbk/athena" ) {
         ( undef, undef, my $exit ) = capture {
             system "ssh athena ls $git/$short/annex";
         };
@@ -247,6 +247,7 @@ sub backup_repo {
         local $CWD = $dir;
         if ( -d "annex" ) {
             system "git config annex.diskreserve '2GB'";
+            # TODO ask user before pairing since it's a guess
             if ( my $host_repo = find_host_annex($short) ) {
                 status "pairing $short with $host_repo";
                 system "git remote add $host $host_repo 2>/dev/null" || 1;
@@ -259,6 +260,7 @@ sub backup_repo {
         }
     } else {                    # repo new to this drive
         if ($annex) {
+            mkdir "$dest" unless ( -d $dest );
             local $CWD = $dest;
             system "git clone --bare $long $short";
             {
@@ -270,6 +272,7 @@ sub backup_repo {
                 # backup drive
                 system "git annex wanted . standard";
                 system "git annex group . incrementalbackup";
+                # TODO ask user before pairing since it's a guess
                 if ( my $host_repo = find_host_annex($short) ) {
                     status "pairing $short with $host_repo";
                     system "git remote add $host $host_repo 2>/dev/null" || 1;
