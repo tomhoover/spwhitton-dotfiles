@@ -9,24 +9,32 @@ INTH="800"
 EXTL="us"
 INTL="gb"
 
-if xrandr -q | grep "$EXT connected"; then
-    # desk mode
-    xrandr --output $INT --off
-    xrandr --output $EXT --off
-    xrandr --output $EXT --primary --mode $EXTW"x"$EXTH \
-           --output $INT --noprimary --mode $INTW"x"$INTH --pos 1680x250
-    setxkbmap -layout $EXTL -option ctrl:nocaps
-    numlockx on
+# if xrandr -q | grep "$EXT connected"; then
+#     # desk mode
+#     xrandr --output $INT --off
+#     xrandr --output $EXT --off
+#     xrandr --output $EXT --primary --mode $EXTW"x"$EXTH \
+#            --output $INT --noprimary --mode $INTW"x"$INTH --pos 1680x250
+#     setxkbmap -layout $EXTL -option ctrl:nocaps
+#     numlockx on
+# else
+#     # laptop mode
+#     xrandr --output $INT --off
+#     xrandr --output $EXT --off
+#     xrandr --output $INT --mode $INTW"x"$INTH
+#     setxkbmap -layout $INTL -option ctrl:nocaps
+#     numlockx off
+#     echo 13 | sudo tee /sys/class/backlight/acpi_video0/brightness
+# fi
+
+keyboard="Bus 006 Device 005: ID 04f2:0833 Chicony Electronics Co., Ltd"
+
+if lsusb | grep -q "$keyboard"; then
+    setxkbmap -layout us -option ctrl:nocaps
 else
-    # laptop mode
-    xrandr --output $INT --off
-    xrandr --output $EXT --off
-    xrandr --output $INT --mode $INTW"x"$INTH
-    setxkbmap -layout $INTL -option ctrl:nocaps
-    numlockx off
-    echo 13 | sudo tee /sys/class/backlight/acpi_video0/brightness
+    setxkbmap -layout gb -option ctrl:nocaps
 fi
 
 xmodmap ~/.Xmodmap
-xfce4-panel --restart
+# xfce4-panel --restart
 xset b off
