@@ -41,7 +41,7 @@ if (@ARGV) {
         status "it looks like you haven't backed up to this media before";
         my $create = $term->ask_yn(prompt => "Create a new backup repository at $loc/gitbk?");
         if ($create) {
-            mkdir "$loc/gitbk";
+            mkdir "$loc/gitbk" unless ( -d "$loc/gitbk" );
         } else {
             exit 1;
         }
@@ -107,7 +107,7 @@ if ( defined $loc ) {
 
     # ---- github-backup
     {
-        mkdir "$loc/gitbk/github 2>/dev/null" || 1;
+        mkdir "$loc/gitbk/github" unless ( -d "$loc/gitbk/github" );
         local $CWD = "$loc/gitbk/github";
         $seq->add_should_succeed("github-backup spwhitton");
         $seq->run();
@@ -265,7 +265,7 @@ sub backup_repo {
         # them all in
         system "git fetch origin '+refs/heads/*:refs/heads/*' --tags"
     } else {
-        mkdir "$dest 2>/dev/null" || 1;
+        mkdir "$dest" unless ( -d $dest );
         local $CWD = $dest;
         system "git clone --mirror $long $short"
     }
