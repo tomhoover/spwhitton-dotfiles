@@ -136,42 +136,6 @@ if ( defined $loc ) {
         }
     }
 
-    # ---- try to pair and sync (personal) annexes
-
-    # find the annexes
-    my @annexes;
-    foreach my $repo ( @athena_repos ) {
-        ( my $output, my $exit ) = capture {
-            system "ssh athena ls $git/$repo/annex";
-        };
-        $exit = $exit >> 8;
-        push @annexes, $repo if ( $exit == 0 );
-    }
-
-    foreach my $annex ( @annexes ) {
-        status "pairing & syncing $annex annex";
-        local $CWD = "$loc/gitbk/athena/$annex";
-        my $exists = -d "annex";
-        # init them and ensure sane config
-        system "git annex init '$drive_name'";
-        system "git config annex.diskreserve '2GB'";
-
-        # only set preferred content settings on a first init, so that
-        # the user can override for this particular backup drive
-        unless ( $exists ) {
-            system "git annex wanted . standard";
-            system "git annex group . incrementalbackup";
-        }
-
-        my $host = hostname;
-        if ( my $host_repo = find_host_annex($annex) ) {
-            system "git remote add $host $host_repo 2>/dev/null" || 1;
-        }
-
-        # finally, sync content
-        system "git annex sync --content";
-    }
-
     # ---- misc. repos
     backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/aggressive-indent-mode.git", "alioth");
     backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/f-el.git", "alioth");
@@ -275,6 +239,46 @@ sub backup_repo {
         system "git clone --mirror $long $short"
     }
 }
+
+    # # ---- try to pair and sync (personal) annexes
+
+    # # find the annexes
+    # my @annexes;
+    # foreach my $repo ( @athena_repos ) {
+    #     ( undef, my $exit ) = capture {
+    #         system "ssh athena ls $git/$repo/annex";
+    #     };
+    #     $exit = $exit >> 8;
+    #     print "got $exit for $repo";
+    #     # push @annexes, $repo if ( $exit == 0 );
+    # }
+
+    # foreach my $annex ( @annexes ) {
+    #     status "configuring $annex annex";
+    #     local $CWD = "$loc/gitbk/athena/$annex";
+    #     my $exists = -d "annex";
+    #     # init them and ensure sane config
+    #     system "git annex init '$short_drive_name'";
+    #     system "git config annex.diskreserve '2GB'";
+
+    #     # only set preferred content settings on a first init, so that
+    #     # the user can override for this particular backup drive
+    #     unless ( $exists ) {
+    #         system "git annex wanted . standard";
+    #         system "git annex group . incrementalbackup";
+    #     }
+
+    #     my $host = hostname;
+    #     if ( my $host_repo = find_host_annex($annex) ) {
+    #         status "pairing $annex with $host_repo";
+    #         system "git remote add $host $host_repo 2>/dev/null" || 1;
+    #     }
+
+    #     # finally, sync content
+    #     status "syncing $annex annex content"
+    #     # system "git annex sync --content";
+# }
+
 
 sub find_host_annex {
     my $annex = shift;
