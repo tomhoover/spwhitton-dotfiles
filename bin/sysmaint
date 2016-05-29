@@ -245,7 +245,7 @@ sub backup_repo {
 
     if ( -e $dir ) {            # repo already backed up to this drive
         local $CWD = $dir;
-        if ($annex) {
+        if ( -d "annex" ) {
             system "git config annex.diskreserve '2GB'";
             if ( my $host_repo = find_host_annex($short) ) {
                 status "pairing $short with $host_repo";
