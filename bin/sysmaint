@@ -252,6 +252,8 @@ sub backup_repo {
                 status "pairing $short with $host_repo";
                 system "git remote add $host $host_repo 2>/dev/null" || 1;
             }
+            # commented out for summer
+            # --no-commit because bare
             # system "git annex sync --content --no-commit"
         } else {
             # we could --prune here, but for backup purposes just pull
@@ -277,6 +279,7 @@ sub backup_repo {
                     status "pairing $short with $host_repo";
                     system "git remote add $host $host_repo 2>/dev/null" || 1;
                 }
+                # commented out for summer
                 # --no-commit because bare
                 # system "git annex sync --content --no-commit"
             }
