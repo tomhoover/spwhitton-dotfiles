@@ -91,3 +91,7 @@
 [merge "dpkg-mergechangelogs"]
        name = debian/changelog merge driver
        driver = dpkg-mergechangelogs -m %O %A %B %A
+
+[gcrypt]
+	publish-participants = true
+	participants = 0x0F56D0553B6D411B
