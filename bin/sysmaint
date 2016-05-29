@@ -23,6 +23,12 @@ use Sys::Hostname;
 my $seq = ShellSequence->new();
 my $term = Term::ReadLine->new('brand');
 
+# ---- config
+
+our @gcrypt_repos = qw/priv.git annex.git rt.git/;
+our @src_exceptions = qw/hscripts/;
+our $git = "/home/git";
+
 # ---- prep
 
 chdir $ENV{HOME};
@@ -114,14 +120,13 @@ if ( defined $loc ) {
     }
 
     # ---- athena repos
-    my $git = "/home/git";
-    my @gcrypt_repos = qw/priv.git annex.git rt.git/;
     my $athena_repos = capture {
         system "ssh athena 'for d in $git/*; do echo \$d; done'";
     };
     my @athena_repos = split /^/, $athena_repos;
-    @athena_repos = apply { s|$git|| } @athena_repos;
+    @athena_repos = apply { s|$git/|| } @athena_repos;
     foreach my $repo ( @athena_repos ) {
+        $repo =~ s/\n//g;
         # TODO detect gcrypt repo down in backup_repo function (only
         # need to detect on clone, not update)
         if ( $repo ~~ @gcrypt_repos ) {
@@ -233,7 +238,6 @@ $seq->run();
 # ---- subroutines
 
 sub find_dirty_src {
-    my @src_exceptions = qw/hscripts/;
     foreach my $f ( glob "src/*" ) {
         my $short = basename($f);
         unless ( (-f $f && $f =~ /orig\.tar/)
@@ -254,7 +258,8 @@ sub find_dirty_src {
 
 sub backup_repo {
     my ( $long, $dest ) = @_;
-    my $short = basename $long;
+    my ( undef, $short ) = split /:([^:]+)$/, $long;
+    $short = basename $short;    # just in case
     $short = "$short.git" unless $short =~ /\.git$/;
     $dest = "$loc/gitbk/$dest";
     my $dir = "$dest/$short";
