@@ -22,6 +22,7 @@ use Sys::Hostname;
 
 my $seq = ShellSequence->new();
 my $term = Term::ReadLine->new('brand');
+my $host = hostname;
 
 # ---- config
 
@@ -228,58 +229,61 @@ sub backup_repo {
     $short = "$short.git" unless $short =~ /\.git$/;
     $dest = "$loc/gitbk/$dest";
     my $dir = "$dest/$short";
-    status "backing up repo $long to $dir";
-    if ( -e $dir ) {
+    status "backup source: $long";
+    status "backup dest:   $dir";
+
+    # first we have to determine whether it's an annex, as that will
+    # affect the commands we run both to clone and to update
+    # TODO generalise this to work for non-athena annexes
+    my $annex = 0;
+    if ( $dest eq "athena" ) {
+        ( undef, undef, my $exit ) = capture {
+            system "ssh athena ls $git/$short/annex";
+        };
+        $annex = $exit >> 8 == 0;
+    }
+
+    if ( -e $dir ) {            # repo already backed up to this drive
         local $CWD = $dir;
-        # we could --prune here, but for backup purposes just pull
-        # them all in
-        system "git fetch origin '+refs/heads/*:refs/heads/*' --tags"
-    } else {
-        mkdir "$dest" unless ( -d $dest );
-        local $CWD = $dest;
-        system "git clone --mirror $long $short"
+        if ($annex) {
+            system "git config annex.diskreserve '2GB'";
+            if ( my $host_repo = find_host_annex($short) ) {
+                status "pairing $short with $host_repo";
+                system "git remote add $host $host_repo 2>/dev/null" || 1;
+            }
+            # system "git annex sync --content --no-commit"
+        } else {
+            # we could --prune here, but for backup purposes just pull
+            # them all in
+            system "git fetch origin '+refs/heads/*:refs/heads/*' --tags";
+        }
+    } else {                    # repo new to this drive
+        if ($annex) {
+            local $CWD = $dest;
+            system "git clone --bare $long $short";
+            {
+                local $CWD = $dir;
+                system "git annex init '$short_drive_name'";
+                system "git config annex.diskreserve '2GB'";
+                # only set preferred content settings on a first init,
+                # so that the user can override for this particular
+                # backup drive
+                system "git annex wanted . standard";
+                system "git annex group . incrementalbackup";
+                if ( my $host_repo = find_host_annex($short) ) {
+                    status "pairing $short with $host_repo";
+                    system "git remote add $host $host_repo 2>/dev/null" || 1;
+                }
+                # --no-commit because bare
+                # system "git annex sync --content --no-commit"
+            }
+        } else {
+            mkdir "$dest" unless ( -d $dest );
+            local $CWD = $dest;
+            system "git clone --mirror $long $short";
+        }
     }
 }
-
-    # # ---- try to pair and sync (personal) annexes
-
-    # # find the annexes
-    # my @annexes;
-    # foreach my $repo ( @athena_repos ) {
-    #     ( undef, my $exit ) = capture {
-    #         system "ssh athena ls $git/$repo/annex";
-    #     };
-    #     $exit = $exit >> 8;
-    #     print "got $exit for $repo";
-    #     # push @annexes, $repo if ( $exit == 0 );
-    # }
-
-    # foreach my $annex ( @annexes ) {
-    #     status "configuring $annex annex";
-    #     local $CWD = "$loc/gitbk/athena/$annex";
-    #     my $exists = -d "annex";
-    #     # init them and ensure sane config
-    #     system "git annex init '$short_drive_name'";
-    #     system "git config annex.diskreserve '2GB'";
-
-    #     # only set preferred content settings on a first init, so that
-    #     # the user can override for this particular backup drive
-    #     unless ( $exists ) {
-    #         system "git annex wanted . standard";
-    #         system "git annex group . incrementalbackup";
-    #     }
-
-    #     my $host = hostname;
-    #     if ( my $host_repo = find_host_annex($annex) ) {
-    #         status "pairing $annex with $host_repo";
-    #         system "git remote add $host $host_repo 2>/dev/null" || 1;
-    #     }
-
-    #     # finally, sync content
-    #     status "syncing $annex annex content"
-    #     # system "git annex sync --content";
-# }
-
 
 sub find_host_annex {
     my $annex = shift;
