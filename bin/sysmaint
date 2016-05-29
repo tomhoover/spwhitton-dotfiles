@@ -49,7 +49,8 @@ if (@ARGV) {
         status "it looks like you haven't backed up to this media before";
         my $create = $term->ask_yn(prompt => "Create a new backup repository at $loc/gitbk?");
         if ($create) {
-            mkdir "$loc/gitbk" unless ( -d "$loc/gitbk" );
+            mkdir "$loc/gitbk"
+              or die "couldn't create $loc/gitbk -- check permissions";
         } else {
             exit 1;
         }
