@@ -22,7 +22,7 @@ $piuparts_opts = [
 $external_commands = {
   'post-build-commands' => [
     [
-      'adt-run-sbuild', '%c', 'unstable-i386-sbuild'
+      'adt-run-sbuild', '%c', 'unstable-%a-sbuild'
     ],
   ],
 };
