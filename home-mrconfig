@@ -183,7 +183,7 @@ fixups =
 	cmd "/C win32setup.bat"
     fi
     # set up Emacs packages
-    $HOME/.emacs.d/pkg/subtrees.sh
+    # $HOME/.emacs.d/pkg/subtrees.sh
 
 # clean-ups so that initial stow will be successful
 pre_stow =
