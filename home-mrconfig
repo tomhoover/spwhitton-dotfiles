@@ -8,8 +8,7 @@ git_gc = git gc "$@"
 # alias
 unmod = mr misstowed --delete-unmodified && mr restow
 
-# avoid hangs due to SSH connection sharing
-jobs = 1
+jobs = 3
 
 # custom actions to be configured repository-by-repository
 git_sync = :
