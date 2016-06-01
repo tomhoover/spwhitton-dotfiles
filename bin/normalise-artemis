@@ -31,8 +31,10 @@ keyboard="Bus 006 Device 005: ID 04f2:0833 Chicony Electronics Co., Ltd"
 
 if lsusb | grep -q "$keyboard"; then
     setxkbmap -layout us -option ctrl:nocaps
+    numlockx on
 else
     setxkbmap -layout gb -option ctrl:nocaps
+    numlockx off
 fi
 
 xmodmap ~/.Xmodmap
