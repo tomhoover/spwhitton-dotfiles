@@ -4,10 +4,6 @@
 
 [DEFAULT]
 git_gc = git gc "$@"
-
-# alias
-unmod = mr misstowed --delete-unmodified && mr restow
-
 jobs = 3
 
 # custom actions to be configured repository-by-repository
@@ -38,6 +34,11 @@ include =
          -a ! "$(perl -e 'print $^O')" = "msys" ]; then
         cat ~/src/dotfiles/lib/mr/stow
     fi
+
+# some hooks to deal with the fact that I use a lot of programs that
+# mistreat symlinks to config files
+pre_unstow = mr misstowed --delete-unmodified >/dev/null
+pre_restow = mr misstowed --delete-unmodified >/dev/null
 
 # --- joeyh's code for specifying what machine we're on for repo skip
 # --- tests, plus my code for detecting Git-on-Windows
