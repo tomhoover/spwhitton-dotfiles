@@ -608,7 +608,7 @@
 
   :config
   ;; This binding replaces a `markdown-export'.
-  (bind-key "<f9>" 'spw/pandoc-paper-compile markdown-mode-map))
+  (bind-key "<f9>" 'spw/pandoc-compile markdown-mode-map))
 
 ;;; RefTeX
 
@@ -1726,8 +1726,13 @@ Passes ARG to `projectile-switch-project-by-name'."
                                      (spw/get-programming-projects programming-projects-dir))))
     (projectile-switch-project-by-name project-dir arg)))
 
-;;; TODO <F9> bound to this or `spw/pandoc-presentation-compile'
-;;; depending on pwd
+(defun spw/pandoc-compile (arg)
+  (interactive "P")
+  (cond
+   ((string= default-directory (expand-file-name "~/doc/papers/"))
+    (spw/pandoc-paper-compile arg))
+   ((string= default-directory (expand-file-name "~/doc/pres/"))
+    (spw/pandoc-presentation-compile arg))))
 
 (defun spw/pandoc-paper-compile (arg)
   "Compile a paper to PDF with pandoc into ~/tmp.
