@@ -93,6 +93,7 @@ alias uavpn="pkill rtorrent && sudo openconnect https://vpn.arizona.edu/ && TERM
 alias loungempd="ssh TallGeese /Applications/VLC.app/Contents/MacOS/VLC -I rc --loop http://192.168.1.236:8000"
 alias sid-build-deps="sudo mk-build-deps -irt 'apt-get -o Debug::pkgProblemResolver=yes -t sid --no-install-recommends'"
 alias test-package-plan="schroot -d $HOME -- /bin/sh -c \"cabal --no-require-sandbox update && cd src/package-plan && perl test-packages.pl\""
+alias dgb="dgit --ignore-dirty build"
 
 # cd to top of git checkout
 alias cg='cd $(git rev-parse --show-toplevel)'
