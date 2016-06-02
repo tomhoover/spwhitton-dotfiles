@@ -1,0 +1,4 @@
+#!/bin/sh
+
+firejail --x11=xephyr --private --private-tmp openbox
+DISPLAY=$(firemon --x11 | grep "DISPLAY" | sed 's/   DISPLAY //') firejail --private --private-tmp /usr/bin/skype
