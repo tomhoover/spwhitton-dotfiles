@@ -3,8 +3,7 @@
 # 0 */2 * * * srem --refresh-emacs
 
 */15 * * * * chronic doccheckin
-#*/30 * * * * offline || chronic mbsync fastmail
-# ^ disabled for May--July 2016
+*/30 * * * * offline || chronic mbsync fastmail
 
 @reboot rt
 
