@@ -27,7 +27,7 @@ INTL="gb"
 #     echo 13 | sudo tee /sys/class/backlight/acpi_video0/brightness
 # fi
 
-keyboard="Bus 006 Device 005: ID 04f2:0833 Chicony Electronics Co., Ltd"
+keyboard="ID 04f2:0833 Chicony Electronics Co., Ltd"
 
 if lsusb | grep -q "$keyboard"; then
     setxkbmap -layout us -option ctrl:nocaps
