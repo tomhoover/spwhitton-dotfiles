@@ -79,7 +79,7 @@ unlink glob "src/*.changes";
 unlink glob "src/*.deb";
 unlink glob "src/*.build";
 unlink glob "src/*.debian.tar.*";
-unlink glob "src/*[0-9].tar.*";
+unlink glob "src/*[0-9].tar.*"; # native package generated tarballs
 system "clean-patch-queues -y";
 
 while (42) {
@@ -142,26 +142,40 @@ if ( defined $loc ) {
     }
 
     # ---- misc. repos
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/aggressive-indent-mode.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/f-el.git", "alioth");
+
+    # Debian packages I'm responsible for
+
+    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/dh-elpa.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/dh-make-elpa.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/ebib.git", "alioth");
     backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/emacs-async.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/emacs-buttercup.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/emacs-highlight-indentation.git", "alioth");
     backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/emacs-noflet.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/perspective-el.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/helm.git", "alioth");
     backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/epl.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/pkg-info-el.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/f-el.git", "alioth");
     backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/flx.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/projectile.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/flycheck.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/helm.git", "alioth");
     backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/let-alist.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/paredit-el.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/parsebib.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/perspective-el.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/pkg-info-el.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/popup-el.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/projectile.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/rainbow-delimiters.git", "alioth");
     backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/seq-el.git", "alioth");
     backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/shut-up.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/popup-el.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/paredit-el.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/smex.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/ws-butler.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/zenburn-emacs.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/aggressive-indent-mode.git", "alioth");
+
+    backup_repo("https://anonscm.debian.org/git/pkg-mozext/classic-theme-restorer.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/pkg-mozext/keysnail.git", "alioth");
     backup_repo("https://anonscm.debian.org/git/pkg-mozext/ublock-origin.git", "alioth");
     backup_repo("https://anonscm.debian.org/git/pkg-mozext/y-u-no-validate.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-mozext/classic-theme-restorer.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/flycheck.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-mozext/keysnail.git", "alioth");
 
 }
 
