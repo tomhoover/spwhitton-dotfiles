@@ -4,7 +4,9 @@
 
 [DEFAULT]
 git_gc = git gc "$@"
-jobs = 3
+
+# avoid hangs due to SSH connection sharing
+jobs = 1
 
 # custom actions to be configured repository-by-repository
 git_sync = :
