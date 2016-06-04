@@ -369,7 +369,7 @@ setopt                   \
     NO_csh_junkie_quotes \
     NO_csh_null_glob     \
     equals               \
-    extended_glob        \
+    NO_extended_glob     \
     extended_history     \
     function_argzero     \
     glob                 \
