@@ -1235,8 +1235,13 @@ Originally from http://stackoverflow.com/a/2172827"
   (interactive "p")
   (spw/delete-word (- arg)))
 
-(bind-key "C-w" 'spw/backward-delete-word)
+;; a nicer kill-region binding, and move the keyboard macro bindings
+;; somewhere else
 (bind-key "C-x C-k" 'kill-region)
+(bind-key "C-c C-x C-k" 'kmacro-keymap)
+
+(bind-key "C-w" 'spw/backward-delete-word)
+
 ;; (global-set-key "\M-d" 'spw/delete-word)
 
 ;;; my buffer save cleanup functions
