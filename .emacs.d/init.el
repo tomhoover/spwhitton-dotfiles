@@ -150,7 +150,7 @@
 ;;; I'm in Arizona
 
 (unless (eq system-type 'windows-nt)
-  (set-time-zone-rule "/usr/share/zoneinfo/US/Mountain"))
+  (set-time-zone-rule "/usr/share/zoneinfo/America/Phoenix"))
 
 ;;; be sure to start the server
 
