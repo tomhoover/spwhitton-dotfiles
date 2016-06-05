@@ -1,8 +1,4 @@
-;;; init --- Sean's Emacs configuration
-
-;;; Commentary:
-
-;;; Code:
+;;; Sean's Emacs configuration
 
 ;;;; ---- package management ----
 
@@ -33,12 +29,12 @@
 
 ;; As of Mar-16 we're appending rather than prepending to the
 ;; load-path so that any installed Debian ELPA packages take
-;; precedence over those in `emacs-pkg-dir'.
+;; precedence over those in `emacs-pkg-dir'
 
-;; If I want some lisp in `emacs-pkg-dir' to take precedence over
-;; system-wide lisp, I should create a file ~/.emacs.d/pkg/overrides
-;; and have the following code prepend a directory to the load path if
-;; it is listed in that file.
+;; If at some point I want some lisp in `emacs-pkg-dir' to take
+;; precedence over system-wide lisp, I should create a file
+;; ~/.emacs.d/pkg/overrides and have the following code prepend a
+;; directory to the load path if it is listed in that file
 (let* ((globs '("*" "*/lisp"))
        (dirs (expand-all-globs emacs-pkg-dir globs)))
   (dolist (dir dirs)
@@ -107,13 +103,14 @@
 ;; don't prompt to create scratch buffers
 (setq confirm-nonexistent-file-or-buffer nil)
 
-;; initial frame width -- commented out in favour of maximising
+;; initial frame width -- not much use with xmonad
 ;; (if window-system (set-frame-width (selected-frame) 80))
 
 ;; soft word wrapping for easier editing of long lines
 (setq-default visual-line-mode t
               word-wrap t
               wrap-prefix "    ")
+(use-package diminish)
 (diminish 'visual-line-mode)
 
 ;; ;; kill the fringes, if we have window system support compiled in
@@ -144,6 +141,7 @@
 (package-initialize)
 (use-package zenburn-theme
   :init
+  ;; in case we're not loading the Debian package
   (add-to-list
    'custom-theme-load-path
    (concat user-emacs-directory "pkg/zenburn-emacs"))
@@ -166,13 +164,14 @@
 ;; (unless (server-running-p)
 ;;   (server-start))
 
+
+;;; save my places in buffers; this is all the session management I need
+
+(setq recentf-save-file "~/.emacs.d/recentf")
+
 
 
 ;;;; ---- packages ----
-
-;;; clean up the mode line
-
-(use-package diminish)
 
 ;;; instead of vim text objects
 
@@ -239,150 +238,29 @@
     (add-hook 'minibuffer-setup-hook 'paredit-everywhere-mode)
     :config
     (spw/paredit-unsteal paredit-everywhere-mode-map))
+
   :config
-  (spw/paredit-unsteal paredit-mode-map)
-  ;; C-j is useless with `aggressive-indent-mode'
-  (setq )
-  )
+  (spw/paredit-unsteal paredit-mode-map))
 
 (electric-pair-mode 1)
 (show-paren-mode 1)
 
 ;; based on http://emacs.stackexchange.com/a/2554/8610
 (defmacro spw/add-mode-pairs (hook pairs)
-  `(add-hook ,hook
-             (lambda ()
-               (setq-local electric-pair-pairs (append electric-pair-pairs ,pairs))
-               (setq-local electric-pair-text-pairs electric-pair-pairs))))
+  `(add-hook
+    ,hook
+    (lambda ()
+      (setq-local electric-pair-pairs (append electric-pair-pairs ,pairs))
+      (setq-local electric-pair-text-pairs electric-pair-pairs))))
 
 (spw/add-mode-pairs 'emacs-lisp-mode-hook '((?` . ?')))
 
-;;; keep parentheses under control: modern replacement for the mighty paredit
-
-(use-package smartparens
-  :disabled t
-  :bind (("M-J" . sp-join-sexp)
-
-         ;; for when I use Emacs via PuTTY
-         ("M-<right>" . sp-forward-slurp-sexp)
-         ("M-<left>" . sp-forward-barf-sexp))
-  :commands (smartparens-strict-mode
-             smartparens-mode
-             show-smartparens-global-mode)
-  :defer 5
-  :init
-
-  (dolist (hook '(emacs-lisp-mode-hook
-                  lisp-mode-hook
-                  lisp-interaction-mode-hook
-                  ielm-mode-hook
-                  scheme-mode-hook
-                  inferior-scheme-mode-hook
-                  python-mode-hook
-                  minibuffer-setup-hook
-                  ;; haskell-mode-hook
-                  ))
-    (add-hook hook
-              (lambda ()
-                (smartparens-strict-mode 1))))
-
-  :config
-
-  ;; always highlight parens
-  (show-smartparens-global-mode 1)
-
-  (require 'smartparens-config)
-  (setq sp-navigate-consider-symbols t)
-
-  (smartparens-global-mode)
-
-  ;; global smartparens bindings
-  (sp-use-smartparens-bindings)
-  (bind-key "C-w" 'sp-backward-kill-word emacs-lisp-mode-map)
-  (bind-key "C-k" 'sp-kill-hybrid-sexp emacs-lisp-mode-map)
-  (bind-key "M-<up>" 'sp-raise-sexp smartparens-mode-map)
-
-  ;; and now undo some of that in particular major modes
-  (add-hook 'org-mode-hook (lambda ()
-                             (crowding/local-set-minor-mode-key
-                              'smartparens-mode (kbd "M-<up>") nil)))
-
-  ;; override smartparens binding for C-k outside of lisp,
-  ;; since sp-kill-hybrid-sexp isn't very smart in comint
-  ;; and I like using C-u C-k
-  ;; (define-key smartparens-strict-mode-map [remap kill-line] 'kill-line)
-  ;; (bind-key "C-k" 'sp-kill-hybrid-sexp
-  ;; emacs-lisp-mode-map)
-
-  ;; when killing the first word of a sentence, leave the
-  ;; two spaces after the previous sentence's terminal
-  ;; period
-  (defun sp-backward-kill-word--fix-punctuation (&rest ignore)
-    (save-excursion
-      (backward-char 2)
-      (when (and (or (looking-at "\\. ")
-                     (looking-at   "! ")
-                     (looking-at "\\? "))
-                 (not (looking-back "^[1-9]+")))
-        (forward-char 1)
-        (insert " "))))
-  (advice-add 'sp-backward-kill-word :after #'sp-backward-kill-word--fix-punctuation)
-
-  ;; fix cursor position after M-d at the beginning of a line
-  (defun sp-kill-word--beg-of-line-fix ()
-    (when (looking-back "^[[:space:]]")
-      (backward-char 1)))
-  (advice-add 'sp-kill-word :after #'sp-kill-word--beg-of-line-fix)
-
-  ;; when after whitespace at the beginning of a line or
-  ;; an Org bullet or heading, delete it all
-  (defun sp-backward-delete-char--remove-indentation (orig-fun &rest args)
-    (if (and
-         ;; do it if we're not at the beginning of the line,
-         ;; and there's whitespace: if we're at the
-         ;; beginning of the line we should always delete
-         (not (equal (point) (line-beginning-position)))
-         (or
-          (looking-back "^[[:space:]]+")
-          (looking-back "^[[:space:]]*- ")
-          (looking-back "^[*]+ ")))
-        (kill-line 0)
-      ;; if not after whitespace at the beginning of the
-      ;; line, just call as usual
-      (apply orig-fun args)))
-  (advice-add 'sp-backward-delete-char :around #'sp-backward-delete-char--remove-indentation)
-
-  ;; when after whitespace at the beginning of a line or an Org bullet
-  ;; or heading, delete it all.  This is more intuitive when C-w is
-  ;; one's main way to delete stuff
-  (defun sp-backward-delete-word--remove-indentation (orig-fun &rest args)
-    (if (and
-         ;; do it if we're not at the beginning of the line,
-         ;; and there's whitespace: if we're at the
-         ;; beginning of the line we should always delete
-         (not (equal (point) (line-beginning-position)))
-         (or
-          (looking-back "^[[:space:]]+")
-          (looking-back "^[[:space:]]*- ")
-          (looking-back "^[*]+ ")))
-        (kill-line 0)
-      ;; if not after whitespace at the beginning of the
-      ;; line, just call as usual
-      (apply orig-fun args)))
-  (advice-add 'sp-backward-delete-word :around #'sp-backward-delete-word--remove-indentation)
-
-  ;; define an additional pairing for Org-mode (verbatim text)
-  (sp-local-pair 'org-mode "=" "=")
-
-  (sp-local-pair 'markdown-mode "`" "`"))
-
 ;;; Org
 
+;; my config
 (eval-after-load 'org '(load "~/.emacs.d/init-org.el"))
 
 (use-package org
-  ;; :ensure org-plus-contrib ; Debian Jessie archive version is new enough
-  ;; :pin org
   :mode (("\\.org" . org-mode)
          ("\\.org_archive" . org-mode))
   :bind (("C-c o c" . org-capture)
@@ -397,10 +275,6 @@
              spw/org-agenda-file-to-front
              spw/org-remove-file
              spw/new-philos-notes))
-
-;;; save my places in buffers; this is all the session management I need
-
-(setq recentf-save-file "~/.emacs.d/recentf")
 
 ;; the three hooks added by the idle progn below don't stay set when
 ;; set by (require 'saveplace), nor do they remain in place if simply
@@ -435,19 +309,9 @@
 
 (setq large-file-warning-threshold 100000000)
 
-;;; doc-view
-
-(use-package doc-view
-  :init (setq doc-view-resolution 150
-              doc-view-continuous t)
-  :config (add-hook 'doc-view-mode-hook 'auto-revert-mode))
-
 ;;; magit
 
 (use-package magit
-  :diminish magit-wip-after-save-local-mode
-  :init
-  (setq magit-last-seen-setup-instructions "1.4.0")
   :demand
   :config
 
@@ -463,14 +327,6 @@
   (setq magit-completing-read-function 'magit-ido-completing-read
         magit-push-always-verify nil
         magit-revert-buffers 'silent)
-
-  ;; C-c C-a to amend without any prompt
-  (defun magit-just-amend ()
-    (interactive)
-    (save-window-excursion
-      (magit-with-refresh
-       (shell-command "git --no-pager commit --amend --reuse-message=HEAD"))))
-  (bind-key "C-c C-a" 'magit-just-amend magit-status-mode-map)
 
   (use-package magit-annex))
 
@@ -578,16 +434,7 @@
         company-echo-delay 0)
 
   (add-to-list 'company-backends 'company-capf)
-  (add-to-list 'company-transformers 'company-sort-by-occurrence)
-
-  ;; python code completion
-
-  (use-package anaconda-mode
-    :disabled t
-    :config (progn
-              (add-hook 'python-mode-hook 'anaconda-mode)
-              (add-to-list 'company-backends 'company-anaconda)
-              (add-hook 'python-mode-hook 'anaconda-eldoc))))
+  (add-to-list 'company-transformers 'company-sort-by-occurrence))
 ;; C-o during company isearch narrows to stuff matching that search;
 ;; mnemonic 'occur'.  C-M-s while outside of search to do the same
 ;; thing
@@ -676,18 +523,6 @@
       (cl-letf (((symbol-function 'window-width) (lambda  () (- width 1))))
         (apply orig-fun args))))
   (advice-add 'deft-buffer-setup :around #'deft-buffer-setup--fix-window-width))
-
-;;; The following two python packages seem to be unavailable for
-;;; download.  Disable them for now.
-
-;;; allow lisp to interact with python
-
-(use-package pymacs :disabled t)
-
-;;; Get Python documentation as info files
-
-(use-package python-info :disabled t)
-;;(use-package pydoc-info :ensure)
 
 ;;; flycheck
 
@@ -847,10 +682,6 @@
 (use-package ido-ubiquitous
   :config (ido-ubiquitous-mode 1))
 
-(use-package ido-vertical-mode
-  :disabled t
-  :init (ido-vertical-mode 1))
-
 (use-package smex
   :bind ("C-x C-m" . smex))
 
@@ -933,10 +764,6 @@
 
 (use-package image-dired
   :init (image-dired-setup-dired-keybindings))
-
-;;; alternative to my old `spw/centre-window'
-
-(use-package centered-window-mode :disabled t :commands centered-window-mode)
 
 ;;; zap-up-to-char is at least as useful as zap-to-char, so load it
 ;;; out of misc.el.
@@ -2348,43 +2175,6 @@ superflous blank quoted lines."
  (lambda ()
    (setq-local electric-layout-rules
                (remove (quote (?\; . after)) electric-layout-rules))))
-
-;;; eshell prompt
-
-;; from the Emacs Wiki [[EshellPrompt]]
-(defun fish-path (path max-len)
-  "Maybe trim PATH down to MAX-LEN (sans slashes).
-
-Replaces parent directories with their initial characters."
-  (let* ((components (split-string (abbreviate-file-name path) "/"))
-         (len (+ (1- (length components))
-                 (reduce '+ components :key 'length)))
-         (str ""))
-    (while (and (> len max-len)
-                (cdr components))
-      (setq str (concat str
-                        (cond ((= 0 (length (car components))) "/")
-                              ((= 1 (length (car components)))
-                               (concat (car components) "/"))
-                              (t
-                               (if (string= "."
-                                            (string (elt (car components) 0)))
-                                   (concat (substring (car components) 0 2)
-                                           "/")
-                                 (string (elt (car components) 0) ?/)))))
-            len (- len (1- (length (car components))))
-            components (cdr components)))
-    (concat str (reduce (lambda (a b) (concat a "/" b)) components))))
-
-(setq eshell-prompt-function
-      (lambda nil
-        (concat
-         (propertize (car (split-string (system-name) "\\.")) 'face `(:foreground "#DFAF8F"))
-         " "
-         (propertize (fish-path (eshell/pwd) 40) 'face `(:foreground "#60b48a"))
-         (propertize " $" 'face `(:foreground "#506070"))
-         " ")))
-(setq eshell-highlight-prompt nil)
 
 ;;; Perl
 
