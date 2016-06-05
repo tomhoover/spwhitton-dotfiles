@@ -1230,16 +1230,13 @@ Originally from http://stackoverflow.com/a/2172827"
   (interactive "p")
   (delete-region (point) (progn (forward-word arg) (point))))
 
-(defun spw/backward-delete-word-dwim (arg)
-  "Delete characters ARG backward until encountering the end of a
-word, unless the region is active, in which case kill it."
+(defun spw/backward-delete-word (arg)
+  "Delete characters ARG backward until encountering the end of a word."
   (interactive "p")
-  (if (region-active-p)
-      (call-interactively 'kill-region)
-    (spw/delete-word (- arg))))
+  (spw/delete-word (- arg)))
 
-(bind-key "C-w" 'spw/backward-delete-word-dwim)
-;; (bind-key "C-x C-k" 'kill-region)
+(bind-key "C-w" 'spw/backward-delete-word)
+(bind-key "C-x C-k" 'kill-region)
 ;; (global-set-key "\M-d" 'spw/delete-word)
 
 ;;; my buffer save cleanup functions
