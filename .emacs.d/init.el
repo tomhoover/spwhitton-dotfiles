@@ -848,6 +848,7 @@
   :config
   (key-chord-mode 1)
   ;; access the C-c keymap with a comfortable key-chord
+  ;; TODO access buffer-local C-c map
   (key-chord-define-global "jk" mode-specific-map))
 
 ;; good key chords from
@@ -1836,6 +1837,10 @@ Ensures the kill ring entry always ends with a newline."
 (bind-key "C-c S S" 'spw/auto-textbook)
 (bind-key "C-c S s" 'spw/textbook)
 (bind-key "C-c S t" 'spw/auto-teachers-book)
+
+;;; mode-specific
+
+(bind-key "C-c u w" 'wdired-change-to-wdired-mode dired-mode-map)
 
 ;;; toggling
 
