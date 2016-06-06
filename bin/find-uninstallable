@@ -1,0 +1,31 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+use autodie;
+
+use Array::Utils qw{ array_minus };
+use Path::Class;
+
+# manually installed packages that aren't part of a standard Debian
+# system and aren't depended on by anything else we have installed
+my @installed = split "\n", `aptitude search '~i !~M !~pstandard !~pimportant !~prequired !?reverse-Depends(?installed)' -F'%p' --disable-columns`;
+
+# packages propellor installs
+my @wanted;
+my $dir = dir("$ENV{HOME}/src/propellor/src/Propellor/Property/SiteSpecific");
+my $file = $dir->file("SPW.hs");
+my $file_handle = $file->openr();
+while( my $line = $file_handle->getline() ) {
+    if ( $line =~ /[,\[] "([a-z0-9-]+)"$/ ) {
+        push @wanted, $1;
+    }
+}
+
+# these are all the packages I might want to remove from my
+# workstation, or `apt-mark auto`
+my @might_want_to_remove_or_mark_auto = array_minus( @installed, @wanted );
+@might_want_to_remove_or_mark_auto = grep { $_ !~ /^task-/ }
+  @might_want_to_remove_or_mark_auto;
+print join "\n", @might_want_to_remove_or_mark_auto;
+print "\n";
