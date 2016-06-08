@@ -1,5 +1,12 @@
 #!/usr/bin/perl
 
+# Run this script to find packages that I might want to uninstall, or
+# at least mark as automatically installed.  We find all manually
+# installed packages that aren't part of a standard Debian system and
+# aren't depended on by anything else we have installed.  Then we
+# filter out a list of packages we always want, and packages that
+# propellor keeps installed.
+
 use strict;
 use warnings;
 use autodie;
@@ -11,8 +18,10 @@ use Path::Class;
 # system and aren't depended on by anything else we have installed
 my @installed = split "\n", `aptitude search '~i !~M !~pstandard !~pimportant !~prequired !?reverse-Depends(?installed)' -F'%p' --disable-columns`;
 
-# packages propellor installs
-my @wanted;
+# packages we definitely want to keep
+my @wanted = qw/acpi acpi-support-base/;
+
+# packages propellor installs (roughly)
 my $dir = dir("$ENV{HOME}/src/propellor/src/Propellor/Property/SiteSpecific");
 my $file = $dir->file("SPW.hs");
 my $file_handle = $file->openr();
@@ -23,9 +32,12 @@ while( my $line = $file_handle->getline() ) {
 }
 
 # these are all the packages I might want to remove from my
-# workstation, or `apt-mark auto`
+# workstation, or at least `apt-mark auto`
 my @might_want_to_remove_or_mark_auto = array_minus( @installed, @wanted );
-@might_want_to_remove_or_mark_auto = grep { $_ !~ /^task-/ }
-  @might_want_to_remove_or_mark_auto;
+
+# remove task-* packages since I probs. don't want to remove those
+@might_want_to_remove_or_mark_auto = grep { $_ !~ /^task-/ } @might_want_to_remove_or_mark_auto;
+
+# output
 print join "\n", @might_want_to_remove_or_mark_auto;
 print "\n";
