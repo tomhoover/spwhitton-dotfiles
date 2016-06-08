@@ -27,6 +27,9 @@ $CONFIG{'also-encrypt-to'} = [ qw{0F56D0553B6D411B} ];
 $CONFIG{'mail-template'} = << 'EOM';
 Hello,
 
+Thank you for meeting up and for the opportunity to exchange PGP
+signatures.
+
 Please find attached the user id{(scalar @uids >= 2 ? 's' : '')}
 {foreach $uid (@uids) {
     $OUT .= "\t".$uid."\n";
