@@ -233,7 +233,7 @@ pre_stow = homedir_mkdirs
 # sets this as the remote in /usr/local/propellor and it must be
 # possible to pull from it without root having my .gitconfig checked
 # out
-checkout = git clone https://git.spwhitton.name/athena propellor --branch spwconf
+checkout = git clone https://git.spwhitton.name/athena propellor --branch spw3conf
 post_checkout =
     cd propellor
     git remote add -f upstream github:joeyh/propellor.git
@@ -251,7 +251,7 @@ fixups =
     # check that the link isn't already in place before making the link
     # because otherwise we get an infinite loop of links that breaks propellor
     [ -L ~/.propellor ] || ln -sf ~/src/propellor ~/.propellor
-    git config propellor.spin-branch spwconf
+    git config propellor.spin-branch spw3conf
     git config propellor.forbid-dirty-spin true
 
 # --- personal website source
