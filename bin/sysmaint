@@ -228,6 +228,7 @@ sub find_dirty_src {
     foreach my $f ( glob "src/*" ) {
         my $short = basename($f);
         unless ( (-f $f && $f =~ /orig\.tar/)
+                 || (-L $f && $f =~ /orig\.tar/)
                  || $short ~~ @src_exceptions
                  || (-d "$f/.git"
                      && ((fgrep { /^\[$short\]$/ } "src/.mrconfig")
