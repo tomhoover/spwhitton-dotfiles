@@ -33,3 +33,4 @@ debian/files
 *.debhelper
 *.substvars
 \.pc
+*.rej
