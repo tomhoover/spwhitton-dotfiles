@@ -95,6 +95,8 @@ alias sid-build-deps="sudo mk-build-deps -irt 'apt-get -o Debug::pkgProblemResol
 alias testing-build-deps="sudo mk-build-deps -irt 'apt-get -o Debug::pkgProblemResolver=yes -t testing --no-install-recommends'"
 alias test-package-plan="schroot -d $HOME -- /bin/sh -c \"cabal --no-require-sandbox update && cd src/package-plan && perl test-packages.pl\""
 alias dgb="dgit --ignore-dirty build"
+alias wnpomodoro="mplayer ~/lib/annex/doc/sounds/*pomodoro.mp3"
+alias gbps="gbp buildpackage --git-builder=sbuild"
 
 # cd to top of git checkout
 alias cg='cd $(git rev-parse --show-toplevel)'
