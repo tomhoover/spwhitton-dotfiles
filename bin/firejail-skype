@@ -1,4 +1,4 @@
 #!/bin/sh
 
-firejail --x11=xephyr --private --private-tmp openbox
-DISPLAY=$(firemon --x11 | grep "DISPLAY" | sed 's/   DISPLAY //') firejail --private --private-tmp /usr/bin/skype
+firejail --x11=xephyr --net=eth0 --private --private-tmp openbox
+DISPLAY=$(firemon --x11 | grep "DISPLAY" | sed 's/   DISPLAY //') firejail --net=eth0 --private --private-tmp /usr/bin/skype
