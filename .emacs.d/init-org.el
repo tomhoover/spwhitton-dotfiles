@@ -308,7 +308,7 @@
      (todo "TODO|NEXT" ((org-agenda-todo-ignore-scheduled t)
                         (org-agenda-todo-ignore-deadlines 'far)
                         (org-agenda-overriding-header "Unscheduled standalone tasks & project next actions")
-                        (org-agenda-skip-function 'spw/skip-projects-and-non-next-subprojects-and-subprojects-of-scheduled-projects)))
+                        (org-agenda-skip-function 'spw//skip-non-unscheduled-standalone-tasks)))
      (agenda "" ((org-agenda-ndays 3)
                  (org-agenda-start-day "+1d")
                  (org-agenda-time-grid nil)
@@ -439,15 +439,20 @@
         next-headline
       nil)))
 
-;;; The "... and subtasks of scheduled projects" is because sometimes
+;;; The "subtasks of scheduled projects" is because sometimes
 ;;; I have broken a project down into NEXT actions but I am planning
 ;;; to deal with them all at once, so I scheduled the parent project
 ;;; to a particular day
+
 ;;; TODO sometimes I have to go to the next project and reveal the
 ;;; SCHEDULED of its parent and then refresh the agenda, or it doesn't
 ;;; get skipped
-(defun spw/skip-projects-and-non-next-subprojects-and-subprojects-of-scheduled-projects ()
-  "Skip projects, subtasks of projects that are not NEXT actions, and subtasks of scheduled projects"
+(defun spw/skip-non-unscheduled-standalone-tasks ()
+  "Skips:
+- projects
+- subtasks of projects that are not NEXT actions
+- subtasks of scheduled projects
+- subtasks of SOMEDAY projects"
   (let ((next-headline (save-excursion (outline-next-heading))))
     (if (or (and (bh/is-subproject-p)
                  (not (string= (spw/org-get-todo-keyword) "NEXT")))
