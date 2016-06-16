@@ -445,13 +445,15 @@
 - subtasks of projects that are not NEXT actions
 - subtasks of SOMEDAY projects
 - subtasks of WAITING projects
-- subtasks of scheduled projects
+- subtasks of scheduled or deadlined projects
 
 In the last case, the idea is that if I've scheduled the project
 then I intend to tackle all the NEXT actions on that date (or at
 least the next chunk of them).  I've broken the project down into
 NEXT actions but not for the purpose of handling them on
 different occasions."
+  ;; TODO probably better if it skipped only scheduled, not deadlined
+  ;; projects: deadlined ones actionable
   (let ((next-headline (save-excursion (outline-next-heading)))
         (forward-headline (save-excursion (org-forward-heading-same-level))))
     (cond
