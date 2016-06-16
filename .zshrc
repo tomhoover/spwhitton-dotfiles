@@ -98,6 +98,11 @@ alias dgb="dgit --ignore-dirty build"
 alias wnpomodoro="mplayer ~/lib/annex/doc/sounds/*pomodoro.mp3"
 alias gbps="gbp buildpackage --git-builder=sbuild"
 
+# based on gregor hermann's dh-make-perl-dev he posted on bugs.d.o
+dh-make-elpa-dev () {
+    PERL5LIB=~/src/dh-make-elpa/lib/ ~/src/dh-make-elpa/dh-make-elpa "$@"
+}
+
 # cd to top of git checkout
 alias cg='cd $(git rev-parse --show-toplevel)'
 
