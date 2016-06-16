@@ -308,7 +308,7 @@
      (todo "TODO|NEXT" ((org-agenda-todo-ignore-scheduled t)
                         (org-agenda-todo-ignore-deadlines 'far)
                         (org-agenda-overriding-header "Unscheduled standalone tasks & project next actions")
-                        (org-agenda-skip-function 'spw/skip-projects-and-non-next-subprojects)))
+                        (org-agenda-skip-function 'spw/skip-non-actionable)))
      (agenda "" ((org-agenda-ndays 3)
                  (org-agenda-start-day "+1d")
                  (org-agenda-time-grid nil)
@@ -439,13 +439,41 @@
         next-headline
       nil)))
 
-(defun spw/skip-projects-and-non-next-subprojects ()
-  "Skip projects and subtasks of projects that are not NEXT actions"
-  (let ((next-headline (save-excursion (outline-next-heading))))
-    (if (or (and (bh/is-subproject-p) (not (string= (spw/org-get-todo-keyword) "NEXT")))
-            (bh/is-project-p))
-        next-headline
-      nil)))
+(defun spw/skip-non-actionable ()
+  "Skip:
+- projects
+- subtasks of projects that are not NEXT actions
+- subtasks of SOMEDAY projects
+- subtasks of WAITING projects
+- subtasks of scheduled projects
+
+In the last case, the idea is that if I've scheduled the project
+then I intend to tackle all the NEXT actions on that date (or at
+least the next chunk of them).  I've broken the project down into
+NEXT actions but not for the purpose of handling them on
+different occasions."
+  (let ((next-headline (save-excursion (outline-next-heading)))
+        (forward-headline (save-excursion (org-forward-heading-same-level))))
+    (cond
+     ((bh/is-project-p)
+      ;; Decide whether we skip all subtasks of this project because
+      ;; it is a SOMEDAY, WAITING or SCHEDULED.  If not, we just skip
+      ;; it because it's a project and its NEXT task is what's
+      ;; actionable
+      (if (or
+           (spw/org-is-scheduled-or-deadlined-p)
+           (string= (spw/org-get-todo-keyword) "SOMEDAY")
+           (string= (spw/org-get-todo-keyword) "WAITING"))
+          forward-headline
+        next-headline))
+     ;; Skip subtasks of projects that are not NEXT actions (we know
+     ;; that the project these NEXT actions are under is actionable)
+     ((and (bh/is-subproject-p)
+           (not (string= (spw/org-get-todo-keyword) "NEXT")))
+      next-headline)
+     ;; Otherwise, don't skip
+     (t
+      nil))))
 
 (defun spw/org-is-scheduled-or-deadlined-p ()
   "A task that is scheduled or deadlined"
