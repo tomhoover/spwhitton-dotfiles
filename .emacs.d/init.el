@@ -923,13 +923,15 @@
              (helm-dash-common-docsets (helm-dash-installed-docsets)))
         (if arg (helm-dash-at-point) (helm-dash))))))
 
+(use-package helm
+  :init (require 'helm-config)
+  :bind ("C-c r" . helm-surfraw))
+
 (use-package helm-dash
   :commands (helm-dash
              helm-dash-at-point
              helm-dash-install-docset
-             helm-dash-installed-docsets)
-  :config
-  (use-package helm :init (require 'helm-config)))
+             helm-dash-installed-docsets))
 
 (use-package debpaste
   :commands (debpaste-display-paste
