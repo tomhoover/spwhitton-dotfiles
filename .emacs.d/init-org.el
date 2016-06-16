@@ -457,12 +457,14 @@ different occasions."
   (let ((next-headline (save-excursion (outline-next-heading))))
     (if (or (bh/is-project-p)
             (and (bh/is-subproject-p)
-                 (save-excursion
-                   (org-up-heading-safe)
-                   (or
-                    (spw/org-is-scheduled-or-deadlined-p)
-                    (string= (spw/org-get-todo-keyword) "SOMEDAY")
-                    (string= (spw/org-get-todo-keyword) "WAITING")))))
+                 (or
+                  (not (string= (spw/org-get-todo-keyword) "NEXT"))
+                  (save-excursion
+                    (org-up-heading-safe)
+                    (or
+                     (spw/org-is-scheduled-or-deadlined-p)
+                     (string= (spw/org-get-todo-keyword) "SOMEDAY")
+                     (string= (spw/org-get-todo-keyword) "WAITING"))))))
         next-headline
       nil)))
 
