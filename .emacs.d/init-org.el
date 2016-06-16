@@ -453,9 +453,9 @@ least the next chunk of them).  I've broken the project down into
 NEXT actions but not for the purpose of handling them on
 different occasions."
   ;; TODO probably better if it skipped only scheduled, not deadlined
-  ;; projects: deadlined ones actionable
+  ;; projects: merely deadlined ones actionable
   (let ((next-headline (save-excursion (outline-next-heading)))
-        (forward-headline (save-excursion (org-forward-heading-same-level))))
+        (forward-headline (save-excursion (spw/org-forward-heading))))
     (cond
      ((bh/is-project-p)
       ;; Decide whether we skip all subtasks of this project because
@@ -476,6 +476,17 @@ different occasions."
      ;; Otherwise, don't skip
      (t
       nil))))
+
+(defun spw/org-forward-heading ()
+  (beginning-of-line)
+  (let ((start (point)))
+    (org-forward-heading-same-level 1 t)
+    ;; Check if that failed to move us, which means we reached
+    ;; the end of the buffer and so have to move ourselves to
+    ;; avoid an infinite loop
+    (if (eq (point) start)
+        (outline-next-heading)
+      (point))))
 
 (defun spw/org-is-scheduled-or-deadlined-p ()
   "A task that is scheduled or deadlined"
