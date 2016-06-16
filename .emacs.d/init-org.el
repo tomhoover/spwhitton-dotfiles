@@ -454,13 +454,27 @@
 - subtasks of scheduled projects
 - subtasks of SOMEDAY projects"
   (let ((next-headline (save-excursion (outline-next-heading))))
-    (if (or (and (bh/is-subproject-p)
-                 (not (string= (spw/org-get-todo-keyword) "NEXT")))
-            (and (bh/is-subproject-p)
-                 (spw/parent-scheduled-or-deadlined-p))
-            (bh/is-project-p))
+    (if (or
+         ;; each disjunct is something that will be SKIPPED
+         (and (bh/is-subproject-p)
+              (not (string= (spw/org-get-todo-keyword) "NEXT")))
+         (and (bh/is-subproject-p)
+              (spw/parent-scheduled-or-deadlined-p))
+         (and (bh/is-subproject-p)
+              (spw/parent-someday-p))
+         (bh/is-project-p))
         next-headline
       nil)))
+
+(defun spw/parent-someday-p ()
+  "A subproject which has a parent (or grandparent, or ..) that is SOMEDAY"
+  (let ((is-subproject-of-someday)
+        (is-a-task (member (nth 2 (org-heading-components)) org-todo-keywords-1)))
+    (save-excursion
+      (while (and (not is-subproject-of-someday) (org-up-heading-safe))
+        (when (string= (nth 2 (org-heading-components)) "SOMEDAY")
+          (setq is-subproject-of-someday t))))
+    (and is-a-task is-subproject-of-someday)))
 
 (defun spw/parent-scheduled-or-deadlined-p ()
   "A subproject which has a parent (or grandparent, or ..) that is scheduled or deadlined.
