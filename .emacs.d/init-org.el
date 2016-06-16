@@ -454,7 +454,14 @@ NEXT actions but not for the purpose of handling them on
 different occasions."
   ;; TODO probably better if it skipped only scheduled, not deadlined
   ;; projects: merely deadlined ones actionable
-  (let ((next-headline (save-excursion (outline-next-heading))))
+  (let ((next-headline
+         ;; Catch the end of the buffer to ensure we never return nil,
+         ;; since if the code below returns next-headline we need to
+         ;; go forward
+         (let ((try (save-excursion (outline-next-heading))))
+           (if try
+               try
+             (save-excursion (forward-line 1) (point))))))
     (if (or (bh/is-project-p)
             (and (bh/is-subproject-p)
                  (or
