@@ -454,6 +454,7 @@
         (regexp (org-re-timestamp 'scheduled-or-deadline)))
     (message regexp)
     (save-excursion
+      (outline-show-subtree)
       (forward-line)
       (org-beginning-of-line)
       (if (looking-at regexp)
