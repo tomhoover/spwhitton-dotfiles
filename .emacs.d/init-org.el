@@ -308,7 +308,7 @@
      (todo "TODO|NEXT" ((org-agenda-todo-ignore-scheduled t)
                         (org-agenda-todo-ignore-deadlines 'far)
                         (org-agenda-overriding-header "Unscheduled standalone tasks & project next actions")
-                        (org-agenda-skip-function 'spw/skip-projects-and-non-next-subprojects)))
+                        (org-agenda-skip-function 'spw/skip-projects-and-non-next-subprojects-and-subprojects-of-scheduled-projects)))
      (agenda "" ((org-agenda-ndays 3)
                  (org-agenda-start-day "+1d")
                  (org-agenda-time-grid nil)
@@ -439,13 +439,37 @@
         next-headline
       nil)))
 
-(defun spw/skip-projects-and-non-next-subprojects ()
-  "Skip projects and subtasks of projects that are not NEXT actions"
+;;; The "... and subtasks of scheduled projects" is because sometimes
+;;; I have broken a project down into NEXT actions but I am planning
+;;; to deal with them all at once, so I scheduled the parent project
+;;; to a particular day
+;;; TODO sometimes I have to go to the next project and reveal the
+;;; SCHEDULED of its parent and then refresh the agenda, or it doesn't
+;;; get skipped
+(defun spw/skip-projects-and-non-next-subprojects-and-subprojects-of-scheduled-projects ()
+  "Skip projects, subtasks of projects that are not NEXT actions, and subtasks of scheduled projects"
   (let ((next-headline (save-excursion (outline-next-heading))))
-    (if (or (and (bh/is-subproject-p) (not (string= (spw/org-get-todo-keyword) "NEXT")))
+    (if (or (and (bh/is-subproject-p)
+                 (not (string= (spw/org-get-todo-keyword) "NEXT")))
+            (and (bh/is-subproject-p)
+                 (spw/parent-scheduled-or-deadlined-p))
             (bh/is-project-p))
         next-headline
       nil)))
+
+(defun spw/parent-scheduled-or-deadlined-p ()
+  "A subproject which has a parent (or grandparent, or ..) that is scheduled or deadlined.
+
+As a degenerate case, something that is not a subproject returns
+nil"
+  (let ((is-subproject-of-scheduled)
+        (is-a-task (member (nth 2 (org-heading-components)) org-todo-keywords-1)))
+    (save-excursion
+      (while (and (not is-subproject-of-scheduled) (org-up-heading-safe))
+        (when (and (member (nth 2 (org-heading-components)) org-todo-keywords-1)
+                   (spw/org-is-scheduled-or-deadlined-p))
+          (setq is-subproject-of-scheduled t))))
+    (and is-a-task is-subproject-of-scheduled)))
 
 (defun spw/org-is-scheduled-or-deadlined-p ()
   "A task that is scheduled or deadlined"
