@@ -1,4 +1,10 @@
 #!/bin/sh
 
+# We can't just use propellor property Firejail.jailed ["skype"] because
+# 1. we can't specify --x11=xephyr in a profile file
+# 2. we can't launch openbox and then skype
+
+# So we have this script.
+
 firejail --x11=xephyr --net=eth0 --private --private-tmp openbox
 DISPLAY=$(firemon --x11 | grep "DISPLAY" | sed 's/   DISPLAY //') firejail --net=eth0 --private --private-tmp /usr/bin/skype
