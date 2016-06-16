@@ -454,28 +454,17 @@ NEXT actions but not for the purpose of handling them on
 different occasions."
   ;; TODO probably better if it skipped only scheduled, not deadlined
   ;; projects: merely deadlined ones actionable
-  (let ((next-headline (save-excursion (outline-next-heading)))
-        (forward-headline (save-excursion (spw/org-forward-heading))))
-    (cond
-     ((bh/is-project-p)
-      ;; Decide whether we skip all subtasks of this project because
-      ;; it is a SOMEDAY, WAITING or SCHEDULED.  If not, we just skip
-      ;; it because it's a project and its NEXT task is what's
-      ;; actionable
-      (if (or
-           (spw/org-is-scheduled-or-deadlined-p)
-           (string= (spw/org-get-todo-keyword) "SOMEDAY")
-           (string= (spw/org-get-todo-keyword) "WAITING"))
-          forward-headline
-        next-headline))
-     ;; Skip subtasks of projects that are not NEXT actions (we know
-     ;; that the project these NEXT actions are under is actionable)
-     ((and (bh/is-subproject-p)
-           (not (string= (spw/org-get-todo-keyword) "NEXT")))
-      next-headline)
-     ;; Otherwise, don't skip
-     (t
-      nil))))
+  (let ((next-headline (save-excursion (outline-next-heading))))
+    (if (or (bh/is-project-p)
+            (and (bh/is-subproject-p)
+                 (save-excursion
+                   (org-up-heading-safe)
+                   (or
+                    (spw/org-is-scheduled-or-deadlined-p)
+                    (string= (spw/org-get-todo-keyword) "SOMEDAY")
+                    (string= (spw/org-get-todo-keyword) "WAITING")))))
+        next-headline
+      nil)))
 
 (defun spw/org-forward-heading ()
   (beginning-of-line)
