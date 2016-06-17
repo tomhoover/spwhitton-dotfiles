@@ -230,6 +230,8 @@ sub find_dirty_src {
         unless ( (-f $f && $f =~ /orig\.tar/)
                  # also permit symlinks to orig tarballs
                  || (-l $f && $f =~ /orig\.tar/)
+                 # also permit gbp orig tarballs
+                 || ($f =~ /orig\.gbp\.tar/)
                  || $short ~~ @src_exceptions
                  || (-d "$f/.git"
                      && ((fgrep { /^\[$short\]$/ } "src/.mrconfig")
