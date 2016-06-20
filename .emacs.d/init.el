@@ -554,7 +554,9 @@
   :config
 
   ;; don't check too often: brief Emacs lock-ups are annoying
-  (setq flycheck-check-syntax-automatically '(mode-enabled save))
+  (setq
+   flycheck-check-syntax-automatically '(mode-enabled save)
+   flymake-start-syntax-check-on-find-file nil)
 
   (global-flycheck-mode 1))
 
