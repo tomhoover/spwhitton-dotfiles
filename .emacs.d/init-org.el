@@ -493,7 +493,9 @@ different occasions."
         (regexp (org-re-timestamp 'scheduled-or-deadline)))
     (message regexp)
     (save-excursion
-      (outline-show-subtree)
+      ;; Ignore errors if we fail to expand a subtree because we're
+      ;; before the first heading
+      (ignore-errors (outline-show-subtree))
       (forward-line)
       (org-beginning-of-line)
       (if (looking-at regexp)
