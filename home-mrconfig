@@ -28,6 +28,10 @@ git_isclean =
             test -z "$(git status --porcelain)"
     ) || (git status --porcelain && exit 1)
 
+# --- Experimental plugin for dgit repos
+
+include = [ -e ~/src/myrepos/lib/dgit ] && cat ~/src/myrepos/lib/dgit
+
 # --- Adam Spiers' plugin for managing dotfile symlinks with mr
 
 include =
