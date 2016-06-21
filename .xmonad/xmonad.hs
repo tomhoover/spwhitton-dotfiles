@@ -124,7 +124,7 @@ myManageHook = composeOne $
                , isDialog                               -?> doFloat
                , className     =? "Firefox"             -?> doShift "www"
                , className     =? "LibreOffice 5.0"     -?> doShift "view"
-               , className     =? "Vlc"                 -?> doShift "view"
+               , className     =? "vlc"                 -?> doShift "view"
                , className     =? "Evince"              -?> doShift "view"
                , title         =? "Dominion"            -?> doShift "view"
                , title         =? "Messenger"           -?> doShift "view"
