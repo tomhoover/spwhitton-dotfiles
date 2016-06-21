@@ -2,7 +2,7 @@
 
     Sean's second attempt at an XMonad configuration, after having learnt some Haskell
 
-    Much inspiration from Joey Hess's config
+    Many ideas from Joey Hess's config
 
 -}
 
@@ -67,17 +67,6 @@ myWorkspaces = [ "one"
                , "view"
                , "tail"
                ]
-
--- duplicates two colours that are set above
-myTheme = Theme
-          { activeBorderColor = "#94BFF3"
-          , inactiveBorderColor = "#656555"
-          , fontName = "Terminus"
-          , activeTextColor = "#94BFF3"
-          , inactiveTextColor = "#656555"
-          , activeColor = "#656555"
-          , inactiveColor = "#94BFF3"
-          }
 
 -- key bindings
 
@@ -148,7 +137,7 @@ myLayoutHook = avoidStruts $    -- small screens: avoidStrutsOn []
                onWorkspace "www" myWebLayout $
                onWorkspace "comm" myWebLayout $
                onWorkspace "tail" (myDish ||| Full) $
-               onWorkspace "view" (tabbed shrinkText myTheme) $
+               onWorkspace "view" simpleTabbed $
                -- default for other workspaces:
                myEditing ||| maximize Grid ||| Full
 
