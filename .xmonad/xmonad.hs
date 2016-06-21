@@ -56,7 +56,17 @@ myMod        = mod4Mask
 myTerm       = "urxvtcd"
 myEditor     = "emacscd"
 myBrowser    = "firefox"
-myWorkspaces = ["one", "two", "three", "www", "comm", "view", "tail"]
+myWorkspaces = [ "one"
+               , "two"
+               , "three"
+               , "four"
+               , "five"
+               , "six"
+               , "www"
+               , "comm"
+               , "view"
+               , "tail"
+               ]
 
 -- key bindings
 
@@ -81,6 +91,10 @@ myKeys = [ ("M4-/", spawn "xmousetidy")
          , ("M4-S-i", kill)
          , ("M1-<Tab>", rotSlavesDown)
          , ("M1-S-<Tab>", rotSlavesUp)
+
+           -- tenth workspace
+         , ("M4-0", windows $ W.greedyView "tail")
+         , ("M4-S-0", windows $ W.shift "tail")
 
            -- When locking the screen, also clear out my SSH key.
            -- Otherwise it lasts until I log off.  See GNOME bugzilla
