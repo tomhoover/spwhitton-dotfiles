@@ -8,10 +8,10 @@
 
 import           XMonad
 import           XMonad.Config.Xfce
-import qualified XMonad.StackSet             as W
-import           XMonad.Util.EZConfig        (additionalKeysP)
+import qualified XMonad.StackSet            as W
+import           XMonad.Util.EZConfig       (additionalKeysP, checkKeymap)
 
-import           XMonad.Actions.CycleWS      (toggleWS)
+import           XMonad.Actions.CycleWS     (toggleWS)
 import           XMonad.Actions.RotSlaves
 import           XMonad.Hooks.ManageDocks
 import           XMonad.Hooks.ManageHelpers
@@ -25,9 +25,12 @@ import           XMonad.Layout.LimitWindows
 import           XMonad.Layout.Maximize
 import           XMonad.Layout.NoBorders
 import           XMonad.Layout.PerWorkspace
+import           XMonad.Layout.Tabbed
 -- import           XMonad.Layout.ResizeScreen
 
-main = xmonad $ xfceConfig
+main = xmonad $ myConfig
+
+myConfig = xfceConfig
 
     { terminal           = myTerm
     , normalBorderColor  = "#656555"
@@ -44,6 +47,7 @@ main = xmonad $ xfceConfig
                            <+> (not <$> isDialog --> doF avoidMaster)
                            <+> (isDialog --> doF W.shiftMaster)
     , layoutHook         = myLayoutHook
+    , startupHook        = return () >> checkKeymap myConfig myKeys
     } `additionalKeysP` myKeys
 
 -- basic preferences
