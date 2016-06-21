@@ -131,6 +131,7 @@ myFloatClasses = [ "Gimp"
 
 myManageHook = composeOne $
                [ checkDock                              -?> doIgnore
+               , className     =? "Xfce4-notifyd"       -?> doIgnore
                , isDialog                               -?> doFloat
                , className     =? "Firefox"             -?> doShift "www"
                , className     =? "LibreOffice 5.0"     -?> doShift "view"
