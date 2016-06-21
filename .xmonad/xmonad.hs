@@ -131,7 +131,7 @@ myManageHook = composeOne $
                , title         =? "ii"                  -?> doShift "comm"
                ] ++ [className =? c -?> doFloat | c <- myFloatClasses]
 
-myLayoutHook = avoidStruts $    -- small screens: avoidStrutsOn []
+myLayoutHook = avoidStrutsOn [] $    -- tall screens: avoidStruts
                smartBorders $
                layoutHintsWithPlacement (0.5, 0.5) $
                onWorkspace "www" myWebLayout $
