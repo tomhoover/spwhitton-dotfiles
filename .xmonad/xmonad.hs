@@ -68,6 +68,17 @@ myWorkspaces = [ "one"
                , "tail"
                ]
 
+-- duplicates two colours that are set above
+myTheme = Theme
+          { activeBorderColor = "#94BFF3"
+          , inactiveBorderColor = "#656555"
+          , fontName = "Terminus"
+          , activeTextColor = "#94BFF3"
+          , inactiveTextColor = "#656555"
+          , activeColor = "#656555"
+          , inactiveColor = "#94BFF3"
+          }
+
 -- key bindings
 
 myKeys = [ ("M4-/", spawn "xmousetidy")
@@ -136,7 +147,7 @@ myLayoutHook = avoidStruts $    -- small screens: avoidStrutsOn []
                onWorkspace "www" myWebLayout $
                onWorkspace "comm" myWebLayout $
                onWorkspace "tail" (myDish ||| Full) $
-               onWorkspace "view" (Full ||| Grid) $
+               onWorkspace "view" (tabbed shrinkText myTheme) $
                -- default for other workspaces:
                myEditing ||| maximize Grid ||| Full
 
