@@ -1,5 +1,6 @@
 [DEFAULT]
-run_lintian = 1
+# disabled to avoid any problems with dgit
+run_lintian = 0
 
 [dom]
 fqdn           = debomatic-i386.debian.net
