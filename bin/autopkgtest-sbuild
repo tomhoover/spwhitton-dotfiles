@@ -1,6 +1,6 @@
 #!/bin/sh
 
-adt-run --changes "$1" --- schroot "$2"
+autopkgtest "$1" -- schroot "$2"
 
 # if adt-run's exit code is 8 then the package had no tests but
 # this isn't a failure, so catch it
