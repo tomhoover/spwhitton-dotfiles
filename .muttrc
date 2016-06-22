@@ -210,3 +210,9 @@ folder-hook "spam" bind index,pager d delete-message
 # make flagged & new messages more obvious
 color index brightred black "~F"
 color index brightwhite black "~N|~O"
+
+# --- mailing lists
+
+lists [0-9]+.*@bugs.debian.org
+subscribe debian-backports@lists.debian.org
+subscribe debian-mentors@lists.debian.org
