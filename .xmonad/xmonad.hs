@@ -131,15 +131,15 @@ myManageHook = composeOne $
                , title         =? "ii"                  -?> doShift "comm"
                ] ++ [className =? c -?> doFloat | c <- myFloatClasses]
 
-myLayoutHook = avoidStrutsOn [] $    -- tall screens: avoidStruts
+myLayoutHook = maximize $
                smartBorders $
                layoutHintsToCenter $
                onWorkspace "www" myWebLayout $
                onWorkspace "comm" myWebLayout $
                onWorkspace "tail" (myDish ||| Full) $
-               onWorkspace "view" simpleTabbed $
+               onWorkspace "view" myViewLayout $
                -- default for other workspaces:
-               myEditing ||| maximize Grid ||| Full
+               avoidStruts $ myEditing ||| maximize Grid ||| Full
 
 -- custom layouts
 
@@ -148,8 +148,7 @@ myLayoutHook = avoidStrutsOn [] $    -- tall screens: avoidStruts
 -- magnification setting of 1.31 allows slave mutt windows to display
 -- their 90 columns properly on artemis' 1280x screen.
 
-myEditing = maximize $
-            limitWindows 7 $
+myEditing = limitWindows 7 $
             -- small screens: magnifiercz' 1.31 $
             -- alt: FixedColumn 1 20 90 10
             Tall 1 0.03 0.55
@@ -159,10 +158,13 @@ myEditing = maximize $
 --                 limitWindows 3 $
 --                 Dishes 1 (1/6)
 
-myWebLayout = maximize $ Mirror $ Tall 1 0.03 0.7
+myWebLayout = avoidStrutsOn [] $ Mirror $ Tall 1 0.03 0.7
 
 -- logs, compiles, tails etc.
-myDish = maximize $ limitWindows 5 $ Dishes 1 (1/5)
+myDish = avoidStruts $ limitWindows 5 $ Dishes 1 (1/5)
+
+myViewLayout = avoidStrutsOn [] $
+               (tabbed shrinkText defaultTheme { fontName = "xft:terminus:size=12" })
 
 -- helper functions
 
