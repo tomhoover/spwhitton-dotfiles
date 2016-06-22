@@ -28,7 +28,7 @@ import           XMonad.Layout.PerWorkspace
 import           XMonad.Layout.Tabbed
 -- import           XMonad.Layout.ResizeScreen
 
-main = xmonad $ myConfig
+main = xmonad myConfig
 
 myConfig = xfceConfig
 
@@ -164,7 +164,7 @@ myWebLayout = avoidStrutsOn [] $ Mirror $ Tall 1 0.03 0.7
 myDish = avoidStruts $ limitWindows 5 $ Dishes 1 (1/5)
 
 myViewLayout = avoidStrutsOn [] $
-               (tabbed shrinkText defaultTheme { fontName = "xft:terminus:size=12" })
+               tabbed shrinkText defaultTheme { fontName = "xft:terminus:size=12" }
 
 -- helper functions
 
