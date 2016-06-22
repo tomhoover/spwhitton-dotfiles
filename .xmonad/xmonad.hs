@@ -133,7 +133,7 @@ myManageHook = composeOne $
 
 myLayoutHook = avoidStrutsOn [] $    -- tall screens: avoidStruts
                smartBorders $
-               layoutHintsWithPlacement (0.5, 0.5) $
+               layoutHintsToCenter $
                onWorkspace "www" myWebLayout $
                onWorkspace "comm" myWebLayout $
                onWorkspace "tail" (myDish ||| Full) $
