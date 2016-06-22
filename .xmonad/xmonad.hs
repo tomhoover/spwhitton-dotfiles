@@ -9,7 +9,7 @@
 import           XMonad
 import           XMonad.Config.Xfce
 import qualified XMonad.StackSet            as W
-import           XMonad.Util.EZConfig       (additionalKeysP, checkKeymap)
+import           XMonad.Util.EZConfig       (additionalKeysP)
 
 import           XMonad.Actions.CycleWS     (toggleWS)
 import           XMonad.Actions.RotSlaves
@@ -47,7 +47,7 @@ myConfig = xfceConfig
                            <+> (not <$> isDialog --> doF avoidMaster)
                            <+> (isDialog --> doF W.shiftMaster)
     , layoutHook         = myLayoutHook
-    , startupHook        = return () >> checkKeymap myConfig myKeys
+    -- , startupHook        = return () >> checkKeymap myConfig myKeys
     } `additionalKeysP` myKeys
 
 -- basic preferences
