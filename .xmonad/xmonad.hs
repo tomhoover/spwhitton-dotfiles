@@ -48,6 +48,7 @@ myConfig = xfceConfig
                            <+> (isDialog --> doF W.shiftMaster)
     , layoutHook         = myLayoutHook
     -- , startupHook        = return () >> checkKeymap myConfig myKeys
+    , handleEventHook = docksEventHook
     } `additionalKeysP` myKeys
 
 -- basic preferences
