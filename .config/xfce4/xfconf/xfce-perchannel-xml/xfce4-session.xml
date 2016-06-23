@@ -15,6 +15,8 @@
   <property name="general" type="empty">
     <property name="FailsafeSessionName" type="empty"/>
     <property name="PromptOnLogout" type="bool" value="false"/>
+    <property name="SessionName" type="string" value="Default"/>
+    <property name="SaveOnExit" type="bool" value="false"/>
   </property>
   <property name="sessions" type="empty">
     <property name="Failsafe" type="empty">
@@ -31,6 +33,9 @@
       <property name="Client4_Command" type="empty"/>
       <property name="Client4_PerScreen" type="empty"/>
     </property>
+  </property>
+  <property name="shutdown" type="empty">
+    <property name="LockScreen" type="bool" value="true"/>
   </property>
   <property name="compat" type="empty">
     <property name="LaunchGNOME" type="bool" value="true"/>
