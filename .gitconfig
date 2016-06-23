@@ -98,3 +98,7 @@
 	participants = 0x0F56D0553B6D411B
 [dgit "default"]
 	clean-mode = git
+
+# work around Debian bug #827892
+[remote "dgit"]
+	skipDefaultUpdate = true
