@@ -4,7 +4,7 @@
 # in the right place for it to run; use a subshell to avoid this
 # affecting anything else
 (
-    cd "$(dirname $1)/$(basename $1 | cut -d_ -f1)*"
+    cd "$(dirname $1)/$(basename $1 | cut -d_ -f1)"*
     autopkgtest "$1" -- schroot "$2"
 )
 
