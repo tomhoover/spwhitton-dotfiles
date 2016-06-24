@@ -8,7 +8,11 @@ $build_arch_all = 1;
 $distribution = 'unstable';
 
 $run_lintian = 1;
-$lintian_opts = ['--allow-root', '--color=always', '--fail-on-warnings']; # might also pass: +EIL +pedantic
+$lintian_opts = [
+    '--allow-root',
+    '--color=never',            # make the .build file more readable
+    '--fail-on-warnings'
+    ];
 
 # TODO detect or specify in a var at top of file the architecture in the following
 $run_piuparts = 1;
