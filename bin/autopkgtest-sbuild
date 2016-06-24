@@ -1,6 +1,12 @@
 #!/bin/sh
 
-autopkgtest "$1" -- schroot "$2"
+# current autopkgtest is very sensitive to pwd; try to make sure we're
+# in the right place for it to run; use a subshell to avoid this
+# affecting anything else
+(
+    cd "$(dirname $1)/$(basename $1 | cut -d_ -f1)"
+    autopkgtest "$1" -- schroot "$2"
+)
 
 # if adt-run's exit code is 8 then the package had no tests but
 # this isn't a failure, so catch it

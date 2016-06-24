@@ -22,7 +22,7 @@ $piuparts_opts = [
 $external_commands = {
   'post-build-commands' => [
     [
-      'autopkgtest-sbuild', '%d', 'unstable-%a-sbuild'
+      'autopkgtest-sbuild', '%c', 'unstable-%a-sbuild'
     ],
   ],
 };
