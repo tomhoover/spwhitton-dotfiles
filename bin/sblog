@@ -1,0 +1,26 @@
+#!/usr/bin/perl
+
+# try to view latest sbuild log
+
+use strict;
+use warnings;
+
+use File::Glob;
+
+chomp( my $version = `dpkg-parsechangelog -SVersion`);
+chomp( my $package = `dpkg-parsechangelog -SSource` );
+
+my @logs = <../${package}_${version}_*.build>;
+
+my @symlinks;
+foreach my $log ( @logs ) {
+    push @symlinks, $log if ( -l $log );
+}
+
+if ( scalar @symlinks > 1 ) {
+    print "multiple logs you might want to look at: \n";
+    print join "\n", @symlinks;
+    print "\n";
+} else {
+    system "less $symlinks[0]";
+}
