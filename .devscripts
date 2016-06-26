@@ -5,3 +5,7 @@ DEB_SIGN_KEYID=0x0F56D0553B6D411B
 DEBSIGN_PROGRAM=gpg
 RMADISON_DEFAULT_URL=debian,ubuntu
 DSCVERIFY_KEYRINGS=~/.gnupg/pubring.gpg
+
+# this ensures that both debuild and gbp-buildpackage don't sign anything.
+# manually do it with debsign (or dgit push) before making an upload
+DEBUILD_DPKG_BUILDPACKAGE_OPTS="-us -uc"
