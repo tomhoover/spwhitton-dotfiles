@@ -16,8 +16,14 @@ git_autoci = :
 # avoid en masse merge commits
 git_update = git remote update; git pull --ff-only "$@"
 
+# avoid pushing non-matching branches, while trying to avoid errors
+# from trying to push to read-only remotes
+git_push = git push-all         # in ~/bin
+
 # `mr -ms status` checks for unpushed branches and files not checked
-# in.  `mr -ms isclean` checks for files not checked in alone
+# in, and stashes.  `mr -ms isclean` checks for files not checked in
+# alone
+# TODO improve this by looking at git_status in /usr/bin/mr?
 git_isclean =
     (
      # 1st line: check HEAD versus index

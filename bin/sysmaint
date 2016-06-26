@@ -105,8 +105,8 @@ $seq->add_should_succeed("mr -ms autoci");
 # `mr -ms isclean` checks for stuff to be checked in ...
 $seq->add_should_succeed("mr -ms isclean");
 $seq->add_should_succeed("mr -s up");
-$seq->add_should_succeed("mr -s push origin --tags :");
-# ... then `mr -ms status` finds unpushed branches
+$seq->add_should_succeed("mr -s push");
+# ... then `mr -ms status` finds unpushed branches & stashes
 $seq->add_should_zero("mr -ms status");
 
 $seq->run();
