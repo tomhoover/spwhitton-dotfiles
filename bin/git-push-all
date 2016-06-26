@@ -19,8 +19,10 @@
 
 # Prerequisites:
 
-# The Git::Wrapper and Config::GitLike perl library.  On a Debian system,
-#     apt-get install libgit-wrapper-perl libconfig-gitlike-perl
+# The Git::Wrapper, Config::GitLike, and List::MoreUtils perl
+# libraries.  On a Debian system,
+#     apt-get install libgit-wrapper-perl libconfig-gitlike-perl \
+#         liblist-moreutils-perl
 
 # Description:
 
@@ -50,17 +52,28 @@ use warnings;
 
 use Git::Wrapper;
 use Config::GitLike;
-
-use Data::Dumper;
+use List::MoreUtils qw{ uniq };
 
 my $git = Git::Wrapper->new(".");
-my $config = Config::GitLike->load_file(".git/config");
+my $config = Config::GitLike->new( confname => 'config' );
+$config->load_file('.git/config');
 
-# $config->get_regexp( key => "branch.*pushRemote" );
+my $pushRemotes = $config->get_regexp( key => "branch\..*\.pushRemote" );
+my @pushRemotes = uniq(values %$pushRemotes);
+my $pushDefault = $config->get( key => "remote.pushDefault" );
+push @pushRemotes, $pushDefault if ( defined $pushDefault );
+my @remotes = $git->remote;
 
-# my @remotes = $git->remote;
-# foreach my $remote ( @remotes ) {
-#     unless ( $remote eq "dgit" ) {
-
-#     }
-# }
+if ( defined $pushDefault ) {
+    # mode one: assume that there are read-only remotes
+    foreach my $remote ( @pushRemotes ) {
+        $git->push("--follow-tags", $remote, ":")
+          unless ( $remote eq "dgit" );
+    }
+} else {
+    # mode two: assume we can write to all remotes
+    foreach my $remote ( @remotes ) {
+        $git->push("--tags", $remote, ":")
+          unless ( $remote eq "dgit" );
+    }
+}
