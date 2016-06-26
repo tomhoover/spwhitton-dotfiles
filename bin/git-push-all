@@ -1,0 +1,66 @@
+#!/usr/bin/perl
+
+# git-push-all -- intelligently push most branches
+
+# Copyright (C) 2016 Sean Whitton
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or (at
+# your option) any later version.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# Prerequisites:
+
+# The Git::Wrapper and Config::GitLike perl library.  On a Debian system,
+#     apt-get install libgit-wrapper-perl libconfig-gitlike-perl
+
+# Description:
+
+# This script will try to push all your branches to the places they
+# should be pushed.  Specifically,
+#
+# - If remote.pushDefault is set, push all matching branches to each
+#   remote mentioned in remote.pushDefault or a
+#   branch.<name>.pushRemote, with --follow-tags.  I.e. for *each* remote
+#
+#       git push --follow-tags <remote> :
+#
+# - Otherwise, push all matching branches and all tags to each remote.  I.e.
+#   for *each* remote
+#
+#       git push --tags <remote> :
+#
+# In summary, this script is similar to `git push --all --tags` except
+# that it doesn't create any new remote branches.  The recommended
+# usage is to run `git push-all` followed by some command which lists
+# branches that haven't been pushed anywhere, such as `mr status` from
+# the myrepos package.  These can then be manually pushed to the right
+# places.
+
+use strict;
+use warnings;
+
+use Git::Wrapper;
+use Config::GitLike;
+
+use Data::Dumper;
+
+my $git = Git::Wrapper->new(".");
+my $config = Config::GitLike->load_file(".git/config");
+
+# $config->get_regexp( key => "branch.*pushRemote" );
+
+# my @remotes = $git->remote;
+# foreach my $remote ( @remotes ) {
+#     unless ( $remote eq "dgit" ) {
+
+#     }
+# }
