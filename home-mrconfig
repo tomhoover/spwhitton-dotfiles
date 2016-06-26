@@ -40,6 +40,7 @@ include = [ -e ~/src/myrepos/lib/dgit ] && cat ~/src/myrepos/lib/dgit
 
 # my preferences that don't match myrepos conventions:
 dgit_update = dgit fetch ; git remote update
+dgit_push = git push-all
 
 # --- Adam Spiers' plugin for managing dotfile symlinks with mr
 
