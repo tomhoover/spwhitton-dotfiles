@@ -62,7 +62,7 @@ my $pushRemotes = $config->get_regexp( key => "branch\..*\.pushRemote" );
 my @pushRemotes = uniq(values %$pushRemotes);
 my $pushDefault = $config->get( key => "remote.pushDefault" );
 push @pushRemotes, $pushDefault if ( defined $pushDefault );
-my @remotes = $git->remote;
+my @remotes = uniq($git->remote);
 
 if ( defined $pushDefault ) {
     # mode one: assume that there are read-only remotes
