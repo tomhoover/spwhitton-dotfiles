@@ -68,16 +68,20 @@ if ( defined $pushDefault ) {
     # mode one: assume that there are read-only remotes
     print "DEBUG: pushing to pushDefault alone\n";
     foreach my $remote ( @pushRemotes ) {
-        print "DEBUG: pushing $remote\n";
-        system "git push --follow-tags $remote :"
-          unless ( $remote eq "dgit" );
+        unless ( $remote eq "dgit" ) {
+            print "DEBUG: pushing $remote\n";
+            system "git push --follow-tags $remote :";
+            exit 1 if ( $? != 0 );
+        }
     }
 } else {
     # mode two: assume we can write to all remotes
     print "DEBUG: pushing to all remotes\n";
     foreach my $remote ( @remotes ) {
-        print "DEBUG: pushing $remote\n";
-        system "git push --tags $remote :"
-          unless ( $remote eq "dgit" );
+        unless ( $remote eq "dgit" ) {
+            print "DEBUG: pushing $remote\n";
+            system "git push --tags $remote :";
+            exit 1 if ( $? != 0 );
+        }
     }
 }
