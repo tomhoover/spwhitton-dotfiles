@@ -544,6 +544,7 @@
   (advice-add 'flycheck-mode :around #'flycheck-mode--org-disable-flycheck)
 
   (use-package flycheck-haskell
+    :if (locate-library "haskell-mode")
     :demand
     :init
     (add-hook 'flycheck-mode-hook #'flycheck-haskell-setup)
