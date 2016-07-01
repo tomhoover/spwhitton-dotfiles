@@ -1593,7 +1593,7 @@ Generates calls to pandoc that look like this: pandoc -s --filter pandoc-citepro
        "--filter" "pandoc-citeproc-preamble"
        "--template" "pessay" "-V" "documentclass=pessay"
        (buffer-file-name) "-o" output-file)
-      (find-file output-file))))
+      (when window-system (find-file output-file)))))
 
 (defun spw/pandoc-presentation-compile ()
   "Compile a presentation to PDF and HTML with pandoc into ~/tmp.
