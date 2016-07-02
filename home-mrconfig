@@ -248,7 +248,7 @@ pre_stow = homedir_mkdirs
 # sets this as the remote in /usr/local/propellor and it must be
 # possible to pull from it without root having my .gitconfig checked
 # out
-checkout = git clone https://git.spwhitton.name/athena propellor --branch spw3conf
+checkout = git clone https://git.spwhitton.name/propellor propellor --branch spw3conf
 post_checkout =
     cd propellor
     git remote add -f upstream github:joeyh/propellor.git
