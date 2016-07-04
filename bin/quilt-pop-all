@@ -1,0 +1,10 @@
+#!/bin/sh
+
+test -e .pc || exit 0
+quilt pop -a
+quiltexit=$?
+if [ $quiltexit = 2 ]; then
+    exit 0
+else
+    exit $quiltexit
+fi
