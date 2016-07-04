@@ -133,7 +133,7 @@ if ( defined $loc ) {
     foreach my $repo ( @athena_repos ) {
         $repo =~ s/\n//g;
         # TODO detect gcrypt repo down in backup_repo function (only
-        # need to detect on clone, not update)
+        # need to detect on clone, not update) -- see git-remote-gcrypt manpage for how to do this
         if ( $repo ~~ @gcrypt_repos ) {
             backup_repo("gcrypt::git\@spwhitton.name:$repo", "athena");
         } else {
