@@ -966,6 +966,7 @@
 ;;   (bind-key (kbd "<XF86Launch7>") 'spw/highlight-and-tidy pdf-view-mode-map))
 
 (use-package ws-butler
+  :if (locate-library "ws-butler")
   :demand
   :diminish ws-butler-mode
   :init (ws-butler-global-mode))
