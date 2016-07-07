@@ -445,7 +445,7 @@
 - subtasks of projects that are not NEXT actions
 - subtasks of SOMEDAY projects
 - subtasks of WAITING projects
-- subtasks of scheduled or deadlined projects
+- subtasks of scheduled projects
 
 In the last case, the idea is that if I've scheduled the project
 then I intend to tackle all the NEXT actions on that date (or at
@@ -469,7 +469,7 @@ different occasions."
                   (save-excursion
                     (org-up-heading-safe)
                     (or
-                     (spw/org-is-scheduled-or-deadlined-p)
+                     (spw/org-is-scheduled-p)
                      (string= (spw/org-get-todo-keyword) "SOMEDAY")
                      (string= (spw/org-get-todo-keyword) "WAITING"))))))
         next-headline
@@ -485,6 +485,22 @@ different occasions."
     (if (eq (point) start)
         (outline-next-heading)
       (point))))
+
+(defun spw/org-is-scheduled-p ()
+  "A task that is scheduled"
+  (let ((is-dated)
+        (is-a-task (member (nth 2 (org-heading-components)) org-todo-keywords-1))
+        (regexp (org-re-timestamp 'scheduled)))
+    (message regexp)
+    (save-excursion
+      ;; Ignore errors if we fail to expand a subtree because we're
+      ;; before the first heading
+      (ignore-errors (outline-show-subtree))
+      (forward-line)
+      (org-beginning-of-line)
+      (if (looking-at regexp)
+          (setq is-dated t)))
+    (and is-a-task is-dated)))
 
 (defun spw/org-is-scheduled-or-deadlined-p ()
   "A task that is scheduled or deadlined"
