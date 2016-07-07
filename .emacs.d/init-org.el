@@ -324,9 +324,9 @@
                       (org-agenda-todo-ignore-deadlines nil)
                       (org-agenda-todo-ignore-with-date nil)
                       (org-agenda-overriding-header "Waiting on others & not scheduled to chase up")))
-     (todo "TODO" ((org-agenda-todo-ignore-with-date t)
-                   (org-agenda-overriding-header "Stuck projects")
-                   (org-agenda-skip-function 'spw/skip-non-stuck-projects)))
+     (todo "TODO|NEXT" ((org-agenda-todo-ignore-with-date t)
+                        (org-agenda-overriding-header "Stuck projects")
+                        (org-agenda-skip-function 'spw/skip-non-stuck-projects)))
      (tags "LEVEL=1+REFILE"
            ((org-agenda-todo-ignore-with-date nil)
             (org-agenda-todo-ignore-deadlines nil)
