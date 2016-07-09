@@ -1,0 +1,35 @@
+#!/bin/sh
+
+# The purpose of this script is to give the right magic invocation to
+# build a Debian package, the traditional way, without using sbuild
+# and friends.  It could later be extended to build other things.
+
+# The main motivation for having the script is to deal with the fact
+# that some repositories are committed to with quilt patches applied,
+# and some are committed with quilt patches unapplied.  This script
+# should make that transparent, without using the
+# d/source/local-options file, which interferes with dgit.
+
+if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    if git branch -a | grep -q "remotes/dgit"; then
+        # let dgit handle it
+        dgit "$@" build
+        lintian
+    else
+        # make the bold assumption we want to build with gbp
+        # TODO would it be enough to check for existence of d/gbp.conf?
+        (
+            # unlike debuild, gbp must be invoked from the root of the
+            # repository
+            cd "$(git rev-parse --show-toplevel)"
+            if [ -d ".pc" ]; then
+                quilt pop -a
+            fi
+            git clean -xfd --exclude="debian/patches/*" # newly created patches
+            gbp buildpackage -us -uc -nc "$@"
+        )
+    fi
+else
+    # not a git repo, woo
+    debuild
+fi
