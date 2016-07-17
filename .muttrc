@@ -177,7 +177,7 @@ macro index,pager <F4> "<pipe-message>grep '\^http' | sed 's/\^/-new-tab /' | xa
 macro pager <f12> "<pipe-message>egrep \"X-RSS-URL:\" | cut -d' ' -f2- | xargs firefox -new-tab<enter>" "open rss2email source link"
 
 # train spam filter
-macro index,pager <f11> "<save-message>+spam<enter>" "mark as spam"
+macro index,pager <f11> "<enter-command>unset resolve<enter><clear-flag>N<enter-command>set resolve<enter><save-message>+spam<enter>" "mark as spam"
 
 # easier scrolling
 bind pager ] previous-page
