@@ -78,6 +78,12 @@ caffeine-indicator &
 # workrave &
 firefox &
 
+# ---- screen locking redux
+
+# TODO do this with autostart files
+pkill light-locker
+pgrep -u "$USER" xscreensaver || xscreensaver &
+
 # ---- fire up my window manager
 
 exec xmonad --replace
