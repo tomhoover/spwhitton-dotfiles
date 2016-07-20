@@ -4,6 +4,8 @@
 
 # The idea is that if this script dies it can be safely be re-run from the beginning
 
+# Note that each backup drive needs a unique filesystem label!
+
 use strict;
 use warnings;
 use lib "$ENV{HOME}/lib/perl5";
@@ -285,13 +287,15 @@ sub backup_repo {
         if ( -d "annex" ) {
             system "git config annex.diskreserve '2GB'";
             # TODO ask user before pairing since it's a guess
-            # if ( my $host_repo = find_host_annex($short) ) {
-            #     status "pairing $short with $host_repo";
-            #     system "git remote add $host $host_repo 2>/dev/null" || 1;
-            # }
-            # commented out for summer
-            # --no-commit because bare
-            # system "git annex sync --content --no-commit"
+            if ( my $host_repo = find_host_annex($short) ) {
+                status "pairing $short with $host_repo";
+                local $CWD = $host_repo;
+                system "git remote add $short_drive_name $dir 2>/dev/null" || 1;
+                system "git annex sync --content $short_drive_name";
+                # TODO now metadata sync with origin remote, if it exists
+            } else {
+                status "couldn't pair $short with host; not syncing it"
+            }
         } else {
             system "git fetch origin '+refs/heads/*:refs/heads/*' --tags --no-prune";
         }
@@ -311,13 +315,15 @@ sub backup_repo {
                 system "git annex wanted . standard";
                 system "git annex group . incrementalbackup";
                 # TODO ask user before pairing since it's a guess
-                # if ( my $host_repo = find_host_annex($short) ) {
-                #     status "pairing $short with $host_repo";
-                #     system "git remote add $host $host_repo 2>/dev/null" || 1;
-                # }
-                # commented out for summer
-                # --no-commit because bare
-                # system "git annex sync --content --no-commit"
+                if ( my $host_repo = find_host_annex($short) ) {
+                    status "pairing $short with $host_repo";
+                    local $CWD = $host_repo;
+                    system "git remote add $short_drive_name $dir 2>/dev/null" || 1;
+                    system "git annex sync --content $short_drive_name";
+                    # TODO now metadata sync with origin remote, if it exists
+                } else {
+                    status "couldn't pair $short with host; not syncing it"
+                }
             }
         } else {
             mkdir "$dest" unless ( -d $dest );
