@@ -250,8 +250,17 @@ sub find_dirty_src {
 }
 
 sub backup_repo {
-    my ( $long, $dest ) = @_;
-    my ( undef, $short ) = split /:([^:]+)$/, $long;
+    my ( $long, $dest, $rename ) = @_;
+    my $short;
+
+    # third param is optional: do we need to rename it because
+    # remote's name is too generic (e.g. 'wiki')?
+    if ( defined $rename ) {
+        $short = $rename;
+    } else {
+        ( undef, $short ) = split /:([^:]+)$/, $long;
+    }
+
     $short = basename $short;    # just in case
     $short = "$short.git" unless $short =~ /\.git$/;
     $dest = "$loc/gitbk/$dest";
