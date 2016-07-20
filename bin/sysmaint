@@ -143,8 +143,9 @@ if ( defined $loc ) {
 
     # ---- misc. repos
 
-    # Debian packages I'm responsible for
+    # Debian packages I'm responsible for, and a few other Debian repos
 
+    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/wiki.git", "alioth", "pkg-emacsen");
     backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/dh-elpa.git", "alioth");
     backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/dh-make-elpa.git", "alioth");
     backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/ebib.git", "alioth");
