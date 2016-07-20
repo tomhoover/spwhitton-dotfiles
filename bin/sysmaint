@@ -300,7 +300,7 @@ sub backup_repo {
             mkdir "$dest" unless ( -d $dest );
             local $CWD = $dest;
             # bare repos don't get a reflog by default
-            system "git -ccore.logAllRefUpdates=true clone --bare $long $short";
+            system "git -c core.logAllRefUpdates=true clone --bare $long $short";
             {
                 local $CWD = $dir;
                 system "git annex init '$short_drive_name'";
@@ -323,7 +323,7 @@ sub backup_repo {
             mkdir "$dest" unless ( -d $dest );
             local $CWD = $dest;
             # bare repos don't get a reflog by default
-            system "git -ccore.logAllRefUpdates=true clone --mirror $long $short";
+            system "git -c core.logAllRefUpdates=true clone --mirror $long $short";
         }
     }
 
