@@ -293,15 +293,14 @@ sub backup_repo {
             # --no-commit because bare
             # system "git annex sync --content --no-commit"
         } else {
-            # we could --prune here, but for backup purposes just pull
-            # them all in
-            system "git fetch origin '+refs/heads/*:refs/heads/*' --tags";
+            system "git fetch origin '+refs/heads/*:refs/heads/*' --tags --no-prune";
         }
     } else {                    # repo new to this drive
         if ($annex) {
             mkdir "$dest" unless ( -d $dest );
             local $CWD = $dest;
-            system "git clone --bare $long $short";
+            # bare repos don't get a reflog by default
+            system "git -ccore.logAllRefUpdates=true clone --bare $long $short";
             {
                 local $CWD = $dir;
                 system "git annex init '$short_drive_name'";
@@ -323,8 +322,26 @@ sub backup_repo {
         } else {
             mkdir "$dest" unless ( -d $dest );
             local $CWD = $dest;
-            system "git clone --mirror $long $short";
+            # bare repos don't get a reflog by default
+            system "git -ccore.logAllRefUpdates=true clone --mirror $long $short";
         }
+    }
+
+    # Protect our backup from being reaped by git-gc
+    {
+        local $CWD = $dir;
+        # Enable the reflog, since it is off by default in bare repos.
+        # Since we fetch with --no-prune, no reflogs will ever get
+        # deleted, so we have one for every branch that ever existed
+        # in the remote we're backing up (that existed at a time we
+        # ran this script, at least)
+        system "git config core.logAllRefUpdates true";
+        # Never remove reflog entries
+        system "git config gc.reflogExpire never";
+        # git-gc will never remove dangling commits mentioned in any
+        # reflog *unless* they are unreachable in the branch the
+        # reflog logs and are older than this config variable
+        system "git config gc.reflogExpireUnreachable never"
     }
 }
 
