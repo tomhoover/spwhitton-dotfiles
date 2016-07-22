@@ -10,10 +10,23 @@
 # should make that transparent, without using the
 # d/source/local-options file, which interferes with dgit.
 
+# If the *first* argument is --ignore-dirty, bypass checks for a dirty
+# git working tree.  No effect outside of a git repository.
+
+if [ "$1" = "--ignore-dirty" ]; then
+    shift
+    ignore=yes
+fi
+
 if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
     if git branch -a | grep -q "remotes/dgit"; then
         # let dgit handle it
-        dgit "$@" build
+        if [ "$ignore" = "yes" ]; then
+            arg="--ignore-dirty"
+        else
+            arg=""
+        fi
+        dgit $arg build "$@"
         lintian
     else
         # make the bold assumption we want to build with gbp
@@ -25,8 +38,21 @@ if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
             if [ -d ".pc" ]; then
                 quilt pop -a
             fi
+            # handle ignore
+            if [ "$ignore" = "yes" ]; then
+                arg="--git-ignore-new"
+            else
+                arg=""
+            fi
+            # safety check before git clean if we're not ignoring
+            if [ ! "$ignore" = "yes" ]; then
+                if git status --porcelain 2>/dev/null | grep -q "^??"; then
+                    echo >$2 "abort: untracked files present (to override, try `buildi')"
+                    exit 1
+                fi
+            fi
             git clean -xfd --exclude="debian/patches/*" # newly created patches
-            gbp buildpackage -us -uc -nc "$@"
+            gbp buildpackage -us -uc -nc $arg "$@"
         )
     fi
 else
