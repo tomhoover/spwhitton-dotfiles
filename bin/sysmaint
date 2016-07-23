@@ -167,6 +167,8 @@ if ( defined $loc ) {
     backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/pkg-info-el.git", "alioth");
     backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/popup-el.git", "alioth");
     backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/projectile.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/persp-projectile.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/helm-projectile.git", "alioth");
     backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/rainbow-delimiters.git", "alioth");
     backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/seq-el.git", "alioth");
     backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/s-el.git", "alioth");
