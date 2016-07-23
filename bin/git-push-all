@@ -27,25 +27,18 @@
 # Description:
 
 # This script will try to push all your branches to the places they
-# should be pushed.  Specifically,
+# should be pushed, with --follow-tags.  Specifically, for each branch,
 #
-# - If remote.pushDefault is set, push all matching branches to each
-#   remote mentioned in remote.pushDefault or a
-#   branch.<name>.pushRemote, with --follow-tags.  I.e. for *each* remote
+# 1. If branch.pushRemote is set, push it there
 #
-#       git push --follow-tags <remote> :
+# 2. Otherwise, if remote.pushDefault is set, push it there
 #
-# - Otherwise, push all matching branches and all tags to each remote.  I.e.
-#   for *each* remote
+# 3. Otherwise, if it is tracking a remote branch, push it there
 #
-#       git push --tags <remote> :
+# 4. Otherwise, exit non-zero.
 #
-# In summary, this script is similar to `git push --all --tags` except
-# that it doesn't create any new remote branches.  The recommended
-# usage is to run `git push-all` followed by some command which lists
-# branches that haven't been pushed anywhere, such as `mr status` from
-# the myrepos package.  These can then be manually pushed to the right
-# places.
+# If a branch is tracking a remote that you cannot push to, be sure to
+# set at least one of branch.pushRemote and remote.pushDefault.
 
 use strict;
 use warnings;
@@ -58,30 +51,27 @@ my $git = Git::Wrapper->new(".");
 my $config = Config::GitLike->new( confname => 'config' );
 $config->load_file('.git/config');
 
-my $pushRemotes = $config->get_regexp( key => "branch\..*\.pushRemote" );
-my @pushRemotes = uniq(values %$pushRemotes);
+my @branches = $git->branch;
 my $pushDefault = $config->get( key => "remote.pushDefault" );
-push @pushRemotes, $pushDefault if ( defined $pushDefault );
-my @remotes = uniq($git->remote);
 
-if ( defined $pushDefault ) {
-    # mode one: assume that there are read-only remotes
-    print "DEBUG: pushing to pushDefault alone\n";
-    foreach my $remote ( @pushRemotes ) {
-        unless ( $remote eq "dgit" ) {
-            print "DEBUG: pushing $remote\n";
-            system "git push --follow-tags $remote :";
-            exit 1 if ( $? != 0 );
-        }
-    }
-} else {
-    # mode two: assume we can write to all remotes
-    print "DEBUG: pushing to all remotes\n";
-    foreach my $remote ( @remotes ) {
-        unless ( $remote eq "dgit" ) {
-            print "DEBUG: pushing $remote\n";
-            system "git push --tags $remote :";
-            exit 1 if ( $? != 0 );
-        }
+foreach my $branch ( @branches ) {
+    $branch =~ s/[ \*]//g;
+    my $pushRemote = $config->get( key => "branch.$branch.pushRemote" );
+    my $tracking = $config->get( key => "branch.$branch.remote" );
+
+    if ( defined $pushRemote ) {
+        print ">> pushing $branch to $pushRemote (its pushRemote)\n";
+        system "git push --follow-tags $pushRemote $branch";
+        exit 1 if ( $? != 0 );
+    } elsif ( defined $pushDefault ) {
+        print ">> pushing $branch to $pushDefault (the remote.pushDefault)\n";
+        system "git push --follow-tags $pushDefault $branch";
+        exit 1 if ( $? != 0 );
+    } elsif ( defined "$tracking" ) {
+        print ">> pushing $branch to $tracking (probably to its tracking branch)\n";
+        system "git push --follow-tags $tracking $branch";
+        exit 1 if ( $? != 0 );
+    } else {
+        die "couldn't find anywhere to push $branch";
     }
 }
