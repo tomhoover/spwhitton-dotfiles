@@ -323,6 +323,7 @@ post_checkout =
         git remote add m3 /media/${USER}/m3/git/athena/wikiannex.git
     fi
 update = git annex sync         # no pull in direct mode
+push = git annex sync --content
 skip = ! mine
 
 # --- git annex for university stuff
