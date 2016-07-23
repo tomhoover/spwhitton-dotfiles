@@ -47,7 +47,7 @@ if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
             # safety check before git clean if we're not ignoring
             if [ ! "$ignore" = "yes" ]; then
                 if git status --porcelain 2>/dev/null | grep -q "^??"; then
-                    echo >$2 "abort: untracked files present (to override, try `buildi')"
+                    echo >&2 "abort: untracked files present (to override, try \`buildi')"
                     exit 1
                 fi
             fi
