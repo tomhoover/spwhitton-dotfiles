@@ -42,20 +42,21 @@
 
 use strict;
 use warnings;
+no warnings "experimental::smartmatch";
 
 use Git::Wrapper;
 use Config::GitLike;
-use List::MoreUtils qw{ uniq };
+use List::MoreUtils qw{ uniq apply };
 
 my $git = Git::Wrapper->new(".");
 my $config = Config::GitLike->new( confname => 'config' );
 $config->load_file('.git/config');
 
-my @branches = $git->branch;
+my @branches = apply { s/[ \*]//g } $git->branch;
+my @allBranches = apply { s/[ \*]//g } $git->branch({ all => 1 });
 my $pushDefault = $config->get( key => "remote.pushDefault" );
 
 foreach my $branch ( @branches ) {
-    $branch =~ s/[ \*]//g;
     my $pushRemote = $config->get( key => "branch.$branch.pushRemote" );
     my $tracking = $config->get( key => "branch.$branch.remote" );
 
@@ -63,11 +64,14 @@ foreach my $branch ( @branches ) {
         print ">> pushing $branch to $pushRemote (its pushRemote)\n";
         system "git push --follow-tags $pushRemote $branch";
         exit 1 if ( $? != 0 );
-    } elsif ( defined $pushDefault ) {
+    # don't push unless it already exists on the remote: this script
+    # avoids creating branches
+    } elsif ( defined $pushDefault
+              && "remotes/$pushDefault/$branch" ~~ @allBranches ) {
         print ">> pushing $branch to $pushDefault (the remote.pushDefault)\n";
         system "git push --follow-tags $pushDefault $branch";
         exit 1 if ( $? != 0 );
-    } elsif ( defined "$tracking" ) {
+    } elsif ( !defined $pushDefault && defined $tracking ) {
         print ">> pushing $branch to $tracking (probably to its tracking branch)\n";
         system "git push --follow-tags $tracking $branch";
         exit 1 if ( $? != 0 );
