@@ -61,7 +61,8 @@ if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
                 fi
             fi
             git clean -xfd --exclude="debian/patches/*" # newly created patches
-            gbp buildpackage -us -uc -nc $arg "$@"
+            # cannot use -nc in the following as that implies -b
+            gbp buildpackage -us -uc $arg "$@"
         )
     fi
 else
