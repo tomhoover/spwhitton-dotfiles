@@ -67,5 +67,5 @@ if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
     fi
 else
     # not a git repo, woo
-    debuild
+    debuild -us -uc
 fi
