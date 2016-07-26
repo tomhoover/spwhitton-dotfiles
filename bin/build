@@ -13,6 +13,9 @@
 # If the *first* argument is --ignore-dirty, bypass checks for a dirty
 # git working tree.  No effect outside of a git repository.
 
+# TODO should we be doing so many cleans?  There is probably a better way.
+# TODO similarly, we are popping and reapplying all the patches over and over.
+
 if [ "$1" = "--ignore-dirty" ]; then
     shift
     ignore=yes
@@ -20,7 +23,7 @@ fi
 
 if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
     if git branch -a | grep -q "remotes/dgit"; then
-        debian/rules clean
+        fakeroot debian/rules clean
         # let dgit handle it
         if [ "$ignore" = "yes" ]; then
             arg="--ignore-dirty"
@@ -52,7 +55,7 @@ if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
             else
                 arg=""
             fi
-            debian/rules clean
+            fakeroot debian/rules clean
             # safety check before git clean if we're not ignoring
             if [ ! "$ignore" = "yes" ]; then
                 if git status --porcelain 2>/dev/null | grep -q "^??"; then
