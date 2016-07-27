@@ -97,3 +97,4 @@ Channel          debian
 # Channel          notes
 Channel          feeds
 Channel          spamtraining
+Channel          hamtraining
