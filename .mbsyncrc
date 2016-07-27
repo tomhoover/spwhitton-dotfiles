@@ -24,7 +24,7 @@ Inbox            ~/.fmail/inbox
 # Trash            trash
 
 IMAPAccount      fastmail
-Host             mail.messagingengine.com
+Host             imap.fastmail.com
 User             spwhitton@fastmail.com
 PassCmd          "cat ~/local/auth/fmailsyncpass"
 UseIMAPS         yes	
@@ -43,23 +43,23 @@ Master           :fmimap:INBOX
 Slave            :fmmaildir:
 
 Channel          fmails
-Master           :fmimap:INBOX/"Sent Items"
+Master           :fmimap:"Sent Items"
 Slave            :fmmaildir:sent
 
 # when I'm actively using listservs again, this kind of thing should
 # allow downloading all of them without the INBOX.Lists prefix:
 
 # Channel fmaill
-#   Master :fmimap:INBOX/Lists/
+#   Master :fmimap:Lists/
 #   Slave :fmmaildir:
 #   Patterns * !INBOX
 
 # Channel          fmaila
-# Master           :fmimap:INBOX/Archive
+# Master           :fmimap:Archive
 # Slave            :fmmaildir:archive
 
 Channel          fmaild
-Master           :fmimap:INBOX/Drafts
+Master           :fmimap:Drafts
 Slave            :fmmaildir:drafts
 
 # Channel          fmailt
@@ -67,16 +67,20 @@ Slave            :fmmaildir:drafts
 # Slave            :fmmaildir:trash
 
 Channel          debian
-Master           :fmimap:INBOX/Lists/Debian
+Master           :fmimap:Lists/Debian
 Slave            :fmmaildir:debian
 
 Channel          feeds
-Master           :fmimap:INBOX/Feeds
+Master           :fmimap:Feeds
 Slave            :fmmaildir:feeds
 
 Channel          spamtraining
-Master           :fmimap:INBOX/Training/Spam
+Master           :fmimap:Training/Spam
 Slave            :fmmaildir:spam
+
+Channel          hamtraining
+Master           :fmimap:Training/Ham
+Slave            :fmmaildir:ham
 
 # # notes from tablet computer
 # Channel          notes
