@@ -94,12 +94,7 @@ alias loungempd="ssh TallGeese /Applications/VLC.app/Contents/MacOS/VLC -I rc --
 alias sid-build-deps="sudo mk-build-deps -irt 'apt-get -o Debug::pkgProblemResolver=yes -t sid --no-install-recommends'"
 alias testing-build-deps="sudo mk-build-deps -irt 'apt-get -o Debug::pkgProblemResolver=yes -t testing --no-install-recommends'"
 alias test-package-plan="schroot -d $HOME -- /bin/sh -c \"cabal --no-require-sandbox update && cd src/package-plan && perl test-packages.pl\""
-alias dgb="dgit --ignore-dirty build"
 alias wnpomodoro="mplayer ~/lib/annex/doc/sounds/*pomodoro.mp3"
-alias gbps="gbp buildpackage --git-builder=sbuild"
-alias buildi="build --ignore-dirty"
-alias buildib="build --ignore-dirty -b"
-alias sbuildi="dgit --ignore-dirty sbuild"
 
 # based on gregor hermann's dh-make-perl-dev he posted on bugs.d.o
 dh-make-elpa-dev () {

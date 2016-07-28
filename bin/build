@@ -1,35 +1,99 @@
 #!/bin/sh
 
-# The purpose of this script is to give the right magic invocation to
-# build a Debian package, the traditional way, without using sbuild
-# and friends.  It could later be extended to build other things.
 
-# The main motivation for having the script is to deal with the fact
-# that some repositories are committed to with quilt patches applied,
-# and some are committed with quilt patches unapplied.  This script
-# should make that transparent, without using the
-# d/source/local-options file, which interferes with dgit.
 
-# If the *first* argument is --ignore-dirty, bypass checks for a dirty
-# git working tree.  No effect outside of a git repository.
+# Rewrite of this script is a WIP because I think I can get what I
+# want by just running debuild instead of dgit/gbp when I want to
+# ignore uncommitted changes.  dpkg-buildpackage should unapply the
+# patches if it applied them.  The only problem is if I applied some
+# with quilt.  However, the only time I actually *need* to do that is
+# when refreshing patches; otherwise I should use gbp-pq, and then
+# test with `debuild -b`.  After refreshing patches I can delete the
+# .pc directory and it should all work.
 
-# TODO should we be doing so many cleans?  There is probably a better way.
-# TODO similarly, we are popping and reapplying all the patches over and over.
 
-if [ "$1" = "--ignore-dirty" ]; then
+
+
+# Copyright (C) 2016 Sean Whitton
+
+# Released under the GPL version 3
+
+# Description:
+
+# The purpose of this script is to give the right magic invocations to
+# build a Debian package, abstracting from the differences between
+#
+# - patches-applied repos intended to be built with dgit
+# - patches-unapplied repos intended to be built with gbp
+# - plain source packages not kept in git
+#
+# We do not consider patches-unapplied dgit repos (unreleased dgit
+# functionality) and patches-applied gbp repos (not popular, and
+# depends on d/source/local-options, which is to be discouraged as it
+# prevents dgit adoption).  The former might make this script
+# obsolete.
+#
+# The following options are accepted, provided they come before any
+# other options, which are passed on to whatever we invoked to build
+# the package.
+#
+# - --ignore -- bypass checks for a dirty git working tree
+# - -b       -- do a binary-only build (no .dsc)
+# - -S       -- do a source-only build (no .deb)
+# - --sbuild -- use sbuild
+#
+# I recommend the following shell aliases:
+#
+#     alias buildi="build --ignore"
+#     alias buildib="build --ignore -b"
+#     alias sbuild="build --sbuild"
+#     alias sbuildi="build --ignore --sbuild"
+
+# Process arguments.  We use -nc because we want to run the clean
+# ourselves before letting gbp or dgit check for uncommitted changes
+while "$1" in "--ignore --binary -S --sbuild"; do
+    case "$1" in
+        --ignore)
+            ignore=yes
+            ;;
+        -b)
+            buildtype="-nc -b"
+            ;;
+        -S)
+            buildtype="-nc -S"
+            ;;
+        --sbuild)
+            sbuild=yes
+            ;;
+    esac
     shift
-    ignore=yes
+done
+
+# default to a full build (mainly for full Lintian output)
+if [ "$buildtype" = "" ]; then
+    buildtype="-nc -F"
+fi
+
+# We try to run a clean unless this is an --ignore build.  Basically,
+# --ignore builds are for iteratively hacking on stuff, but once we
+# don't pass --ignore, we want all the safety checks to fire
+if [ ! "$ignore" = "yes" ]; then
+    fakeroot debian/rules clean
 fi
 
 if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
     if git branch -a | grep -q "remotes/dgit"; then
-        fakeroot debian/rules clean
-        # let dgit handle it
+        # ---- build with dgit
+
         if [ "$ignore" = "yes" ]; then
             arg="--ignore-dirty"
         else
             arg=""
         fi
+        if [ "$sbuild" = "yes" ]; then
+            arg="$arg sbuild"
+        elif [ "$"]             # TODO continue processing args
+
         # safety check before git clean if we're not ignoring
         if [ ! "$ignore" = "yes" ]; then
             if git status --porcelain 2>/dev/null | grep -q "^??"; then
@@ -37,15 +101,14 @@ if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
                 exit 1
             fi
         fi
-        dgit $arg build "$@"
+        dgit $arg "$@"
         lintian
     else
-        # make the bold assumption we want to build with gbp
-        # TODO would it be enough to check for existence of d/gbp.conf?
+        # ---- (assume) build with gbp
         (
-            # unlike debuild, gbp must be invoked from the root of the
-            # repository
+            # gbp must be invoked from the root of the repository
             cd "$(git rev-parse --show-toplevel)"
+
             if [ -d ".pc" ]; then
                 quilt pop -a
             fi
@@ -64,11 +127,18 @@ if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
                 fi
             fi
             git clean -xfd --exclude="debian/patches/*" # newly created patches
-            # cannot use -nc in the following as that implies -b
-            gbp buildpackage -us -uc $arg "$@"
+            gbp buildpackage -F -nc -us -uc --source-options=--unapply-patches $arg "$@"
         )
     fi
 else
-    # not a git repo, woo
-    debuild -us -uc
+    # ---- build with debuild
+    debuild $buildtype -us -uc
 fi
+
+# do a post-clean if we did a pre-clean
+if [ ! "$ignore" = "yes" ]; then
+    fakeroot debian/rules clean
+fi
+
+# TODO should we be doing so many cleans?  There is probably a better way.
+# TODO similarly, we are popping and reapplying all the patches over and over.
