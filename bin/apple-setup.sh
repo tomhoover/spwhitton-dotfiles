@@ -51,7 +51,7 @@ osascript -e 'tell application "System Events" to keystroke "q" using {command d
 # setup
 
 if ! [ -d "$HOME/src/dotfiles/.git" ]; then
-    git clone https://github.com/spwhitton/dotfiles.git $HOME/src/dotfiles
+    git clone https://git.spwhitton.name/dotfiles $HOME/src/dotfiles
     # this is currently out of action because GNU stow installs but
     # doesn't seem to actually do anything on Mac OS
     # $HOME/src/dotfiles/bin/bstraph.sh
