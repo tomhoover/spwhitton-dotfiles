@@ -1,6 +1,8 @@
 #!/usr/bin/perl
 
-# try to view latest sbuild log
+# try to view latest debuild/sbuild log
+# TODO don't check for symlinks, rather actually put the arch in and
+# find the build log so that this works for both debuild and sbuild
 
 use strict;
 use warnings;
