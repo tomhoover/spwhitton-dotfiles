@@ -217,7 +217,7 @@ $seq->add_should_succeed("ssh -t athena 'sudo apt-get update && sudo apt-get upg
 # ---- local system maintenance
 
 # clean packages installed by mk-build-deps(1)
-$seq->add_should_succeed("sudo aptitude -y remove '~n-build-deps\$'");
+$seq->add_should_succeed("sudo aptitude remove '~n-build-deps\$'");
 
 $seq->add_should_succeed("sudo apt-get update");
 $seq->add_should_succeed("sudo apt-get upgrade");
