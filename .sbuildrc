@@ -14,7 +14,6 @@ $lintian_opts = [
     '--fail-on-warnings'
     ];
 
-# TODO detect or specify in a var at top of file the architecture in the following
 $run_piuparts = 1;
 $piuparts_opts = [
     '--schroot',
@@ -23,12 +22,8 @@ $piuparts_opts = [
     # '--fail-on-broken-symlinks', # too many false positives
     ];
 
-$external_commands = {
-  'post-build-commands' => [
-    [
-      'autopkgtest-sbuild', '%d', '%c', 'unstable-%a-sbuild'
-    ],
-  ],
-};
+$run_autopkgtest = 1;
+$autopkgtest_root_args = ["env"];
+$autopkgtest_opts = ["--", "schroot", "unstable-i386-sbuild"];
 
 1;
