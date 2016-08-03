@@ -116,3 +116,7 @@
 # work around Debian bug #827892
 [remote "dgit"]
 	skipDefaultUpdate = true
+[tar "tar.xz"]
+	command = xz -c
+[tar "tar.gz"]
+	command = gzip -c
