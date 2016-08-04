@@ -232,6 +232,7 @@ pre_update = mr autoci
 # since dotfiles repo also stows into ~/.gnupg, and athpriv repo stows
 # into ~/.duply, make the dirs first
 pre_stow = homedir_mkdirs
+post_stow = load-trustdb
 
 [src/athpriv]
 checkout = git clone athenap:athpriv athpriv

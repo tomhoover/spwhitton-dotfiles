@@ -1,0 +1,33 @@
+#!/bin/sh
+
+STAMP="$HOME/.gnupg/.load-trustdb"
+
+mkdir -p "$HOME/.gnupg"
+
+if [ -f "$STAMP" ]; then
+    last_script_run="$(stat -c '%Y' $STAMP)"
+else
+    last_script_run=0
+fi
+if [ -f "$HOME/.gnupg/trustdb.gpg" ]; then
+    last_trustdb_mod="$(stat -c '%Y' $HOME/.gnupg/trustdb.gpg)"
+else
+    last_trustdb_mod=0
+fi
+
+if [ ! -f "$HOME/.gnupg/trustdb.gpg" \
+       -o "$last_trustdb_mod" -le "$last_script_run" \
+   ]; then
+    gpg --import-ownertrust "$HOME/src/priv/.gnupg/otrust.lst"
+    # ensure that a check doesn't happen which set the trustdb mtime
+    # to newer than this script's last run time with no changes we
+    # have to backup
+    gpg --batch --check-trustdb
+    touch "$STAMP"
+else
+    echo >&2 "WARNING: The trustdb has been modified.  You should probably run:"
+    echo >&2
+    echo >&2 "    gpg --export-ownertrust >~/src/priv/.gnupg/otrust.lst"
+    echo >&2
+    echo >&2 "to back it up. (or discard changes: rm ~/.gnupg/trustdb.gpg && load-trustdb)."
+fi
