@@ -1,12 +1,12 @@
 # -*- mode: conf-space; -*-
 
-music_directory		"/home/swhitton/lib/annex/music"
-playlist_directory		"/home/swhitton/doc/playlists"
-db_file			"/home/swhitton/local/mpd/database"
-log_file			"/home/swhitton/local/mpd/log"
-pid_file			"/home/swhitton/local/mpd/pid"
-state_file			"/home/swhitton/local/mpd/state"
-sticker_file                   "/home/swhitton/local/mpd/sticker.sql"
+music_directory		"/home/spwhitton/lib/annex/music"
+playlist_directory		"/home/spwhitton/doc/playlists"
+db_file			"/home/spwhitton/local/mpd/database"
+log_file			"/home/spwhitton/local/mpd/log"
+pid_file			"/home/spwhitton/local/mpd/pid"
+state_file			"/home/spwhitton/local/mpd/state"
+sticker_file                   "/home/spwhitton/local/mpd/sticker.sql"
 bind_to_address		"localhost"
 
 # This audio output should match the default one that running mpd on
