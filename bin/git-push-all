@@ -56,26 +56,31 @@ my @branches = apply { s/[ \*]//g } $git->branch;
 my @allBranches = apply { s/[ \*]//g } $git->branch({ all => 1 });
 my $pushDefault = $config->get( key => "remote.pushDefault" );
 
+my %pushes;
+
 foreach my $branch ( @branches ) {
     my $pushRemote = $config->get( key => "branch.$branch.pushRemote" );
     my $tracking = $config->get( key => "branch.$branch.remote" );
 
     if ( defined $pushRemote ) {
-        print ">> pushing $branch to $pushRemote (its pushRemote)\n";
-        system "git push --follow-tags $pushRemote $branch";
-        exit 1 if ( $? != 0 );
+        print "I: pushing $branch to $pushRemote (its pushRemote)\n";
+        push @{ $pushes{$pushRemote} }, $branch;
     # don't push unless it already exists on the remote: this script
     # avoids creating branches
     } elsif ( defined $pushDefault
               && "remotes/$pushDefault/$branch" ~~ @allBranches ) {
-        print ">> pushing $branch to $pushDefault (the remote.pushDefault)\n";
-        system "git push --follow-tags $pushDefault $branch";
-        exit 1 if ( $? != 0 );
+        print "I: pushing $branch to $pushDefault (the remote.pushDefault)\n";
+        push @{ $pushes{$pushDefault} }, $branch;
     } elsif ( !defined $pushDefault && defined $tracking ) {
-        print ">> pushing $branch to $tracking (probably to its tracking branch)\n";
-        system "git push --follow-tags $tracking $branch";
-        exit 1 if ( $? != 0 );
+        print "I: pushing $branch to $tracking (probably to its tracking branch)\n";
+        push @{ $pushes{$tracking} }, $branch;
     } else {
-        die "couldn't find anywhere to push $branch";
+        die "E: couldn't find anywhere to push $branch";
     }
+}
+
+foreach my $remote ( keys %pushes ) {
+    my @branches = @{ $pushes{$remote} };
+    system "git push --follow-tags $remote @branches";
+    exit 1 if ( $? != 0 );
 }
