@@ -48,7 +48,7 @@ myConfig = xfceConfig
                            <+> (isDialog --> doF W.shiftMaster)
     , layoutHook         = myLayoutHook
 
-    , startupHook = docksStartupHook
+    -- , startupHook = docksStartupHook
     , handleEventHook = docksEventHook
 
     } `additionalKeysP` myKeys
