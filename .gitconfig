@@ -69,6 +69,8 @@
      # pushInsteadOf = https://anonscm.debian.org/cgit/
      pushInsteadOf = http://anonscm.debian.org/git/
      pushInsteadOf = http://anonscm.debian.org/cgit/
+     pushInsteadOf = https://anonscm.debian.org/git/
+     pushInsteadOf = https://anonscm.debian.org/cgit/
 
 # temporary redirects
 [url "git@spwhitton.name:dotfiles.git"]
