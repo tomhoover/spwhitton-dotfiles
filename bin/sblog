@@ -1,8 +1,6 @@
 #!/usr/bin/perl
 
 # try to view latest debuild/sbuild log
-# TODO don't check for symlinks, rather actually put the arch in and
-# find the build log so that this works for both debuild and sbuild
 
 use strict;
 use warnings;
@@ -11,18 +9,6 @@ use File::Glob;
 
 chomp( my $version = `dpkg-parsechangelog -SVersion`);
 chomp( my $package = `dpkg-parsechangelog -SSource` );
+chomp( my $arch    = `dpkg --print-architecture` );
 
-my @logs = <../${package}_${version}_*.build>;
-
-my @symlinks;
-foreach my $log ( @logs ) {
-    push @symlinks, $log if ( -l $log );
-}
-
-if ( scalar @symlinks > 1 ) {
-    print "multiple logs you might want to look at: \n";
-    print join "\n", @symlinks;
-    print "\n";
-} else {
-    system "less $symlinks[0]";
-}
+system "less ../${package}_${version}_$arch.build";
