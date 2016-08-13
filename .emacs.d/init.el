@@ -902,12 +902,11 @@
 (use-package frames-only-mode
   ;; only under X11, thanks
   :if (call-process-shell-command "pgrep" nil nil nil "lightdm")
-  :config
+  :init
   (setq frames-only-mode-use-window-functions
-        (quote
-         (calendar
+        '(calendar
           dired-other-window
-          magit-diff-while-committing)))
+          magit-diff-while-committing))
 
   ;; These can be used to disable *Completions* and *Ido Completions*
   ;; buffers (but with recent `frames-only-mode' it's not really needed)
