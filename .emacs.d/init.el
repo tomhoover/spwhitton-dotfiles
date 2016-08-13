@@ -666,11 +666,6 @@
       ;; that don't match the current input
       ido-work-directory-match-only t)
 
-;; disable *Completions* and *Ido Completions* buffers for the sake of
-;; `frames-only-mode'
-(setq ido-completion-buffer nil
-      completion-auto-help  nil)
-
 (ido-mode 1)
 (ido-everywhere 1)
 
@@ -906,7 +901,20 @@
 
 (use-package frames-only-mode
   ;; only under X11, thanks
-  :if (call-process-shell-command "pgrep" nil nil nil "lightdm"))
+  :if (call-process-shell-command "pgrep" nil nil nil "lightdm")
+  :config
+  (setq frames-only-mode-use-window-functions
+        (quote
+         (calendar
+          dired-other-window
+          magit-diff-while-committing)))
+
+  ;; These can be used to disable *Completions* and *Ido Completions*
+  ;; buffers (but with recent `frames-only-mode' it's not really needed)
+
+  ;; (setq ido-completion-buffer nil
+  ;;       completion-auto-help  nil)
+  )
 
 ;;; Documentation browsing
 

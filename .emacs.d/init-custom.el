@@ -4,8 +4,8 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(fixed-pitch ((t (:weight normal :height 120 :width normal :foundry "raster" :family "Terminus"))))
- '(flymake-errline ((((class color)) (:underline "red"))) t)
- '(flymake-warnline ((((class color)) (:underline "yellow"))) t)
+ '(flymake-errline ((((class color)) (:underline "red"))))
+ '(flymake-warnline ((((class color)) (:underline "yellow"))))
  '(fringe ((t (:background nil))))
  '(git-annex-dired-annexed-available ((t (:foreground "color-151"))))
  '(git-annex-dired-annexed-unavailable ((t (:foreground "color-167"))))
@@ -44,7 +44,6 @@
  '(fci-rule-color "#383838")
  '(footnote-narrow-to-footnotes-when-editing t)
  '(footnote-section-tag "")
- '(frames-only-mode-use-window-functions (quote (calendar dired-other-window)))
  '(gnus-alias-add-identity-menu nil)
  '(gnus-alias-allow-forward-as-reply t)
  '(gnus-alias-default-identity "Nucifera")
@@ -160,7 +159,7 @@
    (quote
     (:eval
      (format " Pr[%s]"
-	     (projectile-project-name)))))
+             (projectile-project-name)))))
  '(safe-local-variable-values
    (quote
     ((eval highlight-regexp "^ *")
