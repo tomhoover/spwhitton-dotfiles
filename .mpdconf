@@ -25,7 +25,7 @@ audio_output {
        name            "Sean's music stream"
        encoder         "lame"
        port            "8000"
-       bind_to_address "192.168.1.236"
+       bind_to_address "192.168.1.72"
        bitrate         "128"
        format          "44100:16:1"
        max_clients     "1"
