@@ -165,10 +165,9 @@ macro index,pager ,B "<enter-command> set my_pdsave=\$pipe_decode<enter>\
 message-hook .  'macro index,pager \cj ,b "URL viewer"'
 message-hook ~G 'macro index,pager \cj ,B "URL viewer"'
 
-# send Message-Id over to Emacs so that I can link to messages
-# macro index,pager <F8> "|~/bin/org-mairix-el-store-link\n"
-macro index <F8> "Fk|~/bin/capture-mail\nj"
-macro pager <F8> "qFk|~/bin/capture-mail\nj"
+# quickly make a TODO item and flag so it doesn't get archived
+macro index \co "!k|~/bin/capture-mail\nj"
+macro pager \co "q!k|~/bin/capture-mail\nj"
 
 # open RSS links in browser (fails because for some reason mutt can't bind <f{1--4}>
 # macro index,pager <F4> "<pipe-message>grep '\^http' | sed 's/\^/-new-tab /' | xargs firefox<enter>" "open all URLs at beginning of lines in message in browser tabs"
