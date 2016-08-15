@@ -151,6 +151,7 @@ folder-hook inbox push "<limit>!~N!~O!~D<enter><last-entry>"
 macro attach S "<save-entry><kill-line>~/tmp/<enter>y<enter>"
 
 # extract URLS--config from http://www.memoryhole.net/~kyle/extract_url/
+# the command to use these is Ctrl-J which picks the right one
 macro index,pager ,b "<enter-command> set my_pdsave=\$pipe_decode<enter>\
 <enter-command> unset pipe_decode<enter>\
 <pipe-message>extract_url.pl<enter>\
@@ -161,8 +162,8 @@ macro index,pager ,B "<enter-command> set my_pdsave=\$pipe_decode<enter>\
 <pipe-message>extract_url.pl<enter>\
 <enter-command> set pipe_decode=\$my_pdsave<enter>" "decrypt message, then get URLs"
 
-message-hook .  'macro index,pager \cb ,b "URL viewer"'
-message-hook ~G 'macro index,pager \cb ,B "URL viewer"'
+message-hook .  'macro index,pager \cj ,b "URL viewer"'
+message-hook ~G 'macro index,pager \cj ,B "URL viewer"'
 
 # send Message-Id over to Emacs so that I can link to messages
 # macro index,pager <F8> "|~/bin/org-mairix-el-store-link\n"
@@ -174,7 +175,7 @@ macro index,pager <F4> "<pipe-message>grep '\^http' | sed 's/\^/-new-tab /' | xa
 
 # open rss2email source link in browser
 # macro pager <f12> "<pipe-message>grep \"\^URL: http\" | xargs firefox -new-tab<enter>" "open rss2email source link"
-macro pager <f12> "<pipe-message>egrep \"X-RSS-URL:\" | cut -d' ' -f2- | xargs firefox -new-tab<enter>" "open rss2email source link"
+folder-hook feeds macro pager \cj "<pipe-message>egrep \"X-RSS-URL:\" | cut -d' ' -f2- | xargs firefox -new-tab<enter>" "open rss2email source link"
 
 # train spam filter
 macro index,pager <f11> "<enter-command>unset resolve<enter><clear-flag>N<enter-command>set resolve<enter><save-message>+spam<enter>" "mark as spam"
