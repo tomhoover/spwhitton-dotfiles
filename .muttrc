@@ -171,7 +171,7 @@ macro index <F8> "Fk|~/bin/capture-mail\nj"
 macro pager <F8> "qFk|~/bin/capture-mail\nj"
 
 # open RSS links in browser (fails because for some reason mutt can't bind <f{1--4}>
-macro index,pager <F4> "<pipe-message>grep '\^http' | sed 's/\^/-new-tab /' | xargs firefox<enter>" "open all URLs at beginning of lines in message in browser tabs"
+# macro index,pager <F4> "<pipe-message>grep '\^http' | sed 's/\^/-new-tab /' | xargs firefox<enter>" "open all URLs at beginning of lines in message in browser tabs"
 
 # open rss2email source link in browser
 # macro pager <f12> "<pipe-message>grep \"\^URL: http\" | xargs firefox -new-tab<enter>" "open rss2email source link"
