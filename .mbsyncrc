@@ -70,6 +70,10 @@ Channel          debian
 Master           :fmimap:Lists/Debian
 Slave            :fmmaildir:debian
 
+Channel          dbulk
+Master           :fmimap:Lists/Debian/Bulk
+Slave            :fmmaildir:debian/bulk
+
 Channel          feeds
 Master           :fmimap:Feeds
 Slave            :fmmaildir:feeds
@@ -94,6 +98,7 @@ Channel          fmaild
 # Channel          fmailt
 # Channel          fmaila
 Channel          debian
+Channel          dbulk
 # Channel          notes
 Channel          feeds
 Channel          spamtraining
