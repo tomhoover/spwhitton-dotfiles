@@ -2,9 +2,10 @@
 
 msg=$(cat /dev/stdin)
 
-#id=$(echo $msg | grep -i "^Message-ID:" | sed "s/^Message-I[dD]: <//" | sed "s/>$//")
+id=$(echo $msg | grep -i "^Message-ID:" | sed "s/^Message-I[dD]: //")
 from=$(echo $msg | grep -m 1 -i "^From:" | sed "s/^From: //" | sed "s/<.*$//" | sed 's/"//g' | sed 's/ $//')
 subject=$(echo $msg | grep -m 1 -i "^Subject:" | sed "s/^Subject: //")
 
 echo "* TODO E-mail \"$subject\" from $from" >>$HOME/doc/org/refile.org
-emacsclient -t -e '(spw/end-of-refile)'
+echo "# Message-Id: $id" >>$HOME/doc/org/refile.org
+#emacsclient -t -e '(spw/end-of-refile)'
