@@ -1766,6 +1766,14 @@ Ensures the kill ring entry always ends with a newline."
     (display-buffer "*dotfiles rebase*")
     (async-shell-command "git-dotfiles-rebase" "*dotfiles rebase*")))
 
+(defun spw/fast-mr-sync ()
+  "Rebase & push dotfiles."
+  (interactive)
+  (let ((default-directory (expand-file-name "~"))
+        (buffer (get-buffer-create "*fmr sync*")))
+    (display-buffer "*fmr sync*")
+    (async-shell-command "MR_FAST=true mr sync" "*fmr sync*")))
+
 ;;; defeat variable-pitch-mode for avy and Org tables and source
 ;;; blocks, per http://stackoverflow.com/a/16819449
 
@@ -1845,6 +1853,7 @@ Ensures the kill ring entry always ends with a newline."
                        (find-file "~/src/dotfiles/.emacs.d/init.el")
                        (eval-buffer)))
 (bind-key "C-c g d" 'spw/dotfiles-rebase)
+(bind-key "C-c g s" 'spw/fast-mr-sync)
 
 (bind-key "C-c S l" 'spw/tblesson)
 (bind-key "C-c S S" 'spw/auto-textbook)
