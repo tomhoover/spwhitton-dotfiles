@@ -41,7 +41,7 @@ set editor = "emacsclient -t -a \"zile -f auto-fill-mode +8\""
 #set editor="switch-to-emacsclient"
 set tilde
 set smart_wrap
-set wrapmargin=10
+set wrap=80
 unset markers
 set wait_key=no
 set print_command="muttprint"
