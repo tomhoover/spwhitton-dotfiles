@@ -5,11 +5,11 @@
 status ()
 {
     echo -n "["
-    tput setaf 3
+    test "$TERM" = "dumb" || tput setaf 3
     echo -n $(basename $0)
-    tput setaf 7
+    test "$TERM" = "dumb" || tput setaf 7
     echo -n "] "
-    tput bold
+    test "$TERM" = "dumb" || tput bold
     echo $@
-    tput sgr0
+    test "$TERM" = "dumb" || tput sgr0
 }
