@@ -1853,7 +1853,7 @@ Ensures the kill ring entry always ends with a newline."
                        (find-file "~/src/dotfiles/.emacs.d/init.el")
                        (eval-buffer)))
 (bind-key "C-c g d" 'spw/dotfiles-rebase)
-(bind-key "C-c g s" 'spw/fast-mr-sync)
+(bind-key "C-c o s" 'spw/fast-mr-sync)
 
 (bind-key "C-c S l" 'spw/tblesson)
 (bind-key "C-c S S" 'spw/auto-textbook)
