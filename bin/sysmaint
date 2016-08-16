@@ -191,6 +191,7 @@ if ( defined $loc ) {
 
 # ---- remote system maintenance
 
+status "info: you can unmount & eject $loc";
 exit unless $term->ask_yn(
                           prompt =>
                           "Backups complete.  Perform remote & local system maintainance?"
