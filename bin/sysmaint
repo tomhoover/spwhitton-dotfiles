@@ -259,6 +259,8 @@ sub backup_repo {
     my ( $long, $dest, $rename ) = @_;
     my $short;
 
+    # clear out the command sequencer
+    $seq->run();
     # third param is optional: do we need to rename it because
     # remote's name is too generic (e.g. 'wiki')?
     if ( defined $rename ) {
@@ -294,13 +296,21 @@ sub backup_repo {
                 status "pairing $short with $host_repo";
                 local $CWD = $host_repo;
                 system "git remote add $short_drive_name $dir 2>/dev/null" || 1;
-                system "git annex sync --content $short_drive_name";
+                $seq->add_should_succeed("git annex sync --content $short_drive_name");
+                $seq->run();
                 # TODO now metadata sync with origin remote, if it exists
             } else {
-                status "couldn't pair $short with host; not syncing it"
+                # TODO extend ShellSequence to run arbitrary perl,
+                # then this whole thing can be retried
+                status "couldn't pair $short with host; not syncing it";
+                my $acknowledged = $term->ask_yn(
+                                                 prompt => "Acknowledged?",
+                                                 default => 'y',
+                                                );
             }
         } else {
-            system "git fetch origin '+refs/heads/*:refs/heads/*' --tags --no-prune";
+            $seq->add_should_succeed("git fetch origin '+refs/heads/*:refs/heads/*' --tags --no-prune");
+            $seq->run();
         }
     } else {                    # repo new to this drive
         if ($annex) {
@@ -322,17 +332,23 @@ sub backup_repo {
                     status "pairing $short with $host_repo";
                     local $CWD = $host_repo;
                     system "git remote add $short_drive_name $dir 2>/dev/null" || 1;
-                    system "git annex sync --content $short_drive_name";
+                    $seq->add_should_succeed("git annex sync --content $short_drive_name");
+                    $seq->run();
                     # TODO now metadata sync with origin remote, if it exists
                 } else {
-                    status "couldn't pair $short with host; not syncing it"
+                    status "couldn't pair $short with host; not syncing it";
+                    my $acknowledged = $term->ask_yn(
+                                                     prompt => "Acknowledged?",
+                                                     default => 'y',
+                                                    );
                 }
             }
         } else {
             mkdir "$dest" unless ( -d $dest );
             local $CWD = $dest;
             # bare repos don't get a reflog by default
-            system "git -c core.logAllRefUpdates=true clone --mirror $long $short";
+            $seq->add_should_succeed("git -c core.logAllRefUpdates=true clone --mirror $long $short");
+            $seq->run;
         }
     }
 
