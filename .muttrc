@@ -119,7 +119,7 @@ unignore From: Date: User-Agent: X-Mailer: x-oxford-username: Message-Id: To: Cc
 
 # --- mailboxes
 
-mailboxes +inbox +sent +debian +debian/.bulk +spam +feeds
+mailboxes +inbox +sent +debian +debian/.bulk +haskell +spam +feeds
 
 # --- message part viewing
 

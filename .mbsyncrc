@@ -74,6 +74,10 @@ Channel          dbulk
 Master           :fmimap:Lists/Debian/Bulk
 Slave            :fmmaildir:debian/bulk
 
+Channel          haskell
+Master           :fmimap:Lists/Haskell
+Slave            :fmmaildir:haskell
+
 Channel          feeds
 Master           :fmimap:Feeds
 Slave            :fmmaildir:feeds
@@ -99,6 +103,7 @@ Channel          fmaild
 # Channel          fmaila
 Channel          debian
 Channel          dbulk
+Channel          haskell
 # Channel          notes
 Channel          feeds
 Channel          spamtraining
