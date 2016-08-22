@@ -183,6 +183,7 @@ if ( defined $loc ) {
     backup_repo("https://anonscm.debian.org/git/pkg-mozext/ublock-origin.git", "alioth");
     backup_repo("https://anonscm.debian.org/git/pkg-mozext/y-u-no-validate.git", "alioth");
     backup_repo("https://anonscm.debian.org/git/pkg-mozext/self-destructing-cookies.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/collab-maint/mairix.git", "alioth");
 
 }
 
