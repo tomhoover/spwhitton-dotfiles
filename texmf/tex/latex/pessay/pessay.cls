@@ -16,6 +16,12 @@
 }
 \newcommand{\finishdouble}{\onehalfspacing}
 
+%% ---- Command to set up enumeration
+
+\newcommand{\enumsettings}{%
+  \setenumerate[1]{label={\arabic*.},ref={(\arabic*)},itemindent=0.30in,labelsep=1em,itemsep=-1em,before=\vspace{-0.5em},after=\vspace{-0.5em}}%
+}
+
 %% ---- Options for our document class.
 
 %% One-half spacing
@@ -68,6 +74,13 @@
   \renewcommand{\footnote}[1]{\endnote{##1}}}
 \DeclareOption{footnotes}{\renewcommand{\notesandrefs}[1]{\bibhere{#1}}\renewcommand{\doendnotes}{}}
 
+%% Enable enum numbering resume
+
+\DeclareOption{resume}{%
+  \renewcommand{\enumsettings}{%
+    \setenumerate[1]{resume,label={\arabic*.},ref={(\arabic*)},itemindent=0.30in,labelsep=1em,itemsep=-1em,before=\vspace{-0.5em},after=\vspace{-0.5em}}%
+  }%
+}
 
 %% ---- Pass options to the article class and then load it with
 %% ---- \papersettings (defined just above)
@@ -96,7 +109,7 @@
 
 %% ---- Useful enumerations
 
-\setenumerate[1]{resume,label={\arabic*.},ref={(\arabic*)},itemindent=0.30in,labelsep=1em,itemsep=-1em,before=\vspace{-0.5em},after=\vspace{-0.5em}}
+\enumsettings
 
 %% ---- Sectioning
 
