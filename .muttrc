@@ -168,8 +168,8 @@ message-hook ~G 'macro index,pager \cj ,B "URL viewer"'
 # quickly make a TODO item and flag so it doesn't get archived
 # macro index \co "!k|~/bin/capture-mail\nj"
 # macro pager \co "q!k|~/bin/capture-mail\nj"
-macro index \co "k|~/bin/capture-mail\n"
-macro pager \co "qk|~/bin/capture-mail\n"
+macro index \co "|~/bin/capture-mail\nj"
+macro pager \co "q|~/bin/capture-mail\nj"
 
 # open RSS links in browser (fails because for some reason mutt can't bind <f{1--4}>
 # macro index,pager <F4> "<pipe-message>grep '\^http' | sed 's/\^/-new-tab /' | xargs firefox<enter>" "open all URLs at beginning of lines in message in browser tabs"
