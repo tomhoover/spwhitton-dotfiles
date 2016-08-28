@@ -17,13 +17,13 @@ $lintian_opts = [
 $run_piuparts = 1;
 $piuparts_opts = [
     '--schroot',
-    'unstable-i386-piuparts',
+    '%r-%a-piuparts',
     '--fail-if-inadequate',
     # '--fail-on-broken-symlinks', # too many false positives
     ];
 
 $run_autopkgtest = 1;
-$autopkgtest_root_args = ["env"];
-$autopkgtest_opts = ["--", "schroot", "unstable-i386-sbuild"];
+$autopkgtest_root_args = "";
+$autopkgtest_opts = ["--", "schroot", "%r-%a-sbuild"];
 
 1;
