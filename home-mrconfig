@@ -254,7 +254,10 @@ post_checkout =
     cd propellor
     git remote add -f upstream github:joeyh/propellor.git
     which cabal && cabal sandbox init || true
-    # from <https://propellor.branchable.com/coding_style/>
+    # from <https://propellor.branchable.com/coding_style/> we use a
+    # hook here because dgit's requirements mean on the debian branch
+    # we have to clean .cabal-sandbox etc. before a build (so we
+    # always have to use sbuild)
     echo >.git/hooks/post-checkout """
 #!/usr/bin/perl
 
