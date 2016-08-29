@@ -1,6 +1,7 @@
 */15 * * * * chronic doccheckin
 @hourly chronic mbsync fastmail
-@daily r2e run
+# 1pm MST
+0 20 * * * r2e run
 @daily chronic athena-publish-org-docs
 @reboot emacs --daemon
 @reboot ii
