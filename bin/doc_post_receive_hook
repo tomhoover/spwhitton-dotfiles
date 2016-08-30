@@ -1,5 +1,12 @@
 #!/bin/sh
 
+# TODO if one of the calls to `org-publish-project' coughs on some
+# syntax errors, it stops further files in that project being
+# published.  This script could e-mail me a warning about that, so I
+# can try to publish interactively (not batch mode) to find the
+# problem (and an easy way to test that interactive publishing would
+# be good, in comproc.org)
+
 HOME=/home/swhitton
 
 . $HOME/.shenv
@@ -13,9 +20,9 @@ else
     cd $HOME/local/src/org-publish/doc
     git pull -f
 fi
-if ! mount | grep "lib/fm" >/dev/null; then
-    mount $HOME/lib/fm
-fi
+#if ! mount | grep "lib/fm" >/dev/null; then
+#    mount $HOME/lib/fm
+#fi
 mkdir -p /var/www/spw/org /tmp/dionysus/Agenda "/tmp/dionysus/Org docs" "/tmp/dionysus/Philos notes"
 
 #TEMP=$(mktemp -d)
