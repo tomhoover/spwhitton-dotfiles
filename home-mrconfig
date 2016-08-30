@@ -254,17 +254,13 @@ post_checkout =
     cd propellor
     git remote add -f upstream github:joeyh/propellor.git
     which cabal && cabal sandbox init || true
-    # from <https://propellor.branchable.com/coding_style/>
-    echo >.dir-locals.el """
-    ((nil . ((indent-tabs-mode . t)
-             (tab-width . 8)
-             (fill-column . 80)))
-     ;; Warn about spaces used for indentation:
-     (haskell-mode . ((eval . (highlight-regexp \"^ *\")))))
-    """
+    # from <https://propellor.branchable.com/coding_style/> we use a
+    # hook here because dgit's requirements mean on the debian branch
+    # we have to clean .cabal-sandbox etc. before a build (so we
+    # always have to use sbuild)
+    cp ~/lib/hooks/propellor-post-checkout ~/src/propellor/.git/hooks
+    chmod 755 .git/hooks/post-checkout
     echo ".dir-locals.el" >> .git/info/exclude
-    # avoid dgit wiping out our .dir-locals.el
-    git config dgit.default.clean-mode dpkg-source
 fixups =
     # check that the link isn't already in place before making the link
     # because otherwise we get an infinite loop of links that breaks propellor

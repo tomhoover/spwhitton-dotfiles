@@ -1,0 +1,26 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+use Path::Class;
+use autodie;
+
+(undef, my $head, my $flag) = @ARGV;
+my $branch = `git name-rev --name-only $head`;
+chomp $branch;
+
+if ( $flag && "$branch" ne "debian" ) {
+    unless ( -d ".cabal-sandbox" ) {
+        system "cabal sandbox init";
+    }
+    open my $fh, ">", ".dir-locals.el";
+    print $fh <<'END';
+((nil . ((indent-tabs-mode . t)
+         (tab-width . 8)
+         (fill-column . 80)))
+         ;; Warn about spaces used for indentation:
+         (haskell-mode . ((eval . (highlight-regexp "^ *")))))
+END
+    close $fh;
+}
