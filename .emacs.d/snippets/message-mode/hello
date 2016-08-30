@@ -1,3 +1,5 @@
-Hello,
+# use C-d to get just "Hello," for (e.g.) group reply
+# --
+Hello${1: `(spw/recipient-first-name)`},
 
 $0
