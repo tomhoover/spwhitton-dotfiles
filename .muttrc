@@ -176,7 +176,8 @@ macro pager \co "q|~/bin/capture-mail\nj"
 
 # open rss2email source link in browser
 # macro pager <f12> "<pipe-message>grep \"\^URL: http\" | xargs firefox -new-tab<enter>" "open rss2email source link"
-folder-hook feeds macro pager \cj "<pipe-message>egrep \"X-RSS-URL:\" | cut -d' ' -f2- | xargs firefox -new-tab<enter>" "open rss2email source link"
+macro pager ,j "<pipe-message>egrep 'X-RSS-URL:' | cut -d' ' -f2- | xargs firefox -new-tab<enter>" "open rss2email source link"
+folder-hook feeds 'macro pager \cj ,j "URL viewer"'
 
 # train spam filter
 macro index,pager <f11> "<enter-command>unset resolve<enter><clear-flag>N<enter-command>set resolve<enter><save-message>+spam<enter>" "mark as spam"
