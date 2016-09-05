@@ -11,7 +11,8 @@ $run_lintian = 1;
 $lintian_opts = [
     '--allow-root',
     '--color=never',            # make the .build file more readable
-    '--fail-on-warnings'
+    '--fail-on-warnings',
+    '--display-info'
     ];
 
 $run_piuparts = 1;
