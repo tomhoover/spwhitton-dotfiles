@@ -21,6 +21,7 @@ $piuparts_opts = [
     '%r-%a-piuparts',
     '--fail-if-inadequate',
     # '--fail-on-broken-symlinks', # too many false positives
+    '--log-level=info',
     ];
 
 $run_autopkgtest = 1;
