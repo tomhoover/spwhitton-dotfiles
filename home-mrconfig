@@ -93,7 +93,7 @@ lib =
         return 1
     }
     workstation() {
-        on swhitton@artemis swhitton@zephyr spwhitton@hephaestus spwhitton@shortgeese
+        on swhitton@artemis swhitton@zephyr spwhitton@hephaestus
     }
     mine() {
         workstation || on swhitton@athena
@@ -268,6 +268,9 @@ fixups =
     git config propellor.spin-branch spw3conf
     git config propellor.forbid-dirty-spin true
 
+# this could be more fine-grained
+skip = ! mine
+
 # --- personal website source
 
 [src/wiki]
@@ -401,7 +404,7 @@ skip = ! [ "$MR_ACTION" = "stowable" ]
 [doc]
 checkout = git clone athenap:doc doc
 update = git pull "$@"
-skip = ! mine
+skip = ! (mine || on spwhitton@shortgeese)
 
 # set file modification times to last commit for deft.el
 fixups = git-utime
