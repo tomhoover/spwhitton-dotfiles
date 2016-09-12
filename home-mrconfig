@@ -352,7 +352,7 @@ fixups =
     git config remote.origin.annex-ignore true
 
 # only using this in Tucson atm
-skip = ! on swhitton@artemis && ! on swhitton@athena && ! on spwhitton@hephaestus
+skip = ! on swhitton@artemis && ! on swhitton@athena && ! on spwhitton@hephaestus && ! on spwhitton@shortgeese
 
 # --- git annex for use with rtorrent
 
