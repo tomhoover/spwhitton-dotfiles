@@ -425,9 +425,9 @@ sync =
     else
         echo ">> syncing on athena"
         athena_cmd doc "mr sync"
-        echo ">> syncing locally"
+        echo "\n>> syncing locally"
         doccheckin && git pull && git push
-        echo ">> syncing on athena again"
+        echo "\n>> syncing on athena again"
         athena_cmd doc "mr sync"
     fi
 
