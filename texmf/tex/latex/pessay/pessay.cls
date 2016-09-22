@@ -163,3 +163,7 @@
 
 \end{center}\startdouble
 }\makeatother
+
+%% ---- Style inline quotations
+
+\expandafter\def\expandafter\quote\expandafter{\quote\onehalfspacing\small}
