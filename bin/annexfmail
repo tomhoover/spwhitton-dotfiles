@@ -85,6 +85,7 @@ archivemail \
 # cd $OUTPUT
 # git annex add archive${suffix}.gz sent${suffix}.gz debian${suffix}.gz feeds${suffix}.gz
 
-mv "$HOME/.mbsyncrc~" "$HOME/.mbsyncrc"
+#mv "$HOME/.mbsyncrc~" "$HOME/.mbsyncrc"
 
 status now commit and sync ~/lib/annex
+status and re-enable ~/.mbsyncrc
