@@ -98,6 +98,9 @@ lib =
     mine() {
         workstation || on swhitton@athena
     }
+    tucson() {
+        on artemis shortgeese athena hephaestus
+    }
     gcrypt() {
         which git-remote-gcrypt >/dev/null 2>/dev/null
     }
@@ -351,8 +354,7 @@ fixups =
     git config annex.autocommit true # needed for ga sync
     git config remote.origin.annex-ignore true
 
-# only using this in Tucson atm
-skip = ! on swhitton@artemis && ! on swhitton@athena && ! on spwhitton@hephaestus && ! on spwhitton@shortgeese
+skip = ! tucson
 
 # --- git annex for use with rtorrent
 
