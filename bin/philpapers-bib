@@ -1,0 +1,25 @@
+#!/bin/sh
+
+# update copy of my collection of references from philpapers.org
+
+# I just keep them all in a single bibliography, #205586.
+# Categorising them into separate bibliography files doesn't achieve
+# much and makes downloading them to .bib files more complicated
+
+id="205586"
+path="$HOME/doc/papers/philpapers.bib"
+link="$HOME/doc/papers/${id}.bib"
+
+# this should include every entry in the bibliography, but it's
+# possible that the site limits how many it will include.  If I hit
+# such a limit, I might have to split into two bibs (I'd only need to
+# download one of them with this script, and the other could be
+# frozen)
+uri="http://philpapers.org/browse/${id}?categorizerOn=&langFilter=&showCategories=on&hideAbstracts=&newWindow=on&onlineOnly=&proOnly=on&filterByAreas=&publishedOnly=&freeOnly=&cId=${id}&sqc=&sort=&format=bib&start=&limit=&jlist=&ap_c1=&ap_c2="
+date=$(date)
+
+echo "@Comment{ PhilPapers bibliography #${id}, exported as of $date }\n" >$path
+
+wget -O- $uri >>$path
+
+test -L $link || ln -s $(basename $path) $link
