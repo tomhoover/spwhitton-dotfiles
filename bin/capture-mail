@@ -1,5 +1,9 @@
 #!/bin/zsh
 
+# TODO save all org buffers so arev kicks in (break out into
+# ~/bin/save-org-buffers with error handling and warning that might
+# need to handle y/n prompt in emacs)
+
 msg=$(cat /dev/stdin)
 
 id=$(echo $msg | grep -i "^Message-ID:" | sed "s/^Message-I[dD]: //")
