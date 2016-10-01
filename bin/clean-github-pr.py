@@ -53,10 +53,13 @@ def main():
     u = g.get_user()
 
     source = sys.argv[1]
-    fork = sys.argv[1].split("/")[1]
-    print "forking repo " + source
+    if '/' in source:
+        fork = sys.argv[1].split("/")[1]
+        print "forking repo " + source
+        u.create_fork(g.get_repo(source))
+    else:
+        fork = sys.argv[1]
 
-    u.create_fork(g.get_repo(source))
     while True:
         try:
             r = u.get_repo(fork)
