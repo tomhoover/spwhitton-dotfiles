@@ -1,0 +1,27 @@
+#!/bin/sh
+
+. "$HOME/.shenv"
+. "$HOME/lib/spw.sh"
+. "$HOME/lib/tputfs.sh"
+
+# Sync ~/doc, taking account of how I access it from Emacs, both
+# locally and on athena
+
+set -e
+
+save-org-buffers
+(
+    cd $HOME/doc
+    if win32; then
+        cmd "/C doccheckin.bat" && git pull && git push
+    elif [ "$(hostname -s)" = "athena" ]; then
+        doccheckin && git pull && git push
+    else
+        status syncing on athena
+        athena_cmd doc "mr sync"
+        status syncing locally
+        doccheckin && git pull && git push
+        status syncing on athena again
+        athena_cmd doc "mr sync"
+    fi
+)

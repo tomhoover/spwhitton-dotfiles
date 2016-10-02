@@ -1,0 +1,17 @@
+#!/bin/sh
+
+. $HOME/.shenv
+
+# If emacs is running, try to save all Org-mode buffers
+
+if pgrep -u $USER emacs >/dev/null; then
+    output="$(emacsclient -e '(org-save-all-org-buffers)' 2>/dev/null)"
+    # TODO wait for 5 seconds for above; if doesn't finish, tell user
+    # that it might mean that Emacs is waiting on a y/n prompt
+    # TODO check output for failure if Org not yet loaded; if so, exit
+    # zero
+    if [ $? != 0 ]; then
+        echo "failed to save all Org buffers"
+        exit 1
+    fi
+fi

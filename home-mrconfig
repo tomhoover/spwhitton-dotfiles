@@ -417,21 +417,7 @@ pre_update = (! win32) && doccheckin
 autoci = doccheckin || true
 
 # quick syncs
-sync =
-    pgrep -u $USER emacs >/dev/null && \
-        emacsclient -e '(org-save-all-org-buffers)' 2>/dev/null || true
-    if win32; then
-        cmd "/C doccheckin.bat" && git pull && git push
-    elif on athena; then
-         doccheckin && git pull && git push
-    else
-        echo ">> syncing on athena"
-        athena_cmd doc "mr sync"
-        echo "\n>> syncing locally"
-        doccheckin && git pull && git push
-        echo "\n>> syncing on athena again"
-        athena_cmd doc "mr sync"
-    fi
+sync = sync-docs
 
 # --- static websites on web host boxes
 
