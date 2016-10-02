@@ -48,8 +48,13 @@ def main():
     creds = f.readline()
     username = creds.split(":")[0]
     pword = creds.split(":")[1].strip()
+    token = f.readline().strip()
 
-    g = github.Github(username, pword)
+    if len(token) != 0:
+        g = github.Github(token)
+    else:
+        g = github.Github(username, pword)
+
     u = g.get_user()
 
     source = sys.argv[1]
