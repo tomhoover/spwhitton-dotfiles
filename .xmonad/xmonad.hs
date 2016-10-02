@@ -108,7 +108,8 @@ myKeys = [ ("M4-/", spawn "xmousetidy")
            -- Since shutting artemis' lid to suspend crashes X and
            -- using the Xfce menu option to suspend fails to lock the
            -- screen, let's just make a binding..
-         , ("M4-<F4>", spawn "sh -c 'ssh-add -D && xscreensaver-command -lock && systemctl suspend'")
+         , ("M4-<F4>", spawn "sensible-suspend")
+         , ("M4-S-<F4>", spawn $ inMyTerm "fmr-sync-suspend")
 
            -- TODO restore M4-l shrink keybinding to M4-S-l or something
          ]

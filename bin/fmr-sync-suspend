@@ -1,0 +1,14 @@
+#!/bin/bash
+# ^ different shells have different options for read()
+
+. $HOME/.shenv
+
+# Perform `fmr sync`, and then run sensible suspend if it succeeded
+
+MR_FAST=true mr sync
+
+if [ $? = 0 ]; then
+    sensible-suspend
+else
+    read -rsp $'Press any key to continue...\n' -n1 key
+fi
