@@ -70,7 +70,10 @@ def main():
     user_work_dir = os.getcwd()
     work_area = tempfile.mkdtemp()
     os.chdir(work_area)
-    subprocess.call(["git", "clone", "https://github.com/" + username + "/" + fork])
+    if pword == 'ssh':
+        subprocess.call(["git", "clone", "git@github.com:" + username + "/" + fork])
+    else:
+        subprocess.call(["git", "clone", "https://github.com/" + username + "/" + fork])
     os.chdir(work_area + "/" + fork)
     subprocess.call(["git", "checkout", "--orphan", "github"])
     subprocess.call(["git", "rm", "-rf", "."])
