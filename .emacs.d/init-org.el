@@ -1064,8 +1064,8 @@ spaces in it and to remove any colons."
 (defun spw/org-agenda-priority-filter (arg)
   (interactive "P")
   (if arg
-      (push "\[#A\]" org-agenda-regexp-filter)
-    (push "\[#[AB]\]" org-agenda-regexp-filter))
+      (push "\[#A\]\\|Appt" org-agenda-regexp-filter)
+    (push "\[#[AB]\]\\|Appt" org-agenda-regexp-filter))
   (org-agenda-filter-apply org-agenda-regexp-filter 'regexp))
 
 ;;;; ---- hooks and keys ----
