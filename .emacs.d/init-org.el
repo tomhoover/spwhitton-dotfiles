@@ -1061,6 +1061,13 @@ spaces in it and to remove any colons."
 (face-override-variable-pitch 'org-table)
 ;;(face-override-variable-pitch 'org-block-background)
 
+(defun spw/org-agenda-priority-filter (arg)
+  (interactive "P")
+  (if arg
+      (push "\[#A\]" org-agenda-regexp-filter)
+    (push "\[#[AB]\]" org-agenda-regexp-filter))
+  (org-agenda-filter-apply org-agenda-regexp-filter 'regexp))
+
 ;;;; ---- hooks and keys ----
 
 (run-at-time "00:59" 3600 'org-save-all-org-buffers)
@@ -1203,6 +1210,9 @@ This function is run automatically after each state change to a DONE state."
 ;;; rebind <space> in agenda mode so that have access to evil's leader
 
 (bind-key (kbd "M-SPC") 'org-agenda-cycle-show org-agenda-mode-map)
+
+;;; hide low-priority tasks
+(bind-key (kbd "&") 'spw/org-agenda-priority-filter org-agenda-mode-map)
 
 ;;; escape to get out of date entry
 
