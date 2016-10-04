@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 # clean-github-pr --- Create tidy repositories for pull requests
 #
