@@ -177,6 +177,7 @@ if ( defined $loc ) {
     backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/ws-butler.git", "alioth");
     backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/zenburn-emacs.git", "alioth");
     backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/aggressive-indent-mode.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/ert-async-el.git", "alioth");
 
     backup_repo("https://anonscm.debian.org/git/pkg-mozext/classic-theme-restorer.git", "alioth");
     backup_repo("https://anonscm.debian.org/git/pkg-mozext/keysnail.git", "alioth");
