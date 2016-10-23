@@ -77,6 +77,7 @@ status "cleaning up ~/src";
 # we retain orig tarballs
 unlink glob "src/*.dsc";
 unlink glob "src/*.upload";
+unlink glob "src/*.inmulti";
 unlink glob "src/*.changes";
 unlink glob "src/*.deb";
 unlink glob "src/*.build";
