@@ -290,6 +290,10 @@ skip = ! mine
 checkout = git clone gcrypt::athenap:annex
 post_checkout =
     cd annex
+    # have to ensure we have origin's git-annex branch before we
+    # delete origin remote
+    git checkout git-annex
+    git checkout master
     git remote rm origin
     git annex init
     git annex enableremote origin gitrepo=athenap:annex
