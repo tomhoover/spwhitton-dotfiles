@@ -93,13 +93,13 @@ lib =
         return 1
     }
     workstation() {
-        on swhitton@artemis swhitton@zephyr spwhitton@hephaestus
+        on swhitton@artemis swhitton@zephyr spwhitton@hephaestus spwhitton@iris
     }
     mine() {
         workstation || on swhitton@athena
     }
     tucson() {
-        on artemis shortgeese athena hephaestus
+        on artemis shortgeese athena hephaestus iris
     }
     gcrypt() {
         which git-remote-gcrypt >/dev/null 2>/dev/null
