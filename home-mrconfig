@@ -261,7 +261,7 @@ post_checkout =
     # hook here because dgit's requirements mean on the debian branch
     # we have to clean .cabal-sandbox etc. before a build (so we
     # always have to use sbuild)
-    cp ~/lib/hooks/propellor-post-checkout ~/src/propellor/.git/hooks
+    cp ~/lib/hooks/propellor-post-checkout ~/src/propellor/.git/hooks/post-checkout
     chmod 755 .git/hooks/post-checkout
     echo ".dir-locals.el" >> .git/info/exclude
 fixups =
