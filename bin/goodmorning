@@ -11,7 +11,7 @@ SONG="/home/swhitton/lib/annex/music/K-pop/Crayon Pop/The First Mini Album/02 - 
 # fi
 
 # systemd doesn't set $HOME for services
-HOME=/home/swhitton
+HOME=/home/spwhitton
 export HOME
 
 . $HOME/.shenv
