@@ -272,6 +272,7 @@
   :commands (org-capture
              org-store-link
              org-agenda
+             org-save-all-org-buffers   ; for ~/bin/sync-docs
              spw/org-agenda-file-to-front
              spw/org-remove-file
              spw/new-philos-notes))
