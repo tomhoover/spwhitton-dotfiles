@@ -70,6 +70,7 @@ if (@ARGV) {
 
 $seq->add_should_zero("ls tmp");
 $seq->add_should_zero("ssh athena ls tmp");
+$seq->add_should_zero("ssh athena ls local/files/tmp");
 $seq->add_should_zero("ls lib/athena/tmp");
 $seq->run();
 
