@@ -1,0 +1,5 @@
+#!/bin/sh
+
+ssh-add -D
+xscreensaver-command -lock
+systemctl suspend

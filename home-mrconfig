@@ -93,13 +93,13 @@ lib =
         return 1
     }
     workstation() {
-        on swhitton@artemis swhitton@zephyr spwhitton@hephaestus
+        on swhitton@artemis swhitton@zephyr spwhitton@hephaestus spwhitton@iris
     }
     mine() {
         workstation || on swhitton@athena
     }
     tucson() {
-        on artemis shortgeese athena hephaestus
+        on artemis shortgeese athena hephaestus iris
     }
     gcrypt() {
         which git-remote-gcrypt >/dev/null 2>/dev/null
@@ -261,7 +261,7 @@ post_checkout =
     # hook here because dgit's requirements mean on the debian branch
     # we have to clean .cabal-sandbox etc. before a build (so we
     # always have to use sbuild)
-    cp ~/lib/hooks/propellor-post-checkout ~/src/propellor/.git/hooks
+    cp ~/lib/hooks/propellor-post-checkout ~/src/propellor/.git/hooks/post-checkout
     chmod 755 .git/hooks/post-checkout
     echo ".dir-locals.el" >> .git/info/exclude
 fixups =
@@ -290,6 +290,10 @@ skip = ! mine
 checkout = git clone gcrypt::athenap:annex
 post_checkout =
     cd annex
+    # have to ensure we have origin's git-annex branch before we
+    # delete origin remote
+    git checkout git-annex
+    git checkout master
     git remote rm origin
     git annex init
     git annex enableremote origin gitrepo=athenap:annex
@@ -417,21 +421,7 @@ pre_update = (! win32) && doccheckin
 autoci = doccheckin || true
 
 # quick syncs
-sync =
-    pgrep -u $USER emacs >/dev/null && \
-        emacsclient -e '(org-save-all-org-buffers)' 2>/dev/null || true
-    if win32; then
-        cmd "/C doccheckin.bat" && git pull && git push
-    elif on athena; then
-         doccheckin && git pull && git push
-    else
-        echo ">> syncing on athena"
-        athena_cmd doc "mr sync"
-        echo "\n>> syncing locally"
-        doccheckin && git pull && git push
-        echo "\n>> syncing on athena again"
-        athena_cmd doc "mr sync"
-    fi
+sync = sync-docs
 
 # --- static websites on web host boxes
 

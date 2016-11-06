@@ -3,6 +3,9 @@
 . "$HOME/.shenv"
 . "$HOME/lib/tputfs.sh"
 
+# Sync ~/lib/dionysus annex, taking account of how I access it from
+# dionysus
+
 set -e
 
 LOCAL="$HOME/lib/dionysus"

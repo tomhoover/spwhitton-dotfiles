@@ -272,6 +272,7 @@
   :commands (org-capture
              org-store-link
              org-agenda
+             org-save-all-org-buffers   ; for ~/bin/sync-docs
              spw/org-agenda-file-to-front
              spw/org-remove-file
              spw/new-philos-notes))
@@ -425,7 +426,9 @@
 
   ;; I like my C-w binding so move one of company's bindings
   (define-key company-active-map "\C-w" nil)
-  (bind-key "M-o" 'company-show-location company-active-map)
+  ;; (bind-key "M-o" 'company-show-location company-active-map)
+  (bind-key "M-[" 'company-show-location company-active-map)
+  ;; ^ rebind due to iris' weird keyboard
 
   ;; settings
 
@@ -714,7 +717,10 @@
 
 ;; do the real work with avy
 (use-package avy
-  :bind (("M-o" . spw/avy-goto-word)
+  :bind (;; ("M-o" . spw/avy-goto-word)
+         ("M-[" . spw/avy-goto-word)
+         ;; ^ rebind due to iris' weird keyboard
+
          ;; if one types numbers, avy-goto-line will switch to old M-g
          ;; g behaviour so may override default M-g g binding
          ("M-g g" . avy-goto-line))

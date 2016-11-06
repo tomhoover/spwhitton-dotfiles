@@ -34,3 +34,4 @@ debian/files
 *.substvars
 \.pc
 *.rej
+debian/debhelper-build-stamp

@@ -95,6 +95,10 @@ alias sid-build-deps="sudo mk-build-deps -irt 'apt-get -o Debug::pkgProblemResol
 alias testing-build-deps="sudo mk-build-deps -irt 'apt-get -o Debug::pkgProblemResolver=yes -t testing --no-install-recommends'"
 alias test-package-plan="schroot -d $HOME -- /bin/sh -c \"cabal --no-require-sandbox update && cd src/package-plan && perl test-packages.pl\""
 alias wnpomodoro="mplayer ~/lib/annex/doc/sounds/*pomodoro.mp3"
+alias ghc8-sbuild="sbuild --extra-repository='deb http://httpredir.debian.org/debian experimental main' --build-dep-resolver=aspcud --add-depends=\"ghc (>= 8)\""
+alias dq="dgit --quilt=gbp"
+alias qsbuild="sbuild --no-run-piuparts --no-run-lintian"
+alias qqsbuild="sbuild --no-run-piuparts --no-run-lintian --no-run-autopkgtest"
 
 # based on gregor hermann's dh-make-perl-dev he posted on bugs.d.o
 dh-make-elpa-dev () {

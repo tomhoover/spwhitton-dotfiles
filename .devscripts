@@ -8,4 +8,6 @@ DSCVERIFY_KEYRINGS=~/.gnupg/pubring.kbx
 
 # this ensures that both debuild and gbp-buildpackage don't sign anything.
 # manually do it with debsign (or dgit push) before making an upload
+# note that this is needed in addition to settings in ~/.config/dpkg/buildpackage.conf
+# because debuild uses debsign for signing
 DEBUILD_DPKG_BUILDPACKAGE_OPTS="-us -uc"
