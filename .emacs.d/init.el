@@ -426,9 +426,7 @@
 
   ;; I like my C-w binding so move one of company's bindings
   (define-key company-active-map "\C-w" nil)
-  ;; (bind-key "M-o" 'company-show-location company-active-map)
-  (bind-key "M-[" 'company-show-location company-active-map)
-  ;; ^ rebind due to iris' weird keyboard
+  (bind-key "M-o" 'company-show-location company-active-map)
 
   ;; settings
 
@@ -717,10 +715,7 @@
 
 ;; do the real work with avy
 (use-package avy
-  :bind (;; ("M-o" . spw/avy-goto-word)
-         ("M-[" . spw/avy-goto-word)
-         ;; ^ rebind due to iris' weird keyboard
-
+  :bind (("M-o" . spw/avy-goto-word)
          ;; if one types numbers, avy-goto-line will switch to old M-g
          ;; g behaviour so may override default M-g g binding
          ("M-g g" . avy-goto-line))
