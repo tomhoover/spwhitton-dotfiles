@@ -82,6 +82,7 @@ unlink glob "src/*.inmulti";
 unlink glob "src/*.changes";
 unlink glob "src/*.deb";
 unlink glob "src/*.build";
+unlink glob "src/*.buildinfo";
 unlink glob "src/*.debian.tar.*";
 unlink glob "src/*[0-9].tar.*"; # native package generated tarballs
 system "clean-patch-queues -y";
