@@ -1,14 +1,12 @@
 #!/bin/zsh
 
-# TODO save all org buffers so arev kicks in (break out into
-# ~/bin/save-org-buffers with error handling and warning that might
-# need to handle y/n prompt in emacs)
-
 msg=$(cat /dev/stdin)
 
 id=$(echo $msg | grep -i "^Message-ID:" | sed "s/^Message-I[dD]: //")
 from=$(echo $msg | grep -m 1 -i "^From:" | sed "s/^From: //" | sed "s/<.*$//" | sed 's/"//g' | sed 's/ $//')
 subject=$(echo $msg | grep -m 1 -i "^Subject:" | sed "s/^Subject: //")
+
+save-org-buffers
 
 echo "* TODO E-mail \"$subject\" from $from" >>$HOME/doc/org/refile.org
 echo "# Message-Id: $id" >>$HOME/doc/org/refile.org
