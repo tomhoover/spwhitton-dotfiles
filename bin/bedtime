@@ -1,0 +1,18 @@
+#!/bin/bash
+
+. $HOME/.shenv
+
+# someday, make this work instead:
+# <http://joeyh.name/blog/entry/a_programmable_alarm_clock_using_systemd/>
+
+(($EUID == 0)) || exec sudo "$0" "$@"
+
+WHEN="${1:-tomorrow 6am}"
+CMD="/home/spwhitton/bin/goodmorning"
+
+when=$(date +%s -d "$WHEN")
+echo $when
+
+loginctl lock-sessions
+systemd-inhibit --what=handle-lid-switch --why=goodmorning  sh -c \
+                "rtcwake -m mem -t $when && /bin/su spwhitton -c $CMD"
