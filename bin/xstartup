@@ -2,8 +2,6 @@
 
 . $HOME/.shenv
 
-# stuff to start in XFCE or GNOME3
-
 # ---- no bell please
 
 xset b off
@@ -11,34 +9,12 @@ xset b off
 # ---- keyboard settings
 
 setxkbmap -option ctrl:nocaps
-setxkbmap -option "compose:ralt"
-setxkbmap -layout gb
-xmodmap ~/.Xmodmap
+xmodmap ~/.xmodmaprc
 xbindkeys
-
-# set US layout if my US usb keyboard is plugged in :(
-lsusb | grep -q "Chicony Electronics Co., Ltd" \
-    && setxkbmap -layout us
 
 # enable numlock if using USB keyboard
 lsusb | grep -q "Chicony Electronics Co., Ltd" \
     && numlockx on
-
-# disable built-in laptop keyboard if US usb keyboard plugged in :)
-# turn this off for now since lid closed anyway and laptopinput script
-# broken
-# [ "$(hostname -s)" = "artemis" ] \
-#     && laptopinput --maybe-disable
-
-# settings for (currently out of action) Apple USB keyboard
-
-if lsusb | grep -q "Aluminum Keyboard"; then
-    echo 2 | sudo tee /sys/module/hid_apple/parameters/fnmode > /dev/null
-    xmodmap $HOME/.Xmodmap-Apple
-    xset r rate 300
-    sleep 2
-    pkill zenity
-fi
 
 # ---- GTK settings
 
@@ -58,31 +34,24 @@ idlesshclear &
 
 # ---- screen locking
 
-if [ -e "/etc/systemd/system/goodmorning.timer" ]; then
+# first replace light-locker with xscreensaver
+pkill light-locker
+pgrep -u "$USER" xscreensaver || xscreensaver &
 
-    # if alarm clock service is in place on this machine, turn over lid
-    # switch handling to logind
-    xfconf-query -c xfce4-power-manager -n \
-                 -p /xfce4-power-manager/logind-handle-lid-switch \
-                 -t bool -s true
+# turn over lid switch handling to logind
+xfconf-query -c xfce4-power-manager -n \
+             -p /xfce4-power-manager/logind-handle-lid-switch \
+             -t bool -s true
 
-    # ... and then use xss-lock to make sure the screen still gets locked
-    xss-lock -- xscreensaver-command -lock &
-
-fi
+# ... and then use xss-lock to make sure the screen still gets locked
+xss-lock -- xscreensaver-command -lock &
 
 # ---- other stuff to launch
 
 redshift-gtk -l 53.57:1.5 -t 6500:3700 &
 caffeine-indicator &
-# workrave &
 firefox &
-
-# ---- screen locking redux
-
-# TODO do this with autostart files
-pkill light-locker
-pgrep -u "$USER" xscreensaver || xscreensaver &
+emacs --daemon
 
 # ---- fire up my window manager
 
