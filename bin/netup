@@ -3,7 +3,9 @@
 . $HOME/.shenv
 
 # postfix should flush itself so just mbsync
-mbsync --quiet fastmail
+if [ -d "$HOME/.fmail" ]; then
+    mbsync --quiet fastmail
+fi
 
 # Run personal anacron when network comes up -- so that it gets run
 # when resuming from suspend and network is available
