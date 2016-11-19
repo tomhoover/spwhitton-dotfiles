@@ -2,13 +2,16 @@
 
 . $HOME/.shenv
 
-movemail
+# postfix should flush itself so just mbsync
+mbsync --quiet fastmail
 
-# anacron won't run on system resume (#744753) so we run it when the
-# network comes up.  This is so it definitely gets run on any day in
-# which I use the machine
+# Run personal anacron when network comes up -- so that it gets run
+# when resuming from suspend and network is available
 hostanacrontab=$HOME/.config/anacron/$(whoami)_$(hostname -f)
 mkdir -p $HOME/local/anacron/spool
 if [ -e "$hostanacrontab" ]; then
     anacron -s -t $hostanacrontab -S $HOME/local/anacron/spool
 fi
+
+# TODO system anacron won't run on system resume (#744753) -- run that
+# here too?
