@@ -696,7 +696,8 @@
   :config
   (yas-global-mode 1)
   (when (f-exists? "/usr/share/yasnippet-snippets")
-    (add-to-list 'yas-snippet-dirs "/usr/share/yasnippet-snippets" t)))
+    (add-to-list 'yas-snippet-dirs "/usr/share/yasnippet-snippets" t))
+  (add-to-list 'warning-suppress-types '(yasnippet backquote-change)))
 
 ;;; htmlize for Org HTML export/publishing
 
