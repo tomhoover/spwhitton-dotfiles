@@ -528,6 +528,7 @@
 ;;; flycheck
 
 (use-package flycheck
+  :disabled t
   :demand
   :init
 
