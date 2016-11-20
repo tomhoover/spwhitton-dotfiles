@@ -125,7 +125,7 @@ lib =
                 tmp \
                 src \
                 lib \
-                lib/fm \
+                lib/athena \
                 local/mutt \
                 local/mpd \
                 local/anacron/spool \
