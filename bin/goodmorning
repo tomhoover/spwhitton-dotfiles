@@ -1,6 +1,6 @@
 #!/bin/sh
 
-VOLUME=60                      # lid closed!
+VOLUME=80
  SONG="/home/spwhitton/lib/annex/music/Soundtracks/Cardcaptor Sakura/Cardcaptor Sakura OST/2-4-32 - Yokoku BGM (BGM for Preview).mp3"
 #SONG="/home/spwhitton/lib/annex/music/K-pop/Crayon Pop/The First Mini Album/02 - Saturday Night.mp3"
 
