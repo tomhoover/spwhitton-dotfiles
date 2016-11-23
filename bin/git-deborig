@@ -132,9 +132,7 @@ sub archive_tag {
  --prefix=$source-$upstream_version/\\
  --format=tar $tag \\
  | $compressor > $orig";
-}
 
-END {
     # Restore situation before we messed around with git attributes
     if ( -e ".git/info/attributes-deborig" ) {
         rename ".git/info/attributes-deborig", ".git/info/attributes";
