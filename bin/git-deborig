@@ -64,7 +64,7 @@ my $compression = "gz";
 # Now check if we can use xz
 if ( -e "debian/source/format" ) {
     open( my $format_fh, '<', "debian/source/format" )
-      or die "couldn't read debian/source/format";
+      or die "couldn't open debian/source/format for reading";
     my $format = <$format_fh>;
     chomp($format) if defined $format;
     if ( $format eq "3.0 (quilt)" ) {
