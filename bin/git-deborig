@@ -31,10 +31,21 @@ use Git::Wrapper;
 use Dpkg::Version;
 use List::Compare;
 
+# Sanity check #1
 die "pwd doesn't look like a Debian source package in a git repository ..\n"
   unless ( -d ".git" && -e "debian/changelog" );
 
+# Process command line args
 die "usage: git deborig [-f] [TAG]\n" unless ( scalar @ARGV < 3);
+my $overwrite = 0;
+my $user_tag;
+foreach my $arg ( @ARGV ) {
+    if ( $arg eq "-f" ) {
+        $overwrite = 1;
+    } else {
+        $user_tag = $arg;
+    }
+}
 
 # Extract source package name and version from d/changelog
 my $changelog = Parse::DebianChangelog->init();
@@ -44,21 +55,36 @@ my $version = Dpkg::Version->new($changelog_data->{"Version"});
 my $upstream_version = $version->version();
 my $source = $changelog_data->{"Source"};
 
-# TODO gz for source package version 1
-# TODO handle -f
-# TODO pipe to xz or gz in case git config not in place
-my $orig = "../${source}_$upstream_version.tar.xz";
-die "orig.tar already exists: not overwriting without -f"
-  if ( -e "$orig" );
+# Sanity check #2
+die "this looks like a native package .." if $version->is_native();
+
+# Default to gzip
+my $compressor = "gzip";
+my $compression = "gz";
+# Now check if we can use xz
+if ( -e "debian/source/format" ) {
+    open( my $format_fh, '<', "debian/source/format" )
+      or die "couldn't read debian/source/format";
+    my $format = <$format_fh>;
+    chomp($format) if defined $format;
+    if ( $format eq "3.0 (quilt)" ) {
+        $compressor = "xz";
+        $compression = "xz";
+    }
+    close $format_fh;
+}
+
+my $orig = "../${source}_$upstream_version.tar.$compression";
+die "$orig already exists: not overwriting without -f\n"
+  if ( -e $orig && ! $overwrite );
 
 # Get available git tags
 my $git = Git::Wrapper->new(".");
 my @all_tags = $git->tag();
 
-if ( scalar @ARGV > 0 ) {
-    my $user_tag = shift @ARGV;
+if ( defined $user_tag ) {
     if ( $user_tag ~~ @all_tags ) {
-        $git->archive("-o$orig", "$user_tag");
+        system "git archive --format=tar $user_tag | $compressor > $orig";
     } else {
         die "the tag $user_tag does not exist in this repository\n";
     }
@@ -71,12 +97,14 @@ if ( scalar @ARGV > 0 ) {
     my $lc = List::Compare->new(\@all_tags, \@candidate_tags);
     my @version_tags = $lc->get_intersection();
 
+    # If there is only one candidate version tag, we're good to go.
+    # Otherwise, let the user know they can tell us which one to use
     if ( scalar @version_tags > 1 ) {
         print "tags ", join(", ", @version_tags), " all exist in this repository\n";
         print "tell me which one you want to make an orig.tar from: git deborig TAG\n";
         exit 1;
     } else {
         my $tag = shift @version_tags;
-        $git->archive("-o$orig", "$tag");
+        system "git archive --format=tar $tag | $compressor > $orig";
     }
 }
