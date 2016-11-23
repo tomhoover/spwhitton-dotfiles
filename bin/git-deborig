@@ -103,6 +103,9 @@ if ( defined $user_tag ) {
         print "tags ", join(", ", @version_tags), " all exist in this repository\n";
         print "tell me which one you want to make an orig.tar from: git deborig TAG\n";
         exit 1;
+    } elsif ( scalar @version_tags < 1 ) {
+        die "couldn't find any of the following tags: ",
+          join(", ", @candidate_tags), "\n";
     } else {
         my $tag = shift @version_tags;
         system "git archive --format=tar $tag | $compressor > $orig";
