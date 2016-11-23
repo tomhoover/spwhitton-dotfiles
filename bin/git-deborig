@@ -117,21 +117,24 @@ sub archive_tag {
 
     # For compatibility with dgit, we have to override any
     # export-subst and export-ignore git attributes that might be set
-    my $exists = ( -e ".git/info/attributes" );
-    rename ".git/info/attributes", ".git/info/attributes-deborig" if $exists;
+    rename ".git/info/attributes", ".git/info/attributes-deborig"
+      if ( -e ".git/info/attributes" );
     open( my $attributes_fh, '>', ".git/info/attributes" )
       or die "could not open .git/info/attributes for writing";
     print $attributes_fh "* -export-subst\n";
     print $attributes_fh "* -export-ignore\n";
     close $attributes_fh;
 
+    # git-archive(1) can be taught to invoke xz by adding some lines
+    # to ~/.gitconfig.  So that this script always works, we just pipe
+    # to the compression tool
     system "git archive \\
  --prefix=$source-$upstream_version/\\
  --format=tar $tag \\
  | $compressor > $orig";
 
     # Restore situation before we messed around with git attributes
-    if ( $exists ) {
+    if ( -e ".git/info/attributes-deborig" ) {
         rename ".git/info/attributes-deborig", ".git/info/attributes";
     } else {
         unlink ".git/info/attributes";
