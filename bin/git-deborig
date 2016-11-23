@@ -74,7 +74,7 @@ if ( -e "debian/source/format" ) {
     close $format_fh;
 }
 
-my $orig = "../${source}_$upstream_version.tar.$compression";
+my $orig = "../${source}_$upstream_version.orig.tar.$compression";
 die "$orig already exists: not overwriting without -f\n"
   if ( -e $orig && ! $overwrite );
 
