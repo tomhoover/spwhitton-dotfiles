@@ -82,13 +82,13 @@ die "$orig already exists: not overwriting without -f\n"
 my $git = Git::Wrapper->new(".");
 my @all_tags = $git->tag();
 
-if ( defined $user_tag ) {
+if ( defined $user_tag ) {      # User told us the tag to archive
     if ( $user_tag ~~ @all_tags ) {
         archive_tag($user_tag);
     } else {
         die "the tag $user_tag does not exist in this repository\n";
     }
-} else {
+} else {    # User didn't specify a tag to archive
     # See which candidate version tags are present in the repo
     my @candidate_tags = ("$upstream_version",
                           "v$upstream_version",
