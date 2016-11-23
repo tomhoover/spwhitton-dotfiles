@@ -84,7 +84,7 @@ my @all_tags = $git->tag();
 
 if ( defined $user_tag ) {
     if ( $user_tag ~~ @all_tags ) {
-        system "git archive --format=tar $user_tag | $compressor > $orig";
+        archive_tag($user_tag);
     } else {
         die "the tag $user_tag does not exist in this repository\n";
     }
@@ -108,6 +108,32 @@ if ( defined $user_tag ) {
           join(", ", @candidate_tags), "\n";
     } else {
         my $tag = shift @version_tags;
-        system "git archive --format=tar $tag | $compressor > $orig";
+        archive_tag($tag);
+    }
+}
+
+sub archive_tag {
+    my $tag = shift;
+
+    # For compatibility with dgit, we have to override any
+    # export-subst and export-ignore git attributes that might be set
+    my $exists = ( -e ".git/info/attributes" );
+    rename ".git/info/attributes", ".git/info/attributes-deborig" if $exists;
+    open( my $attributes_fh, '>', ".git/info/attributes" )
+      or die "could not open .git/info/attributes for writing";
+    print $attributes_fh "* -export-subst\n";
+    print $attributes_fh "* -export-ignore\n";
+    close $attributes_fh;
+
+    system "git archive \\
+ --prefix=$source-$upstream_version/\\
+ --format=tar $tag \\
+ | $compressor > $orig";
+
+    # Restore situation before we messed around with git attributes
+    if ( $exists ) {
+        rename ".git/info/attributes-deborig", ".git/info/attributes";
+    } else {
+        unlink ".git/info/attributes";
     }
 }
