@@ -167,6 +167,7 @@
 
 ;;; save my places in buffers; this is all the session management I need
 
+(setq recentf-keep '(file-remote-p file-readable-p))
 (setq recentf-save-file "~/.emacs.d/recentf")
 
 
