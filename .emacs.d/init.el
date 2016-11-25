@@ -567,17 +567,25 @@
 
 (use-package tramp
   :config
+  ;; from http://carloerodriguez.com/blog/2015/12/14/effective-ssh-connections-with-emacs/
+  (tramp-set-completion-function
+   "ssh"
+   '((tramp-parse-sconfig "/etc/ssh_config")
+     (tramp-parse-sconfig "~/.ssh/config")))
+  (setq tramp-default-method "ssh")
 
-  ;; usernames on hosts
-  (add-to-list 'tramp-default-user-alist '(nil "sdf" "spw"))
-  (add-to-list 'tramp-default-user-alist '("sudo" "localhost" "root"))
-  (add-to-list 'tramp-default-user-alist '(nil nil "swhitton") t)
-  (add-to-list 'tramp-default-user-alist '(nil "ma" "spw"))
-  (add-to-list 'tramp-default-user-alist '(nil "sage" "spwhitton"))
+  ;; see docstring for `tramp-remote-path'
+  (add-to-list 'tramp-remote-path 'tramp-own-remote-path)
 
   ;; TRAMP and zsh are not friends so might as well switch
   ;; over here
-  (setenv "SHELL" "/bin/bash"))
+  (setenv "SHELL" "/bin/bash")
+
+  ;; try to disable vc (from TRAMP FAQ)
+  (setq vc-ignore-dir-regexp
+        (format "\\(%s\\)\\|\\(%s\\)"
+                vc-ignore-dir-regexp
+                tramp-file-name-regexp)))
 
 ;;; ebib for editing BiBTeX databases
 
@@ -616,6 +624,12 @@
          ("C-c v" . projectile-vc))
   :demand
   :config
+  ;; fix bad interaction between projectile and tramp
+  (defun projectile-project-root--tramp-fix (orig-fun &rest args)
+    (unless (file-remote-p default-directory)
+      (apply orig-fun args)))
+  (advice-add 'projectile-project-root :around #'projectile-project-root--tramp-fix)
+
   (projectile-global-mode 1)
   (setq projectile-switch-project-action 'projectile-dired
         projectile-completion-system 'ido)
@@ -660,6 +674,9 @@
       ido-use-url-at-point nil
       ido-max-file-prompt-width 0.1
       ido-save-directory-list-file "~/.emacs.d/ido.last"
+
+      ;; Don't invoke TRAMP to complete
+      ido-enable-tramp-completion nil
 
       ;; Have Ido respect completion-ignored-extensions
       ido-ignore-extensions t
