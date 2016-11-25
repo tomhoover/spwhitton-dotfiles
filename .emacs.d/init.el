@@ -2231,5 +2231,10 @@ superflous blank quoted lines."
 
 (setq debian-changelog-mailing-address "spwhitton@spwhitton.name")
 
+;;; cc-mode
+
+(setq c-default-style "linux"
+      c-basic-offset 4)
+
 (provide 'init)
 ;;; init.el ends here
