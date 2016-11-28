@@ -153,6 +153,7 @@ if ( defined $loc ) {
     backup_repo("https://anonscm.debian.org/git/pkg-emacsen/wiki.git", "alioth", "pkg-emacsen");
     backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/dh-elpa.git", "alioth");
     backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/dh-make-elpa.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/yasnippet.git", "alioth");
     backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/ebib.git", "alioth");
     backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/emacs-async.git", "alioth");
     backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/emacs-buttercup.git", "alioth");
