@@ -99,6 +99,7 @@ alias ghc8-sbuild="sbuild --extra-repository='deb http://httpredir.debian.org/de
 alias dq="dgit --quilt=gbp"
 alias qsbuild="sbuild --no-apt-update --no-apt-distupgrade --no-run-piuparts --no-run-lintian"
 alias qqsbuild="sbuild --no-apt-update --no-apt-distupgrade --no-run-piuparts --no-run-lintian --no-run-autopkgtest"
+alias b="bts --mbox show"
 
 # based on gregor hermann's dh-make-perl-dev he posted on bugs.d.o
 dh-make-elpa-dev () {
