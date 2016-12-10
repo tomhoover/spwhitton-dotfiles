@@ -89,10 +89,14 @@ if ( defined $user_tag ) {      # User told us the tag to archive
         die "the tag $user_tag does not exist in this repository\n";
     }
 } else {    # User didn't specify a tag to archive
+    # convert according to DEP-14 rules
+    my $git_upstream_version = $upstream_version;
+    $git_upstream_version =~ y/:~/%_/;
+    $git_upstream_version =~ s/\.(?=\.|$|lock$)/.#/g;
     # See which candidate version tags are present in the repo
-    my @candidate_tags = ("$upstream_version",
-                          "v$upstream_version",
-                          "upstream/$upstream_version"
+    my @candidate_tags = ("$git_upstream_version",
+                          "v$git_upstream_version",
+                          "upstream/$git_upstream_version"
                          );
     my $lc = List::Compare->new(\@all_tags, \@candidate_tags);
     my @version_tags = $lc->get_intersection();
