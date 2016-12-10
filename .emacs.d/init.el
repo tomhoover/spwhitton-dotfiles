@@ -138,14 +138,13 @@
 
 ;;; zenburn
 
-(package-initialize)
-(use-package zenburn-theme
-  :init
-  ;; in case we're not loading the Debian package
-  (add-to-list
-   'custom-theme-load-path
-   (concat user-emacs-directory "pkg/zenburn-emacs"))
-  (load-theme 'zenburn))
+;; in case Debian package unavailable
+(add-to-list
+ 'custom-theme-load-path
+ (concat user-emacs-directory "pkg/zenburn-emacs"))
+;; add a hook to avoid having to call `package-initialize' (see
+;; README.Debian for elpa-zenburn-theme)
+(add-hook 'after-init-hook (lambda () (load-theme 'zenburn)))
 
 ;;; I'm in Arizona
 
