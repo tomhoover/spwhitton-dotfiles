@@ -124,8 +124,12 @@ sub archive_tag {
     # export-subst and export-ignore git attributes that might be set
     rename ".git/info/attributes", ".git/info/attributes-deborig"
       if ( -e ".git/info/attributes" );
-    open( my $attributes_fh, '>', ".git/info/attributes" )
-      or die "could not open .git/info/attributes for writing";
+    my $attributes_fh;
+    unless ( open( $attributes_fh, '>', ".git/info/attributes" ) ) {
+        rename ".git/info/attributes-deborig", ".git/info/attributes"
+          if ( -e ".git/info/attributes-deborig" );
+        die "could not open .git/info/attributes for writing";
+    }
     print $attributes_fh "* -export-subst\n";
     print $attributes_fh "* -export-ignore\n";
     close $attributes_fh;
