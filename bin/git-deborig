@@ -36,7 +36,8 @@ die "pwd doesn't look like a Debian source package in a git repository ..\n"
   unless ( -d ".git" && -e "debian/changelog" );
 
 # Process command line args
-die "usage: git deborig [-f] [TAG]\n" unless ( scalar @ARGV < 3);
+die "usage: git deborig [-f] [TAG]\n"
+  if ( scalar @ARGV >= 3 || (scalar @ARGV == 2 && !("-f" ~~ @ARGV)) );
 my $overwrite = 0;
 my $user_tag;
 foreach my $arg ( @ARGV ) {
