@@ -139,7 +139,9 @@ if ( defined $loc ) {
         $repo =~ s/\n//g;
         # TODO detect gcrypt repo down in backup_repo function (only
         # need to detect on clone, not update) -- see git-remote-gcrypt manpage for how to do this
-        if ( $repo ~~ @gcrypt_repos ) {
+        if ( $repo eq "priv.git" ) {
+            backup_repo("gcrypt::rsync://athena:/home/git/$repo", "athena");
+        } elsif ( $repo ~~ @gcrypt_repos ) {
             backup_repo("gcrypt::git\@spwhitton.name:$repo", "athena");
         } else {
             backup_repo("git\@spwhitton.name:$repo", "athena");
