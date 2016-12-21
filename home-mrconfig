@@ -358,7 +358,7 @@ fixups =
     git config annex.autocommit true # needed for ga sync
     git config remote.origin.annex-ignore true
 
-skip = ! tucson
+skip = ! tucson || ! on zephyr
 
 # --- git annex for use with rtorrent
 
