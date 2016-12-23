@@ -1011,7 +1011,7 @@
   :if (locate-library "ws-butler")
   :demand
   :diminish ws-butler-mode
-  :init (ws-butler-global-mode))
+  :config (ws-butler-global-mode))
 
 
 
