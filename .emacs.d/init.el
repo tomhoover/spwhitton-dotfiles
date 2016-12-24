@@ -2265,8 +2265,10 @@ superflous blank quoted lines."
 
 ;;; cc-mode
 
-(setq c-default-style "linux"
-      c-basic-offset 4)
+;; the built-in 'linux' style doesn't use tabs, but the kernel style
+;; guide mandates them, so make a slightly modified style
+(c-add-style "linux-tabs" '("linux" (indent-tabs-mode . t)))
+(setq c-default-style "linux-tabs")
 
 (provide 'init)
 ;;; init.el ends here
