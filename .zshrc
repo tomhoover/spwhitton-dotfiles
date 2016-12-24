@@ -66,10 +66,6 @@ alias d="emacsclient -c -n -e '(dired \".\")'"
 alias mg=$EDITOR
 alias mrs="mr -m status"
 
-alias fixmpd="sudo invoke-rc.d mpd restart; pkill sonata"
-alias radio4="mplayer \"http://wmlive-acl.bbc.co.uk/wms/bbc_ami/radio4/radio4_bb_live_eq1_sl0?BBC-UID=044be39365f98aaa88a55ca7f1aa8fc5b3569ae000708114d4dfd43698a07e8a&amp;SSO2-UID=\""
-alias ws="mplayer mms://a243.l3944038972.c39440.g.lm.akamaistream.net/D/243/39440/v0001/reflector:38972"
-
 alias screen="screen -U" # enable UTF-8
 alias tmux="tmux"
 alias rax="screen -URaAx"
@@ -138,6 +134,18 @@ clone () {
 if ! [ "$TMUX" = "" ]; then
     alias fixsshagent="eval $(tmux show-environment | grep '^SSH_AUTH_SOCK')"
 fi
+
+# append a stream to mpd's playlist, and play it
+mpc_play_stream () {
+    mpc stop
+    mpc add $1
+    mpc play $(mpc playlist | wc -l)
+}
+
+# BBC radio stream URIs:
+# http://www.suppertime.co.uk/blogmywiki/2015/04/updated-list-of-bbc-network-radio-urls/
+alias radio4="mpc_play_stream http://bbcmedia.ic.llnwd.net/stream/bbcmedia_radio4fm_mf_p"
+alias worldservice="mpc_play_stream http://bbcwssc.ic.llnwd.net/stream/bbcwssc_mp1_ws-eieuk"
 
 # --- load zsh features
 
