@@ -81,7 +81,8 @@ foreach my $branch ( @branches ) {
 }
 
 foreach my $remote ( keys %pushes ) {
-    # TODO if $remote eq $pushDefault, consider s/follow-// below
+    # TODO if $remote eq $pushDefault, consider s/follow-// below (and
+    # pushRemote of master branch, if that exists?)
     # I almost certainly want all tags on that remote (e.g. an alioth repo)
     my @branches = @{ $pushes{$remote} };
     system "git push --follow-tags $remote @branches";
