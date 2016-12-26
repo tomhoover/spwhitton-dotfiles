@@ -97,7 +97,7 @@ foreach my $remote ( keys %pushes ) {
 # TODO if this turns out to be slow, split out into a script run
 # weekly as part of ~/bin/sysmaint
 
-my @tags = $git->tag;
+my @tags = grep { !(m|archive/debian/\S+|) } $git->tag;
 my @remotes = $git->remote;
 my @pushed_tags;
 
