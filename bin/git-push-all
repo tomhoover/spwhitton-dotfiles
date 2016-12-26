@@ -115,5 +115,6 @@ my @unpushed_tags = array_minus ( @tags, @pushed_tags );
 if ( scalar @unpushed_tags > 0 ) {
     print "E: the following tags have not been pushed to any remote:\n";
     print join(", ", @unpushed_tags);
+    print "\n";
     exit 1;
 }
