@@ -1,0 +1,7 @@
+{
+    "fqdn": "debomatic-amd64.debian.net",
+    "incoming": "/srv/debomatic-amd64",
+    "login": "debomatic",
+    "meta": "debian",
+    "method": "scp"
+}
