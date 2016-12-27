@@ -112,10 +112,21 @@
 [gcrypt]
 	publish-participants = true
 	participants = 0x0F56D0553B6D411B
-[dgit "default"]
-        clean-mode = git
-        rm-old-changes = true
+
+# make git-archive(1) DTRT with -o foo.tar.{xz,gz}
 [tar "tar.xz"]
 	command = xz -c
 [tar "tar.gz"]
 	command = gzip -c
+
+# dgit configuration
+[dgit "default"]
+        # just clean in the most aggressive way dgit knows how
+        clean-mode = git-ff
+        rm-old-changes = true
+        distro = debian
+[dgit-distro "debian"]
+        # default to uploading by ssh.  Host-specific branches of
+        # dotfiles repo can tweak this to ftp-master or ftp-eu if that
+        # turns out to work better down their Internet pipes
+        upload-host = ssh-upload
