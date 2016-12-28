@@ -130,3 +130,4 @@
         # dotfiles repo can tweak this to ftp-master or ftp-eu if that
         # turns out to work better down their Internet pipes
         upload-host = ssh-upload
+        keyid = 0x0F56D0553B6D411B
