@@ -2,4 +2,5 @@
 
 . $HOME/.shenv
 
-RCLCRON_RCLINDEX= RECOLL_CONFDIR="$HOME/.recoll/" recollindex
+RCLCRON_RCLINDEX= RECOLL_CONFDIR="$HOME/.recoll/" \
+                nice ionice -c 3 recollindex
