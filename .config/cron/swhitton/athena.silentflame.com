@@ -3,6 +3,7 @@
 # 1pm MST
 0 20 * * * r2e run
 @daily chronic athena-publish-org-docs
+@daily cd /home/swhitton/lib/podcasts && xargs git annex importfeed < feeds
 @reboot emacs --daemon
 @reboot ii
 @reboot mount /home/swhitton/lib/fm
