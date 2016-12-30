@@ -360,6 +360,29 @@ fixups =
 
 skip = ! workstation
 
+# --- git annex for podcasts
+
+[lib/podcasts]
+checkout = git clone athenap:podcasts
+post_checkout =
+    cd podcasts
+    git annex init
+status = git annex status
+update = git annex sync
+push = git annex sync --content
+isclean = test -z "$(git annex status)" || (git annex status && exit 1)
+
+# origin remote is just for keeping a backup copy of metadata.  athena
+# remote, in $HOME on athena, contains a copy of content.  At present,
+# origin remote only updated by weekly coldbkup script
+fixups =
+    git config push.default matching
+    git config annex.startupscan false
+    git config annex.autocommit true # needed for ga sync
+    git config remote.origin.annex-ignore true
+
+skip = ! workstation
+
 # --- git annex for use with rtorrent
 
 [lib/rt]
