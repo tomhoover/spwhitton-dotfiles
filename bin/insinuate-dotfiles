@@ -9,18 +9,16 @@
 
 # Assumes ssh connection sharing
 
-# TODO Consider using a shallow clone
-
 . $HOME/.shenv
 . $HOME/lib/tputfs.sh
 
 status "trying to clone dotfiles to $1 using https"
-ssh "$1" 'cd $HOME && git clone https://git.spwhitton.name/dotfiles src/dotfiles'
+ssh "$1" 'cd $HOME && git clone --depth 1 https://git.spwhitton.name/dotfiles src/dotfiles'
 
 # https:// can fail for older ca-certificates, so try git://
 if ! [ $? = 0 ]; then
     status "trying to clone dotfiles to $1 using git transport"
-    ssh "$1" 'cd $HOME && git clone git://spwhitton.name/dotfiles' src/dotfiles
+    ssh "$1" 'cd $HOME && git clone --depth 1 git://spwhitton.name/dotfiles' src/dotfiles
     if ! [ $? = 0 ]; then
         status "couldn't clone dotfiles on $1"
         exit 1
