@@ -1,16 +1,14 @@
 #!/bin/sh
 
-set -e
-
-cd "$HOME"
-# make these dirs before loading .shenv
-# then .shenv adds them to our PATH
-mkdir -p "$HOME/local/src" "$HOME/local/bin"
 . $HOME/src/dotfiles/.shenv
 
 # Bootstrap home directory after dotfiles repository successfully
 # cloned (see ~/bin/insinuate-dotfiles).  This script should
 # definitely be POSIX sh
+
+set -e
+cd "$HOME"
+mkdir -p "$HOME/local/src" "$HOME/local/bin"
 
 # use http and checksum the tarball, rather than https:// which often
 # fails on Debian hosts due to old ca-certificates
@@ -61,6 +59,11 @@ if ! which mr >/dev/null; then
 fi
 
 # ---- Verify mr(1) and stow(1) in our PATH
+
+# .shenv adds ~/local/bin to PATH if that dir exists, so we have to
+# call it again now we've created it
+. $HOME/src/dotfiles/.shenv
+hash -r
 
 if ! which stow >/dev/null; then
     echo "still can't find stow :(" >&2
