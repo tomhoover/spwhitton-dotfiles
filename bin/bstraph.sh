@@ -60,8 +60,9 @@ fi
 
 # ---- Verify mr(1) and stow(1) in our PATH
 
-# .shenv adds ~/local/bin to PATH, so a hash should be enough to make
-# them available
+# .shenv adds ~/local/bin to PATH if that dir exists, so we have to
+# call it again now we've created it
+. $HOME/src/dotfiles/.shenv
 hash -r
 
 if ! which stow >/dev/null; then
