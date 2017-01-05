@@ -90,6 +90,8 @@ rm -f "$HOME/.cabal/config"
     mr fixups
 )
 
+echo "I: dotfiles bootstrap successful"
+
 # ---- Check if there is a host-specific branch
 
 if ( cd "$HOME/src/dotfiles" && git branch -a | grep origin/$(hostname) ); then
