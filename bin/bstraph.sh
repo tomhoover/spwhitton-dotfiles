@@ -29,7 +29,6 @@ fi
 
 # ---- Ensure we have both mr(1) and stow(1) in our PATH
 
-
 if ! which stow >/dev/null; then
     (
         cd $HOME/local/src
