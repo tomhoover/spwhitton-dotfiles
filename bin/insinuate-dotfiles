@@ -9,6 +9,8 @@
 
 # Assumes ssh connection sharing
 
+# TODO Consider using a shallow clone
+
 . $HOME/.shenv
 . $HOME/lib/tputfs.sh
 
