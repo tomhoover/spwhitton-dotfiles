@@ -41,6 +41,10 @@ case "$(hostname -f)" in
         cd $HOME
         offline || duply artemis-swhitton-home backup_purge --force
         ;;
+    "iris.silentflame.com")
+        cd $HOME
+        offline || duply iris-spwhitton-home backup_purge --force
+        ;;
     "hephaestus.silentflame.com")
         cd $HOME
         duply hephaestus-spwhitton-home backup_purge --force
