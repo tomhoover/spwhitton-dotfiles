@@ -1,5 +1,4 @@
 #!/bin/sh
-. $HOME/.shenv
 
 # Create my cabal config file, which needs to be different for root
 # and must contain absolute path to home directory (AFAICT).
