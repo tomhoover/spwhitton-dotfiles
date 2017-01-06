@@ -65,6 +65,8 @@ fi
 . $HOME/src/dotfiles/.shenv
 hash -r
 
+# TODO also check version of stow is new enough
+
 if ! which stow >/dev/null; then
     echo "still can't find stow :(" >&2
     exit 1
