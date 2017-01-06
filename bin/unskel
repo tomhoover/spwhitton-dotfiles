@@ -17,7 +17,9 @@ done
 [ "$torm" = "" ] || rm -rf $torm
 
 # on Debian systems root gets a special .bashrc and .profile
-diff -q /usr/share/base-files/dot.bashrc "$HOME/.bashrc" >/dev/null 2>&1 \
-    && rm -f "$HOME/.bashrc"
-diff -q /usr/share/base-files/dot.profile "$HOME/.profile" >/dev/null 2>&1 \
-    && rm -f "$HOME/.profile"
+if diff -q /usr/share/base-files/dot.bashrc "$HOME/.bashrc" >/dev/null 2>&1; then
+    rm -f "$HOME/.bashrc"
+fi
+if diff -q /usr/share/base-files/dot.profile "$HOME/.profile" >/dev/null 2>&1; then
+    rm -f "$HOME/.profile"
+fi
