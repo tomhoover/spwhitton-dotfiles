@@ -79,6 +79,7 @@ fi
 # ---- Perform the bootstrap
 
 (
+    set -e
     . $HOME/src/dotfiles/.shenv
     hash -r
     cd $HOME/src/dotfiles
