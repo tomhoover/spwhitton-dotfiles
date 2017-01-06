@@ -88,7 +88,7 @@ echo "I: dotfiles bootstrap successful"
 
 # ---- Check if there is a host-specific branch
 
-if ! [ "$(hostname)" = "master"] \
+if ! [ "$(hostname)" = "master" ] \
         && ( cd "$HOME/src/dotfiles" && git branch -a | grep origin/$(hostname) ); then
     echo "I: there is a host-specific dotfiles branch for this host"
     echo "I: consider checking it out"
