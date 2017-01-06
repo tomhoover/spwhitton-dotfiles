@@ -76,18 +76,10 @@ fi
 
 # ---- Perform the bootstrap
 
-ln -sf $HOME/src/dotfiles/home-mrconfig $HOME/.mrconfig
-
-# deal with deficiencies in ~/bin/unskel
-rm -f "$HOME/.cabal/config"
-# root's .bashrc and .profile can differ from /etc/skel
-[ "$USER" = "root" ] && rm -f "$HOME/.bashrc" "$HOME/.profile"
-
-# Hand over to code in ~/.mrconfig
 (
     cd $HOME/src/dotfiles
-    mr stow
-    mr fixups
+    mr -t --config src/dotfiles/home-mrconfig -d $HOME/src/dotfiles fixups
+    mr -d src/dotfiles stow
 )
 
 echo "I: dotfiles bootstrap successful"

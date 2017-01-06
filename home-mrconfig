@@ -47,9 +47,9 @@ dgit_push = git push-all
 
 include =
     # stow is not available on Windows
-    if [ -e ~/src/dotfiles/lib/mr/stow \
+    if [ -e "$HOME/src/dotfiles/lib/mr/stow" \
          -a ! "$(perl -e 'print $^O')" = "msys" ]; then
-        cat ~/src/dotfiles/lib/mr/stow
+        cat "$HOME/src/dotfiles/lib/mr/stow"
     fi
 
 # # some hooks to deal with the fact that I use a lot of programs that
@@ -122,6 +122,7 @@ lib =
         (
             cd $HOME
             mkdir -p \
+                .ssh \
                 tmp \
                 src \
                 lib \
@@ -135,13 +136,15 @@ lib =
                 local/lib \
                 local/pub \
                 local/auth
-            touch local/big/.duplicity-ignore src/.mrconfig
+            # known_hosts needs to exist or zsh complains
+            touch local/big/.duplicity-ignore src/.mrconfig .ssh/known_hosts
+            chmod 700 local/auth
             # [ -L "src/build-area" ] || ln -s -T /tmp/debuild src/build-area
         )
     }
 # --- primary dotfiles repository
 
-[src/dotfiles]
+[$HOME/src/dotfiles]
 checkout = git clone https://git.spwhitton.name/dotfiles.git dotfiles
 stowable = true
 
@@ -170,40 +173,32 @@ rebase =
     fi
 
 fixups =
-    # we don't want git doing any automated merges of master, or other
-    # intermediate branches.  mr is configured not to do this (see
-    # redefinition of git_update at top of this file) but I often run
-    # git pull in this repo myself
+    # Use a rebasing workflow since I'm the only person who ever
+    # commits to this repo
     git config branch.master.rebase true
     git config branch.autosetuprebase always
-    # stow won't overwrite a real ~/.mrconfig with a symlink to the
-    # version in my dotfiles repository.  Cannot just delete .mrconfig
-    # before a stow, because then mr can't tell stow what to do.  So
-    # just do it with manual fixup and have stow ignore this file.
-    # Name is different to avoid mr trying to chain load it at any
-    # point.  Similarly for .stow-global-ignore
-    # TODO rm ~/.mrconfig using pre_stow?  But then running mr from within ~/src/dotfiles might go wrong..  Or boostrap script writes ~/.mrconfig including ~/src/dotfiles/home-mrconfig
-    if ! win32; then
+    #
+    if win32; then
+        ( cd ~/src/dotfiles/bin && cmd "/C win32setup.bat" )
+    else
+        # Manually symlink ~/.mrconfig so that we can always use mr
+        # even if dotfiles are unstowed.  Called 'home-mrconfig' to
+        # avoid any chainloading
         ln -sf $HOME/src/dotfiles/home-mrconfig $HOME/.mrconfig
+        #
+        # Ensure that ~/src/dotfiles/home-mrconfig not stowed
         ln -sf $HOME/src/dotfiles/.stow-global-ignore $HOME
+        #
         homedir_mkdirs
-        # set up auth info folder: the "|| true" is because if the
-        # folder is empty the final recursive chmod will fail
-        mkdir -p $HOME/local/auth && chmod 700 $HOME/local/auth && chmod -R 600 $HOME/local/auth/* 2>/dev/null || true
-        touch $HOME/local/big/.duplicity-ignore
-        touch $HOME/.ssh/known_hosts
-        chmod 600 $HOME/.msmtprc
-        # use absolute path because maybe we only just stowed so this
-        # shell doesn't have $PATH setup by .shenv
-        $HOME/bin/loadcron || true
-        $HOME/bin/loadsshkeys || true
-        $HOME/bin/mkcabalc
-    else                        # win32
-        cd ~/src/dotfiles/bin
-	cmd "/C win32setup.bat"
+        chmod -Rf 600 $HOME/.msmtprc $HOME/local/auth/* || true
+        #
+        $HOME/src/dotfiles/bin/loadcron || true
+        $HOME/src/dotfiles/bin/loadsshkeys || true
+        $HOME/src/dotfiles/bin/mkcabalc
+        #
+        # set up Emacs packages
+        # $HOME/.emacs.d/pkg/subtrees.sh
     fi
-    # set up Emacs packages
-    # $HOME/.emacs.d/pkg/subtrees.sh
 
 # clean-ups so that initial stow will be successful
 pre_stow =
@@ -212,7 +207,7 @@ pre_stow =
 
 # --- private dotfiles repositories
 
-[src/priv]
+[$HOME/src/priv]
 checkout = git clone gcrypt::rsync://athena:/home/git/priv.git priv
 stowable = true
 
@@ -237,7 +232,7 @@ pre_update = mr autoci
 pre_stow = homedir_mkdirs
 post_stow = load-trustdb
 
-[src/athpriv]
+[$HOME/src/athpriv]
 checkout = git clone athenap:athpriv athpriv
 stowable = true
 skip = ! mine
@@ -247,7 +242,7 @@ pre_stow = homedir_mkdirs
 
 # --- hosts configuration
 
-[src/propellor]
+[$HOME/src/propellor]
 # this has to be a full URL, as during a spin of a host, propellor
 # sets this as the remote in /usr/local/propellor and it must be
 # possible to pull from it without root having my .gitconfig checked
@@ -276,7 +271,7 @@ skip = ! mine
 
 # --- personal website source
 
-[src/wiki]
+[$HOME/src/wiki]
 checkout = git clone https://git.spwhitton.name/wiki
 skip = ! mine
 
@@ -286,7 +281,7 @@ skip = ! mine
 # configuration (override its update definition to avoid --content)
 # (and isclean defn can be generalised)
 
-[lib/annex]
+[$HOME/lib/annex]
 checkout = git clone gcrypt::athenap:annex
 post_checkout =
     cd annex
@@ -316,7 +311,7 @@ sync = git annex sync origin
 
 # --- personal website big files annex
 
-[lib/wikiannex]
+[$HOME/lib/wikiannex]
 checkout = git clone athena:wikiannex.git
 status = git annex status       # direct mode on athena, so status won't work
 post_checkout =
@@ -337,7 +332,7 @@ skip = ! mine
 
 # --- git annex for university stuff
 
-[lib/dionysus]
+[$HOME/lib/dionysus]
 checkout = git clone athenap:dionysus
 post_checkout =
     cd dionysus
@@ -362,7 +357,7 @@ skip = ! workstation
 
 # --- git annex for podcasts
 
-[lib/podcasts]
+[$HOME/lib/podcasts]
 checkout = git clone athenap:podcasts
 post_checkout =
     cd podcasts
@@ -385,7 +380,7 @@ skip = ! workstation
 
 # --- git annex for use with rtorrent
 
-[lib/rt]
+[$HOME/lib/rt]
 checkout = git clone gcrypt::athenap:rt
 post_checkout = cd rt && git annex init
 status = git annex status --fast
@@ -417,7 +412,7 @@ skip = (! workstation) || fast
 
 # --- source code repositories registered to their own mr config file
 
-[src]
+[$HOME/src]
 
 # Chain load unless we invoked mr via fmr alias.
 chain = ! [ "${MR_FAST}" = "true" ]
@@ -430,7 +425,7 @@ skip = ! [ "$MR_ACTION" = "stowable" ]
 # --- to the myrepos default so that git automatically pulls and
 # --- merges.  Skipped on non-local hosts
 
-[doc]
+[$HOME/doc]
 checkout = git clone athenap:doc doc
 update = git pull "$@"
 skip = ! (mine || on spwhitton@shortgeese)
@@ -448,17 +443,17 @@ sync = sync-docs
 
 # --- static websites on web host boxes
 
-[public_html]
+[$HOME/public_html]
 clone = git clone https://git.spwhitton.name/sageweb public_html
 skip = ! on spwhitton@sage
 
-[html]
+[$HOME/html]
 clone = git clone https://git.spwhitton.name/sdfweb html
 skip = ! on faeroes             # TODO just check if host is *.sdf.org
 
 # --- my offline e-mail (& machine's postfix queue)
 
-[.fmail]
+[$HOME/.fmail]
 sync = movemail
 update = mbsync --quiet fastmail
 push = movemail
