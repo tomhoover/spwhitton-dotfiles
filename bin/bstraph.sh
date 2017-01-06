@@ -53,10 +53,12 @@ if ! which stow >/dev/null; then
     )
 fi
 
-if ! which mr >/dev/null; then
+# TODO check version of mr available on system, rather than
+# unconditionally using the one in src/dotfiles/bin/
+#if ! which mr >/dev/null; then
     mkdir -p $HOME/local/bin
     cp $HOME/src/dotfiles/bin/mr $HOME/local/bin
-fi
+#fi
 
 # ---- Verify mr(1) and stow(1) in our PATH
 
