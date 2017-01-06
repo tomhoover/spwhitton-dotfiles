@@ -52,10 +52,10 @@ include =
         cat ~/src/dotfiles/lib/mr/stow
     fi
 
-# some hooks to deal with the fact that I use a lot of programs that
-# mistreat symlinks to config files
-pre_unstow = mr misstowed --delete-unmodified >/dev/null
-pre_restow = mr misstowed --delete-unmodified >/dev/null
+# # some hooks to deal with the fact that I use a lot of programs that
+# # mistreat symlinks to config files
+# pre_unstow = mr misstowed --delete-unmodified >/dev/null
+# pre_restow = mr misstowed --delete-unmodified >/dev/null
 
 # --- joeyh's code for specifying what machine we're on for repo skip
 # --- tests, plus my code for detecting Git-on-Windows
@@ -98,9 +98,9 @@ lib =
     mine() {
         workstation || on swhitton@athena
     }
-    tucson() {
-        on artemis shortgeese athena hephaestus iris
-    }
+    # tucson() {
+    #     on artemis shortgeese athena hephaestus iris
+    # }
     gcrypt() {
         which git-remote-gcrypt >/dev/null 2>/dev/null
     }
