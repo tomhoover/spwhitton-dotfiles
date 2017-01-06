@@ -82,7 +82,6 @@ fi
     set -e
     . $HOME/src/dotfiles/.shenv
     hash -r
-    cd $HOME/src/dotfiles
     mr -t --config src/dotfiles/home-mrconfig -d $HOME/src/dotfiles fixups
     mr -d src/dotfiles stow
 )
