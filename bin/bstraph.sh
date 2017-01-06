@@ -78,13 +78,8 @@ fi
 
 # ---- Perform the bootstrap
 
-(
-    set -e
-    . $HOME/src/dotfiles/.shenv
-    hash -r
-    mr -t --config src/dotfiles/home-mrconfig -d $HOME/src/dotfiles fixups
-    mr -d src/dotfiles stow
-)
+mr -t --config src/dotfiles/home-mrconfig -d $HOME/src/dotfiles fixups
+mr -d src/dotfiles stow
 
 echo "I: dotfiles bootstrap successful"
 
