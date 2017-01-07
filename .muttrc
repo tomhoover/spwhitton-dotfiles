@@ -108,7 +108,7 @@ set pgp_use_gpg_agent = yes
 set pgp_verify_command="gpg --keyring /usr/share/keyrings/debian-keyring.gpg --keyring /usr/share/keyrings/debian-maintainers.gpg --keyring /usr/share/keyrings/debian-nonupload.gpg --keyring /usr/share/keyrings/debian-role-keys.gpg --status-fd=2 --no-verbose --quiet --batch --output - --verify %s %f"
 
 # absolutely ensure that encrypted messages are readable by me (this
-# is probably unnecessary thanks to pgp_encrypt_self above)
+# is probably unnecessary with NeoMutt thanks to pgp_encrypt_self above)
 set pgp_encrypt_only_command="/usr/lib/mutt/pgpewrap gpg --use-agent --batch --quiet --no-verbose --output - --encrypt --textmode --armor --always-trust --encrypt-to 0x0F56D0553B6D411B -- -r %r -- %f"
 set pgp_encrypt_sign_command="/usr/lib/mutt/pgpewrap gpg --use-agent --batch --quiet --no-verbose --textmode --output - --encrypt --sign %?a?-u %a? --armor --always-trust --encrypt-to 0x0F56D0553B6D411B -- -r %r -- %f"
 
