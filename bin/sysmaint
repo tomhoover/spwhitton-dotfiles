@@ -201,6 +201,10 @@ if ( defined $loc ) {
 
 # ---- remote system maintenance
 
+# TODO put a flag file on athena so this only happens once per week
+# or, better, just rework this so I ssh to athena and run sysmaint
+# there
+
 status "info: you can unmount & eject $loc";
 exit unless $term->ask_yn(
                           prompt =>
