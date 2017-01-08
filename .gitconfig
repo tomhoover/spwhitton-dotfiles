@@ -129,7 +129,9 @@
         # default to uploading by ssh.  Host-specific branches of
         # dotfiles repo can tweak this to ftp-master or ftp-eu if that
         # turns out to work better down their Internet pipes
-        upload-host = ssh-upload
+        #upload-host = ssh-upload
+        # ... except that ssh-upload is inconvenient until #691703 is resolved
+        upload-host = ftp-master
         keyid = 0x0F56D0553B6D411B
 [fetch]
 	fsckObjects = true
