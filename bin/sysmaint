@@ -385,7 +385,9 @@ sub backup_repo {
         # git-gc will never remove dangling commits mentioned in any
         # reflog *unless* they are unreachable in the branch the
         # reflog logs and are older than this config variable
-        system "git config gc.reflogExpireUnreachable never"
+        system "git config gc.reflogExpireUnreachable never";
+        # avoid backing up broken commits
+        system "git config fetch.fsckObjects true";
     }
 }
 
