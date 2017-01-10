@@ -1,0 +1,47 @@
+#!/bin/sh
+
+# Prepare a source package for dgit-maint-merge(7)
+
+# TODO Generalise to some sort of script for any kind of project skeleton code
+
+if ! (git diff-index --quiet --cached HEAD && \
+          git diff-files --quiet && \
+          test -z "$(git status --porcelain)" \
+     ) >/dev/null 2>&1; then
+    echo >&2 "please commit first"
+    exit 1
+fi
+
+if ! [ -f "debian/changelog" ]; then
+    echo >&2 "this doesn't look like a source package"
+    exit 1
+fi
+
+if ! [ -d ".git" ]; then
+    echo >&2 "please `git init`"
+    exit 1
+fi
+
+source=$(dpkg-parsechangelog -SSource)
+
+mkdir -p debian/source
+echo "single-debian-patch" >>debian/source/options
+echo "auto-commit" >>debian/source/options
+git add debian/source/options
+
+cat >debian/source/patch-header <<EOF
+The Debian packaging of $source is maintained using dgit.  For the
+sake of an efficient workflow, Debian modifications to the upstream
+source are squashed into a single diff, rather than a series of quilt
+patches.  To obtain a patch queue for package version 1.2.3-1:
+
+    # apt-get install dgit
+    % dgit clone $source
+    % cd $source
+    % git log --oneline 1.2.3..debian/1.2.3-1 -- . ':!debian'
+
+See dgit(1), dgit(7) and dgit-maint-merge(7) for more information.
+EOF
+git add debian/source/patch-header
+
+dgit setup-new-tree
