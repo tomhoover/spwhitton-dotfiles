@@ -44,4 +44,6 @@ See dgit(1), dgit(7) and dgit-maint-merge(7) for more information.
 EOF
 git add debian/source/patch-header
 
+git commit -m "Source package configuration for dgit-maint-merge(7)"
+
 dgit setup-new-tree
