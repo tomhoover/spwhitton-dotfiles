@@ -446,6 +446,7 @@
 
 (defun spw/skip-non-actionable ()
   "Skip:
+- standalone tasks with deadlines
 - projects
 - subtasks of projects that are not NEXT actions
 - subtasks of SOMEDAY projects
@@ -476,7 +477,9 @@ different occasions."
                     (or
                      (spw/org-is-scheduled-p)
                      (string= (spw/org-get-todo-keyword) "SOMEDAY")
-                     (string= (spw/org-get-todo-keyword) "WAITING"))))))
+                     (string= (spw/org-get-todo-keyword) "WAITING")))))
+            (and (bh/is-task-p)
+                 (spw/org-has-deadline-p)))
         next-headline
       nil)))
 
@@ -496,6 +499,22 @@ different occasions."
   (let ((is-dated)
         (is-a-task (member (nth 2 (org-heading-components)) org-todo-keywords-1))
         (regexp (org-re-timestamp 'scheduled)))
+    (message regexp)
+    (save-excursion
+      ;; Ignore errors if we fail to expand a subtree because we're
+      ;; before the first heading
+      (ignore-errors (outline-show-subtree))
+      (forward-line)
+      (org-beginning-of-line)
+      (if (looking-at regexp)
+          (setq is-dated t)))
+    (and is-a-task is-dated)))
+
+(defun spw/org-has-deadline-p ()
+  "A task that has a deadline"
+  (let ((is-dated)
+        (is-a-task (member (nth 2 (org-heading-components)) org-todo-keywords-1))
+        (regexp (org-re-timestamp 'deadline)))
     (message regexp)
     (save-excursion
       ;; Ignore errors if we fail to expand a subtree because we're
