@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# An alternative is nm-online(1).  However, that will probably succeed
+# even if we can't access the wider Internet.
+
 if wget -q --tries=10 --timeout=20 -O - http://google.com > /dev/null; then
     exit 1
 else
