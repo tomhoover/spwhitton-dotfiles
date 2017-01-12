@@ -98,6 +98,10 @@ alias qqsbuild="DEB_BUILD_OPTIONS=nocheck sbuild --no-apt-update --no-apt-distup
 alias b="bts --mbox show"
 alias test-reproducible="reprotest auto . -- schroot sid"
 
+dak-rdeps () {
+    ssh mirror.ftp-master.debian.org "dak rm -Rn $@"
+}
+
 # based on gregor hermann's dh-make-perl-dev he posted on bugs.d.o
 dh-make-elpa-dev () {
     PERL5LIB=~/src/dh-make-elpa/lib/ ~/src/dh-make-elpa/dh-make-elpa "$@"
