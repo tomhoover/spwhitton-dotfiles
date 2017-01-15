@@ -38,7 +38,9 @@ include = [ -e ~/src/dotfiles/lib/mr/dgit ] && cat ~/src/dotfiles/lib/mr/dgit
 
 # Redefine git_update to avoid an unconditional `git pull` which can
 # result in unwanted merge commits all over $HOME.  This redefinition
-# is based on the value of git_update set in the dgit plugin
+# is based on the value of git_update set in the dgit plugin.  Note
+# that the dgit lib has to have unconditional `git pull` to match
+# global myrepos conventions
 git_update = 
     current_branch="$(git rev-parse --abbrev-ref HEAD)"
     current_branch_remote="$(git config branch.$current_branch.remote || true)"
