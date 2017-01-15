@@ -105,7 +105,7 @@ while (42) {
 
 # ---- standard backup procedure
 
-$seq->add_should_zero("mr -ms misstowed --delete-unmodified");
+# run a restow to catch if we need to run `mr adopt`
 $seq->add_should_succeed("mr -ms restow");
 $seq->add_should_succeed("mr -ms autoci");
 # `mr -ms isclean` checks for stuff to be checked in ...
