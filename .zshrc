@@ -93,7 +93,7 @@ alias test-package-plan="schroot -d $HOME -- /bin/sh -c \"cabal --no-require-san
 alias wnpomodoro="mplayer ~/lib/annex/doc/sounds/*pomodoro.mp3"
 alias ghc8-sbuild="sbuild --extra-repository='deb http://httpredir.debian.org/debian experimental main' --build-dep-resolver=aspcud --add-depends=\"ghc (>= 8)\""
 alias dq="dgit --quilt=gbp"
-alias qsbuild="DEB_BUILD_OPTIONS=nocheck sbuild --no-apt-update --no-apt-distupgrade --no-run-piuparts --no-run-lintian"
+alias qsbuild="sbuild --no-apt-update --no-apt-distupgrade --no-run-piuparts --no-run-lintian"
 alias qqsbuild="DEB_BUILD_OPTIONS=nocheck sbuild --no-apt-update --no-apt-distupgrade --no-run-piuparts --no-run-lintian --no-run-autopkgtest"
 alias b="bts --mbox show"
 alias test-reproducible="reprotest auto . -- schroot sid"
