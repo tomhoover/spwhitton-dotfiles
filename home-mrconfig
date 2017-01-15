@@ -1,8 +1,10 @@
 # -*- mode: conf -*-
 
+[DEFAULT]
+
 # --- global settings
 
-[DEFAULT]
+# custom command for git
 git_gc = git gc "$@"
 
 # avoid hangs due to SSH connection sharing
@@ -18,21 +20,20 @@ git_update = git remote update; git pull --ff-only "$@"
 
 # avoid pushing non-matching branches, while trying to avoid errors
 # from trying to push to read-only remotes
-git_push = git push-all         # in ~/bin
+git_push = git push-all
 
-# `mr -ms status` checks for unpushed branches and files not checked
-# in, and stashes.  `mr -ms isclean` checks for files not checked in
-# alone
-# TODO improve this by looking at git_status in /usr/bin/mr?
-git_isclean =
-    (
-     # 1st line: check HEAD versus index
-     # 2nd line: index versus working tree
-     # 3rd line: untracked files
-        git diff-index --quiet --cached HEAD && \
-            git diff-files --quiet && \
-            test -z "$(git status --porcelain)"
-    ) || (git status --porcelain && exit 1)
+# find dirty working directories, i.e., uncommitted changes and
+# untracked files
+# TODO possibly improve this by looking at git_status in /usr/bin/mr
+git_isclean = 
+	   (
+	    # 1st line: check HEAD versus index
+	    # 2nd line: index versus working tree
+	    # 3rd line: untracked files
+	       git diff-index --quiet --cached HEAD && \
+	           git diff-files --quiet && \
+	           test -z "$(git status --porcelain)"
+	   ) || (git status --porcelain && exit 1)
 
 # --- Experimental plugin for dgit repos
 
