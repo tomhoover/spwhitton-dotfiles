@@ -15,9 +15,6 @@ git_sync = :
 git_rebase = :
 git_autoci = :
 
-# avoid en masse merge commits
-git_update = git remote update; git pull --ff-only "$@"
-
 # avoid pushing non-matching branches, while trying to avoid errors
 # from trying to push to read-only remotes
 git_push = git push-all
@@ -37,12 +34,35 @@ git_isclean =
 
 # --- Experimental plugin for dgit repos
 
-# disabled until I fix it misdetecting ordinary git repos as dgit repos
-#include = [ -e ~/src/myrepos/lib/dgit ] && cat ~/src/myrepos/lib/dgit
+include = [ -e ~/src/dotfiles/lib/mr/dgit ] && cat ~/src/dotfiles/lib/mr/dgit
 
-# my preferences that don't match myrepos conventions:
-dgit_update = dgit fetch ; git remote update
-dgit_push = git push-all
+# Redefine git_update to avoid an unconditional `git pull` which can
+# result in unwanted merge commits all over $HOME.  This redefinition
+# is based on the value of git_update set in the dgit plugin
+git_update = 
+    current_branch="$(git rev-parse --abbrev-ref HEAD)"
+    current_branch_remote="$(git config branch.$current_branch.remote || true)"
+    if [ "$(echo $current_branch | cut -s -d/ -f1)" = "dgit" ]; then
+        echo "I: current branch is dgit/foo; doing \`dgit pull\`"
+        dgit pull
+    else
+        echo "I: current branch is ordinary; doing \`git pull --ff-only\`"
+        git pull --ff-only
+    fi
+    for remote in $(git remote); do
+        # skip if we just called `git pull` on this remote
+        if ! ([ "$remote" = "$current_branch_remote" ] || [ "$remote" = "dgit" ]); then
+            echo "I: fetching $remote"
+            git remote update "$remote"
+        fi
+    done
+    for suite in $(git show-ref | grep refs/remotes/dgit/dgit | cut -d/ -f5 ); do
+        # skip if we just called `dgit pull` on this suite
+        if ! [ "$current_branch" = "dgit/$suite" ]; then
+            echo "I: fetching dgit suite $suite"
+            dgit fetch $suite
+        fi
+    done
 
 # --- Adam Spiers' plugin for managing dotfile symlinks with mr
 
