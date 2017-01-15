@@ -265,7 +265,7 @@ sub find_dirty_src {
                  || $short ~~ @src_exceptions
                  || (-d "$f/.git"
                      && ((fgrep { /^\[$short\]$/ } "src/.mrconfig")
-                         || (fgrep { /^\[$f\]$/ } ".mrconfig")))) {
+                         || (fgrep { /^\[\$HOME\/$f\]$/ } ".mrconfig")))) {
             if (-d "$f/.git") {
                 local $CWD = $f;
                 system "mr register >/dev/null";
