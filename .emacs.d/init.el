@@ -2092,9 +2092,15 @@ Ensures the kill ring entry always ends with a newline."
       (when (looking-at "\"")
         (forward-word 1)
         (forward-char 2))
-      (let ((beg (point))
-            (end (progn (forward-word 1) (point))))
-        (filter-buffer-substring beg end))))
+      (let* ((beg (point))
+             (end (progn (forward-word 1) (point)))
+             (name (filter-buffer-substring beg end)))
+        (cond
+         ;; exceptions for people who have longer forms of their names
+         ;; in their From: headers
+         ((string= name "Nathaniel") "Nathan")
+         ;; default
+         (t name)))))
 
   (defun spw/fix-initial-signature (&rest ignore)
     "Ensure enough space above signature to type."
