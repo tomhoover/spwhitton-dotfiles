@@ -382,7 +382,7 @@ post_checkout =
     git annex init
 status = git annex status
 update = git annex sync
-push = git annex sync --content
+push = git annex sync
 isclean = test -z "$(git annex status)" || (git annex status && exit 1)
 
 # origin remote is just for keeping a backup copy of metadata.  athena
