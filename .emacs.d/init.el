@@ -88,7 +88,7 @@
 ;;; misc display settings
 
 ;; focus follow mouse
-(setq mouse-autoselect-window nil
+(setq mouse-autoselect-window window-system
       focus-follows-mouse window-system)
 
 ;; y/n rather than yes/no
@@ -103,7 +103,7 @@
 ;; don't prompt to create scratch buffers
 (setq confirm-nonexistent-file-or-buffer nil)
 
-;; initial frame width -- not much use with xmonad
+;; initial frame width -- not much use with ~/bin/emacscd
 ;; (if window-system (set-frame-width (selected-frame) 80))
 
 ;; soft word wrapping for easier editing of long lines
@@ -935,6 +935,7 @@
                                   ("Asia/Seoul" "Seoul"))))
 
 (use-package frames-only-mode
+  :disabled t
   ;; only under X11, thanks
   :if (call-process-shell-command "pgrep" nil nil nil "lightdm")
   :init
