@@ -254,6 +254,11 @@
 
 ;;; Org
 
+;; disable org-list-allow-alphabetical so that I can start lines with
+;; "P. 211 - " to refer to a page and not start a bulleted list.  This
+;; has to be set before loading Org
+(setq org-list-allow-alphabetical nil)
+
 ;; my config
 (eval-after-load 'org '(load "~/.emacs.d/init-org.el"))
 
