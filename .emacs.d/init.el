@@ -8,47 +8,62 @@
 
 ;;;; ---- package management ----
 
-;; be sure not to load stale bytecode-compiled lisp
-(setq load-prefer-newer t)
+;;; ~/.emacs.d
 
-;; this is where all subtree packages are
-(defconst emacs-pkg-dir (concat user-emacs-directory "pkg"))
-
-;; load up f, and its dependencies s and dash, so we can use `f-glob'
-;; and `f-join'
-(dolist (pkg '(("f" . "f.el")
-               ("dash" . "dash.el")
-               ("s" . "s.el")))
-  (unless (locate-library (car pkg))
-    (add-to-list 'load-path (concat emacs-pkg-dir "/" (cdr pkg)))))
-(require 'f) (require 's) (require 'dash)
-
-;; helper function
-(defun expand-all-globs (root globs)
-  (let ((do-glob (lambda (glob) (f-glob (f-join root glob)))))
-    (apply 'nconc (mapcar do-glob globs))))
-
-;; now add all my pkg lisp directories
-
-;; As of Mar-16 we're appending rather than prepending to the
-;; load-path so that any installed Debian ELPA packages take
-;; precedence over those in `emacs-pkg-dir'
-
-;; If at some point I want some lisp in `emacs-pkg-dir' to take
-;; precedence over system-wide lisp, I should create a file
-;; ~/.emacs.d/pkg/overrides and have the following code prepend a
-;; directory to the load path if it is listed in that file
-(let* ((globs '("*" "*/lisp"))
-       (dirs (expand-all-globs emacs-pkg-dir globs)))
-  (dolist (dir dirs)
-    (when (file-directory-p dir)
-      (add-to-list 'load-path dir t))))
-
-;; finally put my own site-lisp at the front of `load-path'
+;; libs in ~/.emacs.d/site-lisp can override system packages
+;; This is for my personal, possibly patched versions of libraries.
 (add-to-list 'load-path (concat user-emacs-directory "site-lisp"))
 
-;; we will use use-package to load everything else
-(require 'use-package)
+;; libs in ~/.emacs.d/lisp are overridden by system packages
+;; This is for fallback copies of libraries needed to init Emacs.
+(add-to-list 'load-path (concat user-emacs-directory "lisp") t)
+
+;; be sure not to load stale byte-compiled lisp
+(setq load-prefer-newer t)
+
+;;; `use-package'
+
+(eval-when-compile
+  (require 'use-package))
+(require 'diminish)
+(require 'bind-key)
+
+;; Marking packages as optional:
+;;
+;;   (use-package foo
+;;     :requires (foo))
+;;
+;; This causes `use-package' to silently ignore foo's config if the
+;; package is not available.  We use this for packages like `magit',
+;; which is nice to have, but not needed for most uses of Emacs.
+;; 
+;; Some packages are necessary to properly init my standard editing
+;; environment.  For example, without `key-chord', I would type a lot
+;; of spurious 'j's and 'k's into buffers.
+;; 
+;; Such packages are not marked as optional, and `use-package' will
+;; complain at startup if they are not available.  Fallback copies
+;; should be present in ~/.emacs.d/lisp.
+
+;;; MELPA and friends
+
+;; these lines are for use on hosts on which I cannot install system
+;; packages, but still want my optional packages to be available
+
+;; (setq
+;;  ;; install all packages
+;;  use-package-always-ensure t
+;;
+;;  ;; set up standard package sources
+;;  package-user-dir (expand-file-name "~/local/elpa")
+;;  package-archives
+;;  '(("GNU ELPA" . "https://elpa.gnu.org/packages/")
+;;    ("MELPA Stable" . "https://stable.melpa.org/packages/")
+;;    ("MELPA" . "https://melpa.org/packages/"))
+;;  package-archive-priorities
+;;  '(("GNU ELPA" . 10)
+;;    ("MELPA Stable" . 5)
+;;    ("MELPA" . 0)))
 
 ;;;; ---- basic settings ----
 
@@ -113,7 +128,6 @@
 (setq-default visual-line-mode t
               word-wrap t
               wrap-prefix "    ")
-(use-package diminish)
 (diminish 'visual-line-mode)
 
 ;; ;; kill the fringes, if we have window system support compiled in
