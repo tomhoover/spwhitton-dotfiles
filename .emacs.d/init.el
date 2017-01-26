@@ -193,6 +193,7 @@
 ;;; instead of vim text objects
 
 (use-package expand-region
+  :requires (expand-region)
   :bind ("M-i" . er/expand-region)
   :init
   (setq expand-region-contract-fast-key (kbd "o"))
@@ -236,6 +237,7 @@
      (define-key ,map (kbd "RET") nil)))
 
 (use-package paredit
+  :requires (paredit)
   :commands paredit-mode
   :init
   (dolist
@@ -249,6 +251,7 @@
     (add-hook hook 'paredit-mode))
 
   (use-package paredit-everywhere
+    :requires (paredit-everywhere)
     :commands paredit-everywhere-mode
     :init
     (add-hook 'prog-mode-hook 'paredit-everywhere-mode)
@@ -335,6 +338,7 @@
 ;;; magit
 
 (use-package magit
+  :requires (magit)
   :demand
   :config
 
@@ -351,7 +355,8 @@
         magit-push-always-verify nil
         magit-revert-buffers 'silent)
 
-  (use-package magit-annex))
+  (use-package magit-annex
+   :requires (magit-annex)))
 
 ;;; pointback mode: make sure that point is back where I left it when
 ;;; switching between buffers where at least one buffer is displayed
@@ -366,12 +371,14 @@
 ;;; colour those parentheses
 
 (use-package rainbow-delimiters
+  :requires (rainbow-delimiters)
   :init (setq-default frame-background-mode 'dark)
   :commands rainbow-delimiters-mode)
 
 ;;; and colour those colours
 
 (use-package rainbow-mode
+  :requires (rainbow-mode)
   :commands rainbow-mode
   :init
   (add-hook 'html-mode-hook 'rainbow-mode)
@@ -380,6 +387,7 @@
 ;;; keep reindenting lisp
 
 (use-package aggressive-indent
+  :requires (aggressive-indent)
   :commands aggressive-indent-mode)
 
 ;;; ElDoc and rainbow delimiters activation
@@ -399,6 +407,7 @@
 ;;; boxquotes
 
 (use-package boxquote
+  :requires (boxquote)
   :commands (boxquote-title
              boxquote-region
              boxquote-buffer
@@ -425,12 +434,14 @@
 ;;; word count in modeline, when I want it
 
 (use-package wc-mode
+  :requires (wc-mode)
   :init
   (setq wc-modeline-format "%tw words"))
 
 ;;; company-mode for smart and easy completion
 
 (use-package company
+  :requires (company)
   ;; :commands global-company-mode
   ;; :bind ("<tab>" . company-complete)
   ;; :idle (global-company-mode)
@@ -464,11 +475,14 @@
 
 ;;; Randomize the order of lines in a region
 
-(use-package randomize-region :commands randomize-region)
+(use-package randomize-region
+  :requires (randomize-region)
+  :commands randomize-region)
 
 ;;; Markdown mode
 
 (use-package markdown-mode
+  :requires (markdown-mode)
   :mode "\\.md"
 
   :init
@@ -483,6 +497,7 @@
 ;;; RefTeX
 
 (use-package reftex
+  :requires (reftex)
   :init
   ;; If we set this var then `define-globalized-minor-mode' will not
   ;; activate ws-butler-mode in markdown-mode buffers.  That means it
@@ -505,15 +520,20 @@
 
 ;;; PHP mode
 
-(use-package php-mode :mode (("\\.php" .  php-mode)))
+(use-package php-mode
+  :requires (php-mode)
+  :mode (("\\.php" .  php-mode)))
 
 ;;; YAML mode
 
-(use-package yaml-mode :mode (("\\.yaml" .  yaml-mode)))
+(use-package yaml-mode
+  :requires (yaml-mode)
+  :mode (("\\.yaml" .  yaml-mode)))
 
 ;;; Deft
 
 (use-package deft
+  :requires (deft)
   :commands deft
   :bind ("C-c f" . deft)
   :init
@@ -629,6 +649,7 @@
 ;;; ebib for editing BiBTeX databases
 
 (use-package ebib
+  :requires (ebib)
   :bind ("C-c g e" . ebib)
   :init (setq ebib-preload-bib-files '("~/doc/spw.bib")))
 
@@ -639,14 +660,16 @@
       dired-dwim-target t)
 
 ;; should be able to unzip with Z
-(eval-after-load "dired-aux"
-  '(add-to-list 'dired-compress-file-suffixes
+(with-eval-after-load "dired-aux"
+  (add-to-list 'dired-compress-file-suffixes
                 '("\\.zip\\'" ".zip" "unzip")))
 
 (use-package dired-sort-map
+  :requires (dired-sort-map)
   :init (setq dired-listing-switches "--group-directories-first -alh"))
 
-(use-package git-annex)
+(use-package git-annex
+  :requires (git-annex))
 
 ;;; close old buffers once per day
 
@@ -656,6 +679,7 @@
 ;;; simple concept of projects
 
 (use-package projectile
+  :requires (projectile)
   :commands projectile-vc
   :diminish projectile-mode
   :bind (("C-c p" . projectile-command-map)
@@ -728,6 +752,7 @@
 (ido-everywhere 1)
 
 (use-package flx-ido
+  :requires (flx)
   :config
   (flx-ido-mode 1)
   (setq ido-enable-flex-matching t
@@ -736,18 +761,23 @@
         gc-cons-threshold 20000000))
 
 (use-package ido-ubiquitous
+  :requires (ido-ubiquitous)
   :config (ido-ubiquitous-mode 1))
 
 (use-package smex
+  :requires (smex)
   :bind ("C-x C-m" . smex))
 
 ;; imenu
 
-(use-package imenu-anywhere)
+;; (use-package 
+;;   :requires (imenu-anywhere)
+;;   imenu-anywhere)
 
 ;;; snippets
 
 (use-package yasnippet
+  :requires (yasnippet)
   :diminish yas-minor-mode
   :defer 5
   :config
@@ -833,6 +863,7 @@
 ;;; advanced key binding techniques with hydra
 
 (use-package hydra
+  :requires (hydra)
   :config
   (setq hydra-windows-config nil)
   (defun spw/maybe-delete-other-windows ()
@@ -892,10 +923,10 @@
 ;;; installed (and load here as after other packages these settings
 ;;; depend on)
 
-(when (fboundp 'haskell-mode)
-  ;; Fix broken lack of ghc-init.
-  (defun ghc-init () t)
-  (load "~/.emacs.d/init-haskell.el"))
+;; (when (fboundp 'haskell-mode)
+;;   ;; Fix broken lack of ghc-init.
+;;   (defun ghc-init () t)
+;;   (load "~/.emacs.d/init-haskell.el"))
 
 ;; key-chord to save my hands
 
@@ -1715,14 +1746,14 @@ Ensures the kill ring entry always ends with a newline."
       (beginning-of-line (or (and arg (1+ arg)) 2))
       (if (and arg (not (= 1 arg))) (message "%d lines copied" arg)))))
 
-(defhydra hydra-whole-lines (global-map "C-c" :color red)
-  "whole lines"
+;; (defhydra hydra-whole-lines (global-map "C-c" :color red)
+;;   "whole lines"
 
-  ;; The following might do something smarter for LISPs
-  ("k" kill-whole-line "kill another whole line" :color red)
-  ("/" undo "get that line back" :color red
-   ;; override bind so not bound outside the hydra
-   :bind nil))
+;;   ;; The following might do something smarter for LISPs
+;;   ("k" kill-whole-line "kill another whole line" :color red)
+;;   ("/" undo "get that line back" :color red
+;;    ;; override bind so not bound outside the hydra
+;;    :bind nil))
 
 (defun spw/save-dir ()
   "Copy buffer's directory to kill ring."
