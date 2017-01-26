@@ -5,9 +5,6 @@
 ;; be sure not to load stale bytecode-compiled lisp
 (setq load-prefer-newer t)
 
-;; work around Debian bug #810640
-(setq tramp-ssh-controlmaster-options nil)
-
 ;; this is where all subtree packages are
 (defconst emacs-pkg-dir (concat user-emacs-directory "pkg"))
 
