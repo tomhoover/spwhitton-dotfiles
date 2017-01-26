@@ -1,5 +1,11 @@
 ;;; Sean's Emacs configuration
 
+;;;; ---- security ----
+
+;; don't accept invalid SSL certs
+(eval-after-load 'gnutls
+  '(setq gnutls-verify-error t))
+
 ;;;; ---- package management ----
 
 ;; be sure not to load stale bytecode-compiled lisp
