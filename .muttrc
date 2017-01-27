@@ -20,7 +20,7 @@ set edit_hdrs
 set include
 set reply_to
 set abort_nosubject = no
-alternates '(spwhitton@spwhitton.name)|(spwhitton@email.arizona.edu)'
+alternates '(spwhitton@spwhitton.name)|(spwhitton@email.arizona.edu)|(spwhitton@debian.org)'
 set hdr_format="%4C %Z %{%m/%d} %-15.15F (%4c) %s"
 unset help
 set mail_check=20
