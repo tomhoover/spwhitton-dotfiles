@@ -30,17 +30,23 @@ echo "auto-commit" >>debian/source/options
 git add debian/source/options
 
 cat >debian/source/patch-header <<EOF
-The Debian packaging of $source is maintained using dgit.  For the
-sake of an efficient workflow, Debian modifications to the upstream
-source are squashed into a single diff, rather than a series of quilt
-patches.  To obtain a patch queue for package version 1.2.3-1:
+The Debian packaging of $source is maintained in git, using the merging
+workflow described in dgit-maint-merge(7).  There isn't a patch
+queue that can be represented as a quilt series.
 
-    # apt-get install dgit
-    % dgit clone $source
+A detailed breakdown of the changes is available from their
+canonical representation - git commits in the packaging repository.
+For example, to see the changes made by the Debian maintainer in
+the first upload of upstream version 1.2.3, you could use:
+
+    % git clone https://git.dgit.debian.org/$source
     % cd $source
     % git log --oneline 1.2.3..debian/1.2.3-1 -- . ':!debian'
 
-See dgit(1), dgit(7) and dgit-maint-merge(7) for more information.
+(If you have dgit, use \`dgit clone $source\`, rather than plain \`git
+clone\`.)
+
+A single combined diff, containing all the changes, follows.
 EOF
 git add debian/source/patch-header
 
