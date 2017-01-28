@@ -174,12 +174,29 @@
 (unless (eq system-type 'windows-nt)
   (set-time-zone-rule "/usr/share/zoneinfo/America/Phoenix"))
 
+;;; minimal session management
 
+(use-package recentf
+  :init
+  (setq
+   ;; in an attempt to make TRAMP a bit faster, don't keep remote
+   ;; files in the recentf list (`file-readable-p' is there by default)
+   recentf-keep '(file-remote-p file-readable-p)
 
-;;; save my places in buffers; this is all the session management I need
+   ;; keep recentf's file out of ~
+   recentf-save-file "~/.emacs.d/recentf"))
 
-(setq recentf-keep '(file-remote-p file-readable-p))
-(setq recentf-save-file "~/.emacs.d/recentf")
+;; Save my place in buffers, but only with newer Emacs
+
+;; With older Emacs, the additions to `find-file-hook',
+;; `kill-emacs-hook' and `kill-buffer-hook' made by `save-place' kept
+;; disappearing, unless I enabled save-place using use-package's
+;; `:defer' keyword.  Adding the hooks in this init file didn't work
+;; either.  See older dotfiles repo commits
+
+(when (version< "25.1" emacs-version)
+  (setq save-place-file)
+  (save-place-mode 1))
 
 
 
@@ -300,20 +317,6 @@
              spw/org-agenda-file-to-front
              spw/org-remove-file
              spw/new-philos-notes))
-
-;; the three hooks added by the idle progn below don't stay set when
-;; set by (require 'saveplace), nor do they remain in place if simply
-;; added in this config file or even in 'after-init-hook.  So have
-;; use-package add them a few seconds after Emacs starts
-
-(use-package saveplace
-  :init (setq-default save-place t
-                      save-place-file "~/.emacs.d/saveplace")
-  :defer 5
-  :config
-  (add-hook 'find-file-hook 'save-place-find-file-hook t)
-  (add-hook 'kill-emacs-hook 'save-place-kill-emacs-hook)
-  (add-hook 'kill-buffer-hook 'save-place-to-alist))
 
 ;;; more useful unique buffer names
 
