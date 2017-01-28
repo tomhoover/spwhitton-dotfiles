@@ -822,7 +822,6 @@
 
 ;; use ace-jump-mode to move between links in help file
 (use-package ace-link
-  :defer 5
   :config
   (ace-link-setup-default))
 
