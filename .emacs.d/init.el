@@ -111,6 +111,9 @@
 (setq mouse-autoselect-window window-system
       focus-follows-mouse window-system)
 
+;; initial frame width -- not much use with ~/bin/emacscd
+;; (if window-system (set-frame-width (selected-frame) 80))
+
 ;; y/n rather than yes/no
 (fset 'yes-or-no-p 'y-or-n-p)
 
@@ -120,9 +123,6 @@
 ;; don't handle keyboard events before redrawing
 (setq redisplay-dont-pause t)
 
-
-;; initial frame width -- not much use with ~/bin/emacscd
-;; (if window-system (set-frame-width (selected-frame) 80))
 ;; prompt to create scratch buffers: I usually use files in ~/tmp instead
 (setq confirm-nonexistent-file-or-buffer t)
 
