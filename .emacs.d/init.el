@@ -195,6 +195,8 @@
 ;; either.  See older dotfiles repo commits
 
 (when (version< "25.1" emacs-version)
+  ;; if save-place is slowing down quitting Emacs:
+  ;; (setq save-place-forget-unreadable-files nil)
   (save-place-mode 1))
 
 
