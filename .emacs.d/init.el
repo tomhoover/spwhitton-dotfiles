@@ -777,7 +777,8 @@
   :defer 5
   :config
   (yas-global-mode 1)
-  (add-to-list 'warning-suppress-types '(yasnippet backquote-change)))
+  ;;(add-to-list 'warning-suppress-types '(yasnippet backquote-change))
+  )
 
 ;;; htmlize for Org HTML export/publishing
 
