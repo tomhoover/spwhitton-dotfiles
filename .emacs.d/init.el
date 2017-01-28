@@ -793,12 +793,12 @@
   :init
   (add-hook 'python-mode-hook 'highlight-indentation-current-column-mode))
 
-;;; jump around what's visible
+;;; buffer navigation
 
-;; ace-jump-mode just as a dependency of ace-link (below)
-(use-package ace-jump-mode)
+;; TODO consider these avy-keys from Endless Parentheses blog
+;; (setq avy-keys
+;;       '(?c ?a ?s ?d ?e ?f ?h ?w ?y ?j ?k ?l ?n ?m ?v ?r ?u ?p))
 
-;; do the real work with avy
 (use-package avy
   :bind (("M-o" . spw/avy-goto-word)
          ;; if one types numbers, avy-goto-line will switch to old M-g
