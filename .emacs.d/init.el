@@ -108,8 +108,9 @@
 ;;; misc display settings
 
 ;; focus follow mouse
-(setq mouse-autoselect-window window-system
-      focus-follows-mouse window-system)
+
+(setq mouse-autoselect-window t
+      focus-follows-mouse t)
 
 ;; initial frame width -- not much use with ~/bin/emacscd
 ;; (if window-system (set-frame-width (selected-frame) 80))
