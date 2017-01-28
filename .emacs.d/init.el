@@ -195,7 +195,6 @@
 ;; either.  See older dotfiles repo commits
 
 (when (version< "25.1" emacs-version)
-  (setq save-place-file)
   (save-place-mode 1))
 
 
