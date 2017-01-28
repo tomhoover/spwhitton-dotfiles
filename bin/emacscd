@@ -1,15 +1,20 @@
 #!/bin/sh
 
-# Launch emacsclient and maybe emacs --daemon if appropriate.  Uses
-# emacsclient arguments that work well with my xmonad setup
-# (specifically, frames-only-mode.el).  Name from the venerable
-# urxvtcd script
+# Launch emacsclient and maybe emacs --daemon if needed
+
+# This script is more reliable than calling `server-start' in my Emacs
+# init file.  Previously, I was seeing Emacs fail to start with "Error
+# reading from stdin."  See <http://emacs.stackexchange.com/a/12789>
+
+# `switch-to-buffer' means that there is some chance the new window
+# will show a buffer I want to see (tip from the frames-only-mode
+# README)
 
 emacsclient -c -n -e '(switch-to-buffer nil)'
 
-# Check exit status instead of a pgrep because preventing pgrep from
-# matching this emacscd script is a pain (can do it with -f "emacs
-# --daemon")
+# Check exit status rather than using a tool like pgrep(1).  There are
+# all sorts of ways in which an Emacs server process may have been
+# started
 
 if [ "$?" = "1" ]; then
     emacs --daemon

@@ -1,48 +1,71 @@
 ;;; Sean's Emacs configuration
 
+;;;; ---- security ----
+
+;; don't accept invalid SSL certs
+(eval-after-load 'gnutls
+  '(setq gnutls-verify-error t))
+
 ;;;; ---- package management ----
 
-;; be sure not to load stale bytecode-compiled lisp
-(setq load-prefer-newer t)
+;;; ~/.emacs.d
 
-;; this is where all subtree packages are
-(defconst emacs-pkg-dir (concat user-emacs-directory "pkg"))
-
-;; load up f, and its dependencies s and dash, so we can use `f-glob'
-;; and `f-join'
-(dolist (pkg '(("f" . "f.el")
-               ("dash" . "dash.el")
-               ("s" . "s.el")))
-  (unless (locate-library (car pkg))
-    (add-to-list 'load-path (concat emacs-pkg-dir "/" (cdr pkg)))))
-(require 'f) (require 's) (require 'dash)
-
-;; helper function
-(defun expand-all-globs (root globs)
-  (let ((do-glob (lambda (glob) (f-glob (f-join root glob)))))
-    (apply 'nconc (mapcar do-glob globs))))
-
-;; now add all my pkg lisp directories
-
-;; As of Mar-16 we're appending rather than prepending to the
-;; load-path so that any installed Debian ELPA packages take
-;; precedence over those in `emacs-pkg-dir'
-
-;; If at some point I want some lisp in `emacs-pkg-dir' to take
-;; precedence over system-wide lisp, I should create a file
-;; ~/.emacs.d/pkg/overrides and have the following code prepend a
-;; directory to the load path if it is listed in that file
-(let* ((globs '("*" "*/lisp"))
-       (dirs (expand-all-globs emacs-pkg-dir globs)))
-  (dolist (dir dirs)
-    (when (file-directory-p dir)
-      (add-to-list 'load-path dir t))))
-
-;; finally put my own site-lisp at the front of `load-path'
+;; libs in ~/.emacs.d/site-lisp can override system packages
+;; This is for my personal, possibly patched versions of libraries.
 (add-to-list 'load-path (concat user-emacs-directory "site-lisp"))
 
-;; we will use use-package to load everything else
-(require 'use-package)
+;; libs in ~/.emacs.d/lisp are overridden by system packages
+;; This is for fallback copies of libraries needed to init Emacs.
+(add-to-list 'load-path (concat user-emacs-directory "lisp") t)
+
+;; be sure not to load stale byte-compiled lisp
+(setq load-prefer-newer t)
+
+;;; `use-package'
+
+(eval-when-compile
+  (require 'use-package))
+(require 'diminish)
+(require 'bind-key)
+
+;; Marking packages as optional:
+;;
+;;   (use-package foo
+;;     :if (locate-library "foo"))
+;;
+;; This causes `use-package' to silently ignore foo's config if the
+;; package is not available.  We use this for packages like `magit',
+;; which is nice to have, but not needed for most uses of Emacs.
+;; 
+;; Some packages are necessary to properly init my standard editing
+;; environment.  For example, without `key-chord', I would type a lot
+;; of spurious 'j's and 'k's into buffers.
+;; 
+;; Such packages are not marked as optional, and `use-package' will
+;; complain at startup if they are not available.  Fallback copies
+;; should be present in ~/.emacs.d/lisp.
+
+;;; MELPA and friends
+
+;; these lines are for use on hosts on which I cannot install system
+;; packages, but still want my optional packages to be available
+
+;; (setq
+;;  ;; install all packages
+;;  use-package-always-ensure t
+;;
+;;  ;; set up standard package sources
+;;  package-user-dir (expand-file-name "~/local/elpa")
+;;  package-archives
+;;  '(("GNU ELPA" . "https://elpa.gnu.org/packages/")
+;;    ("MELPA Stable" . "https://stable.melpa.org/packages/")
+;;    ("MELPA" . "https://melpa.org/packages/"))
+;;  package-archive-priorities
+;;  '(("GNU ELPA" . 10)
+;;    ("MELPA Stable" . 5)
+;;    ("MELPA" . 0)))
+
+
 
 ;;;; ---- basic settings ----
 
@@ -52,8 +75,8 @@
 (defconst custom-file (concat user-emacs-directory "init-custom.el"))
 (load custom-file 'noerror)
 
-;; when I do elisp experimentation I use IELM, so make scratch buffer
-;; a little more co-operative
+;; when I do elisp experimentation I use IELM, so we can make
+;; *scratch* easier to use
 (setq initial-major-mode 'text-mode)
 
 ;;; load terminal fixes
@@ -62,31 +85,42 @@
 
 ;;; put backups and autosaves in /tmp
 
-(defconst emacs-tmp-dir (format "%s/%s%s/" temporary-file-directory "emacs" (user-uid)))
+;; set up tmp files dir
+(defconst emacs-tmp-dir
+  (format "%s/%s%s/" temporary-file-directory "emacs" (user-uid)))
 (make-directory emacs-tmp-dir t)
 (chmod emacs-tmp-dir (string-to-number "700" 8))
-(setq backup-by-copying t                    ; don't clobber symlinks
-      backup-directory-alist `((".*" . ,emacs-tmp-dir))
-      tramp-backup-directory-alist backup-directory-alist
-      auto-save-file-name-transforms `((".*" ,emacs-tmp-dir t))
-      auto-save-list-file-prefix emacs-tmp-dir
-      tramp-auto-save-directory emacs-tmp-dir
 
-      ;; disable backups for files accessed through tramp's sudo and su
-      ;; protocols, to prevent copies of root-owned files being in a user's
-      ;; homedir
-      backup-enable-predicate (lambda (name)
-                                (and (normal-backup-enable-predicate name)
-                                     (not
-                                      (let ((method (file-remote-p name 'method)))
-                                        (when (stringp method)
-                                          (member method '("su" "sudo"))))))))
+(setq
+ ;; now teach Emacs to put stuff there
+ backup-directory-alist `((".*" . ,emacs-tmp-dir))
+ tramp-backup-directory-alist backup-directory-alist
+ auto-save-file-name-transforms `((".*" ,emacs-tmp-dir t))
+ auto-save-list-file-prefix emacs-tmp-dir
+ tramp-auto-save-directory emacs-tmp-dir
 
-;;; misc display settings
+ ;; avoid clobbering symlinks
+ backup-by-copying t
+
+ ;; disable backups for files accessed through tramp's sudo and su
+ ;; protocols, to prevent copies of root-owned files being under my uid 
+ backup-enable-predicate
+ (lambda (name)
+   (and (normal-backup-enable-predicate name)
+        (not
+         (let ((method (file-remote-p name 'method)))
+           (when (stringp method)
+             (member method '("su" "sudo"))))))))
+
+;;; misc display and interface settings
 
 ;; focus follow mouse
-(setq mouse-autoselect-window window-system
-      focus-follows-mouse window-system)
+
+(setq mouse-autoselect-window t
+      focus-follows-mouse t)
+
+;; initial frame width -- not much use with ~/bin/emacscd
+;; (if window-system (set-frame-width (selected-frame) 80))
 
 ;; y/n rather than yes/no
 (fset 'yes-or-no-p 'y-or-n-p)
@@ -97,22 +131,14 @@
 ;; don't handle keyboard events before redrawing
 (setq redisplay-dont-pause t)
 
-;; don't prompt to create scratch buffers
-(setq confirm-nonexistent-file-or-buffer nil)
-
-;; initial frame width -- not much use with ~/bin/emacscd
-;; (if window-system (set-frame-width (selected-frame) 80))
+;; prompt to create scratch buffers: I usually use files in ~/tmp instead
+(setq confirm-nonexistent-file-or-buffer t)
 
 ;; soft word wrapping for easier editing of long lines
 (setq-default visual-line-mode t
               word-wrap t
               wrap-prefix "    ")
-(use-package diminish)
 (diminish 'visual-line-mode)
-
-;; ;; kill the fringes, if we have window system support compiled in
-;; (if (fboundp 'set-fringe-mode)
-;;     (set-fringe-mode 0))
 
 ;; Terminus
 (add-to-list 'default-frame-alist '(font . "Terminus-11"))
@@ -127,7 +153,7 @@
 (setq x-stretch-cursor t)
 (setq-default cursor-type 'box)
 
-;; turns off blink-cursor-mode if it ended up on
+;; turn off blink-cursor-mode if it ended up on
 (when (fboundp 'blink-cursor-mode) (blink-cursor-mode 0))
 
 ;; get the mouse out of the way
@@ -135,36 +161,42 @@
 
 ;;; zenburn
 
-;; in case Debian package unavailable
-(add-to-list
- 'custom-theme-load-path
- (concat user-emacs-directory "pkg/zenburn-emacs"))
-;; add a hook to avoid having to call `package-initialize' (see
-;; README.Debian for elpa-zenburn-theme)
-(add-hook 'after-init-hook (lambda () (load-theme 'zenburn)))
+(use-package zenburn-theme
+  :if (locate-library "zenburn-theme")
+  :init
+  ;; add a hook to avoid having to call `package-initialize' (see
+  ;; README.Debian for elpa-zenburn-theme, and Debian bug #847690)
+  (add-hook 'after-init-hook (lambda () (load-theme 'zenburn))))
 
-;;; I'm in Arizona
+
+;;; I'm in Arizona (this is mainly for Org-mode)
 
 (unless (eq system-type 'windows-nt)
   (set-time-zone-rule "/usr/share/zoneinfo/America/Phoenix"))
 
-;;; be sure to start the server
+;;; minimal session management
 
-;; According to <http://emacs.stackexchange.com/a/12789> this might be
-;; causing Emacs to fail to start up properly sometimes after a
-;; reboot, giving me "Error reading from stdin".  I don't see how that
-;; would be but since I'm starting with --daemon anyway, let's try
-;; commenting it out.
+(use-package recentf
+  :init
+  (setq
+   ;; in an attempt to make TRAMP a bit faster, don't keep remote
+   ;; files in the recentf list (`file-readable-p' is there by default)
+   recentf-keep '(file-remote-p file-readable-p)
 
-;; (require 'server)
-;; (unless (server-running-p)
-;;   (server-start))
+   ;; keep recentf's file out of ~
+   recentf-save-file "~/.emacs.d/recentf"))
 
+;; Save my place in buffers, but only with newer Emacs
 
-;;; save my places in buffers; this is all the session management I need
+;; With older Emacs, the additions to `find-file-hook',
+;; `kill-emacs-hook' and `kill-buffer-hook' made by `save-place' kept
+;; disappearing, unless I enabled save-place using use-package's
+;; `:defer' keyword.  Adding the hooks in this init file didn't work
+;; either.  See older dotfiles repo commits
 
-(setq recentf-keep '(file-remote-p file-readable-p))
-(setq recentf-save-file "~/.emacs.d/recentf")
+(when (version< "25.1" emacs-version)
+  (setq save-place-file)
+  (save-place-mode 1))
 
 
 
@@ -173,6 +205,7 @@
 ;;; instead of vim text objects
 
 (use-package expand-region
+  :if (locate-library "expand-region")
   :bind ("M-i" . er/expand-region)
   :init
   (setq expand-region-contract-fast-key (kbd "o"))
@@ -204,53 +237,59 @@
 
 ;;; sexp management
 
-(defmacro spw/paredit-unsteal (map)
-  "Reclaim core Emacs bindings from Paredit in MAP."
-  `(progn
-     (define-key ,map (kbd "M-s") nil)
-     (define-key ,map (kbd "M-r") nil)
-     (define-key ,map (kbd "M-U") 'paredit-splice-sexp)
-     (define-key ,map (kbd "M-<up>") 'paredit-raise-sexp)
-     ;; purpose of unstealing RET is to fix ielm -- there might be a
-     ;; better approach
-     (define-key ,map (kbd "RET") nil)))
-
-(use-package paredit
-  :commands paredit-mode
-  :init
-  (dolist
-      (hook
-       '(emacs-lisp-mode-hook
-         lisp-mode-hook
-         lisp-interaction-mode-hook
-         ielm-mode-hook
-         scheme-mode-hook
-         inferior-scheme-mode-hook))
-    (add-hook hook 'paredit-mode))
-
-  (use-package paredit-everywhere
-    :commands paredit-everywhere-mode
-    :init
-    (add-hook 'prog-mode-hook 'paredit-everywhere-mode)
-    (add-hook 'minibuffer-setup-hook 'paredit-everywhere-mode)
-    :config
-    (spw/paredit-unsteal paredit-everywhere-mode-map))
-
-  :config
-  (spw/paredit-unsteal paredit-mode-map))
-
 (electric-pair-mode 1)
 (show-paren-mode 1)
 
+(defmacro spw--paredit-unsteal (map)
+  "Reclaim core Emacs bindings from Paredit-like keymap MAP."
+  `(progn
+     (define-key ,map (kbd "M-s") nil)
+     (define-key ,map (kbd "M-r") nil)
+
+     ;; check that the current version of paredit/paredit-everywhere
+     ;; actually binds these keys before setting our own preferences
+     (when (lookup-key ,map (kbd "M-U"))
+       (define-key ,map (kbd "M-U") 'paredit-splice-sexp))
+     (when (lookup-key ,map (kbd "M-<up>"))
+       (define-key ,map (kbd "M-<up>") 'paredit-raise-sexp))
+     
+     ;; unsteal RET to fix IELM
+     (define-key ,map (kbd "RET") nil)))
+
+(use-package paredit
+  :if (locate-library "paredit")
+  :commands paredit-mode
+  :init
+  (add-hook 'emacs-lisp-mode-hook 'paredit-mode)
+  (add-hook 'lisp-mode-hook 'paredit-mode)
+  (add-hook 'lisp-interaction-mode-hook 'paredit-mode)
+  (add-hook 'ielm-mode-hook 'paredit-mode)
+  (add-hook 'scheme-mode-hook 'paredit-mode)
+  (add-hook 'inferior-scheme-mode-hook 'paredit-mode)
+  :config
+  (spw--paredit-unsteal paredit-mode-map))
+
+(use-package paredit-everywhere
+  :if (locate-library "paredit-everywhere")
+  :commands paredit-everywhere-mode
+  :init
+  (add-hook 'prog-mode-hook 'paredit-everywhere-mode)
+  (add-hook 'minibuffer-setup-hook 'paredit-everywhere-mode)
+  :config
+  (spw--paredit-unsteal paredit-everywhere-mode-map))
+
+;; enhance electric-pair-mode with some more pairs
 ;; based on http://emacs.stackexchange.com/a/2554/8610
-(defmacro spw/add-mode-pairs (hook pairs)
+
+(defmacro spw--add-mode-pairs (hook pairs)
   `(add-hook
     ,hook
     (lambda ()
-      (setq-local electric-pair-pairs (append electric-pair-pairs ,pairs))
+      (setq-local electric-pair-pairs
+                  (append electric-pair-pairs ,pairs))
       (setq-local electric-pair-text-pairs electric-pair-pairs))))
 
-(spw/add-mode-pairs 'emacs-lisp-mode-hook '((?` . ?')))
+(spw--add-mode-pairs 'emacs-lisp-mode-hook '((?` . ?')))
 
 ;;; Org
 
@@ -279,20 +318,6 @@
              spw/org-remove-file
              spw/new-philos-notes))
 
-;; the three hooks added by the idle progn below don't stay set when
-;; set by (require 'saveplace), nor do they remain in place if simply
-;; added in this config file or even in 'after-init-hook.  So have
-;; use-package add them a few seconds after Emacs starts
-
-(use-package saveplace
-  :init (setq-default save-place t
-                      save-place-file "~/.emacs.d/saveplace")
-  :defer 5
-  :config
-  (add-hook 'find-file-hook 'save-place-find-file-hook t)
-  (add-hook 'kill-emacs-hook 'save-place-kill-emacs-hook)
-  (add-hook 'kill-buffer-hook 'save-place-to-alist))
-
 ;;; more useful unique buffer names
 
 (use-package uniquify
@@ -315,6 +340,7 @@
 ;;; magit
 
 (use-package magit
+  :if (locate-library "magit")
   :demand
   :config
 
@@ -331,7 +357,8 @@
         magit-push-always-verify nil
         magit-revert-buffers 'silent)
 
-  (use-package magit-annex))
+  (use-package magit-annex
+    :if (locate-library "magit-annex")))
 
 ;;; pointback mode: make sure that point is back where I left it when
 ;;; switching between buffers where at least one buffer is displayed
@@ -346,12 +373,14 @@
 ;;; colour those parentheses
 
 (use-package rainbow-delimiters
+  :if (locate-library "rainbow-delimiters")
   :init (setq-default frame-background-mode 'dark)
   :commands rainbow-delimiters-mode)
 
 ;;; and colour those colours
 
 (use-package rainbow-mode
+  :if (locate-library "rainbow-mode")
   :commands rainbow-mode
   :init
   (add-hook 'html-mode-hook 'rainbow-mode)
@@ -360,6 +389,7 @@
 ;;; keep reindenting lisp
 
 (use-package aggressive-indent
+  :if (locate-library "aggressive-indent")
   :commands aggressive-indent-mode)
 
 ;;; ElDoc and rainbow delimiters activation
@@ -405,12 +435,14 @@
 ;;; word count in modeline, when I want it
 
 (use-package wc-mode
+  :if (locate-library "wc-mode")
   :init
   (setq wc-modeline-format "%tw words"))
 
 ;;; company-mode for smart and easy completion
 
 (use-package company
+  :if (locate-library "company")
   ;; :commands global-company-mode
   ;; :bind ("<tab>" . company-complete)
   ;; :idle (global-company-mode)
@@ -444,17 +476,19 @@
 
 ;;; Randomize the order of lines in a region
 
-(use-package randomize-region :commands randomize-region)
+(use-package randomize-region
+  :commands randomize-region)
 
 ;;; Markdown mode
 
 (use-package markdown-mode
+  :if (locate-library "markdown-mode")
   :mode "\\.md"
 
   :init
   (add-hook 'markdown-mode-hook 'turn-on-orgstruct)
   (add-hook 'markdown-mode-hook 'turn-on-orgstruct++)
-  (spw/add-mode-pairs 'markdown-mode-hook '((?` . ?`)))
+  (spw--add-mode-pairs 'markdown-mode-hook '((?` . ?`)))
 
   :config
   ;; This binding replaces a `markdown-export'.
@@ -485,15 +519,20 @@
 
 ;;; PHP mode
 
-(use-package php-mode :mode (("\\.php" .  php-mode)))
+(use-package php-mode
+  :if (locate-library "php-mode")
+  :mode (("\\.php" .  php-mode)))
 
 ;;; YAML mode
 
-(use-package yaml-mode :mode (("\\.yaml" .  yaml-mode)))
+(use-package yaml-mode
+  :if (locate-library "yaml-mode")
+  :mode (("\\.yaml" .  yaml-mode)))
 
 ;;; Deft
 
 (use-package deft
+  :if (locate-library "deft")
   :commands deft
   :bind ("C-c f" . deft)
   :init
@@ -609,6 +648,7 @@
 ;;; ebib for editing BiBTeX databases
 
 (use-package ebib
+  :if (locate-library "ebib")
   :bind ("C-c g e" . ebib)
   :init (setq ebib-preload-bib-files '("~/doc/spw.bib")))
 
@@ -619,14 +659,15 @@
       dired-dwim-target t)
 
 ;; should be able to unzip with Z
-(eval-after-load "dired-aux"
-  '(add-to-list 'dired-compress-file-suffixes
-                '("\\.zip\\'" ".zip" "unzip")))
+(with-eval-after-load "dired-aux"
+  (add-to-list 'dired-compress-file-suffixes
+               '("\\.zip\\'" ".zip" "unzip")))
 
 (use-package dired-sort-map
   :init (setq dired-listing-switches "--group-directories-first -alh"))
 
-(use-package git-annex)
+(use-package git-annex
+  :if (locate-library "git-annex"))
 
 ;;; close old buffers once per day
 
@@ -636,6 +677,7 @@
 ;;; simple concept of projects
 
 (use-package projectile
+  :if (locate-library "projectile")
   :commands projectile-vc
   :diminish projectile-mode
   :bind (("C-c p" . projectile-command-map)
@@ -708,6 +750,7 @@
 (ido-everywhere 1)
 
 (use-package flx-ido
+  :if (locate-library "flx")
   :config
   (flx-ido-mode 1)
   (setq ido-enable-flex-matching t
@@ -716,6 +759,7 @@
         gc-cons-threshold 20000000))
 
 (use-package ido-ubiquitous
+  :if (locate-library "ido-ubiquitous")
   :config (ido-ubiquitous-mode 1))
 
 (use-package smex
@@ -723,16 +767,20 @@
 
 ;; imenu
 
-(use-package imenu-anywhere)
+;; (use-package 
+;;   :if (locate-library "imenu-anywhere")
+;;   imenu-anywhere)
 
 ;;; snippets
 
 (use-package yasnippet
+  :if (locate-library "yasnippet")
   :diminish yas-minor-mode
   :defer 5
   :config
   (yas-global-mode 1)
-  (add-to-list 'warning-suppress-types '(yasnippet backquote-change)))
+  ;;(add-to-list 'warning-suppress-types '(yasnippet backquote-change))
+  )
 
 ;;; htmlize for Org HTML export/publishing
 
@@ -744,12 +792,12 @@
   :init
   (add-hook 'python-mode-hook 'highlight-indentation-current-column-mode))
 
-;;; jump around what's visible
+;;; buffer navigation
 
-;; ace-jump-mode just as a dependency of ace-link (below)
-(use-package ace-jump-mode)
+;; TODO consider these avy-keys from Endless Parentheses blog
+;; (setq avy-keys
+;;       '(?c ?a ?s ?d ?e ?f ?h ?w ?y ?j ?k ?l ?n ?m ?v ?r ?u ?p))
 
-;; do the real work with avy
 (use-package avy
   :bind (("M-o" . spw/avy-goto-word)
          ;; if one types numbers, avy-goto-line will switch to old M-g
@@ -813,6 +861,7 @@
 ;;; advanced key binding techniques with hydra
 
 (use-package hydra
+  :if (locate-library "hydra")
   :config
   (setq hydra-windows-config nil)
   (defun spw/maybe-delete-other-windows ()
@@ -872,10 +921,10 @@
 ;;; installed (and load here as after other packages these settings
 ;;; depend on)
 
-(when (fboundp 'haskell-mode)
-  ;; Fix broken lack of ghc-init.
-  (defun ghc-init () t)
-  (load "~/.emacs.d/init-haskell.el"))
+;; (when (fboundp 'haskell-mode)
+;;   ;; Fix broken lack of ghc-init.
+;;   (defun ghc-init () t)
+;;   (load "~/.emacs.d/init-haskell.el"))
 
 ;; key-chord to save my hands
 
@@ -1695,14 +1744,14 @@ Ensures the kill ring entry always ends with a newline."
       (beginning-of-line (or (and arg (1+ arg)) 2))
       (if (and arg (not (= 1 arg))) (message "%d lines copied" arg)))))
 
-(defhydra hydra-whole-lines (global-map "C-c" :color red)
-  "whole lines"
+;; (defhydra hydra-whole-lines (global-map "C-c" :color red)
+;;   "whole lines"
 
-  ;; The following might do something smarter for LISPs
-  ("k" kill-whole-line "kill another whole line" :color red)
-  ("/" undo "get that line back" :color red
-   ;; override bind so not bound outside the hydra
-   :bind nil))
+;;   ;; The following might do something smarter for LISPs
+;;   ("k" kill-whole-line "kill another whole line" :color red)
+;;   ("/" undo "get that line back" :color red
+;;    ;; override bind so not bound outside the hydra
+;;    :bind nil))
 
 (defun spw/save-dir ()
   "Copy buffer's directory to kill ring."
