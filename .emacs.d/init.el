@@ -760,7 +760,6 @@
   :config (ido-ubiquitous-mode 1))
 
 (use-package smex
-  :if (locate-library "smex")
   :bind ("C-x C-m" . smex))
 
 ;; imenu
