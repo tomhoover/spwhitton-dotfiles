@@ -355,7 +355,7 @@
         magit-revert-buffers 'silent)
 
   (use-package magit-annex
-   :requires (magit-annex)))
+    :requires (magit-annex)))
 
 ;;; pointback mode: make sure that point is back where I left it when
 ;;; switching between buffers where at least one buffer is displayed
@@ -661,7 +661,7 @@
 ;; should be able to unzip with Z
 (with-eval-after-load "dired-aux"
   (add-to-list 'dired-compress-file-suffixes
-                '("\\.zip\\'" ".zip" "unzip")))
+               '("\\.zip\\'" ".zip" "unzip")))
 
 (use-package dired-sort-map
   :requires (dired-sort-map)
