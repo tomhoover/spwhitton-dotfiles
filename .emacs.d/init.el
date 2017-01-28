@@ -220,55 +220,59 @@
 
 ;;; sexp management
 
-(defmacro spw/paredit-unsteal (map)
-  "Reclaim core Emacs bindings from Paredit in MAP."
+(electric-pair-mode 1)
+(show-paren-mode 1)
+
+(defmacro spw--paredit-unsteal (map)
+  "Reclaim core Emacs bindings from Paredit-like keymap MAP."
   `(progn
      (define-key ,map (kbd "M-s") nil)
      (define-key ,map (kbd "M-r") nil)
-     (define-key ,map (kbd "M-U") 'paredit-splice-sexp)
-     (define-key ,map (kbd "M-<up>") 'paredit-raise-sexp)
-     ;; purpose of unstealing RET is to fix ielm -- there might be a
-     ;; better approach
+
+     ;; check that the current version of paredit/paredit-everywhere
+     ;; actually binds these keys before setting our own preferences
+     (when (lookup-key ,map (kbd "M-U"))
+       (define-key ,map (kbd "M-U") 'paredit-splice-sexp))
+     (when (lookup-key ,map (kbd "M-<up>"))
+       (define-key ,map (kbd "M-<up>") 'paredit-raise-sexp))
+     
+     ;; unsteal RET to fix IELM
      (define-key ,map (kbd "RET") nil)))
 
 (use-package paredit
   :requires (paredit)
   :commands paredit-mode
   :init
-  (dolist
-      (hook
-       '(emacs-lisp-mode-hook
-         lisp-mode-hook
-         lisp-interaction-mode-hook
-         ielm-mode-hook
-         scheme-mode-hook
-         inferior-scheme-mode-hook))
-    (add-hook hook 'paredit-mode))
-
-  (use-package paredit-everywhere
-    :requires (paredit-everywhere)
-    :commands paredit-everywhere-mode
-    :init
-    (add-hook 'prog-mode-hook 'paredit-everywhere-mode)
-    (add-hook 'minibuffer-setup-hook 'paredit-everywhere-mode)
-    :config
-    (spw/paredit-unsteal paredit-everywhere-mode-map))
-
+  (add-hook 'emacs-lisp-mode-hook 'paredit-mode)
+  (add-hook 'lisp-mode-hook 'paredit-mode)
+  (add-hook 'lisp-interaction-mode-hook 'paredit-mode)
+  (add-hook 'ielm-mode-hook 'paredit-mode)
+  (add-hook 'scheme-mode-hook 'paredit-mode)
+  (add-hook 'inferior-scheme-mode-hook 'paredit-mode)
   :config
-  (spw/paredit-unsteal paredit-mode-map))
+  (spw--paredit-unsteal paredit-mode-map))
 
-(electric-pair-mode 1)
-(show-paren-mode 1)
+(use-package paredit-everywhere
+  :requires (paredit paredit-everywhere)
+  :commands paredit-everywhere-mode
+  :init
+  (add-hook 'prog-mode-hook 'paredit-everywhere-mode)
+  (add-hook 'minibuffer-setup-hook 'paredit-everywhere-mode)
+  :config
+  (spw--paredit-unsteal paredit-everywhere-mode-map))
 
+;; enhance electric-pair-mode with some more pairs
 ;; based on http://emacs.stackexchange.com/a/2554/8610
-(defmacro spw/add-mode-pairs (hook pairs)
+
+(defmacro spw--add-mode-pairs (hook pairs)
   `(add-hook
     ,hook
     (lambda ()
-      (setq-local electric-pair-pairs (append electric-pair-pairs ,pairs))
+      (setq-local electric-pair-pairs
+                  (append electric-pair-pairs ,pairs))
       (setq-local electric-pair-text-pairs electric-pair-pairs))))
 
-(spw/add-mode-pairs 'emacs-lisp-mode-hook '((?` . ?')))
+(spw--add-mode-pairs 'emacs-lisp-mode-hook '((?` . ?')))
 
 ;;; Org
 
