@@ -485,7 +485,7 @@
   :init
   (add-hook 'markdown-mode-hook 'turn-on-orgstruct)
   (add-hook 'markdown-mode-hook 'turn-on-orgstruct++)
-  (spw/add-mode-pairs 'markdown-mode-hook '((?` . ?`)))
+  (spw--add-mode-pairs 'markdown-mode-hook '((?` . ?`)))
 
   :config
   ;; This binding replaces a `markdown-export'.
