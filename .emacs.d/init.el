@@ -85,27 +85,34 @@
 
 ;;; put backups and autosaves in /tmp
 
-(defconst emacs-tmp-dir (format "%s/%s%s/" temporary-file-directory "emacs" (user-uid)))
+;; set up tmp files dir
+(defconst emacs-tmp-dir
+  (format "%s/%s%s/" temporary-file-directory "emacs" (user-uid)))
 (make-directory emacs-tmp-dir t)
 (chmod emacs-tmp-dir (string-to-number "700" 8))
-(setq backup-by-copying t                    ; don't clobber symlinks
-      backup-directory-alist `((".*" . ,emacs-tmp-dir))
-      tramp-backup-directory-alist backup-directory-alist
-      auto-save-file-name-transforms `((".*" ,emacs-tmp-dir t))
-      auto-save-list-file-prefix emacs-tmp-dir
-      tramp-auto-save-directory emacs-tmp-dir
 
-      ;; disable backups for files accessed through tramp's sudo and su
-      ;; protocols, to prevent copies of root-owned files being in a user's
-      ;; homedir
-      backup-enable-predicate (lambda (name)
-                                (and (normal-backup-enable-predicate name)
-                                     (not
-                                      (let ((method (file-remote-p name 'method)))
-                                        (when (stringp method)
-                                          (member method '("su" "sudo"))))))))
+(setq
+ ;; now teach Emacs to put stuff there
+ backup-directory-alist `((".*" . ,emacs-tmp-dir))
+ tramp-backup-directory-alist backup-directory-alist
+ auto-save-file-name-transforms `((".*" ,emacs-tmp-dir t))
+ auto-save-list-file-prefix emacs-tmp-dir
+ tramp-auto-save-directory emacs-tmp-dir
 
-;;; misc display settings
+ ;; avoid clobbering symlinks
+ backup-by-copying t
+
+ ;; disable backups for files accessed through tramp's sudo and su
+ ;; protocols, to prevent copies of root-owned files being under my uid 
+ backup-enable-predicate
+ (lambda (name)
+   (and (normal-backup-enable-predicate name)
+        (not
+         (let ((method (file-remote-p name 'method)))
+           (when (stringp method)
+             (member method '("su" "sudo"))))))))
+
+;;; misc display and interface settings
 
 ;; focus follow mouse
 
