@@ -168,17 +168,6 @@
 (unless (eq system-type 'windows-nt)
   (set-time-zone-rule "/usr/share/zoneinfo/America/Phoenix"))
 
-;;; be sure to start the server
-
-;; According to <http://emacs.stackexchange.com/a/12789> this might be
-;; causing Emacs to fail to start up properly sometimes after a
-;; reboot, giving me "Error reading from stdin".  I don't see how that
-;; would be but since I'm starting with --daemon anyway, let's try
-;; commenting it out.
-
-;; (require 'server)
-;; (unless (server-running-p)
-;;   (server-start))
 
 
 ;;; save my places in buffers; this is all the session management I need
