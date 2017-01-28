@@ -153,13 +153,13 @@
 
 ;;; zenburn
 
-;; in case Debian package unavailable
-(add-to-list
- 'custom-theme-load-path
- (concat user-emacs-directory "pkg/zenburn-emacs"))
-;; add a hook to avoid having to call `package-initialize' (see
-;; README.Debian for elpa-zenburn-theme)
-(add-hook 'after-init-hook (lambda () (load-theme 'zenburn)))
+(use-package zenburn-theme
+  :requires (zenburn-theme)
+  :init
+  ;; add a hook to avoid having to call `package-initialize' (see
+  ;; README.Debian for elpa-zenburn-theme, and Debian bug #847690)
+  (add-hook 'after-init-hook (lambda () (load-theme 'zenburn))))
+
 
 ;;; I'm in Arizona (this is mainly for Org-mode)
 
