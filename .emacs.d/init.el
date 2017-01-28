@@ -65,6 +65,8 @@
 ;;    ("MELPA Stable" . 5)
 ;;    ("MELPA" . 0)))
 
+
+
 ;;;; ---- basic settings ----
 
 ;;; customisation -- must be loaded early so that zenburn theme is
@@ -73,8 +75,8 @@
 (defconst custom-file (concat user-emacs-directory "init-custom.el"))
 (load custom-file 'noerror)
 
-;; when I do elisp experimentation I use IELM, so make scratch buffer
-;; a little more co-operative
+;; when I do elisp experimentation I use IELM, so we can make
+;; *scratch* easier to use
 (setq initial-major-mode 'text-mode)
 
 ;;; load terminal fixes
@@ -143,7 +145,7 @@
 (setq x-stretch-cursor t)
 (setq-default cursor-type 'box)
 
-;; turns off blink-cursor-mode if it ended up on
+;; turn off blink-cursor-mode if it ended up on
 (when (fboundp 'blink-cursor-mode) (blink-cursor-mode 0))
 
 ;; get the mouse out of the way
@@ -159,7 +161,7 @@
 ;; README.Debian for elpa-zenburn-theme)
 (add-hook 'after-init-hook (lambda () (load-theme 'zenburn)))
 
-;;; I'm in Arizona
+;;; I'm in Arizona (this is mainly for Org-mode)
 
 (unless (eq system-type 'windows-nt)
   (set-time-zone-rule "/usr/share/zoneinfo/America/Phoenix"))
