@@ -37,7 +37,7 @@ set resolve = yes
 set noconfirmappend
 set abort_unmodified = no
 set mark_old = no                  # better with mbsync
-set editor = "emacsclient -t -a \"zile -f auto-fill-mode +8\""
+set editor = "emacsclient -t -a \"mg -n -f auto-fill-mode +8\""
 #set editor="switch-to-emacsclient"
 set tilde
 set smart_wrap
