@@ -29,6 +29,7 @@ echo "single-debian-patch" >>debian/source/options
 echo "auto-commit" >>debian/source/options
 git add debian/source/options
 
+# TODO after substituting $source, word-wrap the paragraphs
 cat >debian/source/patch-header <<EOF
 The Debian packaging of $source is maintained in git, using the merging
 workflow described in dgit-maint-merge(7).  There isn't a patch
