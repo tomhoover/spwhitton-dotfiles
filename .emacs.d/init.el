@@ -130,10 +130,6 @@
               wrap-prefix "    ")
 (diminish 'visual-line-mode)
 
-;; ;; kill the fringes, if we have window system support compiled in
-;; (if (fboundp 'set-fringe-mode)
-;;     (set-fringe-mode 0))
-
 ;; Terminus
 (add-to-list 'default-frame-alist '(font . "Terminus-11"))
 
