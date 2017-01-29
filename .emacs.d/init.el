@@ -723,12 +723,6 @@
 (use-package smex
   :bind ("C-x C-m" . smex))
 
-;; imenu
-
-;; (use-package 
-;;   :if (locate-library "imenu-anywhere")
-;;   imenu-anywhere)
-
 ;;; snippets
 
 (use-package yasnippet
