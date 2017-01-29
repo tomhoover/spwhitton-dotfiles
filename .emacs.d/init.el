@@ -1013,6 +1013,10 @@
   :diminish ws-butler-mode
   :config (ws-butler-global-mode))
 
+(use-package cycle-quotes
+  :if (locate-library "cycle-quotes")
+  :bind ("C-c '" . cycle-quotes))
+
 
 
 ;;;; ---- functions ----
