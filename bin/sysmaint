@@ -195,6 +195,9 @@ if ( defined $loc ) {
     backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/key-chord-el.git", "alioth");
     backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/paredit-everywhere.git", "alioth");
     backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/visual-regexp-el.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/pointback.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/emacs-openwith.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/emacs-world-time-mode.git", "alioth");
 
     backup_repo("https://anonscm.debian.org/git/pkg-mozext/classic-theme-restorer.git", "alioth");
     backup_repo("https://anonscm.debian.org/git/pkg-mozext/keysnail.git", "alioth");
