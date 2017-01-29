@@ -742,6 +742,7 @@
 ;;; make indentation in python nice and visible
 
 (use-package highlight-indentation
+  :if (locate-library "highlight-indentation")
   :init
   (add-hook 'python-mode-hook 'highlight-indentation-current-column-mode))
 
