@@ -303,8 +303,11 @@
 (eval-after-load 'org '(load "~/.emacs.d/init-org.el"))
 
 (use-package org
+  ;; init-org.el uses `f-glob'
+  :if (locate-library "f")
   ;; for org-checklist
   :load-path "/usr/share/org-mode/lisp"
+
   :mode (("\\.org" . org-mode)
          ("\\.org_archive" . org-mode))
   :bind (("C-c o c" . org-capture)
