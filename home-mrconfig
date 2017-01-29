@@ -213,15 +213,16 @@ fixups =
         $HOME/src/dotfiles/bin/loadcron || true
         $HOME/src/dotfiles/bin/loadsshkeys || true
         $HOME/src/dotfiles/bin/mkcabalc
-        #
-        # set up Emacs packages
-        # $HOME/.emacs.d/pkg/subtrees.sh
     fi
 
 # clean-ups so that initial stow will be successful
 pre_stow =
     homedir_mkdirs
     $HOME/src/dotfiles/bin/unskel
+
+# set up Emacs conf & libs
+post_stow = $HOME/src/dotfiles/bin/bytecompile-emacsd
+post_restow = $HOME/src/dotfiles/bin/bytecompile-emacsd
 
 # --- private dotfiles repositories
 
