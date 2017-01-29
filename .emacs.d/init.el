@@ -1032,6 +1032,9 @@
              helm-dash-installed-docsets))
 
 (use-package debpaste
+  ;; packaging this blocked by #419510
+  :disabled t
+  :if (locate-library "debpaste")
   :commands (debpaste-display-paste
              debpaste-paste-region
              debpaste-paste-buffer
