@@ -869,6 +869,8 @@
 
 ;;; advanced key binding techniques with hydra
 
+;; TODO stop using hydra (and remove from propellor conf)
+
 (use-package hydra
   :if (locate-library "hydra")
   :config
@@ -929,6 +931,8 @@
 ;;; Load up Haskell mode settings if Debian haskell-mode package
 ;;; installed (and load here as after other packages these settings
 ;;; depend on)
+
+;; TODO fix Emacs Haskell config..
 
 ;; (when (fboundp 'haskell-mode)
 ;;   ;; Fix broken lack of ghc-init.
