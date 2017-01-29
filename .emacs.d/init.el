@@ -16,6 +16,8 @@
 
 ;; libs in ~/.emacs.d/lisp are overridden by system packages
 ;; This is for fallback copies of libraries needed to init Emacs.
+;; Possible alternate name, if this is breaking Emacs conventions for
+;; dirs called 'lisp': initlibs
 (add-to-list 'load-path (concat user-emacs-directory "lisp") t)
 
 ;; be sure not to load stale byte-compiled lisp
