@@ -525,18 +525,6 @@
         reftex-cite-format '((?\C-m . "[@%l]")
                              (?- . "[-@%l]"))))
 
-;;; PHP mode
-
-(use-package php-mode
-  :if (locate-library "php-mode")
-  :mode (("\\.php" .  php-mode)))
-
-;;; YAML mode
-
-(use-package yaml-mode
-  :if (locate-library "yaml-mode")
-  :mode (("\\.yaml" .  yaml-mode)))
-
 ;;; Deft
 
 (use-package deft
