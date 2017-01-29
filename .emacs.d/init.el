@@ -33,7 +33,7 @@
 ;; Marking packages as optional:
 ;;
 ;;   (use-package foo
-;;     :if (locate-library "foo"))
+;;     :if (spw--optional-pkg-available-p "foo"))
 ;;
 ;; This causes `use-package' to silently ignore foo's config if the
 ;; package is not available.  We use this for packages like `magit',
@@ -46,6 +46,10 @@
 ;; Such packages are not marked as optional, and `use-package' will
 ;; complain at startup if they are not available.  Fallback copies
 ;; should be present in ~/.emacs.d/lisp.
+
+(defun spw--optional-pkg-available-p (pkg)
+  (or use-package-always-ensure
+      (locate-library pkg)))
 
 ;;; MELPA and friends
 
@@ -164,7 +168,7 @@
 ;;; zenburn
 
 (use-package zenburn-theme
-  :if (locate-library "zenburn-theme")
+  :if (spw--optional-pkg-available-p "zenburn-theme")
   :init
   ;; add a hook to avoid having to call `package-initialize' (see
   ;; README.Debian for elpa-zenburn-theme, and Debian bug #847690)
@@ -208,7 +212,7 @@
 ;;; instead of vim text objects
 
 (use-package expand-region
-  :if (locate-library "expand-region")
+  :if (spw--optional-pkg-available-p "expand-region")
   :bind ("M-i" . er/expand-region)
   :init
   (setq expand-region-contract-fast-key (kbd "o"))
@@ -260,7 +264,7 @@
      (define-key ,map (kbd "RET") nil)))
 
 (use-package paredit
-  :if (locate-library "paredit")
+  :if (spw--optional-pkg-available-p "paredit")
   :commands paredit-mode
   :init
   (add-hook 'emacs-lisp-mode-hook 'paredit-mode)
@@ -273,7 +277,7 @@
   (spw--paredit-unsteal paredit-mode-map))
 
 (use-package paredit-everywhere
-  :if (locate-library "paredit-everywhere")
+  :if (spw--optional-pkg-available-p "paredit-everywhere")
   :commands paredit-everywhere-mode
   :init
   (add-hook 'prog-mode-hook 'paredit-everywhere-mode)
@@ -306,7 +310,7 @@
 
 (use-package org
   ;; init-org.el uses `f-glob'
-  :if (locate-library "f")
+  :if (spw--optional-pkg-available-p "f")
   ;; for org-checklist
   :load-path "/usr/share/org-mode/lisp"
 
@@ -348,7 +352,7 @@
 ;;; magit
 
 (use-package magit
-  :if (locate-library "magit")
+  :if (spw--optional-pkg-available-p "magit")
   :demand
   :config
 
@@ -366,7 +370,7 @@
         magit-revert-buffers 'silent)
 
   (use-package magit-annex
-    :if (locate-library "magit-annex")))
+    :if (spw--optional-pkg-available-p "magit-annex")))
 
 ;;; pointback mode: make sure that point is back where I left it when
 ;;; switching between buffers where at least one buffer is displayed
@@ -381,14 +385,14 @@
 ;;; colour those parentheses
 
 (use-package rainbow-delimiters
-  :if (locate-library "rainbow-delimiters")
+  :if (spw--optional-pkg-available-p "rainbow-delimiters")
   :init (setq-default frame-background-mode 'dark)
   :commands rainbow-delimiters-mode)
 
 ;;; and colour those colours
 
 (use-package rainbow-mode
-  :if (locate-library "rainbow-mode")
+  :if (spw--optional-pkg-available-p "rainbow-mode")
   :commands rainbow-mode
   :init
   (add-hook 'html-mode-hook 'rainbow-mode)
@@ -397,7 +401,7 @@
 ;;; keep reindenting lisp
 
 (use-package aggressive-indent
-  :if (locate-library "aggressive-indent")
+  :if (spw--optional-pkg-available-p "aggressive-indent")
   :commands aggressive-indent-mode)
 
 ;;; ElDoc and rainbow delimiters activation
@@ -443,14 +447,14 @@
 ;;; word count in modeline, when I want it
 
 (use-package wc-mode
-  :if (locate-library "wc-mode")
+  :if (spw--optional-pkg-available-p "wc-mode")
   :init
   (setq wc-modeline-format "%tw words"))
 
 ;;; company-mode for smart and easy completion
 
 (use-package company
-  :if (locate-library "company")
+  :if (spw--optional-pkg-available-p "company")
   ;; :commands global-company-mode
   ;; :bind ("<tab>" . company-complete)
   ;; :idle (global-company-mode)
@@ -490,7 +494,7 @@
 ;;; Markdown mode
 
 (use-package markdown-mode
-  :if (locate-library "markdown-mode")
+  :if (spw--optional-pkg-available-p "markdown-mode")
   :mode "\\.md"
 
   :init
@@ -528,7 +532,7 @@
 ;;; Deft
 
 (use-package deft
-  :if (locate-library "deft")
+  :if (spw--optional-pkg-available-p "deft")
   :commands deft
   :bind ("C-c f" . deft)
   :init
@@ -606,7 +610,7 @@
 ;;; ebib for editing BiBTeX databases
 
 (use-package ebib
-  :if (locate-library "ebib")
+  :if (spw--optional-pkg-available-p "ebib")
   :bind ("C-c g e" . ebib)
   :init (setq ebib-preload-bib-files '("~/doc/spw.bib")))
 
@@ -625,7 +629,7 @@
   :init (setq dired-listing-switches "--group-directories-first -alh"))
 
 (use-package git-annex
-  :if (locate-library "git-annex"))
+  :if (spw--optional-pkg-available-p "git-annex"))
 
 ;;; close old buffers once per day
 
@@ -635,7 +639,7 @@
 ;;; simple concept of projects
 
 (use-package projectile
-  :if (locate-library "projectile")
+  :if (spw--optional-pkg-available-p "projectile")
   :commands projectile-vc
   :diminish projectile-mode
   :bind (("C-c p" . projectile-command-map)
@@ -708,7 +712,7 @@
 (ido-everywhere 1)
 
 (use-package flx-ido
-  :if (locate-library "flx")
+  :if (spw--optional-pkg-available-p "flx")
   :config
   (flx-ido-mode 1)
   (setq ido-enable-flex-matching t
@@ -717,7 +721,7 @@
         gc-cons-threshold 20000000))
 
 (use-package ido-ubiquitous
-  :if (locate-library "ido-ubiquitous")
+  :if (spw--optional-pkg-available-p "ido-ubiquitous")
   :config (ido-ubiquitous-mode 1))
 
 (use-package smex
@@ -726,7 +730,7 @@
 ;;; snippets
 
 (use-package yasnippet
-  :if (locate-library "yasnippet")
+  :if (spw--optional-pkg-available-p "yasnippet")
   :diminish yas-minor-mode
   :defer 5
   :config
@@ -737,12 +741,12 @@
 ;;; htmlize for Org HTML export/publishing
 
 (use-package htmlize
-  :if (locate-library "htmlize"))
+  :if (spw--optional-pkg-available-p "htmlize"))
 
 ;;; make indentation in python nice and visible
 
 (use-package highlight-indentation
-  :if (locate-library "highlight-indentation")
+  :if (spw--optional-pkg-available-p "highlight-indentation")
   :init
   (add-hook 'python-mode-hook 'highlight-indentation-current-column-mode))
 
@@ -817,7 +821,7 @@
 ;; TODO stop using hydra (and remove from propellor conf)
 
 (use-package hydra
-  :if (locate-library "hydra")
+  :if (spw--optional-pkg-available-p "hydra")
   :config
   (setq hydra-windows-config nil)
   (defun spw/maybe-delete-other-windows ()
@@ -978,7 +982,7 @@
 (use-package debpaste
   ;; packaging this blocked by #419510
   :disabled t
-  :if (locate-library "debpaste")
+  :if (spw--optional-pkg-available-p "debpaste")
   :commands (debpaste-display-paste
              debpaste-paste-region
              debpaste-paste-buffer
@@ -1008,13 +1012,13 @@
 ;;   (bind-key (kbd "<XF86Launch7>") 'spw/highlight-and-tidy pdf-view-mode-map))
 
 (use-package ws-butler
-  :if (locate-library "ws-butler")
+  :if (spw--optional-pkg-available-p "ws-butler")
   :demand
   :diminish ws-butler-mode
   :config (ws-butler-global-mode))
 
 (use-package cycle-quotes
-  :if (locate-library "cycle-quotes")
+  :if (spw--optional-pkg-available-p "cycle-quotes")
   :bind ("C-c '" . cycle-quotes))
 
 
