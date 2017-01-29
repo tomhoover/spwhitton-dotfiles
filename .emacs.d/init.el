@@ -562,44 +562,6 @@
         (apply orig-fun args))))
   (advice-add 'deft-buffer-setup :around #'deft-buffer-setup--fix-window-width))
 
-;;; flycheck
-
-(use-package flycheck
-  :disabled t
-  :demand
-  :init
-
-  ;; try to disable flymake; having both running at the same time is annoying
-  (setq flymake-allowed-file-name-masks nil)
-
-  ;; make sure flycheck doesn't complain about our use of `require'
-  ;; (might have to disable this sometimes: see docstring for the var)
-  (setq flycheck-emacs-lisp-load-path 'inherit)
-
-  ;; disable flycheck in org-mode as it clobbers the important C-c !
-  (defun flycheck-mode--org-disable-flycheck (orig-fun &rest args)
-    (unless (eq major-mode 'org-mode)
-      (apply orig-fun args)))
-  (advice-add 'flycheck-mode :around #'flycheck-mode--org-disable-flycheck)
-
-  (use-package flycheck-haskell
-    :if (locate-library "haskell-mode")
-    :demand
-    :init
-    (add-hook 'flycheck-mode-hook #'flycheck-haskell-setup)
-    :config
-    ;; override stack defaults
-    (setq flycheck-haskell-runghc-command (list "runghc")))
-
-  :config
-
-  ;; don't check too often: brief Emacs lock-ups are annoying
-  (setq
-   flycheck-check-syntax-automatically '(mode-enabled save)
-   flymake-start-syntax-check-on-find-file nil)
-
-  (global-flycheck-mode 1))
-
 ;;; TRAMP
 
 (use-package tramp
