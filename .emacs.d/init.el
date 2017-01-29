@@ -981,7 +981,11 @@
   :init (require 'helm-config)
   :bind ("C-c r" . helm-surfraw))
 
+;; TODO do I still want this?  if so, ITP.  probably as part of
+;; cleaning up/fixing Emacs Haskell config, and ITP of dash-haskell
+
 (use-package helm-dash
+  :disabled t
   :commands (helm-dash
              helm-dash-at-point
              helm-dash-install-docset
