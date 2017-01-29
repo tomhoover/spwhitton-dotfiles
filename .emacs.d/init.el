@@ -48,7 +48,7 @@
 ;; should be present in ~/.emacs.d/lisp.
 
 (defun spw--optional-pkg-available-p (pkg)
-  (or use-package-always-ensure
+  (or (bound-and-true-p use-package-always-ensure)
       (locate-library pkg)))
 
 ;;; MELPA and friends
