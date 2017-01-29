@@ -826,15 +826,15 @@
         (set-window-configuration hydra-windows-config)
       (setq hydra-windows-config (current-window-configuration))
       (delete-other-windows)))
-  (defhydra hydra-windows (global-map "C-x" :color red)
-    "windows"
-    ("o" other-window "next" :color red)
-    ("O" (lambda () (interactive) (other-window -1)) "previous" :color red)
-    ("S" spw/toggle-window-split "toggle" :color red)
-    ("0" delete-window "del" :color red)
-    ("1" spw/maybe-delete-other-windows "max" :color red)
-    ("2" split-window-below "horiz" :color red)
-    ("3" split-window-right "vert" :color red))
+  ;; (defhydra hydra-windows (global-map "C-x" :color red)
+  ;;   "windows"
+  ;;   ("o" other-window "next" :color red)
+  ;;   ("O" (lambda () (interactive) (other-window -1)) "previous" :color red)
+  ;;   ("S" spw/toggle-window-split "toggle" :color red)
+  ;;   ("0" delete-window "del" :color red)
+  ;;   ("1" spw/maybe-delete-other-windows "max" :color red)
+  ;;   ("2" split-window-below "horiz" :color red)
+  ;;   ("3" split-window-right "vert" :color red))
 
   ;;; winner mode: undo window configuration changes
 
