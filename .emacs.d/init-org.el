@@ -34,6 +34,11 @@
 
 ;;; highlight current sentence
 
+;; This is in ~/.emacs.d/site-lisp because its copyright status is a
+;; bit murky.  The code comes from the Emacs Wiki, but was the
+;; "everything on Emacs Wiki is GPL" notice present when the code was
+;; first posted?  TODO find out, and package for Debian if possible
+
 (use-package hl-sentence
   :commands hl-sentence-mode
   :demand
