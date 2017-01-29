@@ -784,7 +784,7 @@
   ;; (face-override-variable-pitch 'avy-lead-face)
   )
 
-;; use ace-jump-mode to move between links in help file
+;; use avy to move between links in *Help* buffers
 (use-package ace-link
   :defer 5
   :config
