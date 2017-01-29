@@ -792,7 +792,8 @@
 
 ;;; htmlize for Org HTML export/publishing
 
-(use-package htmlize)
+(use-package htmlize
+  :if (locate-library "htmlize"))
 
 ;;; make indentation in python nice and visible
 
