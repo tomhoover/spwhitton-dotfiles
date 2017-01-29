@@ -942,23 +942,6 @@
                                   ("Europe/Paris" "Paris")
                                   ("Asia/Seoul" "Seoul"))))
 
-(use-package frames-only-mode
-  :disabled t
-  ;; only under X11, thanks
-  :if (call-process-shell-command "pgrep" nil nil nil "lightdm")
-  :init
-  (setq frames-only-mode-use-window-functions
-        '(calendar
-          dired-other-window
-          magit-diff-while-committing))
-
-  ;; These can be used to disable *Completions* and *Ido Completions*
-  ;; buffers (but with recent `frames-only-mode' it's not really needed)
-
-  ;; (setq ido-completion-buffer nil
-  ;;       completion-auto-help  nil)
-  )
-
 ;;; Documentation browsing
 
 (defun spw/helm-dash (arg)
