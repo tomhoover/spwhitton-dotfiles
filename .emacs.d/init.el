@@ -728,7 +728,7 @@
 
   ;; disable during Org capture
   (add-to-list 'ido-ubiquitous-command-overrides
-               '(disable prefix "org-capture-")))
+               '(disable prefix "org-capture")))
 
 (use-package smex
   :bind ("C-x C-m" . smex))
