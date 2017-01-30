@@ -741,8 +741,12 @@
   :defer 5
   :config
   (yas-global-mode 1)
-  ;;(add-to-list 'warning-suppress-types '(yasnippet backquote-change))
-  )
+
+  ;; kill warnings about snippets that use backquoted lisp to change
+  ;; the buffer
+  (unless (boundp 'warning-suppress-types)
+    (setq warning-suppress-types nil))
+  (push '(yasnippet backquote-change) warning-suppress-types))
 
 ;;; htmlize for Org HTML export/publishing
 
