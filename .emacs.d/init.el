@@ -830,6 +830,9 @@
         (set-window-configuration hydra-windows-config)
       (setq hydra-windows-config (current-window-configuration))
       (delete-other-windows)))
+
+  ;; Broken because of byte-compilation?  defhydra macro not properly declared?
+
   ;; (defhydra hydra-windows (global-map "C-x" :color red)
   ;;   "windows"
   ;;   ("o" other-window "next" :color red)
@@ -845,20 +848,21 @@
   (winner-mode 1)
 
   ;; Undo the bindings so that the hydra bindings take precedence
-  (define-key winner-mode-map (kbd "C-c <left>") nil)
-  (define-key winner-mode-map (kbd "C-c <right>") nil)
+  ;; (define-key winner-mode-map (kbd "C-c <left>") nil)
+  ;; (define-key winner-mode-map (kbd "C-c <right>") nil)
 
-  (defhydra hydra-winner (global-map "C-c" :color red)
-    "winner"
-    ("<left>" winner-undo "back" :color red)
+  ;; (defhydra hydra-winner (global-map "C-c" :color red)
+  ;;   "winner"
+  ;;   ("<left>" winner-undo "back" :color red)
 
-    ;; We need a lambda here to override `winner-redo''s check that
-    ;; the last command was winner-undo, since the last command will
-    ;; be `hydra-winner/winner-undo' if we replace the lambda with
-    ;; just `winner-undo'
-    ("<right>" (lambda () (interactive)
-                 (let ((last-command 'winner-undo))
-                   (winner-redo))) "forward" :color red)))
+  ;;   ;; We need a lambda here to override `winner-redo''s check that
+  ;;   ;; the last command was winner-undo, since the last command will
+  ;;   ;; be `hydra-winner/winner-undo' if we replace the lambda with
+  ;;   ;; just `winner-undo'
+  ;;   ("<right>" (lambda () (interactive)
+  ;;                (let ((last-command 'winner-undo))
+  ;;                  (winner-redo))) "forward" :color red))
+  )
 
 ;;; aligning rule for Haskell adapted from Haskell mode wiki
 
