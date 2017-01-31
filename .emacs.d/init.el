@@ -895,13 +895,10 @@
 ;;; installed (and load here as after other packages these settings
 ;;; depend on)
 
-;; TODO fix Emacs Haskell config..
-
 (when (fboundp 'haskell-mode)
   ;; Fix broken lack of ghc-init.
   (defun ghc-init () t)
-  ;; (load "~/.emacs.d/init-haskell.el")
-  )
+  (load "~/.emacs.d/init-haskell.el"))
 
 ;; key-chord to save my hands
 
