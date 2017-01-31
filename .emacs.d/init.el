@@ -302,11 +302,9 @@
 
 ;; disable org-list-allow-alphabetical so that I can start lines with
 ;; "P. 211 - " to refer to a page and not start a bulleted list.  This
-;; has to be set before loading Org
+;; has to be set before loading Org, and `use-package' :preface
+;; doesn't seem to be early enough
 (setq org-list-allow-alphabetical nil)
-
-;; my config
-(eval-after-load 'org '(load "~/.emacs.d/init-org.el"))
 
 (use-package org
   ;; init-org.el uses `f-glob'
@@ -325,7 +323,8 @@
              org-save-all-org-buffers   ; for ~/bin/sync-docs
              spw/org-agenda-file-to-front
              spw/org-remove-file
-             spw/new-philos-notes))
+             spw/new-philos-notes)
+  :config (load "~/.emacs.d/init-org.el"))
 
 ;;; more useful unique buffer names
 
