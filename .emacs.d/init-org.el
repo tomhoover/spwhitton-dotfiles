@@ -28,9 +28,9 @@
 
 ;;; links to mairix messages by message-id in Org
 
-(use-package org-mairix-el
-  :bind ("C-c m" . org-mairix-el-insert-link)
-  :commands (org-mairix-el-insert-link org-mairix-el-link org-mairix-el-open))
+;;(use-package org-mairix-el
+;;  :bind ("C-c m" . org-mairix-el-insert-link)
+;;  :commands (org-mairix-el-insert-link org-mairix-el-link org-mairix-el-open))
 
 ;;; highlight current sentence
 
