@@ -891,9 +891,12 @@
 ;;; installed (and load here as after other packages these settings
 ;;; depend on)
 
-(when (fboundp 'haskell-mode)
-  ;; Fix broken lack of ghc-init.
+(use-package haskell-mode
+  :if (spw--optional-pkg-available-p "haskell-mode")
+  :init
+  ;; Fix broken ghc-init: function is missing
   (defun ghc-init () t)
+  :config
   (load "~/.emacs.d/init-haskell.el"))
 
 ;; key-chord to save my hands
