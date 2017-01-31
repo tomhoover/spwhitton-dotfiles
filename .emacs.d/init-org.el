@@ -20,7 +20,7 @@
 
 ;;; checklist helper functions including automatic resetting
 
-(use-package org-checklist)
+(use-package org-checklist :load-path "/usr/share/org-mode/lisp")
 
 ;;; inline tasks
 
