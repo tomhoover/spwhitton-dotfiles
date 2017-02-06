@@ -55,4 +55,4 @@ emacs --daemon
 
 # ---- fire up my window manager
 
-exec xmonad --replace
+#exec xmonad --replace
