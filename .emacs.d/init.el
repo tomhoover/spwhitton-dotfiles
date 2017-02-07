@@ -146,6 +146,10 @@
               wrap-prefix "    ")
 (diminish 'visual-line-mode)
 
+;; Temporarily disable visual-line-mode, as incompatible with
+;; avy-style 'at-full atm: https://github.com/abo-abo/avy/issues/179
+(setq-default visual-line-mode nil)
+
 ;; Terminus
 (add-to-list 'default-frame-alist '(font . "Terminus-11"))
 
