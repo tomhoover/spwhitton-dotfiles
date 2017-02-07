@@ -788,7 +788,9 @@
     (interactive (list (read-char "char: ")
                        current-prefix-arg))
     (if arg (avy-goto-char char nil)
-      (avy-goto-word-1 char nil)))
+      (if (bound-and-true-p subword-mode)
+          (avy-goto-subword-1 char nil)
+        (avy-goto-word-1 char nil))))
 
   ;; TODO: can this be buffer local?  Then I could use it only for
   ;; variable-pitch-mode.  Disabled because outside of that mode it's
