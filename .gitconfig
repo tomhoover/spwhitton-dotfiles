@@ -61,7 +61,7 @@
      # insteadOf = https://anonscm.debian.org/cgit/
      insteadOf = http://anonscm.debian.org/git/
      insteadOf = http://anonscm.debian.org/cgit/
-[url "spw-guest@git.debian.org:/git/"]
+[url "spwhitton@git.debian.org:/git/"]
      pushInsteadOf = alioth:
      pushInsteadOf = git://anonscm.debian.org/
      pushInsteadOf = git://git.debian.org/
