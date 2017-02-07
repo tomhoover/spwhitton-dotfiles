@@ -15,6 +15,10 @@ if which emacs >/dev/null 2>&1; then
     if which chronic >/dev/null 2>&1; then
         chronic emacs --batch --eval "(batch-byte-compile t)" \
                 $HOME/.emacs.d/*.el $HOME/.emacs.d/*/*.el
+
+        # a byte-compiled init file is inconvenient because it gets
+        # loaded before `load-prefer-newer' is set
+        rm $HOME/.emacs.d/init.elc
     else
         echo >&2 "W: not byte-compiling ~/.emacs.d: chronic unavailable"
     fi
