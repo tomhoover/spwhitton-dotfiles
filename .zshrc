@@ -102,6 +102,11 @@ dak-rdeps () {
     ssh mirror.ftp-master.debian.org "dak rm -Rn $@"
 }
 
+build-for-upload () {
+    dgit sbuild "$@" --no-run-lintian --run-piuparts --run-autopkgtest
+    lintian
+}
+
 # based on gregor hermann's dh-make-perl-dev he posted on bugs.d.o
 dh-make-elpa-dev () {
     PERL5LIB=~/src/dh-make-elpa/lib/ ~/src/dh-make-elpa/dh-make-elpa "$@"

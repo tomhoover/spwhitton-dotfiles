@@ -15,7 +15,8 @@ $lintian_opts = [
     '--display-info'
     ];
 
-$run_piuparts = 1;
+# don't run by default: see build-for-upload function in .zshrc
+$run_piuparts = 0;
 $piuparts_opts = [
     '--schroot',
     '%r-%a-piuparts',
@@ -24,7 +25,8 @@ $piuparts_opts = [
     '--log-level=info',
     ];
 
-$run_autopkgtest = 1;
+# don't run by default: see build-for-upload function in .zshrc
+$run_autopkgtest = 0;
 $autopkgtest_root_args = "";
 $autopkgtest_opts = ["--", "schroot", "%r-%a-sbuild"];
 
