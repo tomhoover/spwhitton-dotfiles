@@ -198,7 +198,7 @@
  org-tags-match-list-sublevels t
  org-agenda-persistent-filter t
  org-agenda-skip-deadline-prewarning-if-scheduled 3
- org-agenda-window-setup 'current-window
+ org-agenda-window-setup 'other-window
  org-agenda-entry-text-maxlines 3
 
  org-todo-keywords
