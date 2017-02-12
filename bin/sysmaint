@@ -153,7 +153,7 @@ if ( defined $loc ) {
     my @athena_git_repos = split /^/, $athena_git_repos;
     @athena_git_repos = apply { s|$git/|| } @athena_git_repos;
     my @athena_gcrypt_repos = split /^/, $athena_gcrypt_repos;
-    @athena__gcrypt_repos = apply { s|$gcrypt/|| } @athena_gcrypt_repos;
+    @athena_gcrypt_repos = apply { s|$gcrypt/|| } @athena_gcrypt_repos;
 
     foreach my $repo ( @athena_git_repos ) {
         $repo =~ s/\n//g;
