@@ -37,6 +37,12 @@ our $git = "/srv/git/repositories";
 # this, though
 our $gcrypt = "/srv/gcrypt";
 
+# TODO determine whether a repo is an annex programmatically?
+# advantage of manual list is that we can easily exclude rt.git and
+# podcasts.git, where we don't want any content copied to the backup
+# drive
+my @annexes = qw/annex.git wikiannex.git dionysus.git/;
+
 # ---- prep
 
 chdir $ENV{HOME};
@@ -315,13 +321,10 @@ sub backup_repo {
 
     # first we have to determine whether it's an annex, as that will
     # affect the commands we run both to clone and to update
-    # TODO generalise this to work for non-athena annexes
+    # TODO determine this with a script?
     my $annex = 0;
-    if ( $dest eq "$loc/gitbk/athena" ) {
-        ( undef, undef, my $exit ) = capture {
-            system "ssh athena ls $git/$short/annex";
-        };
-        $annex = $exit >> 8 == 0;
+    if ( $dest eq "$loc/gitbk/athena" && $short ~~ @annexes ) {
+        $annex = 1;
     }
 
     if ( -e $dir ) {            # repo already backed up to this drive
