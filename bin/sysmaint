@@ -330,7 +330,7 @@ sub backup_repo {
     my ( $long, $dest, $rename ) = @_;
     my $short;
 
-    # clear out the command sequencer
+    # flush the command sequencer
     $seq->run();
     # third param is optional: do we need to rename it because
     # remote's name is too generic (e.g. 'wiki')?
