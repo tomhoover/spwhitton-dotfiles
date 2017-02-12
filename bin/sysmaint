@@ -396,6 +396,8 @@ sub backup_repo {
                                                 );
             }
         } else {
+            # TODO verify origin remote is what we expect, or error
+            # out: user probably needs to update backup drive layout
             $seq->add_should_succeed("git fetch origin '+refs/heads/*:refs/heads/*' --tags --no-prune");
             $seq->run();
         }
