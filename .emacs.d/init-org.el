@@ -297,7 +297,7 @@
   (unless
       (ignore-errors (string= "~/doc/" (abbreviate-file-name (projectile-project-root))))
     (projectile-switch-project-by-name "~/doc")))
-(advice-add 'org-agenda :before #'org-agenda--switch-projectile-project)
+;; (advice-add 'org-agenda :before #'org-agenda--switch-projectile-project)
 
 (setq
  org-agenda-custom-commands
