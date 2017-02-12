@@ -305,17 +305,15 @@ skip = ! mine
 checkout = git clone gcrypt::rsync://athena:/srv/gcrypt/annex.git annex
 post_checkout =
     cd annex
-    # have to ensure we have origin's git-annex branch before we
-    # delete origin remote
-    git checkout git-annex
-    git checkout master
-    git remote rm origin
     git annex init
-    git annex enableremote origin gitrepo=athenap:annex
+    git annex enableremote athena rsyncurl=athena:/srv/rsync/annex
 skip = (! workstation) || fast
 
-update = git annex sync origin
-push = git annex sync --content origin
+update = git annex sync --no-content origin
+push =
+    git annex sync --no-content origin
+    git annex sync --content athena
+    git annex sync --no-content origin
 fixups =
     git config push.default matching
     git config remote.origin.gcrypt-publish-participants true
@@ -323,11 +321,9 @@ fixups =
     git config gcrypt.publish-participants true
     git config gcrypt.participants 0x0F56D0553B6D411B
     git config annex.startupscan false
-    git config annex.autocommit true # needed git ga sync
-    # set upstream so that mr can tell when I need to push
-    git branch -u origin/master master
-    git branch -u origin/git-annex git-annex
-sync = git annex sync origin
+    git config annex.autocommit true # needed for ga sync
+    git config remote.origin.annex-ignore true
+sync = git annex sync --no-content origin
 
 # --- personal website big files annex
 
@@ -346,7 +342,7 @@ post_checkout =
         git remote add bkupsd /media/${USER}/bkupsd/git/athena/wikiannex.git
         git remote add m3 /media/${USER}/m3/git/athena/wikiannex.git
     fi
-update = git annex sync         # no pull in direct mode
+update = git annex sync --no-content         # no pull in direct mode
 push = git annex sync --content
 skip = ! mine
 
@@ -359,7 +355,7 @@ post_checkout =
     git annex init
     git annex direct
 status = git annex status
-update = git annex sync
+update = git annex sync --no-content
 push = git annex sync --content
 sync = sync-for-dionysus
 isclean = test -z "$(git annex status)" || (git annex status && exit 1)
@@ -383,8 +379,8 @@ post_checkout =
     cd podcasts
     git annex init
 status = git annex status
-update = git annex sync
-push = git annex sync
+update = git annex --no-content sync
+push = git annex --no-content sync
 isclean = test -z "$(git annex status)" || (git annex status && exit 1)
 
 # origin remote is just for keeping a backup copy of metadata.  athena
@@ -404,8 +400,8 @@ skip = ! workstation
 checkout = git clone gcrypt::rsync://athena:/srv/gcrypt/rt.git rt
 post_checkout = cd rt && git annex init
 status = git annex status --fast
-update = git annex sync origin
-push = git annex sync origin
+update = git annex sync --no-content origin
+push = git annex sync --no-content origin
 autoci = (git annex add . && git commit -m "auto commit on $(hostname -s)") || true
 fixups =
     git config push.default matching
