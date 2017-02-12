@@ -227,7 +227,7 @@ post_restow = $HOME/src/dotfiles/bin/bytecompile-emacsd
 # --- private dotfiles repositories
 
 [$HOME/src/priv]
-checkout = git clone gcrypt::rsync://athena:/home/git/priv.git priv
+checkout = git clone gcrypt::rsync://athena:/srv/gcrypt/priv.git priv
 stowable = true
 
 # this repository can't be checked out until we install
@@ -302,7 +302,7 @@ skip = ! mine
 # (and isclean defn can be generalised)
 
 [$HOME/lib/annex]
-checkout = git clone gcrypt::athenap:annex
+checkout = git clone gcrypt::rsync://athena:/srv/gcrypt/annex.git annex
 post_checkout =
     cd annex
     # have to ensure we have origin's git-annex branch before we
@@ -401,7 +401,7 @@ skip = ! workstation
 # --- git annex for use with rtorrent
 
 [$HOME/lib/rt]
-checkout = git clone gcrypt::athenap:rt
+checkout = git clone gcrypt::rsync://athena:/srv/gcrypt/rt.git rt
 post_checkout = cd rt && git annex init
 status = git annex status --fast
 update = git annex sync origin
