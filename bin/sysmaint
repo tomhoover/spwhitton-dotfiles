@@ -28,9 +28,14 @@ my $host = hostname;
 
 # ---- config
 
-our @gcrypt_repos = qw/priv.git annex.git rt.git/;
 our @src_exceptions = qw/hscripts/;
-our $git = "/home/git";
+our $git = "/srv/git/repositories";
+
+# since I am now using exclusively gcrypt's rsync mode, I do not need
+# to detect whether a repo is a gcrypt repo before attempting to back
+# it up.  Note that git-remote-gcrypt has a --check option for doing
+# this, though
+our $gcrypt = "/srv/gcrypt";
 
 # ---- prep
 
@@ -131,23 +136,25 @@ if ( defined $loc ) {
     }
 
     # ---- athena repos
-    my $athena_repos = capture {
-        system "ssh athena 'for d in $git/*; do echo \$d; done'";
+    my $athena_git_repos = capture {
+        system "ssh athena 'for d in $git/*.git $git/*/*.git; do echo \$d; done'";
     };
-    my @athena_repos = split /^/, $athena_repos;
-    @athena_repos = apply { s|$git/|| } @athena_repos;
-    foreach my $repo ( @athena_repos ) {
+    my $athena_gcrypt_repos = capture {
+        system "ssh athena 'for d in $gcrypt/*; do echo \$d; done'";
+    };
+    my @athena_git_repos = split /^/, $athena_git_repos;
+    @athena_git_repos = apply { s|$git/|| } @athena_git_repos;
+    my @athena_gcrypt_repos = split /^/, $athena_gcrypt_repos;
+    @athena__gcrypt_repos = apply { s|$gcrypt/|| } @athena_gcrypt_repos;
+
+    foreach my $repo ( @athena_git_repos ) {
         $repo =~ s/\n//g;
-        # TODO detect gcrypt repo down in backup_repo function (only
-        # need to detect on clone, not update) -- see git-remote-gcrypt manpage for how to do this
-        # TODO ensure we don't detect rt.git as a gcrypt repo tho as don't want to init it ...
-        if ( $repo eq "priv.git" ) {
-            backup_repo("gcrypt::rsync://athena:/home/git/$repo", "athena");
-        } elsif ( $repo ~~ @gcrypt_repos ) {
-            backup_repo("gcrypt::git\@spwhitton.name:$repo", "athena");
-        } else {
-            backup_repo("git\@spwhitton.name:$repo", "athena");
-        }
+        backup_repo("git\@spwhitton.name:$repo", "athena");
+    }
+
+    foreach my $repo ( @athena_gcrypt_repos ) {
+        $repo =~ s/\n//g;
+        backup_repo("gcrypt::rsync://athena:/srv/git/$repo", "athena");
     }
 
     # ---- misc. repos
