@@ -11,6 +11,7 @@ use warnings;
 use lib "$ENV{HOME}/lib/perl5";
 no warnings "experimental::smartmatch";
 
+use Dpkg::Version;
 use Term::UI;
 use ShellSequence;
 use ScriptStatus;
@@ -100,6 +101,7 @@ unlink glob "src/*[0-9].tar.*"; # native package generated tarballs
 system "clean-patch-queues -y";
 
 while (42) {
+    clean_orig_tars();
     my $output = capture_merged { find_dirty_src() };
     if (length $output) {
         status "the following files/repos in ~/src should be cleaned up:";
@@ -271,8 +273,34 @@ $seq->run();
 
 # ---- subroutines
 
-# TODO delete all but the two highest-versioned orig.tars for each package
-# TODO delete orig.tar if the repo is not actually present
+sub clean_orig_tars {
+    my $origs = {};
+    foreach my $f ( glob "src/*.orig.tar.*" ) {
+        $f =~ m/src\/([^_]*)_/;
+        push @{$origs->{"$1"}}, $f;
+    }
+    sub orig_ver {
+        $a =~ m/src\/[^_]*_([^_]*).orig/;
+        my $ver_a = Dpkg::Version->new("$1");
+        $b =~ m/src\/[^_]*_([^_]*).orig/;
+        my $ver_b = Dpkg::Version->new("$1");
+        $a cmp $b;
+    }
+    foreach my $pkg (keys %$origs) {
+        my @origs = sort orig_ver @{$origs->{$pkg}};
+        if ( -d "src/$pkg/.git" ) {
+            if ( scalar @origs > 2 ) {
+                @origs = splice @origs, 0, -2;
+            } else {
+                @origs = ();
+            }
+        }
+        foreach my $orig ( @origs ) {
+            unlink $orig;
+        }
+    }
+}
+
 # TODO src-unregister script to delete entry from ~/src/.mrconfig and nuke the repo
 
 sub find_dirty_src {
