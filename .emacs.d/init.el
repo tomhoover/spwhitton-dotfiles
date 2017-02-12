@@ -2121,6 +2121,7 @@ Ensures the kill ring entry always ends with a newline."
          ;; exceptions for people who have longer forms of their names
          ;; in their From: headers
          ((string= name "Nathaniel") "Nathan")
+         ((string= name "Thomas") "Tom")
          ;; default
          (t name)))))
 
