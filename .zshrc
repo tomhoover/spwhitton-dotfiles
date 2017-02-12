@@ -103,7 +103,22 @@ dak-rdeps () {
 }
 
 build-for-upload () {
-    dgit sbuild "$@" --no-run-lintian --run-piuparts --run-autopkgtest
+    dgit=""
+    sbuild=""
+    for key in "$@"; do
+        case $key in
+            --gbp|--dpm|--quilt=*)
+                dgit="$dgit $key"
+                shift
+                ;;
+            *)
+                sbuild="$sbuild $key"
+                shift
+                ;;
+        esac
+    done
+    eval dgit $dgit sbuild $sbuild \
+         --no-run-lintian --run-piuparts --run-autopkgtest
     lintian
 }
 
