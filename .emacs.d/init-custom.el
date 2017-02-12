@@ -162,7 +162,10 @@
              (projectile-project-name)))))
  '(safe-local-variable-values
    (quote
-    ((eval highlight-regexp "^ *")
+    ((wc-word-goal . 750)
+     (wc-modeline-format . "%w/%gw")
+     (wc-modeline-format . %w/%gw)
+     (eval highlight-regexp "^ *")
      (eval pandoc-set-write "latex")
      (eval spw/writing-toggle)
      (indent-tabs-mode . t\,))))
