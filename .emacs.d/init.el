@@ -496,6 +496,7 @@
   :init
   (add-hook 'markdown-mode-hook 'turn-on-orgstruct)
   (add-hook 'markdown-mode-hook 'turn-on-orgstruct++)
+  (add-hook 'markdown-mode-hook 'wc-mode)
   (spw--add-mode-pairs 'markdown-mode-hook '((?` . ?`)))
 
   :config
