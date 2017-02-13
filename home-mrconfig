@@ -79,9 +79,6 @@ include =
 # --- tests, plus my code for detecting Git-on-Windows
 
 lib =
-    fast() {
-        test "${MR_FAST}" = "true"
-    }
     win32() {
         test "$(perl -e 'print $^O')" = "msys"
     }
@@ -233,7 +230,7 @@ stowable = true
 # this repository can't be checked out until we install
 # git-remote-gcrypt.  And thanks to gcrypt being slow, skip if I run
 # via fmr.
-skip = (! gcrypt) || (! workstation) || fast
+skip = (! gcrypt) || (! workstation)
 
 fixups =
         chmod 600 .passwddb.pet .s3ql/authinfo2 .gnupg/*.kbx .gnupg/private-keys-v1.d/*.key
@@ -307,7 +304,7 @@ post_checkout =
     cd annex
     git annex init
     git annex enableremote athena rsyncurl=athena:/srv/rsync/annex
-skip = (! workstation) || fast
+skip = (! workstation)
 
 update = git annex sync --no-content origin
 push =
@@ -424,14 +421,12 @@ fixups =
         fi
     fi
 
-skip = (! workstation) || fast
+skip = (! workstation)
 
 # --- source code repositories registered to their own mr config file
 
 [$HOME/src]
-
-# Chain load unless we invoked mr via fmr alias.
-chain = ! [ "${MR_FAST}" = "true" ]
+chain = true
 
 # Always skip, since this is a dummy repository entry in order to
 # chainload.
@@ -455,7 +450,7 @@ pre_update = (! win32) && doccheckin
 autoci = doccheckin || true
 
 # quick syncs
-sync = sync-docs
+sync = mr update && mr push
 
 # --- static websites on web host boxes
 
@@ -478,5 +473,5 @@ push = movemail
 # didn't run one of the sync or update commands.
 skip = ! [ -d "$HOME/.fmail" ] || ! ( [ "$MR_ACTION" = "stowable" ] || [ "$MR_ACTION" = "push" ] || [ "$MR_ACTION" = "sync" ] || [ "$MR_ACTION" = "update" ] )
 
-# this is slower than other MR_FAST repos
+# this is slower than other repos for which sync is defined
 order = 12

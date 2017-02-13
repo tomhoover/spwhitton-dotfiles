@@ -61,7 +61,6 @@ alias ga="git annex"
 alias gs="git status"
 # better: pa fax | grep
 # alias pg="ps auxxxxxxxxxxxxxxxxxxx | grep"
-alias fmr="MR_FAST=true mr"
 alias d="emacsclient -c -n -e '(dired \".\")'"
 alias mg=$EDITOR
 alias mrs="mr -m status"
