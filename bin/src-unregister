@@ -50,6 +50,6 @@ foreach my $repo ( @ARGV ) {
             }
         }
         untie @lines;
-        system "rm -rf $repo";
+        system "rm -rf $repo $repo_*.orig.tar.*";
     }
 }
