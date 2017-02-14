@@ -21,6 +21,8 @@ my $term = Term::ReadLine->new('brand');
 
 foreach my $repo ( @ARGV ) {
     die "$repo does not exist" if ! ( -d $repo );
+    die "$repo is not a git or hg repo"
+      if ! ( -d "$repo/.git" || -d "$repo/.hg" );
 }
 
 foreach my $repo ( @ARGV ) {
