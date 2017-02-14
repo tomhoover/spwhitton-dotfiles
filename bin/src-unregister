@@ -1,0 +1,29 @@
+#!/usr/bin/perl
+
+# Script to remove repositories in ~/src, including removing their
+# entries from ~/src/.mrconfig.  Confirmation is required only if the
+# repository has uncommitted changes, untracked files or unpushed
+# branches
+
+# For convenient tab-completion of the repository names, run this
+# script from ~/src
+
+use warnings;
+use strict;
+
+
+
+# if [ "$#" -ne 1 ]; then
+#     echo >&2 "$(basename $0): usage: $(basename $0) REPO"
+#     exit 1
+# fi
+
+# (
+#     cd $HOME/src
+#     repo="$1"
+
+#     mr -d $repo status
+#     echo
+
+#     echo "Are you sure you want to delete?"
+# )
