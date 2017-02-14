@@ -38,10 +38,9 @@ our $git = "/srv/git/repositories";
 # this, though
 our $gcrypt = "/srv/gcrypt";
 
-# TODO determine whether a repo is an annex programmatically?
-# advantage of manual list is that we can easily exclude rt.git and
-# podcasts.git, where we don't want any content copied to the backup
-# drive
+# annexes that should be inited on the backup drive, and synced with
+# the corresponding annex in $HOME.  This list is manually maintained
+# because I do not want to run `git annex init` en masse
 my @annexes = qw/annex.git wikiannex.git dionysus.git/;
 
 # ---- prep
