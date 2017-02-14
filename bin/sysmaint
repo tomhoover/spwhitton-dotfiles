@@ -155,16 +155,8 @@ if ( defined $loc ) {
     my @athena_gcrypt_repos = split /^/, $athena_gcrypt_repos;
     @athena_gcrypt_repos = apply { s|$gcrypt/|| } @athena_gcrypt_repos;
 
-    # Skip repos that only exist to prevent accidental pushes of
-    # private data to a public repo
-    my @skip = qw/doc.git annex.git athpriv.git podcasts.git priv.git rt.git/;
-
     foreach my $repo ( @athena_git_repos ) {
         $repo =~ s/\n//g;
-
-        if ( $repo ~~ @skip ) {
-            next;
-        }
 
         backup_repo("git\@spwhitton.name:$repo", "athena");
     }
