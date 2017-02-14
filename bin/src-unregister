@@ -11,19 +11,45 @@
 use warnings;
 use strict;
 
+use Capture::Tiny 'tee_stdout';
+use Term::UI;
+use Tie::File;
 
+die "need at least one argument" if ( @ARGV < 1 );
+chdir "$ENV{'HOME'}/src/";
+my $term = Term::ReadLine->new('brand');
 
-# if [ "$#" -ne 1 ]; then
-#     echo >&2 "$(basename $0): usage: $(basename $0) REPO"
-#     exit 1
-# fi
+foreach my $repo ( @ARGV ) {
+    die "$repo does not exist" if ! ( -d $repo );
+}
 
-# (
-#     cd $HOME/src
-#     repo="$1"
-
-#     mr -d $repo status
-#     echo
-
-#     echo "Are you sure you want to delete?"
-# )
+foreach my $repo ( @ARGV ) {
+    (my $output, undef) = tee_stdout { system "mr -m -d $repo status" };
+    my $confirm = 1;
+    if (length($output)) {
+        $confirm = $term->ask_yn(
+                                 prompt => 'Delete unclean repo $repo?',
+                                 default => 'n',
+                                );
+    }
+    if ($confirm) {
+        my $in_block = 0;
+        tie my @lines, 'Tie::File', "$ENV{'HOME'}/src/.mrconfig"
+          or die "could not open ~/src/.mrconfig";
+        for (my $i = 0; $i < @lines; $i++) {
+            if ($lines[$i] =~ m/^\[(.*)\]$/) {
+                if ($1 eq $repo) {
+                    $in_block = 1;
+                } else {
+                    $in_block = 0;
+                }
+            }
+            if ($in_block) {
+                splice @lines, $i, 1;
+                $i--;
+            }
+        }
+        untie @lines;
+        system "rm -rf $repo";
+    }
+}
