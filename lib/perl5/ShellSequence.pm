@@ -76,20 +76,32 @@ sub run {
         my $require = shift @$cmd;
         my @args = @$cmd;
 
+        # previously we always used tee_stdout, and then looked at
+        # both $output and its exit code.  However, tee_stdout works
+        # badly for ncurses, such as debconf prompts which appeared
+        # during apt runs.  So don't use tee_stdout except when we
+        # have to
         while (42) {
             status "running `@args'";
-            (my $output, my $exit) = tee_stdout {
+            if ($require eq 'SUCCEED') {
                 system @args;
-            };
-            $exit = $exit >> 8;
-            if ($require eq 'SUCCEED' && $exit != 0) {
-                status "`@args' failed but it was required to succeed";
-                choice($i, @args) || last;
-            } elsif ($require eq 'ZERO' && length($output)) {
-                status "`@args' was required to produce no output";
-                choice($i, @args) || last;
+                my $exit = $? >> 8;
+                if ($exit != 0) {
+                    status "`@args' failed but it was required to succeed";
+                    choice($i, @args) || last;
+                } else {
+                    last;
+                }
             } else {
-                last;
+                (my $output, undef) = tee_stdout {
+                    system @args;
+                };
+                if (length($output)) {
+                    status "`@args' was required to produce no output";
+                    choice($i, @args) || last;
+                } else {
+                    last;
+                }
             }
         }
     }
