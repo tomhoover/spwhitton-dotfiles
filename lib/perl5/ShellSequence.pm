@@ -57,7 +57,7 @@ sub choice {
             my @maybe_next = @{$i->peek()};
             shift @maybe_next;
             my @next = @maybe_next;
-            status "info: the next command will be `@next'";
+            status "info: if you skip, the next command will be `@next'";
         }
         my $give_up = $term->ask_yn(
                                     prompt => 'Give up and skip this command?',
