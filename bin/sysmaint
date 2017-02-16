@@ -301,8 +301,6 @@ sub clean_orig_tars {
     }
 }
 
-# TODO src-unregister script to delete entry from ~/src/.mrconfig and nuke the repo
-
 sub find_dirty_src {
     foreach my $f ( glob "src/*" ) {
         my $short = basename($f);
