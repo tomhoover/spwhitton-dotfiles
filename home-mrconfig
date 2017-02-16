@@ -34,14 +34,14 @@ git_isclean =
 
 # --- Experimental plugin for dgit repos
 
-include = [ -e ~/src/dotfiles/lib/mr/dgit ] && cat ~/src/dotfiles/lib/mr/dgit
+include = cat ~/src/dotfiles/lib/mr/dgit
+
+# --- Sensible pulls
 
 # Redefine git_update to avoid an unconditional `git pull` which can
-# result in unwanted merge commits all over $HOME.  This redefinition
-# is based on the value of git_update set in the dgit plugin.  Note
-# that the dgit lib has to have unconditional `git pull` to match
-# global myrepos conventions
-git_update = git-merge-ff-all
+# result in unwanted merge commits all over $HOME (this has to come
+# after we include the dgit lib, which also defines git_update)
+git_update = git pull-safe
 
 # --- Adam Spiers' plugin for managing dotfile symlinks with mr
 
