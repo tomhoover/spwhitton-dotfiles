@@ -2,8 +2,11 @@
 
 # source: Jefromi on Stack Overflow -- https://stackoverflow.com/a/4157435
 
+# modified by spwhitton to default to $branch@{u} at the suggestion of
+# orip on Stack Overflow
+
 _usage() {
-    echo "Usage: git merge-ff <branch> <committish-to-merge>" 1>&2
+    echo "Usage: git merge-ff <branch> [<committish-to-merge>]" 1>&2
     exit 1
 }
 
@@ -52,5 +55,6 @@ shift $((OPTIND-1))
 
 case $# in
     2 ) _merge_ff "$1" "$2";;
+    1 ) _merge_ff "$1" "${1}@{u}";;
     * ) _usage
 esac
