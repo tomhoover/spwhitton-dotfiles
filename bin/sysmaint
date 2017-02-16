@@ -87,7 +87,7 @@ $seq->add_should_succeed("src-register-all");
 $seq->run();
 
 status "cleaning up ~/src";
-# we retain orig tarballs
+clean_orig_tars();
 unlink glob "src/*.dsc";
 unlink glob "src/*.diff.gz";
 unlink glob "src/*.upload";
@@ -101,7 +101,6 @@ unlink glob "src/*[0-9].tar.*"; # native package generated tarballs
 system "clean-patch-queues -y";
 
 while (42) {
-    clean_orig_tars();
     my $output = capture_merged { find_dirty_src() };
     if (length $output) {
         status "the following files/repos in ~/src should be cleaned up:";
