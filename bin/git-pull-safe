@@ -29,11 +29,11 @@ branches="$(git for-each-ref --format='%(refname:short)' refs/heads/)"
 git remote update
 for branch in $branches; do
     remote="$(branch_remote $branch 2>/dev/null || true)"
-    # echo "I: branch $branch has prefix $prefix and remote $remote"
     if [ "$(branch_prefix $branch)" != "dgit"  ] && [ "$remote" != "" ]; then
         # if the branch cannot be fast-forwarded, git-merge-ff will
         # exit non-zero, so myrepos will report that the update
         # failed, so user intervention is required
+        echo "I: attempting to fast-forward local branch $branch"
         git merge-ff "$branch"
     fi
 done
