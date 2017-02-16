@@ -55,6 +55,6 @@ shift $((OPTIND-1))
 
 case $# in
     2 ) _merge_ff "$1" "$2";;
-    1 ) _merge_ff "$1" "${1}@{u}";;
+    1 ) _merge_ff "$1" "${1}@{upstream}";;
     * ) _usage
 esac
