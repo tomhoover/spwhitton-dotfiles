@@ -5,6 +5,9 @@
 # modified by spwhitton to default to $branch@{u} at the suggestion of
 # orip on Stack Overflow
 
+# modified by spwhitton not to output a diff when the fast-forward
+# didn't change anything
+
 _usage() {
     echo "Usage: git merge-ff <branch> [<committish-to-merge>]" 1>&2
     exit 1
@@ -32,6 +35,12 @@ _merge_ff() {
         if [ "$(git merge-base $branch_orig_hash $commit_orig_hash)" != "$branch_orig_hash" ]; then
             echo "Error: merging $commit into $branch would not be a fast-forward" 1>&2
             exit 1
+        fi
+        if [ "$commit_orig_hash" = "$branch_orig_hash" ]; then
+            if [ -z $quiet ]; then
+                echo "Info: $branch already up-to-date"
+            fi
+            exit 0
         fi
         echo "Updating ${branch_orig_hash:0:7}..${commit_orig_hash:0:7}"
         if git update-ref -m "merge $commit: Fast forward" "refs/heads/$branch" "$commit_orig_hash" "$branch_orig_hash"; then
