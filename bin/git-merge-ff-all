@@ -1,0 +1,36 @@
+#!/bin/sh
+
+# Update all remote-tracking branches, and as many local branches that
+# we can fast-forward.  Additionally, if the current branch looks like
+# a dgit suite-tracking branch, merge the current contents of the
+# Debian archive into the current branch
+
+set -e
+
+current_branch="$(git rev-parse --abbrev-ref HEAD)"
+branches="$(git for-each-ref --format='%(refname:short)' refs/heads/)"
+
+if [ "$(echo $current_branch | cut -s -d/ -f1)" = "dgit" ]; then
+    echo "I: current branch is dgit/foo; doing \`dgit pull\`"
+    dgit pull
+fi
+for suite in $(git show-ref | grep refs/remotes/dgit/dgit | cut -d/ -f5 ); do
+    # skip if we just called `dgit pull` on this suite
+    if ! [ "$current_branch" = "dgit/$suite" ]; then
+        echo "I: fetching dgit suite $suite"
+        dgit fetch $suite
+    fi
+done
+
+git remote update
+for branch in $branches; do
+    prefix="$(echo $branch | cut -s -d/ -f1)"
+    remote="$(git config branch.$branch.remote 2>/dev/null || true)"
+    # echo "I: branch $branch has prefix $prefix and remote $remote"
+    if [ "$prefix" != "dgit"  ] && [ "$remote" != "" ]; then
+        # if the branch cannot be fast-forwarded, git-merge-ff will
+        # exit non-zero, so myrepos will report that the update
+        # failed, so user intervention is required
+        git merge-ff "$branch"
+    fi
+done

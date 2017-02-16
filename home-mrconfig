@@ -41,30 +41,7 @@ include = [ -e ~/src/dotfiles/lib/mr/dgit ] && cat ~/src/dotfiles/lib/mr/dgit
 # is based on the value of git_update set in the dgit plugin.  Note
 # that the dgit lib has to have unconditional `git pull` to match
 # global myrepos conventions
-git_update = 
-    current_branch="$(git rev-parse --abbrev-ref HEAD)"
-    current_branch_remote="$(git config branch.$current_branch.remote || true)"
-    if [ "$(echo $current_branch | cut -s -d/ -f1)" = "dgit" ]; then
-        echo "I: current branch is dgit/foo; doing \`dgit pull\`"
-        dgit pull
-    else
-        echo "I: current branch is ordinary; doing \`git pull --ff-only\`"
-        git pull --ff-only
-    fi
-    for remote in $(git remote); do
-        # skip if we just called `git pull` on this remote
-        if ! ([ "$remote" = "$current_branch_remote" ] || [ "$remote" = "dgit" ]); then
-            echo "I: fetching $remote"
-            git remote update "$remote"
-        fi
-    done
-    for suite in $(git show-ref | grep refs/remotes/dgit/dgit | cut -d/ -f5 ); do
-        # skip if we just called `dgit pull` on this suite
-        if ! [ "$current_branch" = "dgit/$suite" ]; then
-            echo "I: fetching dgit suite $suite"
-            dgit fetch $suite
-        fi
-    done
+git_update = git-merge-ff-all
 
 # --- Adam Spiers' plugin for managing dotfile symlinks with mr
 
