@@ -38,7 +38,7 @@ _merge_ff() {
         fi
         if [ "$commit_orig_hash" = "$branch_orig_hash" ]; then
             if [ -z $quiet ]; then
-                echo "Info: $branch already up-to-date"
+                echo "Already up-to-date."
             fi
             exit 0
         fi
