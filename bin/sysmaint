@@ -83,6 +83,7 @@ $seq->add_should_zero("ls tmp");
 $seq->add_should_zero("ssh athena ls tmp");
 $seq->add_should_zero("ssh athena ls local/files/tmp");
 $seq->add_should_zero("ls lib/athena/tmp");
+$seq->add_should_succeed("src-register-all");
 $seq->run();
 
 status "cleaning up ~/src";
@@ -310,16 +311,9 @@ sub find_dirty_src {
                  # also permit gbp orig tarballs
                  || ($f =~ /orig\.gbp\.tar/)
                  || $short ~~ @src_exceptions
-                 || (-d "$f/.git"
-                     && ((fgrep { /^\[$short\]$/ } "src/.mrconfig")
-                         || (fgrep { /^\[\$HOME\/$f\]$/ } ".mrconfig")))) {
-            if (-d "$f/.git") {
-                local $CWD = $f;
-                system "mr register >/dev/null";
-                print "$f\n" if ($? >> 8 != 0);
-            } else {
-                print "$f\n";
-            }
+                 || -d "$f/.git" || -d "$f/.hg" # handled by src-register-all
+               ) {
+            print "$f\n";
         }
     }
 }

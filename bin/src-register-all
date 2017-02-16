@@ -1,0 +1,22 @@
+#!/usr/bin/perl
+
+# Add new all new git/hg repos in ~/src to ~/src/.mrconfig
+
+use strict;
+use warnings;
+use File::Basename;
+use File::Grep "fgrep";
+use File::chdir;
+
+foreach my $f ( glob "$ENV{'HOME'}/src/*" ) {
+    my $short = basename($f);
+    next unless ( -d "$f/.git" || -d "$f/.hg" );
+    unless ( (fgrep { /^\[$short\]$/ }
+              "$ENV{'HOME'}/src/.mrconfig")
+             || (fgrep { /^\[\$HOME\/src\/$short\]$/ }
+                 "$ENV{'HOME'}/.mrconfig") ) {
+        local $CWD = $f;
+        system "mr register >/dev/null";
+        die "failed to register ~/src/$short" unless ($? >> 8 == 0);
+    }
+}

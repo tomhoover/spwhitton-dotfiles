@@ -25,6 +25,9 @@ foreach my $repo ( @ARGV ) {
       if ! ( -d "$repo/.git" || -d "$repo/.hg" );
 }
 
+# we rely on calling `mr status` so ensure the repo is registered
+system "src-register-all";
+
 foreach my $repo ( @ARGV ) {
     (my $output, undef) = tee_stdout { system "mr -m -d $repo status" };
     my $confirm = 1;
