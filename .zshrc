@@ -97,6 +97,15 @@ alias qqsbuild="DEB_BUILD_OPTIONS=nocheck sbuild --no-apt-update --no-apt-distup
 alias b="bts --mbox show"
 alias test-reproducible="reprotest auto . -- schroot sid"
 
+# This alias is more reliable than calling `server-start' in my Emacs
+# init file.  Previously, I was seeing Emacs fail to start with "Error
+# reading from stdin."  See <http://emacs.stackexchange.com/a/12789>
+
+# `switch-to-buffer' means that there is some chance the new window
+# will show a buffer I want to see (tip from the frames-only-mode
+# README)
+alias emacscd="emacsclient -c -a '' -n -e '(switch-to-buffer nil)'"
+
 dak-rdeps () {
     ssh mirror.ftp-master.debian.org "dak rm -Rn $@"
 }
