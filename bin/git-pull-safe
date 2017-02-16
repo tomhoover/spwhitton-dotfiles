@@ -20,18 +20,7 @@ function branch_remote() {
 current_branch="$(git rev-parse --abbrev-ref HEAD)"
 branches="$(git for-each-ref --format='%(refname:short)' refs/heads/)"
 
-if [ "$(branch_prefix $current_branch)" = "dgit" ]; then
-    echo "I: current branch is $current_branch; doing \`dgit pull\`"
-    dgit pull
-fi
-for suite in $(git show-ref | grep refs/remotes/dgit/dgit | cut -d/ -f5 ); do
-    # skip if we just called `dgit pull` on this suite
-    if ! [ "$current_branch" = "dgit/$suite" ]; then
-        echo "I: fetching dgit suite $suite"
-        dgit fetch $suite
-    fi
-done
-
+# (1) normal git branches
 git remote update
 for branch in $branches; do
     remote="$(branch_remote $branch 2>/dev/null || true)"
@@ -41,5 +30,18 @@ for branch in $branches; do
         # exit non-zero, so myrepos will report that the update
         # failed, so user intervention is required
         git merge-ff "$branch"
+    fi
+done
+
+# (2) dgit branches
+if [ "$(branch_prefix $current_branch)" = "dgit" ]; then
+    echo "I: current branch is $current_branch; doing \`dgit pull\`"
+    dgit pull
+fi
+for suite in $(git show-ref | grep refs/remotes/dgit/dgit | cut -d/ -f5 ); do
+    # skip if we just called `dgit pull` on this suite
+    if ! [ "$current_branch" = "dgit/$suite" ]; then
+        echo "I: fetching dgit suite $suite"
+        dgit fetch $suite
     fi
 done
