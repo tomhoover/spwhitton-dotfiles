@@ -29,6 +29,7 @@ foreach my $repo ( @ARGV ) {
 system "src-register-all";
 
 foreach my $repo ( @ARGV ) {
+    system "mr -d $repo register";
     (my $output, undef) = tee_stdout { system "mr -m -d $repo status" };
     my $confirm = 1;
     if (length($output)) {
