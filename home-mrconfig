@@ -422,7 +422,7 @@ skip = ! (mine || on spwhitton@shortgeese)
 fixups = git-utime
 
 # before pulling, automatically commit in the same way that my cron job does
-pre_update = (! win32) && doccheckin
+pre_update = (! win32) && save-org-buffers && doccheckin
 # ... and let me do it manually
 autoci = doccheckin || true
 
