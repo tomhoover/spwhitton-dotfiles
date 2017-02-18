@@ -162,7 +162,8 @@
              (projectile-project-name)))))
  '(safe-local-variable-values
    (quote
-    ((wc-word-goal . 750)
+    ((bug-reference-bug-regexp . "#\\(?2:[0-9]+\\)")
+     (wc-word-goal . 750)
      (wc-modeline-format . "%w/%gw")
      (wc-modeline-format . %w/%gw)
      (eval highlight-regexp "^ *")
