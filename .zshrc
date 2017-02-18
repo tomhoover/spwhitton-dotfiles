@@ -109,6 +109,9 @@ alias emacscd="emacsclient -c -a '' -n -e '(switch-to-buffer nil)'"
 dak-rdeps () {
     ssh mirror.ftp-master.debian.org "dak rm -Rn $@"
 }
+madison () {
+    ssh mirror.ftp-master.debian.org "dak ls $@"
+}
 
 build-for-upload () {
     dgit=""
