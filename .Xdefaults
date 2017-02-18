@@ -58,6 +58,20 @@ URxvt*shading: 30
 URxvt*cursorBlink: false
 URxvt*cursorColor: #dcdccc
 
+! do not scroll with output
+URxvt*scrollTtyOutput: false
+
+! scroll in relation to buffer (with mouse scroll or Shift+Page Up)
+URxvt*scrollWithBuffer: true
+
+! scroll back to the bottom on keypress
+URxvt*scrollTtyKeypress: true
+
+! from Arch wiki: permits mousewheel/shift-pgup scrolling when using a pager
+URxvt.secondaryScreen: 1
+URxvt.secondaryScroll: 0
+!URxvt.secondaryWheel:  1 ! requires patched urxvt
+
 ! disable everything except the URL matcher
 URxvt.perl-ext-common: matcher
 

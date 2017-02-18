@@ -37,7 +37,7 @@ set resolve = yes
 set noconfirmappend
 set abort_unmodified = no
 set mark_old = no                  # better with mbsync
-set editor = "emacsclient -t -a \"zile -f auto-fill-mode +8\""
+set editor = "emacsclient -t -a \"mg -n -f auto-fill-mode +8\""
 #set editor="switch-to-emacsclient"
 set tilde
 set smart_wrap
@@ -86,33 +86,31 @@ set sort_aux = last-date-received
 
 # --- GPG settings
 
+# can't use gpgme because some Debian services require inline PGP
+# signatures, which gpgme doesn't support
+set crypt_use_gpgme = no
+
+# general preferences about signing and encrypting
 set pgp_autosign = yes
 set pgp_sign_as = 0x0F56D0553B6D411B
 set pgp_replysign = yes
 set pgp_replysignencrypted = yes
 set pgp_replyencrypt = yes
 set pgp_timeout = 120
-#set fcc_clear = yes
 set fcc_clear = no
+set pgp_encrypt_self = yes
 set pgp_use_gpg_agent = yes
-#set pgp_strict_enc # maybe needed?
+#set pgp_strict_enc
 
-# stick with old settings for now
-set crypt_use_gpgme=no
+# redefine some settings from Debian's /etc/Muttrc.d/gpg.rc:
 
-set pgp_decode_command="gpg --status-fd=2 --use-agent --no-verbose --quiet --batch --output - %f"
-set pgp_verify_command="gpg --status-fd=2 --use-agent --no-verbose --quiet --batch --output - --verify %s %f"
-set pgp_decrypt_command="gpg --status-fd=2 --use-agent --no-verbose --quiet --batch --output - %f"
-set pgp_sign_command="gpg --use-agent --no-verbose --batch --quiet --output - --armor --detach-sign --textmode %?a?-u %a? %f"
-set pgp_clearsign_command="gpg --use-agent --no-verbose --batch --quiet --output - --armor --textmode --clearsign %?a?-u %a? %f"
+# additionally use Debian keyrings to verify sigs
+set pgp_verify_command="gpg --keyring /usr/share/keyrings/debian-keyring.gpg --keyring /usr/share/keyrings/debian-maintainers.gpg --keyring /usr/share/keyrings/debian-nonupload.gpg --keyring /usr/share/keyrings/debian-role-keys.gpg --status-fd=2 --no-verbose --quiet --batch --output - --verify %s %f"
+
+# absolutely ensure that encrypted messages are readable by me (this
+# is probably unnecessary with NeoMutt thanks to pgp_encrypt_self above)
 set pgp_encrypt_only_command="/usr/lib/mutt/pgpewrap gpg --use-agent --batch --quiet --no-verbose --output - --encrypt --textmode --armor --always-trust --encrypt-to 0x0F56D0553B6D411B -- -r %r -- %f"
 set pgp_encrypt_sign_command="/usr/lib/mutt/pgpewrap gpg --use-agent --batch --quiet --no-verbose --textmode --output - --encrypt --sign %?a?-u %a? --armor --always-trust --encrypt-to 0x0F56D0553B6D411B -- -r %r -- %f"
-set pgp_import_command="gpg --use-agent --no-verbose --import %f"
-set pgp_export_command="gpg --use-agent --no-verbose --export --armor %r"
-set pgp_verify_key_command="gpg --use-agent --verbose --batch --fingerprint --check-sigs %r"
-set pgp_list_pubring_command="gpg --use-agent --no-verbose --batch --quiet --with-colons --list-keys %r"
-set pgp_list_secring_command="gpg --use-agent --no-verbose --batch --quiet --with-colons --list-secret-keys %r"
-set pgp_good_sign="^gpg: Good signature from"
 
 # --- message headers
 

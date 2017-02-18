@@ -11,6 +11,7 @@ use warnings;
 use lib "$ENV{HOME}/lib/perl5";
 no warnings "experimental::smartmatch";
 
+use Dpkg::Version;
 use Term::UI;
 use ShellSequence;
 use ScriptStatus;
@@ -28,9 +29,19 @@ my $host = hostname;
 
 # ---- config
 
-our @gcrypt_repos = qw/priv.git annex.git rt.git/;
 our @src_exceptions = qw/hscripts/;
-our $git = "/home/git";
+our $git = "/srv/git/repositories";
+
+# since I am now using exclusively gcrypt's rsync mode, I do not need
+# to detect whether a repo is a gcrypt repo before attempting to back
+# it up.  Note that git-remote-gcrypt has a --check option for doing
+# this, though
+our $gcrypt = "/srv/gcrypt";
+
+# annexes that should be inited on the backup drive, and synced with
+# the corresponding annex in $HOME.  This list is manually maintained
+# because I do not want to run `git annex init` en masse
+my @annexes = qw/annex.git wikiannex.git dionysus.git/;
 
 # ---- prep
 
@@ -72,11 +83,13 @@ $seq->add_should_zero("ls tmp");
 $seq->add_should_zero("ssh athena ls tmp");
 $seq->add_should_zero("ssh athena ls local/files/tmp");
 $seq->add_should_zero("ls lib/athena/tmp");
+$seq->add_should_succeed("src-register-all");
 $seq->run();
 
 status "cleaning up ~/src";
-# we retain orig tarballs
+clean_orig_tars();
 unlink glob "src/*.dsc";
+unlink glob "src/*.diff.gz";
 unlink glob "src/*.upload";
 unlink glob "src/*.inmulti";
 unlink glob "src/*.changes";
@@ -104,7 +117,7 @@ while (42) {
 
 # ---- standard backup procedure
 
-$seq->add_should_zero("mr -ms misstowed --delete-unmodified");
+# run a restow to catch if we need to run `mr adopt`
 $seq->add_should_succeed("mr -ms restow");
 $seq->add_should_succeed("mr -ms autoci");
 # `mr -ms isclean` checks for stuff to be checked in ...
@@ -130,20 +143,26 @@ if ( defined $loc ) {
     }
 
     # ---- athena repos
-    my $athena_repos = capture {
-        system "ssh athena 'for d in $git/*; do echo \$d; done'";
+    my $athena_git_repos = capture {
+        system "ssh athena 'for d in $git/*.git $git/*/*.git; do echo \$d; done'";
     };
-    my @athena_repos = split /^/, $athena_repos;
-    @athena_repos = apply { s|$git/|| } @athena_repos;
-    foreach my $repo ( @athena_repos ) {
+    my $athena_gcrypt_repos = capture {
+        system "ssh athena 'for d in $gcrypt/*; do echo \$d; done'";
+    };
+    my @athena_git_repos = split /^/, $athena_git_repos;
+    @athena_git_repos = apply { s|$git/|| } @athena_git_repos;
+    my @athena_gcrypt_repos = split /^/, $athena_gcrypt_repos;
+    @athena_gcrypt_repos = apply { s|$gcrypt/|| } @athena_gcrypt_repos;
+
+    foreach my $repo ( @athena_git_repos ) {
         $repo =~ s/\n//g;
-        # TODO detect gcrypt repo down in backup_repo function (only
-        # need to detect on clone, not update) -- see git-remote-gcrypt manpage for how to do this
-        if ( $repo ~~ @gcrypt_repos ) {
-            backup_repo("gcrypt::git\@spwhitton.name:$repo", "athena");
-        } else {
-            backup_repo("git\@spwhitton.name:$repo", "athena");
-        }
+
+        backup_repo("git\@spwhitton.name:$repo", "athena");
+    }
+
+    foreach my $repo ( @athena_gcrypt_repos ) {
+        $repo =~ s/\n//g;
+        backup_repo("gcrypt::rsync://athena:/srv/git/$repo", "athena_gcrypt");
     }
 
     # ---- misc. repos
@@ -153,6 +172,7 @@ if ( defined $loc ) {
     backup_repo("https://anonscm.debian.org/git/pkg-emacsen/wiki.git", "alioth", "pkg-emacsen");
     backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/dh-elpa.git", "alioth");
     backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/dh-make-elpa.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/yasnippet.git", "alioth");
     backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/ebib.git", "alioth");
     backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/emacs-async.git", "alioth");
     backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/emacs-buttercup.git", "alioth");
@@ -181,6 +201,18 @@ if ( defined $loc ) {
     backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/zenburn-emacs.git", "alioth");
     backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/aggressive-indent-mode.git", "alioth");
     backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/ert-async-el.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/git-annex-el.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/debpaste-el.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/magit-annex.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/xml-rpc-el.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/wc-mode.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/deft.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/key-chord-el.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/paredit-everywhere.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/visual-regexp-el.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/pointback.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/emacs-openwith.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/emacs-world-time-mode.git", "alioth");
 
     backup_repo("https://anonscm.debian.org/git/pkg-mozext/classic-theme-restorer.git", "alioth");
     backup_repo("https://anonscm.debian.org/git/pkg-mozext/keysnail.git", "alioth");
@@ -195,6 +227,10 @@ if ( defined $loc ) {
 # system "sudo umount $loc";
 
 # ---- remote system maintenance
+
+# TODO put a flag file on athena so this only happens once per week
+# or, better, just rework this so I ssh to athena and run sysmaint
+# there
 
 status "info: you can unmount & eject $loc";
 exit unless $term->ask_yn(
@@ -237,6 +273,34 @@ $seq->run();
 
 # ---- subroutines
 
+sub clean_orig_tars {
+    my $origs = {};
+    foreach my $f ( glob "src/*.orig.tar.*" ) {
+        $f =~ m/src\/([^_]*)_/;
+        push @{$origs->{"$1"}}, $f;
+    }
+    sub orig_ver {
+        $a =~ m/src\/[^_]*_([^_]*).orig/;
+        my $ver_a = Dpkg::Version->new("$1");
+        $b =~ m/src\/[^_]*_([^_]*).orig/;
+        my $ver_b = Dpkg::Version->new("$1");
+        $a cmp $b;
+    }
+    foreach my $pkg (keys %$origs) {
+        my @origs = sort orig_ver @{$origs->{$pkg}};
+        if ( -d "src/$pkg/.git" ) {
+            if ( scalar @origs > 2 ) {
+                @origs = splice @origs, 0, -2;
+            } else {
+                @origs = ();
+            }
+        }
+        foreach my $orig ( @origs ) {
+            unlink $orig;
+        }
+    }
+}
+
 sub find_dirty_src {
     foreach my $f ( glob "src/*" ) {
         my $short = basename($f);
@@ -246,16 +310,9 @@ sub find_dirty_src {
                  # also permit gbp orig tarballs
                  || ($f =~ /orig\.gbp\.tar/)
                  || $short ~~ @src_exceptions
-                 || (-d "$f/.git"
-                     && ((fgrep { /^\[$short\]$/ } "src/.mrconfig")
-                         || (fgrep { /^\[$f\]$/ } ".mrconfig")))) {
-            if (-d "$f/.git") {
-                local $CWD = $f;
-                system "mr register >/dev/null";
-                print "$f\n" if ($? >> 8 != 0);
-            } else {
-                print "$f\n";
-            }
+                 || -d "$f/.git" || -d "$f/.hg" # handled by src-register-all
+               ) {
+            print "$f\n";
         }
     }
 }
@@ -264,18 +321,23 @@ sub backup_repo {
     my ( $long, $dest, $rename ) = @_;
     my $short;
 
-    # clear out the command sequencer
+    # flush the command sequencer
     $seq->run();
     # third param is optional: do we need to rename it because
     # remote's name is too generic (e.g. 'wiki')?
     if ( defined $rename ) {
         $short = $rename;
     } else {
-        ( undef, $short ) = split /:([^:]+)$/, $long;
+        if ( $long =~ m/^http/ ) {
+            ( undef, $short ) = split /\/([^\/]+)$/, $long;
+        } else {
+            ( undef, $short ) = split /:([^:]+)$/, $long;
+        }
+        $short =~ s/\/srv\/git\///;
     }
 
-    $short = basename $short;    # just in case
     $short = "$short.git" unless $short =~ /\.git$/;
+    my $vshort = basename $short;
     $dest = "$loc/gitbk/$dest";
     my $dir = "$dest/$short";
     status "backup source: $long";
@@ -283,21 +345,23 @@ sub backup_repo {
 
     # first we have to determine whether it's an annex, as that will
     # affect the commands we run both to clone and to update
-    # TODO generalise this to work for non-athena annexes
+    # TODO determine this with a script?
     my $annex = 0;
-    if ( $dest eq "$loc/gitbk/athena" ) {
-        ( undef, undef, my $exit ) = capture {
-            system "ssh athena ls $git/$short/annex";
-        };
-        $annex = $exit >> 8 == 0;
+    if ( $dest eq "$loc/gitbk/athena" && $vshort ~~ @annexes ) {
+        $annex = 1;
     }
 
     if ( -e $dir ) {            # repo already backed up to this drive
         local $CWD = $dir;
-        if ( -d "annex" ) {
+        # TODO second disjunct in to allow for non-bare repos on
+        # backup drive, e.g. gitbk/athena/annex on m3.  At present,
+        # gitbk/athena/annex.git is a symlink to gitbk/athena/annex.
+        # We should be able to handle this without the symlink, in
+        # this script
+        if ( -d "annex" || -d ".git/annex" ) {
             system "git config annex.diskreserve '2GB'";
             # TODO ask user before pairing since it's a guess
-            if ( my $host_repo = find_host_annex($short) ) {
+            if ( my $host_repo = find_host_annex($vshort) ) {
                 status "pairing $short with $host_repo";
                 local $CWD = $host_repo;
                 system "git remote add $short_drive_name $dir 2>/dev/null" || 1;
@@ -314,6 +378,8 @@ sub backup_repo {
                                                 );
             }
         } else {
+            # TODO verify origin remote is what we expect, or error
+            # out: user probably needs to update backup drive layout
             $seq->add_should_succeed("git fetch origin '+refs/heads/*:refs/heads/*' --tags --no-prune");
             $seq->run();
         }
@@ -333,7 +399,7 @@ sub backup_repo {
                 system "git annex wanted . standard";
                 system "git annex group . incrementalbackup";
                 # TODO ask user before pairing since it's a guess
-                if ( my $host_repo = find_host_annex($short) ) {
+                if ( my $host_repo = find_host_annex($vshort) ) {
                     status "pairing $short with $host_repo";
                     local $CWD = $host_repo;
                     system "git remote add $short_drive_name $dir 2>/dev/null" || 1;
@@ -371,7 +437,9 @@ sub backup_repo {
         # git-gc will never remove dangling commits mentioned in any
         # reflog *unless* they are unreachable in the branch the
         # reflog logs and are older than this config variable
-        system "git config gc.reflogExpireUnreachable never"
+        system "git config gc.reflogExpireUnreachable never";
+        # avoid backing up broken commits
+        system "git config fetch.fsckObjects true";
     }
 }
 

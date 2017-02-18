@@ -1,8 +1,10 @@
 # -*- mode: conf -*-
 
+[DEFAULT]
+
 # --- global settings
 
-[DEFAULT]
+# custom command for git
 git_gc = git gc "$@"
 
 # avoid hangs due to SSH connection sharing
@@ -13,18 +15,14 @@ git_sync = :
 git_rebase = :
 git_autoci = :
 
-# avoid en masse merge commits
-git_update = git remote update; git pull --ff-only "$@"
-
 # avoid pushing non-matching branches, while trying to avoid errors
 # from trying to push to read-only remotes
-git_push = git push-all         # in ~/bin
+git_push = git push-all
 
-# `mr -ms status` checks for unpushed branches and files not checked
-# in, and stashes.  `mr -ms isclean` checks for files not checked in
-# alone
-# TODO improve this by looking at git_status in /usr/bin/mr?
-git_isclean =
+# find dirty working directories, i.e., uncommitted changes and
+# untracked files
+# TODO possibly improve this by looking at git_status in /usr/bin/mr
+git_isclean = 
     (
      # 1st line: check HEAD versus index
      # 2nd line: index versus working tree
@@ -36,34 +34,28 @@ git_isclean =
 
 # --- Experimental plugin for dgit repos
 
-# disabled until I fix it misdetecting ordinary git repos as dgit repos
-#include = [ -e ~/src/myrepos/lib/dgit ] && cat ~/src/myrepos/lib/dgit
+include = cat ~/src/dotfiles/lib/mr/dgit
 
-# my preferences that don't match myrepos conventions:
-dgit_update = dgit fetch ; git remote update
-dgit_push = git push-all
+# --- Sensible pulls
+
+# Redefine git_update to avoid an unconditional `git pull` which can
+# result in unwanted merge commits all over $HOME (this has to come
+# after we include the dgit lib, which also defines git_update)
+git_update = git pull-safe
 
 # --- Adam Spiers' plugin for managing dotfile symlinks with mr
 
 include =
     # stow is not available on Windows
-    if [ -e ~/src/dotfiles/lib/mr/stow \
+    if [ -e "$HOME/src/dotfiles/lib/mr/stow" \
          -a ! "$(perl -e 'print $^O')" = "msys" ]; then
-        cat ~/src/dotfiles/lib/mr/stow
+        cat "$HOME/src/dotfiles/lib/mr/stow"
     fi
-
-# some hooks to deal with the fact that I use a lot of programs that
-# mistreat symlinks to config files
-pre_unstow = mr misstowed --delete-unmodified >/dev/null
-pre_restow = mr misstowed --delete-unmodified >/dev/null
 
 # --- joeyh's code for specifying what machine we're on for repo skip
 # --- tests, plus my code for detecting Git-on-Windows
 
 lib =
-    fast() {
-        test "${MR_FAST}" = "true"
-    }
     win32() {
         test "$(perl -e 'print $^O')" = "msys"
     }
@@ -98,9 +90,9 @@ lib =
     mine() {
         workstation || on swhitton@athena
     }
-    tucson() {
-        on artemis shortgeese athena hephaestus iris
-    }
+    # tucson() {
+    #     on artemis shortgeese athena hephaestus iris
+    # }
     gcrypt() {
         which git-remote-gcrypt >/dev/null 2>/dev/null
     }
@@ -122,6 +114,7 @@ lib =
         (
             cd $HOME
             mkdir -p \
+                .ssh \
                 tmp \
                 src \
                 lib \
@@ -135,13 +128,15 @@ lib =
                 local/lib \
                 local/pub \
                 local/auth
-            touch local/big/.duplicity-ignore src/.mrconfig
+            # known_hosts needs to exist or zsh complains
+            touch local/big/.duplicity-ignore src/.mrconfig .ssh/known_hosts
+            chmod 700 local/auth
             # [ -L "src/build-area" ] || ln -s -T /tmp/debuild src/build-area
         )
     }
 # --- primary dotfiles repository
 
-[src/dotfiles]
+[$HOME/src/dotfiles]
 checkout = git clone https://git.spwhitton.name/dotfiles.git dotfiles
 stowable = true
 
@@ -170,56 +165,49 @@ rebase =
     fi
 
 fixups =
-    # we don't want git doing any automated merges of master, or other
-    # intermediate branches.  mr is configured not to do this (see
-    # redefinition of git_update at top of this file) but I often run
-    # git pull in this repo myself
+    # Use a rebasing workflow since I'm the only person who ever
+    # commits to this repo
     git config branch.master.rebase true
     git config branch.autosetuprebase always
-    # stow won't overwrite a real ~/.mrconfig with a symlink to the
-    # version in my dotfiles repository.  Cannot just delete .mrconfig
-    # before a stow, because then mr can't tell stow what to do.  So
-    # just do it with manual fixup and have stow ignore this file.
-    # Name is different to avoid mr trying to chain load it at any
-    # point.  Similarly for .stow-global-ignore
-    # TODO rm ~/.mrconfig using pre_stow?  But then running mr from within ~/src/dotfiles might go wrong..  Or boostrap script writes ~/.mrconfig including ~/src/dotfiles/home-mrconfig
-    if ! win32; then
+    #
+    if win32; then
+        ( cd ~/src/dotfiles/bin && cmd "/C win32setup.bat" )
+    else
+        # Manually symlink ~/.mrconfig so that we can always use mr
+        # even if dotfiles are unstowed.  Called 'home-mrconfig' to
+        # avoid any chainloading
         ln -sf $HOME/src/dotfiles/home-mrconfig $HOME/.mrconfig
+        #
+        # Ensure that ~/src/dotfiles/home-mrconfig not stowed
         ln -sf $HOME/src/dotfiles/.stow-global-ignore $HOME
+        #
         homedir_mkdirs
-        # set up auth info folder: the "|| true" is because if the
-        # folder is empty the final recursive chmod will fail
-        mkdir -p $HOME/local/auth && chmod 700 $HOME/local/auth && chmod -R 600 $HOME/local/auth/* 2>/dev/null || true
-        touch $HOME/local/big/.duplicity-ignore
-        touch $HOME/.ssh/known_hosts
-        chmod 600 $HOME/.msmtprc
-        # use absolute path because maybe we only just stowed so this
-        # shell doesn't have $PATH setup by .shenv
-        $HOME/bin/loadcron || true
-        $HOME/bin/loadsshkeys || true
-        $HOME/bin/mkcabalc
-    else                        # win32
-        cd ~/src/dotfiles/bin
-	cmd "/C win32setup.bat"
+        chmod -Rf 600 $HOME/.msmtprc $HOME/local/auth/* || true
+        #
+        $HOME/src/dotfiles/bin/loadcron || true
+        $HOME/src/dotfiles/bin/loadsshkeys || true
+        $HOME/src/dotfiles/bin/mkcabalc
     fi
-    # set up Emacs packages
-    # $HOME/.emacs.d/pkg/subtrees.sh
 
 # clean-ups so that initial stow will be successful
 pre_stow =
     homedir_mkdirs
     $HOME/src/dotfiles/bin/unskel
 
+# set up Emacs conf & libs
+post_stow = $HOME/src/dotfiles/bin/bytecompile-emacsd
+post_restow = $HOME/src/dotfiles/bin/bytecompile-emacsd
+
 # --- private dotfiles repositories
 
-[src/priv]
-checkout = git clone gcrypt::athenap:priv priv
+[$HOME/src/priv]
+checkout = git clone gcrypt::rsync://athena:/srv/gcrypt/priv.git priv
 stowable = true
 
 # this repository can't be checked out until we install
 # git-remote-gcrypt.  And thanks to gcrypt being slow, skip if I run
 # via fmr.
-skip = (! gcrypt) || (! workstation) || fast
+skip = (! gcrypt) || (! workstation)
 
 fixups =
         chmod 600 .passwddb.pet .s3ql/authinfo2 .gnupg/*.kbx .gnupg/private-keys-v1.d/*.key
@@ -237,7 +225,7 @@ pre_update = mr autoci
 pre_stow = homedir_mkdirs
 post_stow = load-trustdb
 
-[src/athpriv]
+[$HOME/src/athpriv]
 checkout = git clone athenap:athpriv athpriv
 stowable = true
 skip = ! mine
@@ -247,7 +235,7 @@ pre_stow = homedir_mkdirs
 
 # --- hosts configuration
 
-[src/propellor]
+[$HOME/src/propellor]
 # this has to be a full URL, as during a spin of a host, propellor
 # sets this as the remote in /usr/local/propellor and it must be
 # possible to pull from it without root having my .gitconfig checked
@@ -268,7 +256,8 @@ fixups =
     # check that the link isn't already in place before making the link
     # because otherwise we get an infinite loop of links that breaks propellor
     [ -L ~/.propellor ] || ln -sf ~/src/propellor ~/.propellor
-    git config propellor.spin-branch spw3conf
+    # disabled until spw3conf is merged into spwconf
+    # git config propellor.spin-branch spw3conf
     git config propellor.forbid-dirty-spin true
 
 # this could be more fine-grained
@@ -276,7 +265,7 @@ skip = ! mine
 
 # --- personal website source
 
-[src/wiki]
+[$HOME/src/wiki]
 checkout = git clone https://git.spwhitton.name/wiki
 skip = ! mine
 
@@ -286,21 +275,19 @@ skip = ! mine
 # configuration (override its update definition to avoid --content)
 # (and isclean defn can be generalised)
 
-[lib/annex]
-checkout = git clone gcrypt::athenap:annex
+[$HOME/lib/annex]
+checkout = git clone gcrypt::rsync://athena:/srv/gcrypt/annex.git annex
 post_checkout =
     cd annex
-    # have to ensure we have origin's git-annex branch before we
-    # delete origin remote
-    git checkout git-annex
-    git checkout master
-    git remote rm origin
     git annex init
-    git annex enableremote origin gitrepo=athenap:annex
-skip = (! workstation) || fast
+    git annex enableremote athena rsyncurl=athena:/srv/rsync/annex
+skip = (! workstation)
 
-update = git annex sync origin
-push = git annex sync --content origin
+update = git annex sync --no-content origin
+push =
+    git annex sync --no-content origin
+    git annex sync --content athena
+    git annex sync --no-content origin
 fixups =
     git config push.default matching
     git config remote.origin.gcrypt-publish-participants true
@@ -308,15 +295,13 @@ fixups =
     git config gcrypt.publish-participants true
     git config gcrypt.participants 0x0F56D0553B6D411B
     git config annex.startupscan false
-    git config annex.autocommit true # needed git ga sync
-    # set upstream so that mr can tell when I need to push
-    git branch -u origin/master master
-    git branch -u origin/git-annex git-annex
-sync = git annex sync origin
+    git config annex.autocommit true # needed for ga sync
+    git config remote.origin.annex-ignore true
+sync = git annex sync --no-content origin
 
 # --- personal website big files annex
 
-[lib/wikiannex]
+[$HOME/lib/wikiannex]
 checkout = git clone athena:wikiannex.git
 status = git annex status       # direct mode on athena, so status won't work
 post_checkout =
@@ -331,20 +316,20 @@ post_checkout =
         git remote add bkupsd /media/${USER}/bkupsd/git/athena/wikiannex.git
         git remote add m3 /media/${USER}/m3/git/athena/wikiannex.git
     fi
-update = git annex sync         # no pull in direct mode
+update = git annex sync --no-content         # no pull in direct mode
 push = git annex sync --content
 skip = ! mine
 
 # --- git annex for university stuff
 
-[lib/dionysus]
+[$HOME/lib/dionysus]
 checkout = git clone athenap:dionysus
 post_checkout =
     cd dionysus
     git annex init
     git annex direct
 status = git annex status
-update = git annex sync
+update = git annex sync --no-content
 push = git annex sync --content
 sync = sync-for-dionysus
 isclean = test -z "$(git annex status)" || (git annex status && exit 1)
@@ -358,16 +343,39 @@ fixups =
     git config annex.autocommit true # needed for ga sync
     git config remote.origin.annex-ignore true
 
-skip = ! tucson
+skip = ! workstation
+
+# --- git annex for podcasts
+
+[$HOME/lib/podcasts]
+checkout = git clone athenap:podcasts
+post_checkout =
+    cd podcasts
+    git annex init
+status = git annex status
+update = git annex --no-content sync
+push = git annex --no-content sync
+isclean = test -z "$(git annex status)" || (git annex status && exit 1)
+
+# origin remote is just for keeping a backup copy of metadata.  athena
+# remote, in $HOME on athena, contains a copy of content.  At present,
+# origin remote only updated by weekly coldbkup script
+fixups =
+    git config push.default matching
+    git config annex.startupscan false
+    git config annex.autocommit true # needed for ga sync
+    git config remote.origin.annex-ignore true
+
+skip = ! workstation
 
 # --- git annex for use with rtorrent
 
-[lib/rt]
-checkout = git clone gcrypt::athenap:rt
+[$HOME/lib/rt]
+checkout = git clone gcrypt::rsync://athena:/srv/gcrypt/rt.git rt
 post_checkout = cd rt && git annex init
 status = git annex status --fast
-update = git annex sync origin
-push = git annex sync origin
+update = git annex sync --no-content origin
+push = git annex sync --no-content origin
 autoci = (git annex add . && git commit -m "auto commit on $(hostname -s)") || true
 fixups =
     git config push.default matching
@@ -390,14 +398,12 @@ fixups =
         fi
     fi
 
-skip = (! workstation) || fast
+skip = (! workstation)
 
 # --- source code repositories registered to their own mr config file
 
-[src]
-
-# Chain load unless we invoked mr via fmr alias.
-chain = ! [ "${MR_FAST}" = "true" ]
+[$HOME/src]
+chain = true
 
 # Always skip, since this is a dummy repository entry in order to
 # chainload.
@@ -407,7 +413,7 @@ skip = ! [ "$MR_ACTION" = "stowable" ]
 # --- to the myrepos default so that git automatically pulls and
 # --- merges.  Skipped on non-local hosts
 
-[doc]
+[$HOME/doc]
 checkout = git clone athenap:doc doc
 update = git pull "$@"
 skip = ! (mine || on spwhitton@shortgeese)
@@ -416,26 +422,26 @@ skip = ! (mine || on spwhitton@shortgeese)
 fixups = git-utime
 
 # before pulling, automatically commit in the same way that my cron job does
-pre_update = (! win32) && doccheckin
+pre_update = (! win32) && save-org-buffers && doccheckin
 # ... and let me do it manually
 autoci = doccheckin || true
 
 # quick syncs
-sync = sync-docs
+sync = mr update && mr push
 
 # --- static websites on web host boxes
 
-[public_html]
+[$HOME/public_html]
 clone = git clone https://git.spwhitton.name/sageweb public_html
 skip = ! on spwhitton@sage
 
-[html]
+[$HOME/html]
 clone = git clone https://git.spwhitton.name/sdfweb html
 skip = ! on faeroes             # TODO just check if host is *.sdf.org
 
 # --- my offline e-mail (& machine's postfix queue)
 
-[.fmail]
+[$HOME/.fmail]
 sync = movemail
 update = mbsync --quiet fastmail
 push = movemail
@@ -444,5 +450,5 @@ push = movemail
 # didn't run one of the sync or update commands.
 skip = ! [ -d "$HOME/.fmail" ] || ! ( [ "$MR_ACTION" = "stowable" ] || [ "$MR_ACTION" = "push" ] || [ "$MR_ACTION" = "sync" ] || [ "$MR_ACTION" = "update" ] )
 
-# this is slower than other MR_FAST repos
+# this is slower than other repos for which sync is defined
 order = 12

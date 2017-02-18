@@ -3,6 +3,9 @@
 # 1pm MST
 0 20 * * * r2e run
 @daily chronic athena-publish-org-docs
+# Run `importfeed --relaxed` on a machine that is always turned on.
+# Audio files downloaded on workstation
+@daily cd /home/swhitton/lib/podcasts && chronic xargs git annex importfeed --relaxed < feeds
 @reboot emacs --daemon
 @reboot ii
 @reboot mount /home/swhitton/lib/fm

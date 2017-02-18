@@ -19,10 +19,10 @@
 
 # Prerequisites:
 
-# The Git::Wrapper, Config::GitLike, and List::MoreUtils perl
-# libraries.  On a Debian system,
+# The Git::Wrapper, Array::Utils, Config::GitLike, and List::MoreUtils
+# perl libraries.  On a Debian system,
 #     apt-get install libgit-wrapper-perl libconfig-gitlike-perl \
-#         liblist-moreutils-perl
+#         liblist-moreutils-perl libarray-utils-perl
 
 # Description:
 
@@ -44,6 +44,7 @@ use strict;
 use warnings;
 no warnings "experimental::smartmatch";
 
+use Array::Utils qw{ array_minus };
 use Git::Wrapper;
 use Config::GitLike;
 use List::MoreUtils qw{ uniq apply };
@@ -80,7 +81,43 @@ foreach my $branch ( @branches ) {
 }
 
 foreach my $remote ( keys %pushes ) {
+    # TODO if $remote eq $pushDefault, consider s/follow-// below (and
+    # pushRemote of master branch, if that exists?)
+    # I almost certainly want all tags on that remote (e.g. an alioth repo)
     my @branches = @{ $pushes{$remote} };
     system "git push --follow-tags $remote @branches";
     exit 1 if ( $? != 0 );
+}
+
+# Now find any tags that have not been pushed to any remote.
+# --follow-tags should avoid this, but sometimes tags fall through the
+# gaps.  It will also catch unannotated tags, since --follow-tags
+# ignores those, and I probably don't want them
+
+# TODO if this turns out to be slow, split out into a script run
+# weekly as part of ~/bin/sysmaint
+
+# TODO definitely split out because should be run as a safety catch by
+# src-unregistered
+
+my @tags = grep { !(m|archive/debian/\S+|) } $git->tag;
+my @remotes = $git->remote;
+my @pushed_tags;
+
+foreach my $remote ( @remotes ) {
+    unless ( $remote eq "dgit" ) {
+        my @this_remote_tags = apply { s|\^\{\}$||; s|[a-f0-9]+\trefs/tags/|| }
+          $git->ls_remote( { tags => 1 }, $remote );
+        push @pushed_tags, @this_remote_tags;
+    }
+}
+
+@pushed_tags = uniq @pushed_tags;
+my @unpushed_tags = array_minus ( @tags, @pushed_tags );
+
+if ( scalar @unpushed_tags > 0 ) {
+    print "E: the following tags have not been pushed to any remote:\n";
+    print join(", ", @unpushed_tags);
+    print "\n";
+    exit 1;
 }

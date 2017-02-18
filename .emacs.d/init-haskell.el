@@ -12,6 +12,8 @@
 
 (require 'use-package)
 (require 'bind-key)
+
+;; TODO polish, and package for Debian
 (require 'haskell-tab-indent)
 
 ;;; newer GHC (cannot add this to PATH in .shenv because xmonad needs

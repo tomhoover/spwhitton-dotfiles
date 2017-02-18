@@ -61,14 +61,9 @@ alias ga="git annex"
 alias gs="git status"
 # better: pa fax | grep
 # alias pg="ps auxxxxxxxxxxxxxxxxxxx | grep"
-alias fmr="MR_FAST=true mr"
 alias d="emacsclient -c -n -e '(dired \".\")'"
 alias mg=$EDITOR
 alias mrs="mr -m status"
-
-alias fixmpd="sudo invoke-rc.d mpd restart; pkill sonata"
-alias radio4="mplayer \"http://wmlive-acl.bbc.co.uk/wms/bbc_ami/radio4/radio4_bb_live_eq1_sl0?BBC-UID=044be39365f98aaa88a55ca7f1aa8fc5b3569ae000708114d4dfd43698a07e8a&amp;SSO2-UID=\""
-alias ws="mplayer mms://a243.l3944038972.c39440.g.lm.akamaistream.net/D/243/39440/v0001/reflector:38972"
 
 alias screen="screen -U" # enable UTF-8
 alias tmux="tmux"
@@ -98,7 +93,42 @@ alias wnpomodoro="mplayer ~/lib/annex/doc/sounds/*pomodoro.mp3"
 alias ghc8-sbuild="sbuild --extra-repository='deb http://httpredir.debian.org/debian experimental main' --build-dep-resolver=aspcud --add-depends=\"ghc (>= 8)\""
 alias dq="dgit --quilt=gbp"
 alias qsbuild="sbuild --no-apt-update --no-apt-distupgrade --no-run-piuparts --no-run-lintian"
-alias qqsbuild="sbuild --no-apt-update --no-apt-distupgrade --no-run-piuparts --no-run-lintian --no-run-autopkgtest"
+alias qqsbuild="DEB_BUILD_OPTIONS=nocheck sbuild --no-apt-update --no-apt-distupgrade --no-run-piuparts --no-run-lintian --no-run-autopkgtest"
+alias b="bts --mbox show"
+alias test-reproducible="reprotest auto . -- schroot sid"
+
+# This alias is more reliable than calling `server-start' in my Emacs
+# init file.  Previously, I was seeing Emacs fail to start with "Error
+# reading from stdin."  See <http://emacs.stackexchange.com/a/12789>
+
+# `switch-to-buffer' means that there is some chance the new window
+# will show a buffer I want to see (tip from the frames-only-mode
+# README)
+alias emacscd="emacsclient -c -a '' -n -e '(switch-to-buffer nil)'"
+
+dak-rdeps () {
+    ssh mirror.ftp-master.debian.org "dak rm -Rn $@"
+}
+
+build-for-upload () {
+    dgit=""
+    sbuild=""
+    for key in "$@"; do
+        case $key in
+            --gbp|--dpm|--quilt=*)
+                dgit="$dgit $key"
+                shift
+                ;;
+            *)
+                sbuild="$sbuild $key"
+                shift
+                ;;
+        esac
+    done
+    eval dgit $dgit sbuild $sbuild \
+         --no-run-lintian --run-piuparts --run-autopkgtest
+    lintian
+}
 
 # based on gregor hermann's dh-make-perl-dev he posted on bugs.d.o
 dh-make-elpa-dev () {
@@ -136,6 +166,18 @@ clone () {
 if ! [ "$TMUX" = "" ]; then
     alias fixsshagent="eval $(tmux show-environment | grep '^SSH_AUTH_SOCK')"
 fi
+
+# append a stream to mpd's playlist, and play it
+mpc_play_stream () {
+    mpc stop
+    mpc add $1
+    mpc play $(mpc playlist | wc -l)
+}
+
+# BBC radio stream URIs:
+# http://www.suppertime.co.uk/blogmywiki/2015/04/updated-list-of-bbc-network-radio-urls/
+alias radio4="mpc_play_stream http://bbcmedia.ic.llnwd.net/stream/bbcmedia_radio4fm_mf_p"
+alias worldservice="mpc_play_stream http://bbcwssc.ic.llnwd.net/stream/bbcwssc_mp1_ws-eieuk"
 
 # --- load zsh features
 

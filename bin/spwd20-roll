@@ -1,0 +1,113 @@
+#!/usr/bin/env runhaskell
+
+import Text.Regex.TDFA
+import Data.List.Split
+import qualified System.Random as Random
+-- import Control.Monad(when)
+import System.Environment
+
+-- *** functions for dice rolling ***
+
+parseRolls :: String -> [(Int, Bool)]
+parseRolls x
+  -- handle special case where we just have a number
+  | x =~ "^[0-9]+$"
+    = (read x :: Int, True):[]
+  | otherwise
+    = parseRollTerms $
+      if head x == '-' then l else "+":l
+    where l = split (oneOf "+-") . concat . words $ x
+
+parseRollTerms :: [String] -> [(Int, Bool)]
+parseRollTerms [] = []
+parseRollTerms [x] = [(read x, False)]
+
+parseRollTerms (x:y:xs)
+
+  -- failed attempt to handle special case
+  -- | y =~ "^[0-9]+$"
+  --   = (getSign x * read y :: Int, True):parseRollTerms xs
+
+  | y =~ "^[0-9]*d[0-9]+$"
+    = (take (read' a) $ repeat (getSign x * read b :: Int, True)) ++ parseRollTerms xs
+
+  | otherwise
+    = (getSign x * read y, False):parseRollTerms xs
+
+  where getSign "-" = -1
+        getSign _ = 1
+        [a, b] = splitOn "d" y
+        read' "" = 1
+        read' k = read k :: Int
+
+rolls :: (Random.RandomGen g) => g -> [(Int, Bool)] -> [Int]
+rolls _ [] = []
+rolls g (x:xs) = if b
+                 then let (r,g') = Random.randomR (range a) g in
+                 r:(rolls g' xs)
+                 else a:(rolls g xs)
+  where a = fst x
+        b = snd x
+        range n = if n > 0 then (1,n) else (n,-1)
+
+doRoll :: (Random.RandomGen g) => g -> String -> String
+doRoll g s = (show $ sum r) ++ " = " ++ sumToStr r
+  where r = rolls g $ parseRolls $ s
+
+sumToStr :: (Show a, Num a, Ord a) => [a] -> String
+sumToStr [] = ""
+sumToStr xs = drop 3 $
+              foldr (\x a -> " "
+                             ++ (if x > 0 then "+" else "-")
+                             ++ " "
+                             ++ (show . abs) x
+                             ++ a) "" xs
+
+-- *** functions for initiative tracking ***
+
+-- rather skeletal
+
+-- getInit :: IO [String]
+-- getInit = sequence $
+--   [getLine]
+
+-- printInit :: [(String, Int, Int)] -> String
+-- printInit (x:xs) = "init table"
+
+-- parseInit :: [String] -> [(String, Int, Int)]
+-- parseInit (x:y:z:xs) = [("Andinicu", 2, 18)]
+
+-- *** input, output, execution ***
+
+-- disabled for non-interactive usage
+
+-- doInputLoop :: (Random.RandomGen g) => g -> IO ()
+-- doInputLoop g = do
+--   putStr ">>> "
+--   input <- getLine
+--   handleInput g input
+--   g' <- Random.newStdGen
+--   doInputLoop g'
+
+-- handleInput :: (Random.RandomGen g) => g -> String -> IO ()
+-- handleInput g input
+
+--   | input =~ "^([0-9]*[d]{0,1}[0-9]+[+-])*[0-9]*[d]{0,1}[0-9]+$"
+--     = putStrLn $ doRoll g input
+
+--   | input == "init" = do
+--     init <- getInit
+--     putStrLn $ printInit $ parseInit init
+
+--   | otherwise = putStrLn "unknown command"
+
+-- old main for interactive usage
+
+-- main = do
+--   g <- Random.getStdGen
+--   doInputLoop g
+
+main = do
+  g <- Random.getStdGen
+  args <- getArgs
+  putStrLn $ doRoll g (unwords args)

@@ -1,0 +1,11 @@
+{
+    "-hooks": [
+        "check-debs",
+        "allowed-distribution"
+    ],
+    "allowed_distributions": ".*",
+    "fqdn": "mentors.debian.net",
+    "incoming": "/upload",
+    "meta": "debian",
+    "method": "http"
+}

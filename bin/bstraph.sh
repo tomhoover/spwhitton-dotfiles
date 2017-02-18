@@ -1,53 +1,74 @@
 #!/bin/sh
+
 . $HOME/src/dotfiles/.shenv
 
-# Bootstrap home directory after dotfiles repository cloned.  This
-# script should be POSIX.
+# Bootstrap home directory after dotfiles repository successfully
+# cloned (see ~/bin/insinuate-dotfiles).  This script should
+# definitely be POSIX sh
 
 set -e
-STOWURL="https://ftp.gnu.org/gnu/stow/stow-2.2.0.tar.gz"
-cd $HOME
+cd "$HOME"
+mkdir -p "$HOME/local/src" "$HOME/local/bin"
 
-# seems to be needed for a find command run at some point; not sure
-# where but I see the output of find failing to find this dir
-mkdir -p $HOME/local/src
+# use http and checksum the tarball, rather than https:// which often
+# fails on Debian hosts due to old ca-certificates
+STOWURL="http://ftp.gnu.org/gnu/stow/stow-2.2.0.tar.gz"
+STOWSHA256SUM="8b89d79939cf9ae87d2f223bb36a3b2d0c66775b62aeb9953c6d33dab40d3c2b  stow-2.2.0.tar.gz"
+
+# ---- Handle special case hosts
 
 # On athena, clone URLs are different as they come from /home/git (and
 # pushInsteadOf won't work because that can't append the required
 # `.git').  So we must change to the athena branch now in order to get
 # a fixed .mrconfig.
-if [ "$(hostname)" = "athena" ]; then
+if [ "$(hostname -f)" = "athena.silentflame.com" ]; then
     cd $HOME/src/dotfiles
     git checkout athena
     cd $HOME
 fi
 
-# 1. install our two small helper scripts
+# ---- Ensure we have both mr(1) and stow(1) in our PATH
 
 if ! which stow >/dev/null; then
-    cd $HOME/local/src
-    rm -rf stow-*
-    curl -O $STOWURL
-    tar xfz stow-*
-    cd $(basename $STOWURL | sed -e 's/.tar.gz//')
+    (
+        cd $HOME/local/src
+        rm -rf stow-*
+        curl -O $STOWURL
+        stowsha256sum=$(sha256sum stow-*.tar.gz)
+        if ! [ "$STOWSHA256SUM" = "$stowsha256sum" ]; then
+            echo >&2 "bstraph.sh: ERROR: stow tarball checksum mismatch"
+            rm -rf stow-*
+            exit 1
+        fi
 
-    # we need to use gmake on BSD
-    if which gmake; then
-        ./configure --prefix=$HOME/local && gmake install
-    else
-        ./configure --prefix=$HOME/local && make install
-    fi
+        tar xfz stow-*.tar.gz
+        cd $(basename $STOWURL | sed -e 's/.tar.gz//')
 
-    cd $HOME
+        # we need to use gmake on BSD
+        if which gmake; then
+            ./configure --prefix=$HOME/local && gmake install
+        else
+            ./configure --prefix=$HOME/local && make install
+        fi
+    )
 fi
-if ! which mr >/dev/null; then
+
+# TODO check version of mr available on system, rather than
+# unconditionally using the one in src/dotfiles/bin/
+#if ! which mr >/dev/null; then
     mkdir -p $HOME/local/bin
     cp $HOME/src/dotfiles/bin/mr $HOME/local/bin
-fi
+#fi
 
-# 2. check those installs
+# ---- Verify mr(1) and stow(1) in our PATH
 
+# .shenv adds ~/local/bin to PATH if that dir exists, so we have to
+# call it again now we've created it
+. $HOME/src/dotfiles/.shenv
 hash -r
+
+# TODO also check version of stow is new enough
+
 if ! which stow >/dev/null; then
     echo "still can't find stow :(" >&2
     exit 1
@@ -57,22 +78,17 @@ if ! which mr >/dev/null; then
     exit 1
 fi
 
-# 3. use those scripts to do the setup
+# ---- Perform the bootstrap
 
-ln -sf $HOME/src/dotfiles/home-mrconfig $HOME/.mrconfig
+mr -t --config src/dotfiles/home-mrconfig -d $HOME/src/dotfiles fixups
+mr -d src/dotfiles stow
 
-# remove extra stuff that unskel doesn't
-rm -f $HOME/.cabal/config
+echo "I: dotfiles bootstrap successful"
 
-# unskel can't catch these for root cos they're slightly different on
-# Debian Stable
-if [ "$USER" = "root" ]; then
-    rm -f $HOME/.bashrc $HOME/.profile
+# ---- Check if there is a host-specific branch
+
+if ! [ "$(hostname)" = "master" ] \
+        && ( cd "$HOME/src/dotfiles" && git branch -a | grep origin/$(hostname) ); then
+    echo "I: there is a host-specific dotfiles branch for this host"
+    echo "I: consider checking it out"
 fi
-
-cd $HOME/src/dotfiles
-mr stow
-mr fixups
-cd $HOME
-
-echo "Dotfiles should be stowed into $HOME.  You should check out the host-specific branch and restow, if it exists, and then run 'mr --force co' to get all my other repos."

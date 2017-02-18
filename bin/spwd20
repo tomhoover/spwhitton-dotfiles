@@ -1,5 +1,10 @@
 #!/usr/bin/env python
 
+# this makes few enough assumptions to work for all d20 games except
+# possibly 5e -- one of the core rulebooks says somewhere that
+# monsters of the same type roll for initiative jointly and all take
+# their turn together
+
 import re
 import readline
 import subprocess

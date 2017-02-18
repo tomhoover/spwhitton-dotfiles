@@ -6,6 +6,10 @@
 
 ;;;; ---- packages ----
 
+;;; this config uses `f-glob'
+
+(use-package f)
+
 ;;; with the new exporter in Org version 8, must explicitly require
 ;;; the exporters I want to use
 
@@ -16,7 +20,7 @@
 
 ;;; checklist helper functions including automatic resetting
 
-(use-package org-checklist)
+(use-package org-checklist :load-path "/usr/share/org-mode/lisp")
 
 ;;; inline tasks
 
@@ -24,11 +28,16 @@
 
 ;;; links to mairix messages by message-id in Org
 
-(use-package org-mairix-el
-  :bind ("C-c m" . org-mairix-el-insert-link)
-  :commands (org-mairix-el-insert-link org-mairix-el-link org-mairix-el-open))
+;;(use-package org-mairix-el
+;;  :bind ("C-c m" . org-mairix-el-insert-link)
+;;  :commands (org-mairix-el-insert-link org-mairix-el-link org-mairix-el-open))
 
 ;;; highlight current sentence
+
+;; This is in ~/.emacs.d/site-lisp because its copyright status is a
+;; bit murky.  The code comes from the Emacs Wiki, but was the
+;; "everything on Emacs Wiki is GPL" notice present when the code was
+;; first posted?  TODO find out, and package for Debian if possible
 
 (use-package hl-sentence
   :commands hl-sentence-mode
@@ -161,13 +170,14 @@
 
  org-remove-highlights-with-change nil
  org-read-date-prefer-future t
- org-file-apps (quote ((auto-mode . emacs)
-                       ("\\.mm\\'" . system)
-                       ("\\.x?html?\\'" . system)
-                       ("\\.pdf\\'" . system)
-                       ("\\.jpg\\'" . "/usr/bin/feh %s")
-                       ("\\.png\\'" . "/usr/bin/feh %s")
-                       ("\\.gif\\'" . "/usr/bin/feh %s")))
+ ;; TODO needs updating for Org-mode version 9 (see changelog)
+ ;; org-file-apps (quote ((auto-mode . emacs)
+ ;;                       ("\\.mm\\'" . system)
+ ;;                       ("\\.x?html?\\'" . system)
+ ;;                       ("\\.pdf\\'" . system)
+ ;;                       ("\\.jpg\\'" . "/usr/bin/feh %s")
+ ;;                       ("\\.png\\'" . "/usr/bin/feh %s")
+ ;;                       ("\\.gif\\'" . "/usr/bin/feh %s")))
  org-list-demote-modify-bullet (quote (("-" . "+")
                                        ("+" . "*")
                                        ("*" . "-")
@@ -188,7 +198,7 @@
  org-tags-match-list-sublevels t
  org-agenda-persistent-filter t
  org-agenda-skip-deadline-prewarning-if-scheduled 3
- org-agenda-window-setup 'current-window
+ org-agenda-window-setup 'other-window
  org-agenda-entry-text-maxlines 3
 
  org-todo-keywords
@@ -287,12 +297,12 @@
   (unless
       (ignore-errors (string= "~/doc/" (abbreviate-file-name (projectile-project-root))))
     (projectile-switch-project-by-name "~/doc")))
-(advice-add 'org-agenda :before #'org-agenda--switch-projectile-project)
+;; (advice-add 'org-agenda :before #'org-agenda--switch-projectile-project)
 
 (setq
  org-agenda-custom-commands
  '(("a" "Primary agenda view"
-    ((agenda "day" ((org-agenda-ndays 1)
+    ((agenda "day" ((org-agenda-span 'day)
                     (org-agenda-overriding-header
                      "Tasks, appointments and waiting tasks to be chased today")
                     (org-agenda-include-deadlines nil)
@@ -302,14 +312,14 @@
      (org-agenda-start-with-follow-mode nil))
     ("/var/www/spw/org/agenda.html" "/tmp/dionysus/Agenda/Today's agenda.html"))
    ("A" "Daily planning view"
-    ((agenda "day" ((org-agenda-ndays 1)
+    ((agenda "day" ((org-agenda-span 'day)
                     (org-agenda-time-grid nil)
                     (org-agenda-overriding-header "Plan for today & upcoming deadlines")))
      (todo "TODO|NEXT" ((org-agenda-todo-ignore-scheduled t)
                         (org-agenda-todo-ignore-deadlines 'far)
                         (org-agenda-overriding-header "Unscheduled standalone tasks & project next actions")
                         (org-agenda-skip-function 'spw/skip-non-actionable)))
-     (agenda "" ((org-agenda-ndays 3)
+     (agenda "" ((org-agenda-span 3)
                  (org-agenda-start-day "+1d")
                  (org-agenda-time-grid nil)
                  (org-agenda-repeating-timestamp-show-all t)
@@ -350,7 +360,7 @@
              'spw/skip-incomplete-projects-and-all-subprojects)))))
 
    ("d" "Six-month diary" agenda ""
-    ((org-agenda-ndays 180)
+    ((org-agenda-span 180)
      ;; (org-agenda-start-on-weekday 1)
      (org-agenda-time-grid nil)
      (org-agenda-repeating-timestamp-show-all t)
@@ -368,18 +378,22 @@
     ;; tags passed to org-agenda-auto-exclude-function always
     ;; lower case per version Org 6.34 changelog
     ((string= tag "@e5thst")
-     (not (string= (system-name) "artemis.silentflame.com")))
+     (not (string= (system-name) "artemis")))
     ((string= tag "@tucson")
-     (not (string= (system-name) "artemis.silentflame.com")))
+     (not (string= (system-name) "artemis")))
     ((string= tag "@sheffield")
-     (not (string= (system-name) "zephyr.silentflame.com")))
+     (not (string= (system-name) "zephyr")))
+    ((string= tag "@tucson")
+     (not (or (string= (system-name) "iris")
+              (string= (system-name) "hephaestus"))))
     ((string= tag "@campus")
-     (string= (system-name) "athena.silentflame.com"))
+     (string= (system-name) "athena"))
     ((string= tag "ua")
      (= (calendar-day-of-week (calendar-current-date)) 6))
     ((string= tag "@workstation")
-     (not (or (string= (system-name) "artemis.silentflame.com")
-              (string= (system-name) "zephyr.silentflame.com")))))
+     (not (or (string= (system-name) "iris")
+              (string= (system-name) "zephyr")
+              (string= (system-name) "hephaestus")))))
    (concat "-" tag)))
 
 (setq org-agenda-auto-exclude-function 'org-my-auto-exclude-function)
@@ -441,6 +455,7 @@
 
 (defun spw/skip-non-actionable ()
   "Skip:
+- standalone tasks with deadlines
 - projects
 - subtasks of projects that are not NEXT actions
 - subtasks of SOMEDAY projects
@@ -471,7 +486,9 @@ different occasions."
                     (or
                      (spw/org-is-scheduled-p)
                      (string= (spw/org-get-todo-keyword) "SOMEDAY")
-                     (string= (spw/org-get-todo-keyword) "WAITING"))))))
+                     (string= (spw/org-get-todo-keyword) "WAITING")))))
+            (and (bh/is-task-p)
+                 (spw/org-has-deadline-p)))
         next-headline
       nil)))
 
@@ -491,6 +508,22 @@ different occasions."
   (let ((is-dated)
         (is-a-task (member (nth 2 (org-heading-components)) org-todo-keywords-1))
         (regexp (org-re-timestamp 'scheduled)))
+    (message regexp)
+    (save-excursion
+      ;; Ignore errors if we fail to expand a subtree because we're
+      ;; before the first heading
+      (ignore-errors (outline-show-subtree))
+      (forward-line)
+      (org-beginning-of-line)
+      (if (looking-at regexp)
+          (setq is-dated t)))
+    (and is-a-task is-dated)))
+
+(defun spw/org-has-deadline-p ()
+  "A task that has a deadline"
+  (let ((is-dated)
+        (is-a-task (member (nth 2 (org-heading-components)) org-todo-keywords-1))
+        (regexp (org-re-timestamp 'deadline)))
     (message regexp)
     (save-excursion
       ;; Ignore errors if we fail to expand a subtree because we're
@@ -1072,7 +1105,7 @@ spaces in it and to remove any colons."
 
 (run-at-time "00:59" 3600 'org-save-all-org-buffers)
 
-(spw/add-mode-pairs 'org-mode-hook '((?= . ?=)))
+(spw--add-mode-pairs 'org-mode-hook '((?= . ?=)))
 
 (add-hook
  'org-mode-hook
@@ -1097,96 +1130,6 @@ spaces in it and to remove any colons."
 ;;              (not (get-buffer-window "fall_2015_weekday_schedule.org" 0))
 ;;              (y-or-n-p "Also load Fall 2015 weekday schedule?"))
 ;;     (find-file-other-window "~/doc/org/fall_2015_weekday_schedule.org")))
-
-;; Redefine `org-auto-repeat-maybe' with abo-abo's patch from
-;; <http://stackoverflow.com/a/18125783> so that when a task is both
-;; scheduled and deadlined and only the deadline repeats, the
-;; scheduled timestamp will be cleared when the deadline is moved
-;; forward
-
-(defun org-auto-repeat-maybe (done-word)
-  "Check if the current headline contains a repeated deadline/schedule.
-If yes, set TODO state back to what it was and change the base date
-of repeating deadline/scheduled time stamps to new date.
-This function is run automatically after each state change to a DONE state."
-  ;; last-state is dynamically scoped into this function
-  (let* ((repeat (org-get-repeat))
-	 (aa (assoc org-last-state org-todo-kwd-alist))
-	 (interpret (nth 1 aa))
-	 (head (nth 2 aa))
-	 (whata '(("h" . hour) ("d" . day) ("m" . month) ("y" . year)))
-	 (msg "Entry repeats: ")
-	 (org-log-done nil)
-	 (org-todo-log-states nil)
-	 re type n what ts time to-state)
-    (when (and repeat (not (zerop (string-to-number (substring repeat 1)))))
-      (if (eq org-log-repeat t) (setq org-log-repeat 'state))
-      (setq to-state (or (org-entry-get nil "REPEAT_TO_STATE")
-			 org-todo-repeat-to-state))
-      (unless (and to-state (member to-state org-todo-keywords-1))
-	(setq to-state (if (eq interpret 'type) org-last-state head)))
-      (org-todo to-state)
-      (when (or org-log-repeat (org-entry-get nil "CLOCK"))
-	(org-entry-put nil "LAST_REPEAT" (format-time-string
-					  (org-time-stamp-format t t))))
-      (when org-log-repeat
-	(if (or (memq 'org-add-log-note (default-value 'post-command-hook))
-		(memq 'org-add-log-note post-command-hook))
-	    ;; OK, we are already setup for some record
-	    (if (eq org-log-repeat 'note)
-		;; make sure we take a note, not only a time stamp
-		(setq org-log-note-how 'note))
-	  ;; Set up for taking a record
-	  (org-add-log-setup 'state (or done-word (car org-done-keywords))
-			     org-last-state
-			     'findpos org-log-repeat)))
-      (org-back-to-heading t)
-      (org-add-planning-info nil nil 'closed)
-      (setq re (concat "\\(" org-scheduled-time-regexp "\\)\\|\\("
-		       org-deadline-time-regexp "\\)\\|\\("
-		       org-ts-regexp "\\)"))
-      (while (re-search-forward
-	      re (save-excursion (outline-next-heading) (point)) t)
-	(setq type (if (match-end 1) org-scheduled-string
-		     (if (match-end 3) org-deadline-string "Plain:"))
-	      ts (match-string (if (match-end 2) 2 (if (match-end 4) 4 0))))
-	(if (not (string-match "\\([.+]\\)?\\(\\+[0-9]+\\)\\([hdwmy]\\)" ts))
-            (org-remove-timestamp-with-keyword org-scheduled-string)
-          (setq	n (string-to-number (match-string 2 ts))
-                what (match-string 3 ts))
-          (if (equal what "w") (setq n (* n 7) what "d"))
-          (if (and (equal what "h") (not (string-match "[0-9]\\{1,2\\}:[0-9]\\{2\\}" ts)))
-              (user-error "Cannot repeat in Repeat in %d hour(s) because no hour has been set" n))
-          ;; Preparation, see if we need to modify the start date for the change
-          (when (match-end 1)
-            (setq time (save-match-data (org-time-string-to-time ts)))
-            (cond
-             ((equal (match-string 1 ts) ".")
-              ;; Shift starting date to today
-              (org-timestamp-change
-               (- (org-today) (time-to-days time))
-               'day))
-             ((equal (match-string 1 ts) "+")
-              (let ((nshiftmax 10) (nshift 0))
-                (while (or (= nshift 0)
-                           (<= (time-to-days time)
-                               (time-to-days (current-time))))
-                  (when (= (incf nshift) nshiftmax)
-                    (or (y-or-n-p (message "%d repeater intervals were not enough to shift date past today.  Continue? " nshift))
-                        (user-error "Abort")))
-                  (org-timestamp-change n (cdr (assoc what whata)))
-                  (org-at-timestamp-p t)
-                  (setq ts (match-string 1))
-                  (setq time (save-match-data (org-time-string-to-time ts)))))
-              (org-timestamp-change (- n) (cdr (assoc what whata)))
-              ;; rematch, so that we have everything in place for the real shift
-              (org-at-timestamp-p t)
-              (setq ts (match-string 1))
-              (string-match "\\([.+]\\)?\\(\\+[0-9]+\\)\\([hdwmy]\\)" ts))))
-          (save-excursion (org-timestamp-change n (cdr (assoc what whata)) nil t))
-          (setq msg (concat msg type " " org-last-changed-timestamp " "))))
-      (setq org-log-post-message msg)
-      (message "%s" msg))))
 
 (define-key org-mode-map (kbd "C-c C-SPC") 'org-mark-subtree)
 (define-key org-mode-map (kbd "<f11>") 'org-toggle-link-display)

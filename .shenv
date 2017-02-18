@@ -3,6 +3,9 @@
 # Environment variables for X and all text-mode shells: both bash and
 # zsh and scripts run by cron source this.  So POSIX only.
 
+# We have calls to `which` which we expect to fail
+set +e
+
 # ---- choose editor depending on what's available
 
 emacsclient=$(which emacsclient 2>/dev/null)

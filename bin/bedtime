@@ -7,7 +7,7 @@
 
 (($EUID == 0)) || exec sudo "$0" "$@"
 
-WHEN="${1:-tomorrow 7am}"
+WHEN="${1:-tomorrow 6am}"
 CMD="/home/spwhitton/bin/goodmorning"
 
 when=$(date +%s -d "$WHEN")

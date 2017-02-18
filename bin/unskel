@@ -3,17 +3,23 @@
 # Removes contents of /etc/skel in home directory.  Checks for
 # modifications, so should always be safe to run.
 
-SKEL=/etc/skel
+SKEL="/etc/skel"
 torm=""
 
 for skelfile in $(find $SKEL -type f | sed -e "s|${SKEL}/||"); do
     # The following conditional passes if the file in $HOME is the
     # *same* as the file in $SKEL, so it ought to be deleted.
-    if diff -q $SKEL/$skelfile $HOME/$skelfile > /dev/null; then
+    if diff -q "$SKEL/$skelfile" "$HOME/$skelfile" >/dev/null 2>&1; then
        torm="$torm $HOME/$skelfile"
     fi
 done
 
-if ! [ "$torm" = "" ]; then
-   rm -rf $torm
+[ "$torm" = "" ] || rm -rf $torm
+
+# on Debian systems root gets a special .bashrc and .profile
+if diff -q /usr/share/base-files/dot.bashrc "$HOME/.bashrc" >/dev/null 2>&1; then
+    rm -f "$HOME/.bashrc"
+fi
+if diff -q /usr/share/base-files/dot.profile "$HOME/.profile" >/dev/null 2>&1; then
+    rm -f "$HOME/.profile"
 fi

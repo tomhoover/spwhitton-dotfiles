@@ -1,0 +1,38 @@
+#!/bin/sh
+
+# Try to get my dotfiles onto a host
+
+# Intended for machines on which I don't have root -- otherwise I'd
+# just use propellor.  The reason for using this script rather than
+# simply sshing in and running `git clone` is to avoid zsh's "first
+# run" screen on Debian hosts
+
+# Assumes ssh connection sharing
+
+. $HOME/.shenv
+. $HOME/lib/tputfs.sh
+
+status "trying to clone dotfiles to $1 using https"
+ssh "$1" 'cd $HOME && git clone --depth 1 https://git.spwhitton.name/dotfiles src/dotfiles'
+
+# https:// can fail for older ca-certificates, so try git://
+if ! [ $? = 0 ]; then
+    status "trying to clone dotfiles to $1 using git transport"
+    ssh "$1" 'cd $HOME && git clone --depth 1 git://spwhitton.name/dotfiles' src/dotfiles
+    if ! [ $? = 0 ]; then
+        status "couldn't clone dotfiles on $1"
+        exit 1
+    fi
+
+    # since we used an insecure transport, verify
+    hash=$(ssh "$1" 'cd $HOME/src/dotfiles && git show-ref -s master | head -n1')
+    if ! ( cd "$HOME/src/dotfiles" && git branch --contains "$hash" | grep master); then
+        status "couldn't find remote HEAD in local master branch"
+        status "nuking corrupted clone on $1"
+        ssh "$1" 'rm -rf $HOME/src/dotfiles'
+        exit 1
+    fi
+fi
+
+status "clone ok; running bootstrap script"
+ssh "$1" 'cd $HOME && sh src/dotfiles/bin/bstraph.sh'
