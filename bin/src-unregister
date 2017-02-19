@@ -14,6 +14,7 @@ use strict;
 use Capture::Tiny 'tee_stdout';
 use Term::UI;
 use Tie::File;
+use File::chdir;
 
 die "need at least one argument" if ( @ARGV < 1 );
 chdir "$ENV{'HOME'}/src/";
@@ -29,7 +30,10 @@ foreach my $repo ( @ARGV ) {
 system "src-register-all";
 
 foreach my $repo ( @ARGV ) {
-    system "mr -d $repo register";
+    {
+        local $CWD = $repo;
+        system "mr register";
+    }
     (my $output, undef) = tee_stdout { system "mr -m -d $repo status" };
     my $confirm = 1;
     if (length($output)) {
