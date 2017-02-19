@@ -14,7 +14,8 @@
 (require 'bind-key)
 
 ;; TODO polish, and package for Debian
-(require 'haskell-tab-indent)
+(use-package haskell-tab-indent
+  :load-path "~/.emacs.d/site-lisp")
 
 ;;; newer GHC (cannot add this to PATH in .shenv because xmonad needs
 ;;; the old GHC)
