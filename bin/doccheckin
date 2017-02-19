@@ -1,5 +1,9 @@
 #!/bin/zsh
 
+set -e
+
+save-org-buffers
+
 cd ~/doc/
 
 # don't do anything if waiting on a manual merge; don't want just
