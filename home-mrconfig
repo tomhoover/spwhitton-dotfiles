@@ -422,12 +422,12 @@ skip = ! (mine || on spwhitton@shortgeese)
 fixups = git-utime
 
 # before pulling, automatically commit in the same way that my cron job does
-pre_update = (! win32) && save-org-buffers && doccheckin
+pre_update = (! win32) && doccheckin
 # ... and let me do it manually
 autoci = doccheckin || true
 
 # quick syncs
-sync = mr update && mr push
+sync = doccheckin && git pull && git push
 
 # --- static websites on web host boxes
 
