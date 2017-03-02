@@ -129,8 +129,13 @@ build-for-upload () {
                 ;;
         esac
     done
-    eval dgit $dgit sbuild $sbuild \
-         --no-run-lintian --run-piuparts --run-autopkgtest
+    if [[ $(pwd) =~ "src/DHG_packages/p" ]]; then
+        sbuild $sbuild \
+             --no-run-lintian --run-piuparts --run-autopkgtest
+    else
+        eval dgit $dgit sbuild $sbuild \
+             --no-run-lintian --run-piuparts --run-autopkgtest
+    fi
     lintian
 }
 
