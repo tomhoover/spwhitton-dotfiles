@@ -243,7 +243,7 @@ pre_stow = homedir_mkdirs
 checkout = git clone https://git.spwhitton.name/propellor propellor --branch spw3conf
 post_checkout =
     cd propellor
-    git remote add -f upstream github:joeyh/propellor.git
+    git remote add -f upstream https://git.joeyh.name/git/propellor.git
     which cabal && cabal sandbox init || true
     # from <https://propellor.branchable.com/coding_style/> we use a
     # hook here because dgit's requirements mean on the debian branch
