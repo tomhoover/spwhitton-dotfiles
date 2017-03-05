@@ -96,7 +96,7 @@ alias qsbuild="sbuild --no-apt-update --no-apt-distupgrade --no-run-piuparts --n
 alias qqsbuild="DEB_BUILD_OPTIONS=nocheck sbuild --no-apt-update --no-apt-distupgrade --no-run-piuparts --no-run-lintian --no-run-autopkgtest"
 alias b="bts --mbox show"
 alias test-reproducible="reprotest auto . -- schroot sid"
-alias dinstall="curl https://ftp-master.debian.org/dinstall.status"
+alias dinstall="curl https://ftp-master.debian.org/dinstall.status;echo -n 'Now: ';date -u"
 
 # This alias is more reliable than calling `server-start' in my Emacs
 # init file.  Previously, I was seeing Emacs fail to start with "Error
