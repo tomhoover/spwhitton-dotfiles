@@ -244,6 +244,8 @@ checkout = git clone https://git.spwhitton.name/propellor propellor --branch spw
 post_checkout =
     cd propellor
     git remote add -f upstream https://git.joeyh.name/git/propellor.git
+    # We create a cabal sandbox so that haskell-mode ignores
+    # stack.yaml.  All of propellor's deps are available system-wide
     which cabal && cabal sandbox init || true
     # from <https://propellor.branchable.com/coding_style/> we use a
     # hook here because dgit's requirements mean on the debian branch
