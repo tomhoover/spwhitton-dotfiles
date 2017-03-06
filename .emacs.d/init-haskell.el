@@ -24,8 +24,9 @@
  haskell-indentation-left-offset 4
  haskell-indentation-show-indentations nil
 
- ;; rely on `haskell-mode-goto-loc' instead
- haskell-tags-on-save nil
+ ;; we rely on `haskell-mode-goto-loc' for our M-. binding, but still
+ ;; generate a TAGS file for completion
+ haskell-tags-on-save t
 
  ;; this tends to get in the way
  haskell-mode-contextual-import-completion nil
@@ -79,6 +80,15 @@
 
 ;; pass C-u to insert a missing type signature
 (bind-key "C-c C-t" 'haskell-mode-show-type-at       interactive-haskell-mode-map)
+
+;; ensure that company falls back to dabbrevs when haskell-mode cannot
+;; complete, such as in where clauses (this is straight from
+;; haskell-mode docs)
+(add-hook 'haskell-mode-hook
+          (lambda ()
+            (set (make-local-variable 'company-backends)
+                 (append '((company-capf company-dabbrev-code))
+                         company-backends))))
 
 (provide 'init-haskell)
 ;;; init-haskell.el ends here
