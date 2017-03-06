@@ -1996,6 +1996,7 @@ Ensures the kill ring entry always ends with a newline."
 
 ;; always update file contents
 (global-auto-revert-mode 1)
+(diminish 'auto-revert-mode)
 
 ;; and a binding to do so manually
 (bind-key "C-x C-r" (lambda () (interactive) (revert-buffer nil t)))
