@@ -896,9 +896,6 @@
 
 (use-package haskell-mode
   :if (spw--optional-pkg-available-p "haskell-mode")
-  :init
-  ;; Fix broken ghc-init: function is missing
-  (defun ghc-init () t)
   :config
   (load "~/.emacs.d/init-haskell.el"))
 
