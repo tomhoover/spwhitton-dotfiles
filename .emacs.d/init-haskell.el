@@ -2,95 +2,83 @@
 
 ;;; Commentary:
 
-;;; Installation:
-
-;; Needs (use-package flycheck) in init.el.
-
-;; Needs exes from Hackage: stylish-haskell
-
 ;;; Code:
 
-(require 'use-package)
+(eval-when-compile
+  (require 'use-package))
+(require 'diminish)
 (require 'bind-key)
+
+(require 'haskell)
+(require 'haskell-interactive-mode)
+(require 'haskell-process)
+(require 'subword)
 
 ;; TODO polish, and package for Debian
 (use-package haskell-tab-indent
   :load-path "~/.emacs.d/site-lisp")
 
-;;; newer GHC (cannot add this to PATH in .shenv because xmonad needs
-;;; the old GHC)
+(setq
+ ;; indentation preferences
+ haskell-indentation-layout-offset 4
+ haskell-indentation-left-offset 4
+ haskell-indentation-show-indentations nil
 
-;; (when (f-directory? "~/local/stow/ghc/bin")
-;;   (add-to-list 'exec-path (expand-file-name "~/local/stow/ghc/bin")))
+ ;; rely on `haskell-mode-goto-loc' instead
+ haskell-tags-on-save nil
 
-;;; haskell mode does most of our work
+ ;; this tends to get in the way
+ haskell-mode-contextual-import-completion nil
 
-;; (require 'haskell-mode-autoloads)
-;; (add-to-list 'Info-default-directory-list "~/.emacs.d/pkg/haskell-mode/")
+ ;; enable standard features from haskell-mode docs
+ haskell-process-suggest-remove-import-lines t
+ haskell-process-auto-import-loaded-modules t
+ haskell-process-log t
 
-(use-package haskell-mode
-  :config
+ ;; guess whether this is a stack or pure cabal project
+ haskell-process-type 'auto)
 
-  (require 'haskell-interactive-mode)
-  (require 'haskell-process)
+;; Use a local hook to turn on an appropriate indentation mode.  Use
+;; `haskell-indentation-mode' by default, but if our .dir-locals.el
+;; specifies `indent-tabs-mode', we should instead use my
+;; `haskell-tab-indent-mode'
+(add-hook 'haskell-mode-hook
+          (lambda ()
+            (add-hook 'hack-local-variables-hook
+                      (lambda ()
+                        (if indent-tabs-mode
+                            (haskell-tab-indent-mode)
+                          (haskell-indentation-mode)))
+                      nil t)))
 
-  (setq haskell-indentation-layout-offset 4
-        haskell-indentation-left-offset 4
-        haskell-indentation-show-indentations nil
-        haskell-tags-on-save t
-        haskell-process-suggest-remove-import-lines t
-        haskell-mode-contextual-import-completion nil
-        haskell-process-log t
-        haskell-process-auto-import-loaded-modules t)
+;; (add-hook 'haskell-mode-hook 'turn-on-haskell-doc)
+(add-hook 'haskell-mode-hook 'interactive-haskell-mode)
+(add-hook 'haskell-mode-hook 'subword-mode)
 
-  ;; Turn on an appropriate indentation mode.  Use
-  ;; `haskell-indentation-mode' by default, but if our .dir-locals.el
-  ;; specifies `indent-tabs-mode' we should use my
-  ;; `haskell-tab-indent-mode'.
-  (add-hook 'haskell-mode-hook
-            (lambda ()
-              (add-hook 'hack-local-variables-hook
-                        (lambda ()
-                          (if indent-tabs-mode
-                              (haskell-tab-indent-mode)
-                            (haskell-indentation-mode)))
-                        nil t))) ; local hook
+(diminish 'interactive-haskell-mode)
+(diminish 'subword-mode)
 
-  (add-hook 'haskell-mode-hook 'turn-on-haskell-doc)
-  (add-hook 'haskell-mode-hook 'capitalized-words-mode)
-  (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
-  (add-hook 'haskell-mode-hook (lambda () (diminish 'interactive-haskell-mode)) t)
-  ;; override stack default
-  ;; (add-hook 'haskell-mode-hook (lambda () (flycheck-select-checker 'haskell-ghc)))
+;; standard Haskell repl interaction bindings
+(bind-key "C-c C-l" 'haskell-process-load-or-reload  haskell-mode-map)
+(bind-key "C-c C-b" 'haskell-interactive-bring       haskell-mode-map)
+(bind-key "C-c C-i" 'haskell-process-do-info         haskell-mode-map)
+(bind-key "C-c C-c" 'haskell-process-cabal-build     haskell-mode-map)
+(bind-key "C-c C-k" 'haskell-interactive-mode-clear  haskell-mode-map)
+(bind-key "C-c C"   'haskell-process-cabal           haskell-mode-map)
 
-  ;; recommended bindings from haskell-mode wiki
-  (define-key haskell-mode-map (kbd "C-c C") 'haskell-process-cabal)
-  (define-key haskell-cabal-mode-map (kbd "C-c C-b") 'haskell-interactive-bring)
-  (define-key haskell-cabal-mode-map (kbd "C-c C-k") 'haskell-interactive-mode-clear)
-  (define-key haskell-cabal-mode-map (kbd "C-c C-c") 'haskell-process-cabal-build)
-  (define-key haskell-cabal-mode-map (kbd "C-c C") 'haskell-process-cabal))
+;; same again for `haskell-cabal-mode'
+(bind-key "C-c C-b" 'haskell-interactive-bring       haskell-cabal-mode-map)
+(bind-key "C-c C-k" 'haskell-interactive-mode-clear  haskell-cabal-mode-map)
+(bind-key "C-c C-c" 'haskell-process-cabal-build     haskell-cabal-mode-map)
+(bind-key "C-c C"   'haskell-process-cabal           haskell-cabal-mode-map)
 
-;;; Try to kill off flymake since init.el is starting flycheck.  Also
-;;; remove a call to flymake-mode (add the call to `ghc-init' back in
-;;; later).
+;;; these two bindings require GHCi 8 or newer (or GHCi-ng)
 
-;; Needs emacs 24.4 for with-eval-after-load
+;; jump asynchronously; no need for a TAGS file
+(bind-key "M-."     'haskell-mode-goto-loc           interactive-haskell-mode-map)
 
-;; (when (and (=  emacs-major-version 24)
-;;            (>= emacs-minor-version 4))
-;;   (with-eval-after-load "haskell-mode"
-;;     ;; Disable haskell-mode's default snippets for now.  We take the
-;;     ;; car of this list because that should be the latest version of
-;;     ;; haskell-mode.
-
-;;     ;; disabled until I can get the autoloads right
-;;     ;; (delete (car (f-glob (f-join package-user-dir
-;;     ;; "haskell-mode-*/snippets"))) yas-snippet-dirs)
-
-;;     (setq flymake-allowed-file-name-masks nil)
-;;     (remove-hook 'haskell-mode-hook (lambda ()
-;;                                       (ghc-init)
-;;                                       (flymake-mode)))))
+;; pass C-u to insert a missing type signature
+(bind-key "C-c C-t" 'haskell-mode-show-type-at       interactive-haskell-mode-map)
 
 (provide 'init-haskell)
 ;;; init-haskell.el ends here

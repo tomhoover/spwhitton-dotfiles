@@ -896,8 +896,10 @@
 
 (use-package haskell-mode
   :if (spw--optional-pkg-available-p "haskell-mode")
-  :config
-  (load "~/.emacs.d/init-haskell.el"))
+  :mode (("\\.hs" . haskell-mode)
+         ("\\.lhs" . literate-haskell-mode)
+         ("\\.cabal" . haskell-cabal-mode))
+  :config (load "~/.emacs.d/init-haskell.el"))
 
 ;; key-chord to save my hands
 
