@@ -1645,20 +1645,8 @@ Generates calls to pandoc that look like this: pandoc -s --filter pandoc-citepro
   (when (and (string= default-directory (expand-file-name "~/doc/papers/"))
              (or (eq major-mode 'markdown-mode)
                  (eq major-mode 'org-mode)))
-    (let ((output-file (f-join (if arg "~/lib/annex/doc/papers" "~/tmp")
-                               (f-filename (f-swap-ext (buffer-file-name) "pdf")))))
-      (when (and arg (f-symlink? output-file))
-        (call-process-shell-command
-         "git" nil "*git annex output*" nil
-         "-C" "~/lib/annex" "annex" "unlock" output-file))
-      (call-process-shell-command
-       "pandoc" nil "*pandoc output*" nil
-       "-s" "--filter" "pandoc-citeproc"
-       ;; (concat "--bibliography=" (expand-file-name "~/doc/spw.bib"))
-       "--filter" "pandoc-citeproc-preamble"
-       "--template" "pessay" "-V" "documentclass=pessay"
-       (buffer-file-name) "-o" output-file)
-      (when window-system (find-file output-file)))))
+    (let ((output-file (f-filename (f-swap-ext (buffer-file-name) "pdf"))))
+      (compile (concat "make " output-file ".view")))))
 
 (defun spw/pandoc-presentation-compile ()
   "Compile a presentation to PDF and HTML with pandoc into ~/tmp.
