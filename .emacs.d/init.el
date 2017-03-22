@@ -351,6 +351,8 @@
   :if (spw--optional-pkg-available-p "magit")
   :demand
   :config
+  ;; by default, don't pass -f to `git remote add`
+  (setq magit-remote-arguments nil)
 
   ;; Fix magit-version: doesn't work when magit is a subtree
   (defun magit-version ()
