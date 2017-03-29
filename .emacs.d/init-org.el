@@ -203,7 +203,7 @@
 
  org-todo-keywords
  '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
-   (sequence "WAITING(w)" "SOMEDAY(s)" "|" "CANCELLED(c)"))
+   (sequence "WAITING(w@)" "SOMEDAY(s)" "|" "CANCELLED(c)"))
 
  org-todo-keyword-faces '(("SOMEDAY" . (:foreground "#94BFF3" :weight bold)) ; zenburn-blue+1
                           ("NEXT" . (:foreground "#F0DFAF" :weight bold))) ; zenburn-yellow
