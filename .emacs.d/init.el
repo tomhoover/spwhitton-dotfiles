@@ -1648,7 +1648,12 @@ Generates calls to pandoc that look like this: pandoc -s --filter pandoc-citepro
              (or (eq major-mode 'markdown-mode)
                  (eq major-mode 'org-mode)))
     (let ((output-file (f-filename (f-swap-ext (buffer-file-name) "pdf"))))
-      (compile (concat "make " output-file (if window-system ".view" ""))))))
+      (compile (concat "make " output-file
+                       ;; We can easily reload the file in evince, and
+                       ;; the .view target means that Emacs thinks
+                       ;; compilation isn't finished until evince quits.
+                       ;; (if window-system ".view" "")
+                       )))))
 
 (defun spw/pandoc-presentation-compile ()
   "Compile a presentation to PDF and HTML with pandoc into ~/tmp.
