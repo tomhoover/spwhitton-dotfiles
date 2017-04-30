@@ -88,7 +88,7 @@
                  ("@Tucson"       . ?T)
                  ("@campus"       . ?C)
                  ("@Sheffield"    . ?S)
-                 ("@E5thSt"       . ?H)
+                 ("@CClubRd"      . ?H)
                  (:endgroup)
                  ("@iPad"         . ?I)
                  (:startgroup)
@@ -377,7 +377,7 @@
    (cond
     ;; tags passed to org-agenda-auto-exclude-function always
     ;; lower case per version Org 6.34 changelog
-    ((string= tag "@e5thst")
+    ((string= tag "@cclubrd")
      (not (string= (system-name) "artemis")))
     ((string= tag "@tucson")
      (not (string= (system-name) "artemis")))
