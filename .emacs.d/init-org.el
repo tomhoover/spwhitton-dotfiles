@@ -514,6 +514,15 @@ different occasions."
       (ignore-errors (outline-show-subtree))
       (forward-line)
       (org-beginning-of-line)
+
+      ;; if a task is scheduled and deadlined, and the DEADLINE: comes
+      ;; before the SCHEDULED:, the regexp won't match (if the
+      ;; DEADLINE: comes second, it will match).  So skip over
+      ;; DEADLINE, if it appears
+      (when (looking-at (org-re-timestamp 'deadlined))
+        (forward-sexp 3)
+        (forward-char))
+
       (if (looking-at regexp)
           (setq is-dated t)))
     (and is-a-task is-dated)))
