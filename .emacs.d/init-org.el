@@ -508,7 +508,6 @@ different occasions."
   (let ((is-dated)
         (is-a-task (member (nth 2 (org-heading-components)) org-todo-keywords-1))
         (regexp (org-re-timestamp 'scheduled)))
-    (message regexp)
     (save-excursion
       ;; Ignore errors if we fail to expand a subtree because we're
       ;; before the first heading
@@ -524,7 +523,6 @@ different occasions."
   (let ((is-dated)
         (is-a-task (member (nth 2 (org-heading-components)) org-todo-keywords-1))
         (regexp (org-re-timestamp 'deadline)))
-    (message regexp)
     (save-excursion
       ;; Ignore errors if we fail to expand a subtree because we're
       ;; before the first heading
@@ -540,7 +538,6 @@ different occasions."
   (let ((is-dated)
         (is-a-task (member (nth 2 (org-heading-components)) org-todo-keywords-1))
         (regexp (org-re-timestamp 'scheduled-or-deadline)))
-    (message regexp)
     (save-excursion
       ;; Ignore errors if we fail to expand a subtree because we're
       ;; before the first heading
