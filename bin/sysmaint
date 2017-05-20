@@ -162,7 +162,7 @@ if ( defined $loc ) {
 
     foreach my $repo ( @athena_gcrypt_repos ) {
         $repo =~ s/\n//g;
-        backup_repo("gcrypt::rsync://athena:/srv/git/$repo", "athena_gcrypt");
+        backup_repo("gcrypt::rsync://athena:/srv/gcrypt/$repo", "athena_gcrypt");
     }
 
     # ---- misc. repos
