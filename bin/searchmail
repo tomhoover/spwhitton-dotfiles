@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# TODO use a tmpdir for the output dir, so can run more than one
+# search and have the results open in diff windows
+
+# TODO set terminal title to search string
+
 output=$(mairix --threads $@)
 #echo $output
 
