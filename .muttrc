@@ -30,7 +30,9 @@ unset arrow_cursor
 set fast_reply
 set pager_context = 1
 set reply_to = ask-yes
-set recall = ask-yes
+# use 'R' to recall -- this makes it less inconvenient to have
+# multiple drafts queued
+set recall = no
 #set pager_stop
 set tmpdir="~/local/mutt"
 set resolve = yes
