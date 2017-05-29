@@ -33,6 +33,10 @@ foreach my $repo ( @ARGV ) {
     {
         local $CWD = $repo;
         system "mr register";
+        my $exit = $? >> 8;
+        if ($exit != 0) {
+            die;
+        }
     }
     (my $output, undef) = tee_stdout { system "mr -m -d $repo status" };
     my $confirm = 1;
