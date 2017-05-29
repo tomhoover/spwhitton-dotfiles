@@ -336,7 +336,7 @@ sub backup_repo {
         } else {
             ( undef, $short ) = split /:([^:]+)$/, $long;
         }
-        $short =~ s/\/srv\/git\///;
+        $short =~ s/\/srv\/(git|gcrypt)\///;
     }
 
     $short = "$short.git" unless $short =~ /\.git$/;
