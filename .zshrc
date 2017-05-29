@@ -189,6 +189,11 @@ mpc_play_stream () {
 alias radio4="mpc_play_stream http://bbcmedia.ic.llnwd.net/stream/bbcmedia_radio4fm_mf_p"
 alias worldservice="mpc_play_stream http://bbcwssc.ic.llnwd.net/stream/bbcwssc_mp1_ws-eieuk"
 
+# Manipulate Policy bugs.  (from Russ Allbery)
+bts-policy () {
+    bts user debian-policy@packages.debian.org , package debian-policy , "$@"
+}
+
 # --- load zsh features
 
 # Change word boundary characters. Nabbed from
