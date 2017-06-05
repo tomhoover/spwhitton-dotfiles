@@ -216,6 +216,7 @@ if ( defined $loc ) {
     backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/emacs-openwith.git", "alioth");
     backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/emacs-world-time-mode.git", "alioth");
     backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/helm-dash.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/redtick.git", "alioth");
 
     backup_repo("https://anonscm.debian.org/git/pkg-mozext/classic-theme-restorer.git", "alioth");
     backup_repo("https://anonscm.debian.org/git/pkg-mozext/keysnail.git", "alioth");
