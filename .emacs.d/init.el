@@ -1036,6 +1036,12 @@
   :if (spw--optional-pkg-available-p "cycle-quotes")
   :bind ("C-c '" . cycle-quotes))
 
+(use-package redtick
+  :if (spw--optional-pkg-available-p "cycle-quotes")
+  :bind ("C-c P" . redtick-mode)
+  :init
+  (setq redtick-history-file nil))
+
 
 
 ;;;; ---- functions ----
