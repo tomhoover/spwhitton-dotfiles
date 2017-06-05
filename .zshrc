@@ -524,3 +524,7 @@ if [[ "$TERM" == "dumb" ]]; then
     export NOCOLOR="true"
     PS1='$ '
 fi
+
+if [[ -n ${INSIDE_EMACS} ]]; then
+    unsetopt zle
+fi
