@@ -1849,6 +1849,42 @@ Ensures the kill ring entry always ends with a newline."
     'fixed-pitch
     (face-attribute face :inherit))))
 
+;;; shells in Emacs
+
+(defun spw--shell-here ()
+  "Switch to this project's shell, then change to this buffer's directory."
+  (interactive)
+  (let ((here default-directory)
+        (shell-buffer-name
+         (if projectile-project-name
+             ;; convention established by `projectile-run-shell'
+             (concat "*shell " (projectile-project-name) "*")
+           ;; just one shell buffer, '*shell*', lies outside of any
+           ;; projectile project
+           "*shell*")))
+    (if (get-buffer shell-buffer-name)
+        (progn
+          (pop-to-buffer (get-buffer shell-buffer-name))
+          (unless (string= default-directory here)
+            (spw--shell-cd here))))
+    (shell shell-buffer-name)))
+
+(defun spw--shell-cd (dir)
+  "Try to change directory to DIR in the current buffer.
+
+Assumes that the current buffer is `shell-mode'."
+  ;; it might be more robust to use `comint-send-input', but that
+  ;; clutters the tail of the shell buffer
+  (end-of-buffer)
+  (insert (concat "cd " dir))
+  (comint-send-input))
+
+(defun spw--remote-shell (host)
+  "Open or switch to a shell on HOST, via TRAMP."
+  (interactive "sHost: ")
+  (let ((default-directory (concat "/" host ":")))
+    (shell (concat "*shell " host "*"))))
+
 
 
 ;;;; ---- personal settings ----
@@ -2299,6 +2335,31 @@ superflous blank quoted lines."
 ;; guide mandates them, so make a slightly modified style
 (c-add-style "linux-tabs" '("linux" (indent-tabs-mode . t)))
 (setq c-default-style "linux-tabs")
+
+;;; shells in Emacs
+
+;; while this forces us to yank text into another buffer before making
+;; edits, it's more annoying to require M-> before typing a command
+(setq comint-scroll-to-bottom-on-input t)
+
+;; for the time being zsh is my login shell, but for robustness, stick
+;; with bash in Emacs shells
+(setenv "ESHELL" "/bin/bash")
+
+(add-hook 'shell-mode-hook
+          (lambda ()
+            ;; avoid scroll jumps when newlines are output into the
+            ;; shell buffer (tip from Ryan Barrett's Emacs config)
+            (set (make-local-variable 'scroll-conservatively) 10)
+
+            ;; `dirtrack-mode' generally better than the default
+            ;; `shell-dirtrack-mode'
+            ;; TODO I think `dirtrack-list' needs to be modified for my custom PS1
+            (shell-dirtrack-mode 0)
+            (dirtrack-mode 1)))
+
+;; this is my entry point
+(bind-key "C-c J" 'spw--shell-here)
 
 (provide 'init)
 ;;; init.el ends here
