@@ -1856,7 +1856,7 @@ Ensures the kill ring entry always ends with a newline."
   (interactive)
   (let ((here default-directory)
         (shell-buffer-name
-         (if projectile-project-name
+         (if (projectile-project-name)
              ;; convention established by `projectile-run-shell'
              (concat "*shell " (projectile-project-name) "*")
            ;; just one shell buffer, '*shell*', lies outside of any
