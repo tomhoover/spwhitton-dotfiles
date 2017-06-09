@@ -2346,6 +2346,8 @@ superflous blank quoted lines."
 ;; with bash in Emacs shells
 (setenv "ESHELL" "/bin/bash")
 
+(setenv "PAGER" "cat")
+
 (add-hook 'shell-mode-hook
           (lambda ()
             ;; avoid scroll jumps when newlines are output into the
