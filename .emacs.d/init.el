@@ -2363,5 +2363,10 @@ superflous blank quoted lines."
 ;; this is my entry point
 (bind-key "C-c J" 'spw--shell-here)
 
+;; TODO need to set `display-buffer-reuse-frames' so emacsclient calls
+;; from the shell work as expected?  e.g. when a command calls $EDITOR
+
+;; TODO open local and remote shells as root using TRAMP
+
 (provide 'init)
 ;;; init.el ends here
