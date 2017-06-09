@@ -5,6 +5,9 @@
 
 # TODO set terminal title to search string
 
+# TODO '-n' option not to include threads, and pass command to mutt
+# (with -e) not to sort on threads, in that case
+
 output=$(mairix --threads $@)
 #echo $output
 
