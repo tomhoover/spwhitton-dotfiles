@@ -3,4 +3,4 @@
 
 */15 * * * * chronic doccheckin
 */30 * * * * chronic mbsync fastmail
-*/35 * * * * notmuch new
+*/35 * * * * chronic notmuch new
