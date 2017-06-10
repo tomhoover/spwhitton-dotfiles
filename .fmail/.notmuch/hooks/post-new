@@ -3,6 +3,12 @@
 # mark all sent mail as read
 notmuch tag -unread -- folder:sent
 
+# ensure all drafts are in the drafts folder
+floating_drafts=$(notmuch search --output=files -- tag:draft and not folder:drafts)
+if [ ! -z "$floating_drafts" ]; then
+    mv $floating_drafts $HOME/.fmail/drafts/cur
+fi
+
 # mark all drafts as drafts, and as read
 notmuch tag -unread +draft -- folder:drafts
 
