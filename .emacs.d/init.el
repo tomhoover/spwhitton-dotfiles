@@ -1909,8 +1909,8 @@ Assumes that the current buffer is `shell-mode'."
 ;; fixup-whitespace seems to make just-one-space redundant
 (bind-key "M-SPC" 'fixup-whitespace)
 
-;; never want to send any e-mail
-(unbind-key "C-x m")
+;; main e-mail access point
+(bind-key "C-c m" 'notmuch-jump-search)
 
 ;; fallback expanding
 (bind-key "M-/" 'hippie-expand)

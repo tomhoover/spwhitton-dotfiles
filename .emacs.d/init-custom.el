@@ -69,6 +69,15 @@
  '(jabber-alert-presence-hooks nil)
  '(mairix-file-path "~/local")
  '(mairix-search-file "mairixresults")
+ '(notmuch-saved-searches
+   (quote
+    ((:name "personal unread" :query "tag:unread and not query:\"listserv unread\" and not query:\"UA unread\"" :key "u" :search-type tree)
+     (:name "UA unread" :query "tag:unread and to:spwhitton@email.arizona.edu" :key "U" :search-type tree)
+     (:name "listserv unread" :query "tag:unread and (to:lists.debian.org or to:lists.alioth.debian.org)" :key "l" :search-type tree)
+     (:name "flagged" :query "tag:flagged" :key "f")
+     (:name "sent" :query "from:spwhitton@spwhitton.name or from:spwhitton@email.arizona.edu" :key "s")
+     (:name "drafts" :query "tag:draft" :key "d")
+     (:name "all mail" :query "*" :key "a"))))
  '(openwith-associations
    (quote
     (("\\.pdf\\'" "evince"
