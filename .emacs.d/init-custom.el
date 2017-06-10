@@ -171,6 +171,7 @@
      (eval pandoc-set-write "latex")
      (eval spw/writing-toggle)
      (indent-tabs-mode . t\,))))
+ '(send-mail-function (quote sendmail-send-it))
  '(smart-tab-disabled-major-modes (quote (org-mode term-mode latex-mode message-mode)))
  '(smart-tab-using-hippie-expand nil)
  '(tm/backspace-delete-column t)
