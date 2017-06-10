@@ -1046,6 +1046,7 @@
   :if (spw--optional-pkg-available-p "cycle-quotes")
   ;; main e-mail access point
   :bind ("C-c m" . notmuch-jump-search)
+  :commands (notmuch-tree)
   :init
   ;; these let bindings avoid the need to add saved searches to the
   ;; database, so that our database remains recreteable from just my
