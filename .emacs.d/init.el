@@ -2164,6 +2164,11 @@ Assumes that the current buffer is `shell-mode'."
 (use-package message
   :mode ("/mutt-.*$" . message-mode)
   :init
+  ;; show trailing whitespace in message-mode, but don't clean it up
+  ;; automatically, as that breaks the signature separator
+  (add-hook 'message-mode-hook (lambda ()
+                                 (setq ws-butler-mode-set-explicitly t)
+                                 (setq-local show-trailing-whitespace t)))
 
   ;; used in message-mode yasnippets
   (defun spw/recipient-first-name ()
