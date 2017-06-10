@@ -1051,15 +1051,23 @@
   ;; these let bindings avoid the need to add saved searches to the
   ;; database, so that our database remains recreteable from just my
   ;; Maildirs
-  (let ((lists "to:(lists.debian.org or lists.alioth.debian.org) and not to:-announce"))
+  (let ((lists "to:(lists.debian.org or lists.alioth.debian.org) and not to:-announce")
+        (feeds "from:rss@spwhitton.name"))
     (setq notmuch-saved-searches
           `((:name "personal unread" :key "u" :search-type tree
-                   :query ,(concat "tag:unread and not to:spwhitton@email.arizona.edu and not (" lists ")"))
+                   :query ,(concat
+                            "tag:unread and not to:spwhitton@email.arizona.edu and not ("
+                            lists
+                            ") and not ("
+                            feeds
+                            ")"))
             (:name "UA unread" :key "U" :search-type tree
                    :query "tag:unread and to:spwhitton@email.arizona.edu")
             (:name "listserv unread" :key "l" :search-type tree
                    :query ,(concat "tag:unread and (" lists ")"))
-            (:name "flagged" :key "f"
+            (:name "feeds unread" :key "f" :search-type tree
+                   :query ,(concat "tag:unread and (" feeds ")"))
+            (:name "flagged" :key "F"
                    :query "tag:flagged" )
             (:name "sent" :key "s"
                    :query "from:spwhitton@spwhitton.name or from:spwhitton@email.arizona.edu")
