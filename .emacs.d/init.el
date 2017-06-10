@@ -1042,6 +1042,31 @@
   :init
   (setq redtick-history-file nil))
 
+(use-package notmuch
+  :if (spw--optional-pkg-available-p "cycle-quotes")
+  ;; main e-mail access point
+  :bind ("C-c m" . notmuch-jump-search)
+  :init
+  ;; these let bindings avoid the need to add saved searches to the
+  ;; database, so that our database remains recreteable from just my
+  ;; Maildirs
+  (let ((lists "to:(lists.debian.org or lists.alioth.debian.org) and not to:-announce"))
+    (setq notmuch-saved-searches
+          `((:name "personal unread" :key "u" :search-type tree
+                   :query ,(concat "tag:unread and not to:spwhitton@email.arizona.edu and not (" lists ")"))
+            (:name "UA unread" :key "U" :search-type tree
+                   :query "tag:unread and to:spwhitton@email.arizona.edu")
+            (:name "listserv unread" :key "l" :search-type tree
+                   :query ,(concat "tag:unread and (" lists ")"))
+            (:name "flagged" :key "f"
+                   :query "tag:flagged" )
+            (:name "sent" :key "s"
+                   :query "from:spwhitton@spwhitton.name or from:spwhitton@email.arizona.edu")
+            (:name "drafts" :key "d"
+                   :query "tag:draft")
+            (:name "all mail" :key "a"
+                   :query "*")))))
+
 
 
 ;;;; ---- functions ----
@@ -1908,9 +1933,6 @@ Assumes that the current buffer is `shell-mode'."
 
 ;; fixup-whitespace seems to make just-one-space redundant
 (bind-key "M-SPC" 'fixup-whitespace)
-
-;; main e-mail access point
-(bind-key "C-c m" 'notmuch-jump-search)
 
 ;; fallback expanding
 (bind-key "M-/" 'hippie-expand)
