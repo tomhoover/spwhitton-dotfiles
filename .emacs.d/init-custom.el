@@ -69,6 +69,7 @@
  '(jabber-alert-presence-hooks nil)
  '(mairix-file-path "~/local")
  '(mairix-search-file "mairixresults")
+ '(notmuch-mua-user-agent-function (quote notmuch-mua-user-agent-full))
  '(openwith-associations
    (quote
     (("\\.pdf\\'" "evince"
