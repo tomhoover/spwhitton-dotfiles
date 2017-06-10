@@ -1066,7 +1066,12 @@
             (:name "drafts" :key "d"
                    :query "tag:draft")
             (:name "all mail" :key "a"
-                   :query "*")))))
+                   :query "*"))))
+  ;; this ensures that hitting C-x m right after Emacs starts yields a
+  ;; message with the correct From: address and User-Agent header, etc.
+  (defun compose-mail--load-notmuch (&rest ignore)
+    (require 'notmuch))
+  (advice-add 'compose-mail :before #'compose-mail--load-notmuch))
 
 
 
