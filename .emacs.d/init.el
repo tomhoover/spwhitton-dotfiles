@@ -1088,7 +1088,11 @@
   ;; message with the correct From: address and User-Agent header, etc.
   (defun compose-mail--load-notmuch (&rest ignore)
     (require 'notmuch))
-  (advice-add 'compose-mail :before #'compose-mail--load-notmuch))
+  (advice-add 'compose-mail :before #'compose-mail--load-notmuch)
+
+  ;; some bindings
+  (bind-key "S-SPC" 'notmuch-tree-scroll-message-window-back notmuch-tree-mode-map)
+  (bind-key "g" (notmuch-tree-close-message-pane-and #'notmuch-show-reply) notmuch-tree-mode-map))
 
 
 
