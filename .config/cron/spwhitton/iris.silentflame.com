@@ -1,2 +1,2 @@
 */15 * * * * chronic doccheckin
-*/30 * * * * offline || ( chronic mbsync fastmail && chronic notmuch new )
+*/30 * * * * offline || chronic notmuch new

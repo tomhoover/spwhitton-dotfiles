@@ -78,7 +78,6 @@ alias calup="emacs -batch -l /home/swhitton/.emacs.d/init.el -eval \"(org-batch-
 alias dotex="texi2dvi --pdf --clean --batch"
 alias whitenoise="cvlc --quiet --loop ~/lib/annex/doc/sounds/R*.ogg"
 alias myip="dig +short myip.opendns.com @resolver1.opendns.com"
-alias mailnow="pkill mbsync ; mbsync -q fastmail && mutt -Z"
 alias mykb="setxkbmap gb; setxkbmap -option ctrl:nocaps"
 alias fixmacs="pkill -USR2 emacs"
 alias myfiles="cadaver https://myfiles.messagingengine.com/"
