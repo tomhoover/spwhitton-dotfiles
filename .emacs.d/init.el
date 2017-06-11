@@ -1053,9 +1053,9 @@
 
 (use-package notmuch
   :if (spw--optional-pkg-available-p "notmuch")
-  ;; main e-mail access point
-  :bind ("C-c m" . notmuch-jump-search)
-  :commands (notmuch-tree)
+  :bind (("C-c m" . notmuch-jump-search)
+         ("C-c z" . notmuch-tree))
+
   :init
   ;; these let bindings avoid the need to add saved searches to the
   ;; database, so that our database remains recreteable from just my
