@@ -378,7 +378,16 @@
   :commands global-pointback-mode
   :defer 5
   :config
-  (global-pointback-mode 1))
+  (global-pointback-mode 1)
+
+  ;; Disable pointback-mode in notmuch tree view buffers.  When
+  ;; notmuch moves to a new message (e.g. upon hitting 'n'), it
+  ;; deletes the split message view, creates a new split, and displays
+  ;; the message there.  But deleting the split windows causes
+  ;; pointback mode to move point in the original window, so point is
+  ;; no longer on the message displayed.  This leads to various
+  ;; strange behaviours
+  (add-hook 'notmuch-tree-mode-hook (lambda () (pointback-mode 0))))
 
 ;;; colour those parentheses
 
