@@ -1063,7 +1063,9 @@
   (let ((lists "to:(lists.debian.org or lists.alioth.debian.org) and not to:-announce and not to:spwhitton@spwhitton.name and not to:spwhitton@email.arizona.edu")
         (feeds "from:rss@spwhitton.name"))
     (setq notmuch-saved-searches
-          `((:name "personal unread" :key "u" :search-type tree
+          `((:name "all unread" :key "u" :search-type tree
+                   :query "tag:unread")
+            (:name "personal unread" :key "p" :search-type tree
                    :query ,(concat
                             "tag:unread and not to:spwhitton@email.arizona.edu and not ("
                             lists
