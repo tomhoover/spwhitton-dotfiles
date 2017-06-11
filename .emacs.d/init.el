@@ -1037,13 +1037,13 @@
   :bind ("C-c '" . cycle-quotes))
 
 (use-package redtick
-  :if (spw--optional-pkg-available-p "cycle-quotes")
+  :if (spw--optional-pkg-available-p "redtick")
   :bind ("C-c P" . redtick-mode)
   :init
   (setq redtick-history-file nil))
 
 (use-package notmuch
-  :if (spw--optional-pkg-available-p "cycle-quotes")
+  :if (spw--optional-pkg-available-p "notmuch")
   ;; main e-mail access point
   :bind ("C-c m" . notmuch-jump-search)
   :commands (notmuch-tree)
