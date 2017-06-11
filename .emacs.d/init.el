@@ -1086,6 +1086,12 @@
                    :query "tag:draft")
             (:name "all mail" :key "a"
                    :query "*"))))
+
+  (setq notmuch-tagging-keys
+        '(("u" ("+unread") "Mark as unread")
+          ("s" ("+spam") "Mark as spam")
+          ("m" ("+killed") "Kill thread"))) ; 'm' for 'mute'
+
   ;; this ensures that hitting C-x m right after Emacs starts yields a
   ;; message with the correct From: address and User-Agent header, etc.
   (defun compose-mail--load-notmuch (&rest ignore)
