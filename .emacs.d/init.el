@@ -1078,14 +1078,15 @@
                    :query ,(concat "tag:unread and (" lists ")"))
             (:name "feeds unread" :key "f" :search-type tree
                    :query ,(concat "tag:unread and (" feeds ")"))
-            (:name "flagged" :key "F"
-                   :query "tag:flagged" )
-            (:name "sent" :key "s"
+            ;; (:name "flagged" :key "F" :search-type tree
+            ;;        :query "tag:flagged" )
+            (:name "sent" :key "s" :search-type tree
                    :query "from:spwhitton@spwhitton.name or from:spwhitton@email.arizona.edu")
-            (:name "drafts" :key "d"
-                   :query "tag:draft")
-            (:name "all mail" :key "a"
-                   :query "*"))))
+            ;; (:name "drafts" :key "d" :search-type tree
+            ;;        :query "tag:draft")
+            ;; (:name "all mail" :key "a" :search-type tree
+            ;;        :query "*")
+            )))
 
   (setq notmuch-tagging-keys
         '(("u" ("+unread") "Mark as unread")
