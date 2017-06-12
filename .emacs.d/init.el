@@ -518,13 +518,6 @@
 
 (use-package reftex
   :init
-  ;; If we set this var then `define-globalized-minor-mode' will not
-  ;; activate ws-butler-mode in markdown-mode buffers.  That means it
-  ;; won't strip spaces in lines like "# " which I use in writing
-  ;; essays, and it won't strip newlines that indicate paragraph flow
-  ;; (obscure Markdown feature)
-  (add-hook 'markdown-mode-hook (lambda () (setq ws-butler-mode-set-explicitly t)))
-
   (add-hook 'markdown-mode-hook 'turn-on-reftex)
   (defun spw/org-maybe-turn-on-reftex ()
     (when (string= default-directory (expand-file-name "~/doc/papers/"))
@@ -1039,8 +1032,13 @@
   :if (spw--optional-pkg-available-p "ws-butler")
   :demand
   :diminish ws-butler-mode
-  :init (setq ws-butler-global-exempt-modes
-              '(markdown-mode message-mode))
+  :init
+  ;; message-mode is sensitive to trailing whitespace in sig dashes
+  ;; and empty headers.  markdown-mode is sensitive in empty headers
+  ;; (e.g. "# " which I use in writing essays) and newlines that
+  ;; indicate paragraph flow (obscure Markdown feature)
+  (setq ws-butler-global-exempt-modes
+        '(markdown-mode message-mode))
   :config (ws-butler-global-mode))
 
 (use-package cycle-quotes
