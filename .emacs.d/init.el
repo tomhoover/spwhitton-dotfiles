@@ -2302,11 +2302,16 @@ superflous blank quoted lines."
                                           (message-templ-apply "UA")
                                           (mml-unsecure-message))))))
 
-  ;; C-c C-b should skip over mml's sign/encrypt lines
-  (defun message-goto-body--skip-mml-secure (&rest ignore)
-    (when (looking-at "^<#secure")
+  ;; C-c C-b should skip over mml's sign/encrypt lines (it is a bad
+  ;; idea to advise message-goto-body as various functions assume it
+  ;; does not skip over sign/encrypt lines
+  ;; (e.g. `notmuch-mua-check-no-misplaced-secure-tag')
+  (defun spw--message-goto-body--skip-mml-secure ()
+    (interactive)
+    (message-goto-body)
+    (when (looking-at "^<#\\(secure\\|part\\)")
       (forward-line)))
-  (advice-add 'message-goto-body :after #'message-goto-body--skip-mml-secure)
+  (bind-key "C-c C-b" 'spw--message-goto-body--skip-mml-secure message-mode-map)
 
   (defun spw--message-normalise ()
     (interactive)
@@ -2321,7 +2326,7 @@ superflous blank quoted lines."
       (let ((body (point)))
         ;; if the message begins with quoted text, insert a basic
         ;; salutation
-        (when (looking-at "^On .* wrote:$")
+        (when (looking-at "^\\(<#[^\n]+>\n\\)*On .* wrote:$")
           (insert "Hello,\n\n"))
         (message-goto-signature)
         (unless (eobp)
