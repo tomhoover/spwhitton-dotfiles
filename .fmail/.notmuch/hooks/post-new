@@ -35,3 +35,12 @@ fi
 
 # mark all spam as spam
 notmuch tag +spam -- folder:spam
+
+# ensure all deleted messages are in the trash folder
+floating_deleted=$(notmuch search --output=files -- tag:deleted)
+if [ ! -z "$floating_deleted" ]; then
+    mdmv $floating_deleted $HOME/.fmail/trash
+fi
+
+# mark all trash as trash
+notmuch tag +deleted -- folder:trash

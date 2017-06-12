@@ -1092,7 +1092,8 @@
   (setq notmuch-tagging-keys
         '(("u" ("+unread") "Mark as unread")
           ("s" ("+spam") "Mark as spam")
-          ("m" ("+killed") "Kill thread"))) ; 'm' for 'mute'
+          ("m" ("+killed") "Kill thread") ; 'm' for 'mute'
+          ("d" ("+deleted") "Send to trash")))
 
   ;; this ensures that hitting C-x m right after Emacs starts yields a
   ;; message with the correct From: address and User-Agent header, etc.

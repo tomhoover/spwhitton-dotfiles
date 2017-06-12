@@ -62,9 +62,9 @@ Channel          fmaild
 Master           :fmimap:Drafts
 Slave            :fmmaildir:drafts
 
-# Channel          fmailt
-# Master           :fmimap:INBOX/Trash
-# Slave            :fmmaildir:trash
+Channel          fmailt
+Master           :fmimap:Trash
+Slave            :fmmaildir:trash
 
 Channel          debian
 Master           :fmimap:Lists/Debian
@@ -99,7 +99,7 @@ Group            fastmail
 Channel          fmaili
 Channel          fmails
 Channel          fmaild
-# Channel          fmailt
+Channel          fmailt
 # Channel          fmaila
 Channel          debian
 Channel          dbulk
