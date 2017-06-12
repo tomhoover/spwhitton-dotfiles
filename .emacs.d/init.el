@@ -1101,13 +1101,17 @@
     (require 'notmuch))
   (advice-add 'compose-mail :before #'compose-mail--load-notmuch)
 
+  ;; always decrypt & verify PGP parts
+  (setq notmuch-crypto-process-mime t)
+  ;; have Emacs set envelope-from to be on the safe side
+  (setq mail-specify-envelope-from t
+        message-sendmail-envelope-from 'header
+        mail-envelope-from 'header)
+
   :config
   ;; some bindings
   (bind-key "S-SPC" 'notmuch-tree-scroll-message-window-back notmuch-tree-mode-map)
-  (bind-key "g" (notmuch-tree-close-message-pane-and #'notmuch-show-reply) notmuch-tree-mode-map)
-
-  ;; always decrypt & verify PGP parts
-  (setq notmuch-crypto-process-mime t))
+  (bind-key "g" (notmuch-tree-close-message-pane-and #'notmuch-show-reply) notmuch-tree-mode-map))
 
 
 
