@@ -2355,7 +2355,10 @@ superflous blank quoted lines."
 
   ;; this key is normally used to insert a Newsgroups: header, but I
   ;; don't need that
-  (bind-key "C-c C-n" 'spw--message-normalise message-mode-map))
+  (bind-key "C-c C-n" 'spw--message-normalise message-mode-map)
+
+  ;; default is not much use and I keep hitting it by mistake
+  (bind-key "C-c C-s" 'message-goto-subject notmuch-message-mode-map))
 
 (defun djcb/snip (b e summ)
   "Replace region B to E with SUMM like this: [snip:summary (n lines)]."
