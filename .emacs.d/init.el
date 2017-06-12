@@ -1057,7 +1057,6 @@
   :if (spw--optional-pkg-available-p "notmuch")
   :bind (("C-c m" . notmuch-jump-search)
          ("C-c z" . notmuch-tree))
-
   :init
   ;; these let bindings avoid the need to add saved searches to the
   ;; database, so that our database remains recreteable from just my
@@ -1101,10 +1100,10 @@
     (require 'notmuch))
   (advice-add 'compose-mail :before #'compose-mail--load-notmuch)
 
+  :config
   ;; some bindings
   (bind-key "S-SPC" 'notmuch-tree-scroll-message-window-back notmuch-tree-mode-map)
   (bind-key "g" (notmuch-tree-close-message-pane-and #'notmuch-show-reply) notmuch-tree-mode-map)
-
 
   ;; always decrypt & verify PGP parts
   (setq notmuch-crypto-process-mime t))
