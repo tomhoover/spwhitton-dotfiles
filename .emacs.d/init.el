@@ -1101,7 +1101,11 @@
 
   ;; some bindings
   (bind-key "S-SPC" 'notmuch-tree-scroll-message-window-back notmuch-tree-mode-map)
-  (bind-key "g" (notmuch-tree-close-message-pane-and #'notmuch-show-reply) notmuch-tree-mode-map))
+  (bind-key "g" (notmuch-tree-close-message-pane-and #'notmuch-show-reply) notmuch-tree-mode-map)
+
+
+  ;; always decrypt & verify PGP parts
+  (setq notmuch-crypto-process-mime t))
 
 
 
