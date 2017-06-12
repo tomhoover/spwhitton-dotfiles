@@ -379,15 +379,10 @@
   :defer 5
   :config
   (global-pointback-mode 1)
-
-  ;; Disable pointback-mode in notmuch tree view buffers.  When
-  ;; notmuch moves to a new message (e.g. upon hitting 'n'), it
-  ;; deletes the split message view, creates a new split, and displays
-  ;; the message there.  But deleting the split windows causes
-  ;; pointback mode to move point in the original window, so point is
-  ;; no longer on the message displayed.  This leads to various
-  ;; strange behaviours
-  (add-hook 'notmuch-tree-mode-hook (lambda () (pointback-mode 0))))
+  ;; see https://stackoverflow.com/a/6839968
+  (defun spw--disable-pointback ()
+    (add-hook 'after-change-major-mode-hook
+              (lambda () (pointback-mode 0) :append :local))))
 
 ;;; colour those parentheses
 
@@ -1057,6 +1052,15 @@
          ("C-c z" . notmuch-tree))
 
   :init
+  ;; Disable pointback-mode in notmuch tree view buffers.  When
+  ;; notmuch moves to a new message (e.g. upon hitting 'n'), it
+  ;; deletes the split message view, creates a new split, and displays
+  ;; the message there.  But deleting the split windows causes
+  ;; pointback mode to move point in the original window, so point is
+  ;; no longer on the message displayed.  This leads to various
+  ;; strange behaviours
+  (add-hook 'notmuch-tree-mode-hook 'spw-disable-pointback)
+
   ;; these let bindings avoid the need to add saved searches to the
   ;; database, so that our database remains recreteable from just my
   ;; Maildirs
