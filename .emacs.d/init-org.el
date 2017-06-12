@@ -62,6 +62,10 @@
       (call-interactively 'htmlize-buffer)
       (write-file "~/tmp/calendar.html"))))
 
+;;; links to notmuch messages
+
+(use-package org-notmuch :load-path "/usr/share/org-mode/lisp")
+
 
 
 ;;;; ---- preferences ----
