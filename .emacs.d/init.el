@@ -2249,7 +2249,7 @@ Assumes that the current buffer is `shell-mode'."
   ;; slightly modify C-c C-z behaviour: fix Mutt and Emacs which both
   ;; think that there doesn't need to be a newline before the
   ;; signature dashes
-  (add-hook 'message-mode-hook 'spw/fix-initial-signature)
+  ;; (add-hook 'message-mode-hook 'spw/fix-initial-signature)
   ;; (advice-add 'message-kill-to-signature :after #'spw/fix-signature-kill)
 
   (defun spw/debbugs-no-ack ()
@@ -2280,7 +2280,77 @@ superflous blank quoted lines."
               (footnote-mode)
               ;; annoying for WNPP; I want the bug number
               ;; (spw/debbugs-no-ack)
-              (message-goto-body))))
+              (message-goto-body)))
+
+  ;; ensure encrypted messages are also encrypted to me, so I can read
+  ;; them in my sent mail folder
+  (setq mml-secure-openpgp-encrypt-to-self t)
+
+  (use-package message-templ
+    :if (spw--optional-pkg-available-p "message-templ")
+    :commands message-templ-config-exec
+    :init
+    (setq message-templ-alist '(("default"
+                                 ("From" . "Sean Whitton <spwhitton@spwhitton.name>"))
+                                ("UA"
+                                 ("From" . "Sean Whitton <spwhitton@email.arizona.edu>"))
+                                ("Debian"
+                                 ("From" . "Sean Whitton <spwhitton@debian.org>"))))
+    (setq message-templ-config-alist '(("^To:.*@.*\\(\.edu\\|\.ac\.uk\\)"
+                                        (lambda ()
+                                          (message-templ-apply "UA")
+                                          (mml-unsecure-message))))))
+
+  ;; C-c C-b should skip over mml's sign/encrypt lines
+  (defun message-goto-body--skip-mml-secure (&rest ignore)
+    (when (looking-at "^<#secure")
+      (forward-line)))
+  (advice-add 'message-goto-body :after #'message-goto-body--skip-mml-secure)
+
+  (defun spw--message-normalise ()
+    (interactive)
+    (message-fill-yanked-message)
+    (spw/compact-blank-lines)
+    ;; sign messages by default
+    (mml-secure-message-sign-pgpmime)
+    ;; set up From address and disable signing where appropriate
+    (message-templ-config-exec)
+    (save-excursion
+      (message-goto-body)
+      (let ((body (point)))
+        ;; if the message begins with quoted text, insert a basic
+        ;; salutation
+        (when (looking-at "^On .* wrote:$")
+          (insert "Hello,\n\n"))
+        (message-goto-signature)
+        (unless (eobp)
+          (end-of-line -1))
+        ;; delete trailing whitespace in message body, when that
+        ;; message body exists (this protects signature dashes and
+        ;; empty headers)
+        (when (< body (point))
+          (delete-trailing-whitespace body (point)))
+        ;; ensure there is a newline before the signature dashes
+        (unless (bolp)
+          (insert "\n")))))
+
+  ;; try to strip signatures when citing
+  (setq notmuch-mua-cite-function 'message-cite-original-without-signature)
+
+  ;; with defaults, this gets us "On X, Y wrote:" lines
+  (setq message-citation-line-function 'message-insert-formatted-citation-line)
+
+  ;; run this when setting up the message.  we could run it in a hook
+  ;; run before the message is sent, but I always want to review the
+  ;; results of the cleanup
+  ;;
+  ;; note that certain aspects of the normalisation won't take effect
+  ;; at this stage of message buffer setup, such as adding the salutation
+  (add-hook 'message-setup-hook 'spw--message-normalise)
+
+  ;; this key is normally used to insert a Newsgroups: header, but I
+  ;; don't need that
+  (bind-key "C-c C-n" 'spw--message-normalise message-mode-map))
 
 (defun djcb/snip (b e summ)
   "Replace region B to E with SUMM like this: [snip:summary (n lines)]."
