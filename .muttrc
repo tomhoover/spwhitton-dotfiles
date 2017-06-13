@@ -182,7 +182,7 @@ macro pager ,j "<pipe-message>egrep 'X-RSS-URL:' | cut -d' ' -f2- | xargs firefo
 folder-hook feeds 'macro pager \cj ,j "URL viewer"'
 
 # train spam filter
-macro index,pager <f11> "<enter-command>unset resolve<enter><clear-flag>N<enter-command>set resolve<enter><save-message>+spam<enter>" "mark as spam"
+macro index,pager ,s "<enter-command>unset resolve<enter><clear-flag>N<enter-command>set resolve<enter><save-message>+spam<enter>" "mark as spam"
 
 # easier scrolling
 bind pager ] previous-page
