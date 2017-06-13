@@ -147,7 +147,7 @@ bind index,pager <F7> next-unread-mailbox
 
 # on startup, don't show new messages: distractions
 # works when I type mutt into a terminal, but not if I use xmonad launcher shortcut...
-folder-hook inbox push "<limit>!~N!~O!~D<enter><last-entry>"
+# folder-hook inbox push "<limit>!~N!~O!~D<enter><last-entry>"
 
 # quickly save attachments, woo
 macro attach S "<save-entry><kill-line>~/tmp/<enter>y<enter>"
