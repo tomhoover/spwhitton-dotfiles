@@ -222,3 +222,7 @@ color index brightwhite black "~N|~O"
 lists [0-9]+.*@bugs.debian.org
 subscribe debian-backports@lists.debian.org
 subscribe debian-devel@lists.debian.org
+
+# --- mbsync
+
+macro generic,index,pager G "<sync-mailbox><shell-escape>mbsync fastmail<enter><sync-mailbox>"
