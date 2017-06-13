@@ -13,3 +13,6 @@ notmuch tag +spam -- folder:spam
 
 # mark all trash as trash
 notmuch tag +deleted -- folder:trash
+
+# mark all archived mail as read and unflagged
+notmuch tag -unread -flagged -- path:pre2012/** or path:2013/** or path:2014/** or path:2015/** or path:2016/** or path:2017a/**
