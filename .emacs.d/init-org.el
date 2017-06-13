@@ -62,10 +62,6 @@
       (call-interactively 'htmlize-buffer)
       (write-file "~/tmp/calendar.html"))))
 
-;;; links to notmuch messages
-
-(use-package org-notmuch :load-path "/usr/share/org-mode/lisp")
-
 
 
 ;;;; ---- preferences ----
@@ -640,9 +636,6 @@ different occasions."
  '(("t" "Task to be refiled" entry (file "~/doc/org/refile.org")
     "* TODO %^{Title}
 %?")
-   ("m" "Task from mail to be refiled" entry (file "~/doc/org/refile.org")
-    "* TODO [[notmuch:id:%:message-id][%^{Title|\"%:subject\" from %:fromname}]]
-%?")
    ("n" "Information to be refiled" entry (file "~/doc/org/refile.org")
     "* %^{Title}
 %?")
@@ -662,11 +655,6 @@ different occasions."
 %?")
    ("u" "URI on clipboard" entry (file "~/doc/org/refile.org")
     "* SOMEDAY [[%^{URI|%x}][%^{Title}]]" :immediate-finish t)))
-
-(setq org-capture-templates-contexts
-      '(("t" "m" ((in-mode . "notmuch-show-mode")))
-        ("t" ((not-in-mode . "notmuch-show-mode")))
-        ("m" ((in-mode . "notmuch-show-mode")))))
 
 ;;; function and advice for my weekly review process (see the
 ;;; docstrings immediately below)

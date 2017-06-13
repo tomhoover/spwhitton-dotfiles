@@ -2,4 +2,4 @@
 0 */2 * * * srem --refresh-emacs
 
 */15 * * * * chronic doccheckin
-*/30 * * * * chronic notmuch new
+*/30 * * * * chronic mbsync fastmail

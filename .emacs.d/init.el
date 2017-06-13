@@ -375,17 +375,6 @@
 ;;; in more than one window
 
 (use-package pointback
-  ;; this breaks `notmuch-tree-mode' (when notmuch moves to a new
-  ;; message (e.g. upon hitting 'n'), it deletes the split message
-  ;; view, creates a new split, and displays the message there.  But
-  ;; deleting the split windows causes pointback mode to move point in
-  ;; the original window, so point is no longer on the message
-  ;; displayed.  This leads to various strange behaviours) and due to
-  ;; limitations of `define-globalized-minor-mode', it is not clear
-  ;; how to cleanly disable pointback only in `notmuch-tree-mode'
-  ;; buffers (see https://stackoverflow.com/a/6839968).  So just
-  ;; disable for now
-  :disabled t
   :commands global-pointback-mode
   :defer 5
   :config
@@ -1052,66 +1041,6 @@
   :bind ("C-c P" . redtick-mode)
   :init
   (setq redtick-history-file nil))
-
-(use-package notmuch
-  :if (spw--optional-pkg-available-p "notmuch")
-  :bind (("C-c m" . notmuch-jump-search)
-         ("C-c z" . notmuch-tree))
-  :init
-  ;; these let bindings avoid the need to add saved searches to the
-  ;; database, so that our database remains recreteable from just my
-  ;; Maildirs
-  (let ((lists "to:(lists.debian.org or lists.alioth.debian.org) and not to:-announce and not to:spwhitton@spwhitton.name and not to:spwhitton@email.arizona.edu")
-        (feeds "from:rss@spwhitton.name"))
-    (setq notmuch-saved-searches
-          `((:name "all unread" :key "u" :search-type tree
-                   :query "tag:unread")
-            (:name "personal unread" :key "p" :search-type tree
-                   :query ,(concat
-                            "tag:unread and not to:spwhitton@email.arizona.edu and not ("
-                            lists
-                            ") and not ("
-                            feeds
-                            ")"))
-            (:name "UA unread" :key "U" :search-type tree
-                   :query "tag:unread and to:spwhitton@email.arizona.edu")
-            (:name "listserv unread" :key "l" :search-type tree
-                   :query ,(concat "tag:unread and (" lists ")"))
-            (:name "feeds unread" :key "f" :search-type tree
-                   :query ,(concat "tag:unread and (" feeds ")"))
-            ;; (:name "flagged" :key "F" :search-type tree
-            ;;        :query "tag:flagged" )
-            (:name "sent" :key "s" :search-type tree
-                   :query "from:spwhitton@spwhitton.name or from:spwhitton@email.arizona.edu")
-            ;; (:name "drafts" :key "d" :search-type tree
-            ;;        :query "tag:draft")
-            ;; (:name "all mail" :key "a" :search-type tree
-            ;;        :query "*")
-            )))
-
-  (setq notmuch-tagging-keys
-        '(("u" ("+unread") "Mark as unread")
-          ("s" ("+spam") "Mark as spam")
-          ("m" ("+killed") "Kill thread") ; 'm' for 'mute'
-          ("d" ("+deleted") "Send to trash")))
-
-  ;; this ensures that hitting C-x m right after Emacs starts yields a
-  ;; message with the correct From: address and User-Agent header, etc.
-  (defun compose-mail--load-notmuch (&rest ignore)
-    (require 'notmuch))
-  (advice-add 'compose-mail :before #'compose-mail--load-notmuch)
-
-  ;; always decrypt & verify PGP parts
-  (setq notmuch-crypto-process-mime t)
-  ;; have Emacs set envelope-from to be on the safe side
-  (setq mail-specify-envelope-from t
-        message-sendmail-envelope-from 'header
-        mail-envelope-from 'header)
-
-  :config
-  ;; some bindings
-  (bind-key "S-SPC" 'notmuch-tree-scroll-message-window-back notmuch-tree-mode-map)
-  (bind-key "g" (notmuch-tree-close-message-pane-and #'notmuch-show-reply) notmuch-tree-mode-map))
 
 
 
@@ -1920,42 +1849,6 @@ Ensures the kill ring entry always ends with a newline."
     'fixed-pitch
     (face-attribute face :inherit))))
 
-;;; shells in Emacs
-
-(defun spw--shell-here ()
-  "Switch to this project's shell, then change to this buffer's directory."
-  (interactive)
-  (let ((here default-directory)
-        (shell-buffer-name
-         (if (projectile-project-name)
-             ;; convention established by `projectile-run-shell'
-             (concat "*shell " (projectile-project-name) "*")
-           ;; just one shell buffer, '*shell*', lies outside of any
-           ;; projectile project
-           "*shell*")))
-    (if (get-buffer shell-buffer-name)
-        (progn
-          (pop-to-buffer (get-buffer shell-buffer-name))
-          (unless (string= default-directory here)
-            (spw--shell-cd here))))
-    (shell shell-buffer-name)))
-
-(defun spw--shell-cd (dir)
-  "Try to change directory to DIR in the current buffer.
-
-Assumes that the current buffer is `shell-mode'."
-  ;; it might be more robust to use `comint-send-input', but that
-  ;; clutters the tail of the shell buffer
-  (end-of-buffer)
-  (insert (concat "cd " dir))
-  (comint-send-input))
-
-(defun spw--remote-shell (host)
-  "Open or switch to a shell on HOST, via TRAMP."
-  (interactive "sHost: ")
-  (let ((default-directory (concat "/" host ":")))
-    (shell (concat "*shell " host "*"))))
-
 
 
 ;;;; ---- personal settings ----
@@ -1979,6 +1872,9 @@ Assumes that the current buffer is `shell-mode'."
 
 ;; fixup-whitespace seems to make just-one-space redundant
 (bind-key "M-SPC" 'fixup-whitespace)
+
+;; never want to send any e-mail
+(unbind-key "C-x m")
 
 ;; fallback expanding
 (bind-key "M-/" 'hippie-expand)
@@ -2254,7 +2150,7 @@ Assumes that the current buffer is `shell-mode'."
   ;; slightly modify C-c C-z behaviour: fix Mutt and Emacs which both
   ;; think that there doesn't need to be a newline before the
   ;; signature dashes
-  ;; (add-hook 'message-mode-hook 'spw/fix-initial-signature)
+  (add-hook 'message-mode-hook 'spw/fix-initial-signature)
   ;; (advice-add 'message-kill-to-signature :after #'spw/fix-signature-kill)
 
   (defun spw/debbugs-no-ack ()
@@ -2291,21 +2187,6 @@ superflous blank quoted lines."
   ;; them in my sent mail folder
   (setq mml-secure-openpgp-encrypt-to-self t)
 
-  (use-package message-templ
-    :if (spw--optional-pkg-available-p "message-templ")
-    :commands message-templ-config-exec
-    :init
-    (setq message-templ-alist '(("default"
-                                 ("From" . "Sean Whitton <spwhitton@spwhitton.name>"))
-                                ("UA"
-                                 ("From" . "Sean Whitton <spwhitton@email.arizona.edu>"))
-                                ("Debian"
-                                 ("From" . "Sean Whitton <spwhitton@debian.org>"))))
-    (setq message-templ-config-alist '(("^To:.*@.*\\(\.edu\\|\.ac\.uk\\)"
-                                        (lambda ()
-                                          (message-templ-apply "UA")
-                                          (mml-unsecure-message))))))
-
   ;; C-c C-b should skip over mml's sign/encrypt lines (it is a bad
   ;; idea to advise message-goto-body as various functions assume it
   ;; does not skip over sign/encrypt lines
@@ -2317,54 +2198,8 @@ superflous blank quoted lines."
       (forward-line)))
   (bind-key "C-c C-b" 'spw--message-goto-body--skip-mml-secure message-mode-map)
 
-  (defun spw--message-normalise ()
-    (interactive)
-    (message-fill-yanked-message)
-    (spw/compact-blank-lines)
-    ;; sign messages by default
-    (mml-secure-message-sign-pgpmime)
-    ;; set up From address and disable signing where appropriate
-    (message-templ-config-exec)
-    (save-excursion
-      (message-goto-body)
-      (let ((body (point)))
-        ;; if the message begins with quoted text, insert a basic
-        ;; salutation
-        (when (looking-at "^\\(<#[^\n]+>\n\\)*On .* wrote:$")
-          (forward-line)
-          (insert "Hello,\n\n"))
-        (message-goto-signature)
-        (unless (eobp)
-          (end-of-line -1))
-        ;; delete trailing whitespace in message body, when that
-        ;; message body exists (this protects signature dashes and
-        ;; empty headers)
-        (when (< body (point))
-          (delete-trailing-whitespace body (point)))
-        ;; ensure there is a newline before the signature dashes
-        (unless (bolp)
-          (insert "\n")))))
-
-  ;; try to strip signatures when citing
-  (setq notmuch-mua-cite-function 'message-cite-original-without-signature)
-
-  ;; with defaults, this gets us "On X, Y wrote:" lines
-  (setq message-citation-line-function 'message-insert-formatted-citation-line)
-
-  ;; run this when setting up the message.  we could run it in a hook
-  ;; run before the message is sent, but I always want to review the
-  ;; results of the cleanup
-  ;;
-  ;; note that certain aspects of the normalisation won't take effect
-  ;; at this stage of message buffer setup, such as adding the salutation
-  (add-hook 'message-setup-hook 'spw--message-normalise)
-
-  ;; this key is normally used to insert a Newsgroups: header, but I
-  ;; don't need that
-  (bind-key "C-c C-n" 'spw--message-normalise message-mode-map)
-
   ;; default is not much use and I keep hitting it by mistake
-  (bind-key "C-c C-s" 'message-goto-subject notmuch-message-mode-map))
+  (bind-key "C-c C-s" 'message-goto-subject message-mode-map))
 
 (defun djcb/snip (b e summ)
   "Replace region B to E with SUMM like this: [snip:summary (n lines)]."
@@ -2486,38 +2321,6 @@ superflous blank quoted lines."
 ;; guide mandates them, so make a slightly modified style
 (c-add-style "linux-tabs" '("linux" (indent-tabs-mode . t)))
 (setq c-default-style "linux-tabs")
-
-;;; shells in Emacs
-
-;; while this forces us to yank text into another buffer before making
-;; edits, it's more annoying to require M-> before typing a command
-(setq comint-scroll-to-bottom-on-input t)
-
-;; for the time being zsh is my login shell, but for robustness, stick
-;; with bash in Emacs shells
-(setenv "ESHELL" "/bin/bash")
-
-(setenv "PAGER" "cat")
-
-(add-hook 'shell-mode-hook
-          (lambda ()
-            ;; avoid scroll jumps when newlines are output into the
-            ;; shell buffer (tip from Ryan Barrett's Emacs config)
-            (set (make-local-variable 'scroll-conservatively) 10)
-
-            ;; `dirtrack-mode' generally better than the default
-            ;; `shell-dirtrack-mode'
-            ;; TODO I think `dirtrack-list' needs to be modified for my custom PS1
-            (shell-dirtrack-mode 0)
-            (dirtrack-mode 1)))
-
-;; this is my entry point
-(bind-key "C-c J" 'spw--shell-here)
-
-;; TODO need to set `display-buffer-reuse-frames' so emacsclient calls
-;; from the shell work as expected?  e.g. when a command calls $EDITOR
-
-;; TODO open local and remote shells as root using TRAMP
 
 (provide 'init)
 ;;; init.el ends here
