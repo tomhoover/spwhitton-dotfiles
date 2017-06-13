@@ -116,9 +116,9 @@ set pgp_encrypt_sign_command="/usr/lib/mutt/pgpewrap gpg --use-agent --batch --q
 
 # --- message headers
 
-hdr_order From: Date: User-Agent: X-Mailer: x-oxford-username: Message-Id: To: Cc: Reply-To: Subject:
+hdr_order From: Date: x-oxford-username: Message-Id: To: Cc: Reply-To: Subject:
 ignore *
-unignore From: Date: User-Agent: X-Mailer: x-oxford-username: Message-Id: To: Cc: Reply-To: Subject:
+unignore From: Date: x-oxford-username: Message-Id: To: Cc: Reply-To: Subject:
 
 # --- mailboxes
 
