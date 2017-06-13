@@ -203,12 +203,13 @@ bind index,pager \cP print-message
 # safety, since mbsync trash functionality doesn't work with FastMail
 bind generic,index,pager d noop
 bind generic,index,pager D noop
+bind generic,index,pager \cd noop
 
-# ... but let me delete notes made on tablet computer
-folder-hook . bind generic,index,pager d noop
-folder-hook "notes" bind index,pager d delete-message
-# ... and delete mistaken spam trains
-folder-hook "spam" bind index,pager d delete-message
+# # ... but let me delete notes made on tablet computer
+# folder-hook . bind generic,index,pager d noop
+# folder-hook "notes" bind index,pager d delete-message
+# # ... and delete mistaken spam trains
+# folder-hook "spam" bind index,pager d delete-message
 
 # --- colours
 
