@@ -30,23 +30,23 @@ unset arrow_cursor
 set fast_reply
 set pager_context = 1
 set reply_to = ask-yes
-# use 'R' to recall -- this makes it less inconvenient to have
-# multiple drafts queued
-set recall = no
-#set pager_stop
+set pager_stop
 set tmpdir="~/local/mutt"
 set resolve = yes
 set noconfirmappend
 set abort_unmodified = no
 set mark_old = no                  # better with mbsync
 set editor = "emacsclient -t -a \"mg -n -f auto-fill-mode +8\""
-#set editor="switch-to-emacsclient"
 set tilde
 set smart_wrap
 set wrap=80
 unset markers
 set wait_key=no
 set print_command="muttprint"
+
+# use 'R' to recall, rather than asking to recall when we compose --
+# this makes it less inconvenient to have multiple drafts queued
+set recall = no
 
 # --- CatMail hooks
 
@@ -139,11 +139,10 @@ source ~/doc/mutt-groups           # keep shortcut groups in a separate
 # --- key bindings
 
 # filtering function keys, some from Jonathan
-macro index <F10> "l((~N|~O)!~D)<return><home>" "blah"
-macro index <F9> "lall\n<end>" "blahblah"
+macro index <F10> "l((~N|~O)!~D)<return><home>" "limit to mail to be processed"
+macro index <F9> "lall\n<end>" "limit to all mail"
 macro index,pager <F5> "c=inbox<return>" "switch to inbox"
 macro index,pager <F6> "c=sent<return>" "switch to sent"
-# macro index,pager <F7> "c=archive<return>" "switch to archive"
 bind index,pager <F7> next-unread-mailbox
 
 # on startup, don't show new messages: distractions
@@ -221,4 +220,4 @@ color index brightwhite black "~N|~O"
 
 lists [0-9]+.*@bugs.debian.org
 subscribe debian-backports@lists.debian.org
-subscribe debian-mentors@lists.debian.org
+subscribe debian-devel@lists.debian.org
