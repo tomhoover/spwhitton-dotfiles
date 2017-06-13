@@ -2331,6 +2331,7 @@ superflous blank quoted lines."
         ;; if the message begins with quoted text, insert a basic
         ;; salutation
         (when (looking-at "^\\(<#[^\n]+>\n\\)*On .* wrote:$")
+          (forward-line)
           (insert "Hello,\n\n"))
         (message-goto-signature)
         (unless (eobp)
