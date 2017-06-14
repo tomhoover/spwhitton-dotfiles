@@ -1,16 +1,62 @@
 #!/bin/bash
 
-# TODO use a tmpdir for the output dir, so can run more than one
-# search and have the results open in diff windows
+# searchmail --- Wrapper around mairix to open results in mutt
+#
+# Copyright (C) 2017  Sean Whitton
+#
+# searchmail is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# searchmail is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with searchmail.  If not, see <http://www.gnu.org/licenses/>.
 
-# TODO set terminal title to search string
+set -e
 
-# TODO '-n' option not to include threads, and pass command to mutt
-# (with -e) not to sort on threads, in that case
+USAGE="$0: usage: $0 [-n] search-patterns"
+mairix_opts=""
+mutt_opts=""
 
-output=$(mairix --threads $@)
-#echo $output
-
-if ! [ "$output" = "Matched 0 messages" ]; then
-    mutt -Rf ~/local/mairixresults
+# check args
+if [ "$#" = "0" ]; then
+    echo >&2 "$USAGE"
+    exit 1
 fi
+
+# process the one arg this script doesn't pass on to mairix
+if [ "$1" = "-n" ]; then
+    shift
+else
+    mairix_opts="$mairix_opts --threads"
+
+    # we assume the user has "sort = threads" in their ~/.muttrc, and
+    # override that when not including whole threads
+    mutt_opts="$mutt_opts -e\"set sort=date\""
+fi
+
+# set terminal title to search query
+xtitle "$@"
+
+# set up temporary maildir
+mfolder=$(mktemp -d ${0}XXXX)
+chmod 700 $mfolder
+
+# pass the mfolder and the query to mairix, and the mfolder to mutt
+mairix_opts="$mairix_opts --mfolder $mfolder $@"
+mutt_opts="$mutt_opts -Rf $mfolder"
+
+# run mairix and check if there were any search results
+output=$(mairix $mairix_opts)
+if ! [ "$output" = "Matched 0 messages" ]; then
+    # there were some results; open them in mutt
+    mutt $mutt_opts
+fi
+
+# clean up
+rm -rf $work
