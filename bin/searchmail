@@ -32,12 +32,12 @@ fi
 # process the one arg this script doesn't pass on to mairix
 if [ "$1" = "-n" ]; then
     shift
-else
-    mairix_opts="$mairix_opts --threads"
 
     # we assume the user has "sort = threads" in their ~/.muttrc, and
     # override that when not including whole threads
     mutt_opts="$mutt_opts -e\"set sort=date\""
+else
+    mairix_opts="$mairix_opts --threads"
 fi
 
 # set terminal title to search query
