@@ -17,7 +17,8 @@
 # You should have received a copy of the GNU General Public License
 # along with searchmail.  If not, see <http://www.gnu.org/licenses/>.
 
-USAGE="$0: usage: $0 [-n] search-patterns"
+us="$(basename $0)"
+USAGE="$us: usage: $us [-n] search-patterns"
 mairix_opts=""
 mutt_opts=""
 
@@ -33,27 +34,31 @@ if [ "$1" = "-n" ]; then
 
     # we assume the user has "sort = threads" in their ~/.muttrc, and
     # override that when not including whole threads
-    mutt_opts="$mutt_opts -e\"set sort=date\""
+    mutt_opts="$mutt_opts -e \"set sort=date\""
 else
     mairix_opts="$mairix_opts --threads"
 fi
 
-# set terminal title to search query
-xtitle "$@"
-
 # set up temporary maildir
-mfolder=$(mktemp --tmpdir -d ${0}XXXX)
+mfolder=$(mktemp --tmpdir -d ${us}XXXX)
+mkdir $mfolder/cur $mfolder/new $mfolder/tmp
 chmod 700 $mfolder
 
-# pass the mfolder and the query to mairix, and the mfolder to mutt
-mairix_opts="$mairix_opts --mfolder $mfolder $@"
+# pass the mfolder to mairix and mutt
+mairix_opts="$mairix_opts --mfolder $mfolder"
 mutt_opts="$mutt_opts -Rf $mfolder"
 
-# run mairix and check if there were any search results
-output=$(mairix $mairix_opts)
+# run mairix and check if there were any search results.  We use the
+# special "$@" to ensure that each argument is individually quoted in
+# case they contain spaces, but note that mairix search terms should
+# not contain spaces.  Instead of `f:"Sean Whitton"` you should pass
+# `f:Sean f:Whitton`
+output=$(mairix $mairix_opts "$@")
 if ! [ "$output" = "Matched 0 messages" ]; then
+    # set terminal title to search query
+    xtitle "mairix results: $@"
     # there were some results; open them in mutt
-    mutt $mutt_opts
+    eval "mutt $mutt_opts"
 fi
 
 # clean up

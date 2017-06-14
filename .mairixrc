@@ -1,7 +1,7 @@
 base=$HOME
 maildir=.fmail/*
 mbox=lib/annex/doc/mail/*
-mformat=mbox
+mformat=maildir
 mfolder=local/mairixresults
 database=~/local/mairixdb
 omit=spam*
