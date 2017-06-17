@@ -36,6 +36,10 @@ git_isclean =
 
 include = cat ~/src/dotfiles/lib/mr/dgit
 
+# --- git-svn
+
+include = [ -e "/usr/share/mr/git-svn" ] && cat /usr/share/mr/git-svn
+
 # --- Sensible pulls
 
 # Redefine git_update to avoid an unconditional `git pull` which can
