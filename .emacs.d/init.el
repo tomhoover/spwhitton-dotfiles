@@ -1040,7 +1040,9 @@
   :if (spw--optional-pkg-available-p "redtick")
   :bind ("C-c P" . redtick-mode)
   :init
-  (setq redtick-history-file nil))
+  (setq redtick-history-file nil)
+  :config
+  (remove-hook 'redtick-after-rest-hook #'redtick--save-history))
 
 
 
