@@ -194,6 +194,14 @@ bts-policy () {
     bts user debian-policy@packages.debian.org , package debian-policy , "$@"
 }
 
+dgit-view () {
+    if [ $# = 0 ]; then
+        1="--gbp"
+    fi
+    dgit "$@" --dgit-view-save=unquilted quilt-fixup
+    git checkout unquilted
+}
+
 # --- load zsh features
 
 # Change word boundary characters. Nabbed from
