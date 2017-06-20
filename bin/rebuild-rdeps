@@ -1,0 +1,32 @@
+#!/bin/sh
+
+us="$(basename $0)"
+
+# first arg is root of dep tree.  other args passed on to sbuild
+# (e.g. --extra-package="$HOME/src/dh-elpa_1.0_all.deb" --add-depends="dh-elpa (>= 1.0)")
+root="$1"
+shift
+
+# ensure our sources are up-to-date
+#sudo apt-get update
+
+# need a temporary directory, as sbuild will download source packages
+work=$(mktemp --tmpdir -d ${us}XXXX)
+# logs of failed builds will go here
+mkdir -p $HOME/tmp
+(
+    cd $work
+
+    build-rdeps --quiet $root | while read p; do
+        sbuild --no-apt-update --no-apt-upgrade --no-apt-distupgrade  \
+               --no-run-piuparts --no-run-lintian --no-run-autopkgtest \
+               "$p" "$@"
+        if [ $? != 0 ]; then
+            echo "failed: $p"
+            mv ${p}_*Z.build  $HOME/tmp
+        fi
+    done
+)
+
+# clean up
+rm -rf $work
