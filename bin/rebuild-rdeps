@@ -10,10 +10,10 @@ shift
 # ensure our sources are up-to-date
 #sudo apt-get update
 
-# need a temporary directory, as sbuild will download source packages
-work=$(mktemp --tmpdir -d ${us}XXXX)
 # logs of failed builds will go here
 mkdir -p $HOME/tmp
+# need a temporary directory, as sbuild will download source packages
+work=$(mktemp --tmpdir=$HOME/tmp -d ${us}XXXX)
 (
     cd $work
 
