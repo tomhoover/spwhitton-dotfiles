@@ -254,7 +254,7 @@ if ( defined $loc ) {
 
 # TODO luksClose if necessary & umount
 # system "sudo umount $loc";
-status "info: you can unmount & eject $loc";
+status "info: you can unmount & eject $loc" if ( defined $loc );
 
 # ---- local system maintenance
 
