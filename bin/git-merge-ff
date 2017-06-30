@@ -8,6 +8,10 @@
 # modified by spwhitton not to output a diff when the fast-forward
 # didn't change anything
 
+# modified by spwhitton to add trailing '--' to call to git-diff(1),
+# which avoids an error when there is a filename and branch with the
+# same name
+
 _usage() {
     echo "Usage: git merge-ff <branch> [<committish-to-merge>]" 1>&2
     exit 1
@@ -46,7 +50,7 @@ _merge_ff() {
         if git update-ref -m "merge $commit: Fast forward" "refs/heads/$branch" "$commit_orig_hash" "$branch_orig_hash"; then
             if [ -z $quiet ]; then
                 echo "Fast forward"
-                git diff --stat "$branch@{1}" "$branch"
+                git diff --stat "$branch@{1}" "$branch" --
             fi
         else
             echo "Error: fast forward using update-ref failed" 1>&2
