@@ -130,14 +130,12 @@ $seq->add_should_succeed("ls local/pub");
 $seq->run();
 $term->get_reply(
                  prompt => "Consider cleaning up/annexing files in these two dirs.",
-                 choices => [qw|okay|],
                  default => 'okay',
                 );
 $seq->add_should_succeed("ls");
 $seq->run();
 $term->get_reply(
                  prompt => "Clean up any loose files, e.g. from sbuild runs.",
-                 choices => [qw|done|],
                  default => 'done',
                 );
 
@@ -269,7 +267,6 @@ $seq->add_should_succeed("df -h");
 $seq->run();
 $term->get_reply(
                  prompt => "Confirm that host has enough disc space, or clean up some files.",
-                 choices => [qw|done|],
                  default => 'done',
                 );
 
@@ -278,7 +275,6 @@ if ($host eq "athena") {
     $seq->run();
     $term->get_reply(
                      prompt => "If athena was rebooted, perform athena reboot procedure.",
-                     choices => [qw|done|],
                      default => 'done',
                     );
 }
