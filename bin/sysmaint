@@ -81,7 +81,7 @@ if (@ARGV) {
             exit 1;
         }
     }
-} elsif ($host ne "athena.silentflame.com") {
+} elsif ($host ne "athena") {
     status "you didn't specify a drive to perform a coldbkup to as a command";
     status "line argument to this script";
     exit unless $term->ask_yn(
@@ -273,7 +273,7 @@ $term->get_reply(
                  default => 'done',
                 );
 
-if ($host eq "athena.silentflame.com") {
+if ($host eq "athena") {
     $seq->add_should_succeed("uptime");
     $seq->run();
     $term->get_reply(
