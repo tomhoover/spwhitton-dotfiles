@@ -334,6 +334,7 @@
 ;;; OpenWith
 
 (use-package openwith
+  :if (spw--optional-pkg-available-p "openwith")
   :commands openwith-mode
   ;; I want this immediately
   :demand
@@ -413,7 +414,8 @@
   (add-hook hook
             (lambda ()
               (eldoc-mode 1)
-              (aggressive-indent-mode 1)
+	      (when (fboundp 'aggressive-indent-mode)
+		(aggressive-indent-mode 1))
               (rainbow-delimiters-mode 1))))
 
 ;;; boxquotes
@@ -802,6 +804,7 @@
 ;;; make dired copy and move asynchronously
 
 (use-package async
+  :if (spw--optional-pkg-available-p "async")
   :init (when (require 'dired-aux)
           (require 'dired-async)))
 
@@ -818,7 +821,8 @@
 
 ;;; make Emacs regexps easier
 
-(use-package visual-regexp)
+(use-package visual-regexp
+  :if (spw--optional-pkg-available-p "visual-regexp"))
 
 ;;; advanced key binding techniques with hydra
 
@@ -933,6 +937,7 @@
 ;;; M-. and M-, and C-c C-d [C-]d to describe
 
 (use-package elisp-slime-nav
+  :if (spw--optional-pkg-available-p "elisp-slime-nav")
   :commands (turn-on-elisp-slime-nav-mode elisp-slime-nav-mode)
   :init (dolist (hook '(emacs-lisp-mode-hook ielm-mode-hook))
           (add-hook hook 'elisp-slime-nav-mode)))
@@ -974,6 +979,7 @@
         (if arg (helm-dash-at-point) (helm-dash))))))
 
 (use-package helm
+  :if (spw--optional-pkg-available-p "helm")
   :init (require 'helm-config)
   :bind ("C-c r" . helm-surfraw))
 
