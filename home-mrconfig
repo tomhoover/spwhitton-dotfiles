@@ -89,10 +89,10 @@ lib =
         return 1
     }
     workstation() {
-        on swhitton@artemis swhitton@zephyr spwhitton@hephaestus spwhitton@iris
+        on swhitton@zephyr spwhitton@hephaestus spwhitton@iris
     }
     mine() {
-        workstation || on swhitton@athena
+        workstation || on spwhitton@athena
     }
     # tucson() {
     #     on artemis shortgeese athena hephaestus iris
