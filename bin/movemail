@@ -3,7 +3,7 @@
 . $HOME/.shenv
 
 if offline; then
-    echo >&2 ERROR: We\'re offline; cannot sync mail
+    echo >&2 ERROR: We\'re offline\; cannot sync mail
     exit 1
 else
     postqueue -f
