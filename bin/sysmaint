@@ -58,7 +58,6 @@ my @annexes = qw/annex.git wikiannex.git dionysus.git/;
 # ---- prep
 
 chdir $ENV{HOME};
-system "mount lib/athena 2>/dev/null" || 1;
 my ($loc, $drive_name, $short_drive_name);
 
 if (@ARGV) {
@@ -82,7 +81,7 @@ if (@ARGV) {
             exit 1;
         }
     }
-} else {
+} elsif ($host ne "athena.silentflame.com") {
     status "you didn't specify a drive to perform a coldbkup to as a command";
     status "line argument to this script";
     exit unless $term->ask_yn(
@@ -94,9 +93,6 @@ if (@ARGV) {
 # ---- pre-backup cleanup tasks
 
 $seq->add_should_zero("ls tmp");
-$seq->add_should_zero("ssh athena ls tmp");
-$seq->add_should_zero("ssh athena ls local/files/tmp");
-$seq->add_should_zero("ls lib/athena/tmp");
 $seq->add_should_succeed("src-register-all");
 $seq->run();
 
@@ -128,6 +124,22 @@ while (42) {
         last;
     }
 }
+
+$seq->add_should_succeed("ls local/big");
+$seq->add_should_succeed("ls local/pub");
+$seq->run();
+$term->get_reply(
+                 prompt => "Consider cleaning up/annexing files in these two dirs.",
+                 choices => [qw|okay|],
+                 default => 'okay',
+                );
+$seq->add_should_succeed("ls");
+$seq->run();
+$term->get_reply(
+                 prompt => "Clean up any loose files, e.g. from sbuild runs.",
+                 choices => [qw|done|],
+                 default => 'done',
+                );
 
 # ---- standard backup procedure
 
@@ -244,38 +256,32 @@ if ( defined $loc ) {
 
 # TODO luksClose if necessary & umount
 # system "sudo umount $loc";
-
-# ---- remote system maintenance
-
-# TODO put a flag file on athena so this only happens once per week
-# or, better, just rework this so I ssh to athena and run sysmaint
-# there
-
 status "info: you can unmount & eject $loc";
-exit unless $term->ask_yn(
-                          prompt =>
-                          "Backups complete.  Perform remote & local system maintainance?"
-                         );
-
-status "checking athena's storage";
-system "ssh athena df -h";
-my $disc_space_okay = $term->ask_yn(
-                                    prompt => "Does athena have enough free disc space?",
-                                    default => 'y',
-                                   );
-die "deal with athena's low free disc space" unless $disc_space_okay;
-
-status "checking athena's uptime";
-system "ssh athena uptime";
-my $athena_rebooted = $term->ask_yn(
-                                    prompt => "Was athena rebooted?",
-                                    default => 'n',
-                                   );
-die "perform athena reboot procedure" if $athena_rebooted;
-
-$seq->add_should_succeed("ssh -t athena 'sudo apt-get update && sudo apt-get upgrade && sudo apt-get autoremove && sudo apt-get autoclean'");
 
 # ---- local system maintenance
+
+exit unless $term->ask_yn(
+                          prompt =>
+                          "Backups complete.  Perform local system maintainance?"
+                         );
+
+$seq->add_should_succeed("df -h");
+$seq->run();
+$term->get_reply(
+                 prompt => "Confirm that host has enough disc space, or clean up some files.",
+                 choices => [qw|done|],
+                 default => 'done',
+                );
+
+if ($host eq "athena.silentflame.com") {
+    $seq->add_should_succeed("uptime");
+    $seq->run();
+    $term->get_reply(
+                     prompt => "If athena was rebooted, perform athena reboot procedure.",
+                     choices => [qw|done|],
+                     default => 'done',
+                    );
+}
 
 # clean packages installed by mk-build-deps(1)
 $seq->add_should_succeed("sudo aptitude remove '~n-build-deps\$'");
@@ -284,10 +290,9 @@ $seq->add_should_succeed("sudo apt-get update");
 $seq->add_should_succeed("sudo apt-get upgrade");
 $seq->add_should_succeed("sudo apt-get dist-upgrade");
 $seq->add_should_succeed("sudo apt-get -y autoremove");
+$seq->add_should_succeed("sudo apt-get autoclean");
 
 $seq->add_should_zero("mailq | grep -v 'Mail queue is empty'");
-$seq->add_should_zero("ssh athena mailq | grep -v 'Mail queue is empty'");
-
 $seq->run();
 
 # ---- subroutines
