@@ -18,5 +18,5 @@ if [ "$(hostname -f)" = "athena.silentflame.com" ]; then
     fi
 else
     # on a workstation, get connected to ma
-    mosh athena /home/swhitton/bin/ii
+    mosh athena /home/spwhitton/bin/ii
 fi
