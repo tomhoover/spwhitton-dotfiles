@@ -22,6 +22,8 @@ git_push = git push-all
 # find dirty working directories, i.e., uncommitted changes and
 # untracked files
 # TODO possibly improve this by looking at git_status in /usr/bin/mr
+# TODO doesn't work for direct mode git annex repos (see `isclean =`
+# workarounds below, and on athena branch)
 git_isclean = 
     (
      # 1st line: check HEAD versus index
