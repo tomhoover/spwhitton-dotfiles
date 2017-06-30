@@ -1,10 +1,14 @@
 #!/usr/bin/perl
 
-# Cold (offline) backups & other elements in a weekly maintenance routine
+# Sync up repositories, clean up temporary files, offline backups &
+# system maintenance which should not happen unattended
 
-# The idea is that if this script dies it can be safely be re-run from the beginning
-
-# Note that each backup drive needs a unique filesystem label!
+# Notes:
+#
+# - if this script dies, it should be possible to run it from the beginning
+# - we assume that each offline backup drive has a unique filesystem
+#   label, and that it is mounted to a directory with name equal to this
+#   label (as udev does by default these days)
 
 use strict;
 use warnings;
@@ -23,6 +27,8 @@ use List::MoreUtils "apply";
 use File::Spec::Functions "rel2abs";
 use Sys::Hostname;
 
+# ---- globals
+
 my $seq = ShellSequence->new();
 my $term = Term::ReadLine->new('brand');
 my $host = hostname;
@@ -30,17 +36,23 @@ my $host = hostname;
 # ---- config
 
 our @src_exceptions = qw/hscripts/;
+
+# where are our git repos?  a host defined in ~/.ssh/config
+our $git_host = "athena";
+
+# on the $git_host, where are our repositories?
 our $git = "/srv/git/repositories";
 
-# since I am now using exclusively gcrypt's rsync mode, I do not need
-# to detect whether a repo is a gcrypt repo before attempting to back
-# it up.  Note that git-remote-gcrypt has a --check option for doing
-# this, though
+# on the $git_host, where are our git-remote-gcrypt repos?
+# (we have them in a separate dir because we use exclusively gcrypt's
+# rsync mode.  otherwise, if mixed in with regular git repos, gcrypt
+# has a --check option)
 our $gcrypt = "/srv/gcrypt";
 
 # annexes that should be inited on the backup drive, and synced with
 # the corresponding annex in $HOME.  This list is manually maintained
-# because I do not want to run `git annex init` en masse
+# because I do not want this script to run `git annex init` in lots of
+# repos, creating bogus UUIDs
 my @annexes = qw/annex.git wikiannex.git dionysus.git/;
 
 # ---- prep
@@ -138,6 +150,7 @@ if ( defined $loc ) {
     {
         mkdir "$loc/gitbk/github" unless ( -d "$loc/gitbk/github" );
         local $CWD = "$loc/gitbk/github";
+        # TODO should login to github API to work around rate limiting
         $seq->add_should_succeed("github-backup spwhitton");
         $seq->run();
     }
