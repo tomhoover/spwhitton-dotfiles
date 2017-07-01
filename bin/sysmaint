@@ -159,13 +159,14 @@ $seq->run();
 if ( defined $loc ) {
 
     # ---- github-backup
-    {
-        mkdir "$loc/gitbk/github" unless ( -d "$loc/gitbk/github" );
-        local $CWD = "$loc/gitbk/github";
-        # TODO should login to github API to work around rate limiting
-        $seq->add_should_succeed("github-backup spwhitton");
-        $seq->run();
-    }
+    # handed over to a cronjob on athena
+    # {
+    #     mkdir "$loc/gitbk/github" unless ( -d "$loc/gitbk/github" );
+    #     local $CWD = "$loc/gitbk/github";
+    #     # TODO should login to github API to work around rate limiting
+    #     $seq->add_should_succeed("github-backup spwhitton");
+    #     $seq->run();
+    # }
 
     # ---- athena repos
     my $athena_git_repos = capture {
