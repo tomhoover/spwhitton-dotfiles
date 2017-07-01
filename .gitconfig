@@ -39,7 +39,7 @@
 [url "https://git.spwhitton.name/"]
      insteadOf = git://spwhitton.name/
      insteadOf = athena:
-[url "swhitton@athena.silentflame.com:"]
+[url "spwhitton@athena.silentflame.com:"]
      insteadOf = athenah:
 
 [url "git@github.com:"]
