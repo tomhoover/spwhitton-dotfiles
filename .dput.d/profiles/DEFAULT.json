@@ -1,19 +1,19 @@
 {
+    "__comment": "permit source-only uploads",
     "-hooks": [
-        // permit source-only uploads
-        "check-debs",
+        "check-debs"
     ],
 
     "+hooks": [
         "checksums",
-        "impatient",
+        "impatient"
     ],
 
-    // require explicit selection of ftp-master
+    "__comment": "require explicit selection of ftp-master",
     "default_host_main": "debomatic-amd64",
 
     "full_upload_log": true,
 
-    // avoid any problems with dgit (see #827879)
-    "run_lintian": false,
+    "__comment": "avoid any problems with dgit (#827879)",
+    "run_lintian": false
 }
