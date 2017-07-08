@@ -88,6 +88,7 @@ alias uavpn="pkill rtorrent && sudo openconnect https://vpn.arizona.edu/ && TERM
 alias loungempd="ssh TallGeese /Applications/VLC.app/Contents/MacOS/VLC -I rc --loop http://192.168.1.72:8000"
 alias sid-build-deps="sudo mk-build-deps -irt 'apt-get -o Debug::pkgProblemResolver=yes -t sid --no-install-recommends'"
 alias testing-build-deps="sudo mk-build-deps -irt 'apt-get -o Debug::pkgProblemResolver=yes -t testing --no-install-recommends'"
+alias stable-build-deps="sudo mk-build-deps -irt 'apt-get -o Debug::pkgProblemResolver=yes -t stable --no-install-recommends'"
 alias test-package-plan="schroot -d $HOME -- /bin/sh -c \"cabal --no-require-sandbox update && cd src/package-plan && perl test-packages.pl\""
 alias wnpomodoro="mplayer ~/lib/annex/doc/sounds/*pomodoro.mp3"
 alias ghc8-sbuild="sbuild --extra-repository='deb http://httpredir.debian.org/debian experimental main' --build-dep-resolver=aspcud --add-depends=\"ghc (>= 8)\""
