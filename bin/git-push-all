@@ -64,16 +64,16 @@ foreach my $branch ( @branches ) {
     my $tracking = $config->get( key => "branch.$branch.remote" );
 
     if ( defined $pushRemote ) {
-        print "I: pushing $branch to $pushRemote (its pushRemote)\n";
+        # print "I: pushing $branch to $pushRemote (its pushRemote)\n";
         push @{ $pushes{$pushRemote} }, $branch;
     # don't push unless it already exists on the remote: this script
     # avoids creating branches
     } elsif ( defined $pushDefault
               && "remotes/$pushDefault/$branch" ~~ @allBranches ) {
-        print "I: pushing $branch to $pushDefault (the remote.pushDefault)\n";
+        # print "I: pushing $branch to $pushDefault (the remote.pushDefault)\n";
         push @{ $pushes{$pushDefault} }, $branch;
     } elsif ( !defined $pushDefault && defined $tracking ) {
-        print "I: pushing $branch to $tracking (probably to its tracking branch)\n";
+        # print "I: pushing $branch to $tracking (probably to its tracking branch)\n";
         push @{ $pushes{$tracking} }, $branch;
     } else {
         die "E: couldn't find anywhere to push $branch";
