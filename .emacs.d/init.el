@@ -441,11 +441,19 @@
              boxquote-unbox-region
              boxquote-unbox))
 
-;;; word count in modeline, when I want it
+;;; word count in modeline
 
 (use-package wc-mode
   :if (spw--optional-pkg-available-p "wc-mode")
   :init
+  (defun spw--large-buffer-disable-wc-mode (orig-fun &rest args)
+    "Disable `wc-mode' if the buffer has a large number of words.
+
+This is a workaround for `wc-mode''s performance issues."
+    (unless (> (wc nil nil 1) 4000)
+      (apply orig-fun args)))
+  (advice-add 'wc-mode :around #'spw--large-buffer-disable-wc-mode)
+
   (setq wc-modeline-format "%tw words"))
 
 ;;; company-mode for smart and easy completion
