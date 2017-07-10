@@ -162,9 +162,6 @@
 ;; turn off blink-cursor-mode if it ended up on
 (when (fboundp 'blink-cursor-mode) (blink-cursor-mode 0))
 
-;; get the mouse out of the way
-(mouse-avoidance-mode 'exile)
-
 ;;; zenburn
 
 (use-package zenburn-theme
