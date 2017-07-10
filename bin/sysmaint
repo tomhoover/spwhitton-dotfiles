@@ -251,6 +251,8 @@ if ( defined $loc ) {
     backup_repo("https://anonscm.debian.org/git/pkg-mozext/self-destructing-cookies.git", "alioth");
     backup_repo("https://anonscm.debian.org/git/collab-maint/mairix.git", "alioth");
 
+    backup_repo("https://anonscm.debian.org/git/python-modules/packages/pytest-helpers-namespace.git", "alioth");
+
 }
 
 # TODO luksClose if necessary & umount
