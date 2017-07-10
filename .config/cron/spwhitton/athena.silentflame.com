@@ -16,9 +16,9 @@
 # ikiwiki midnight maintenance: update day on calendar marked as today
 # (cannot be @daily as that is not semantically guaranteed to be at
 # midnight)
-0 0 * * * ikiwiki --setup /home/swhitton/src/athpriv/spwhitton.setup --refresh
+0 0 * * * ikiwiki --setup /home/spwhitton/src/athpriv/spwhitton.setup --refresh
 
 # old jobs:
 #@daily chronic athena-publish-org-docs
-#@reboot cd /home/swhitton/lib/dionysus && git annex watch
-#@reboot mount /home/swhitton/lib/fm
+#@reboot cd /home/spwhitton/lib/dionysus && git annex watch
+#@reboot mount /home/spwhitton/lib/fm
