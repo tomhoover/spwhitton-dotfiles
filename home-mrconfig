@@ -125,6 +125,7 @@ lib =
                 src \
                 lib \
                 lib/athena \
+                lib/backup \
                 local/mutt \
                 local/mpd \
                 local/anacron/spool \
