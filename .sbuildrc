@@ -18,8 +18,9 @@ $lintian_opts = [
 # don't run by default: see build-for-upload function in .zshrc
 $run_piuparts = 0;
 $piuparts_opts = [
+    '--no-eatmydata',
     '--schroot',
-    '%r-%a-piuparts',
+    '%r-%a-sbuild',
     '--fail-if-inadequate',
     # '--fail-on-broken-symlinks', # too many false positives
     '--log-level=info',
