@@ -886,6 +886,7 @@ https://github.com/company-mode/company-mode/issues/94#issuecomment-40884387"
           (add-hook hook 'elisp-slime-nav-mode)))
 
 (use-package world-time-mode
+  :if (spw--optional-pkg-available-p "world-time-mode")
   :commands world-time-list
   :bind ("C-c g t" . spw/world-time-list))
 
