@@ -1094,28 +1094,6 @@ Author unknown."
           (if this-win-2nd (other-window 1))))))
 (bind-key "C-c s" 'spw--toggle-window-split)
 
-;;; join up setqs when editing Emacs config
-
-(defun spw/join-setqs ()
-  "Interactively join a series of setq forms into a single definition."
-  (interactive)
-  (open-line 1)
-  (insert "(setq)")
-  (next-line)
-  (beginning-of-line)
-  (while (looking-at "(setq")
-    (call-interactively 'sp-kill-word)
-    (sp-backward-sexp)
-    (sp-join-sexp)
-    (next-line)
-    (beginning-of-line))
-  (sp-backward-sexp)
-  (next-line)
-  (delete-indentation)
-  (beginning-of-line)
-  (mark-sexp)
-  (indent-region (region-beginning) (region-end)))
-
 (defun magnars/move-beginning-of-line-dwim (arg)
   "Move point back to indentation of beginning of line.
 
