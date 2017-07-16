@@ -214,6 +214,7 @@
 (defmacro spw--paredit-unsteal (map)
   "Reclaim core Emacs bindings from Paredit-like keymap MAP."
   `(progn
+     ;; these are core Emacs text-editing bindings
      (define-key ,map (kbd "M-s") nil)
      (define-key ,map (kbd "M-r") nil)
 
@@ -224,7 +225,7 @@
      (when (lookup-key ,map (kbd "M-<up>"))
        (define-key ,map (kbd "M-<up>") 'paredit-raise-sexp))
      
-     ;; unsteal RET to fix IELM
+     ;; this is to fix IELM
      (define-key ,map (kbd "RET") nil)))
 
 (use-package paredit
