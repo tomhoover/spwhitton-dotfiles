@@ -904,39 +904,6 @@ https://github.com/company-mode/company-mode/issues/94#issuecomment-40884387"
                                   ("Europe/Paris" "Paris")
                                   ("Asia/Seoul" "Seoul"))))
 
-;;; Documentation browsing
-
-(defun spw/helm-dash (arg)
-  (interactive "P")
-  (when (eq major-mode 'haskell-mode)
-    (spw/helm-dash-haskell arg)))
-(bind-key "C-c d" 'spw/helm-dash)
-
-;; TODO maybe projectile-project-root instaed?
-(defun spw/helm-dash-haskell (arg)
-  (let ((project-docsets (f-join (magit-toplevel) "docsets/")))
-    (when (f-directory? project-docsets)
-      ;; helm-dash ignores local versions of these variables, so call
-      ;; the function within a let binding
-      (let* ((helm-dash-docsets-path project-docsets)
-             (helm-dash-common-docsets (helm-dash-installed-docsets)))
-        (if arg (helm-dash-at-point) (helm-dash))))))
-
-(use-package helm
-  :if (spw--optional-pkg-available-p "helm")
-  :init (require 'helm-config)
-  :bind ("C-c r" . helm-surfraw))
-
-;; TODO do I still want this?  if so, ITP.  probably as part of
-;; cleaning up/fixing Emacs Haskell config, and ITP of dash-haskell
-
-(use-package helm-dash
-  :disabled t
-  :commands (helm-dash
-             helm-dash-at-point
-             helm-dash-install-docset
-             helm-dash-installed-docsets))
-
 (use-package debpaste
   :if (spw--optional-pkg-available-p "debpaste")
   :commands (debpaste-display-paste
@@ -953,19 +920,6 @@ https://github.com/company-mode/company-mode/issues/94#issuecomment-40884387"
     'debpaste-display-received-info-in-buffer)
   (define-key debpaste-command-map "l"
     'debpaste-display-posted-info-in-buffer))
-
-;; (package-initialize)
-;; (when (fboundp 'pdf-tools-install)
-;;   (pdf-tools-install)
-
-
-;;   (defun spw/highlight-and-tidy ()
-;;     "Highlight current selection and tidy mouse pointer away."
-;;     (interactive)
-;;     (call-interactively 'pdf-annot-add-highlight-markup-annotation)
-;;     (call-process "xmousetidy"))
-
-;;   (bind-key (kbd "<XF86Launch7>") 'spw/highlight-and-tidy pdf-view-mode-map))
 
 (use-package ws-butler
   :if (spw--optional-pkg-available-p "ws-butler")
