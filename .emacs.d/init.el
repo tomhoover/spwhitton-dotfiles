@@ -245,8 +245,8 @@
   :if (spw--optional-pkg-available-p "paredit-everywhere")
   :commands paredit-everywhere-mode
   :init
-  (add-hook 'prog-mode-hook 'paredit-everywhere-mode)
-  (add-hook 'minibuffer-setup-hook 'paredit-everywhere-mode)
+  (dolist (hook '(prog-mode-hook minibuffer-setup-hook))
+    (add-hook hook 'paredit-everywhere-mode))
   :config
   (spw--paredit-unsteal paredit-everywhere-mode-map))
 
