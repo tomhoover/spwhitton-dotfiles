@@ -444,22 +444,6 @@ https://github.com/company-mode/company-mode/issues/94#issuecomment-40884387"
   ;; This binding replaces use of `markdown-export'.
   (bind-key "<f9>" 'spw/pandoc-compile markdown-mode-map))
 
-;;; RefTeX
-
-(use-package reftex
-  :init
-  (add-hook 'markdown-mode-hook 'turn-on-reftex)
-  (defun spw/org-maybe-turn-on-reftex ()
-    (when (string= default-directory (expand-file-name "~/doc/papers/"))
-      (turn-on-reftex)))
-  (add-hook 'org-mode-hook 'spw/org-maybe-turn-on-reftex)
-  :config
-  ;; This setup binds `C-c [ RET search-string RET' to try to insert a
-  ;; citation
-  (setq reftex-default-bibliography (quote ("~/doc/spw.bib"))
-        reftex-cite-format '((?\C-m . "[@%l]")
-                             (?- . "[-@%l]"))))
-
 ;;; Deft
 
 (use-package deft
