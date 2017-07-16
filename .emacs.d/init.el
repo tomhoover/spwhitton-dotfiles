@@ -196,7 +196,7 @@
 ;; either.  See older dotfiles repo commits
 
 (when (version< "25.1" emacs-version)
-  ;; if save-place is slowing down quitting Emacs:
+  ;; if save-place is slowing down quitting Emacs, uncomment this:
   ;; (setq save-place-forget-unreadable-files nil)
   (save-place-mode 1))
 
@@ -315,7 +315,6 @@ hooks listed in `lisp-major-mode-hooks'."
 (use-package openwith
   :if (spw--optional-pkg-available-p "openwith")
   :commands openwith-mode
-  ;; I want this immediately
   :demand
   :config (openwith-mode 1))
 
@@ -366,9 +365,8 @@ hooks listed in `lisp-major-mode-hooks'."
 (use-package rainbow-mode
   :if (spw--optional-pkg-available-p "rainbow-mode")
   :commands rainbow-mode
-  :init
-  (add-hook 'html-mode-hook 'rainbow-mode)
-  (add-hook 'css-mode-hook 'rainbow-mode))
+  :init (dolist (hook '(html-mode-hook css-mode-hook))
+          (add-hook hook 'rainbow-mode)))
 
 ;;; keep reindenting lisp
 
@@ -422,22 +420,19 @@ This is a workaround for `wc-mode''s performance issues."
 
 (use-package company
   :if (spw--optional-pkg-available-p "company")
-  ;; :commands global-company-mode
-  ;; :bind ("<tab>" . company-complete)
-  ;; :idle (global-company-mode)
   :diminish company-mode
   :config
+  (defun spw--activate-company ()
+    "Setup company mode.
 
-  ;; startup company
-
-  (defun spw/company-prog-setup ()
-    "Setup company mode carefully when its needed, rather than using the brash global-company-mode"
+Using this in preference to global-company-mode, with <tab> bound
+to `company-complete'.  For another approach, see
+https://github.com/company-mode/company-mode/issues/94#issuecomment-40884387"
     (company-mode 1)
     (define-key (current-local-map) (kbd "M-/") 'company-complete))
   (add-hook 'prog-mode-hook 'spw/company-prog-setup)
-  ;; alternative approach: https://github.com/company-mode/company-mode/issues/94#issuecomment-40884387
 
-  ;; I like my C-w binding so move one of company's bindings
+  ;; retain my C-w binding; move company's C-w binding
   (define-key company-active-map "\C-w" nil)
   (bind-key "M-o" 'company-show-location company-active-map)
 
@@ -449,6 +444,8 @@ This is a workaround for `wc-mode''s performance issues."
 
   (add-to-list 'company-backends 'company-capf)
   (add-to-list 'company-transformers 'company-sort-by-occurrence))
+;; usage notes:
+;;
 ;; C-o during company isearch narrows to stuff matching that search;
 ;; mnemonic 'occur'.  C-M-s while outside of search to do the same
 ;; thing
@@ -470,7 +467,7 @@ This is a workaround for `wc-mode''s performance issues."
   (add-hook 'markdown-mode-hook 'wc-mode)
 
   :config
-  ;; This binding replaces a `markdown-export'.
+  ;; This binding replaces use of `markdown-export'.
   (bind-key "<f9>" 'spw/pandoc-compile markdown-mode-map))
 
 ;;; RefTeX
