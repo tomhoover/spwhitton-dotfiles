@@ -208,8 +208,24 @@
 
 (show-paren-mode 1)
 
-;; insert closing pairs automatically only in programming modes
-(add-hook 'prog-mode-hook 'electric-pair-local-mode)
+(use-package elec-pair
+  :commands (electric-pair-local-mode electric-pair-mode)
+  :init
+  ;; insert closing pairs automatically only in programming modes
+  (add-hook 'prog-mode-hook 'electric-pair-local-mode)
+  :config
+  ;; enhance electric-pair-mode with some more pairs
+  ;; based on http://emacs.stackexchange.com/a/2554/8610
+  (defmacro spw--add-mode-pairs (hook pairs)
+    `(add-hook
+      ,hook
+      (lambda ()
+        (setq-local electric-pair-pairs
+                    (append electric-pair-pairs ,pairs))
+        (setq-local electric-pair-text-pairs electric-pair-pairs))))
+  (spw--add-mode-pairs 'emacs-lisp-mode-hook '((?` . ?')))
+  (spw--add-mode-pairs 'markdown-mode-hook '((?` . ?`)))
+  (spw--add-mode-pairs 'org-mode-hook '((?= . ?=))))
 
 ;; make a list of lisp editing modes
 (setq lisp-major-mode-hooks '(emacs-lisp-mode-hook
@@ -260,19 +276,6 @@ hooks listed in `lisp-major-mode-hooks'."
     (add-hook hook 'paredit-everywhere-mode))
   :config
   (spw--paredit-unsteal paredit-everywhere-mode-map))
-
-;; enhance electric-pair-mode with some more pairs
-;; based on http://emacs.stackexchange.com/a/2554/8610
-
-(defmacro spw--add-mode-pairs (hook pairs)
-  `(add-hook
-    ,hook
-    (lambda ()
-      (setq-local electric-pair-pairs
-                  (append electric-pair-pairs ,pairs))
-      (setq-local electric-pair-text-pairs electric-pair-pairs))))
-
-(spw--add-mode-pairs 'emacs-lisp-mode-hook '((?` . ?')))
 
 ;;; Org
 
@@ -473,7 +476,6 @@ This is a workaround for `wc-mode''s performance issues."
   (add-hook 'markdown-mode-hook 'turn-on-orgstruct)
   (add-hook 'markdown-mode-hook 'turn-on-orgstruct++)
   (add-hook 'markdown-mode-hook 'wc-mode)
-  (spw--add-mode-pairs 'markdown-mode-hook '((?` . ?`)))
 
   :config
   ;; This binding replaces a `markdown-export'.

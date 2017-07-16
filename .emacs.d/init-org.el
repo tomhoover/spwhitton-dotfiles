@@ -1111,8 +1111,6 @@ spaces in it and to remove any colons."
 
 (run-at-time "00:59" 3600 'org-save-all-org-buffers)
 
-(spw--add-mode-pairs 'org-mode-hook '((?= . ?=)))
-
 (add-hook
  'org-mode-hook
  '(lambda ()
