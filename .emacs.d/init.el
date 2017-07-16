@@ -888,7 +888,7 @@ https://github.com/company-mode/company-mode/issues/94#issuecomment-40884387"
 (use-package world-time-mode
   :if (spw--optional-pkg-available-p "world-time-mode")
   :commands world-time-list
-  :bind ("C-c g t" . spw/world-time-list))
+  :bind ("C-c g t" . world-time-list))
 
 ;; and set up time zones I'm interested in
 
@@ -1094,7 +1094,7 @@ Author unknown."
           (if this-win-2nd (other-window 1))))))
 (bind-key "C-c s" 'spw--toggle-window-split)
 
-(defun magnars/move-beginning-of-line-dwim (arg)
+(defun magnars--move-beginning-of-line-dwim (arg)
   "Move point back to indentation or beginning of line.
 
 Move point to the first non-whitespace character on this line.
@@ -1116,10 +1116,11 @@ point reaches the beginning or end of the buffer, stop there."
     (back-to-indentation)
     (when (= orig-point (point))
       (move-beginning-of-line 1))))
+(bind-key "C-a" 'magnars--move-beginning-of-line-dwim)
 
 ;;; tidy up troublesome unicode
 
-(defun gleitzman/unicode-hunt ()
+(defun gleitzman--unicode-hunt ()
   "Destroy some special Unicode characters like smart quotes.
 
 Originally from <http://blog.gleitzman.com/post/35416335505/hunting-for-unicode-in-emacs>."
@@ -1137,6 +1138,7 @@ Originally from <http://blog.gleitzman.com/post/35416335505/hunting-for-unicode-
             do
             (goto-char (point-min))
             (replace-regexp key value)))))
+(bind-key "C-c g u" 'gleitzman--unicode-hunt)
 
 (defun prelude/eval-and-replace ()
   "Replace the preceding sexp with its value."
@@ -1331,50 +1333,11 @@ Ensures the kill ring entry always ends with a newline."
       (beginning-of-line (or (and arg (1+ arg)) 2))
       (if (and arg (not (= 1 arg))) (message "%d lines copied" arg)))))
 
-;; (defhydra hydra-whole-lines (global-map "C-c" :color red)
-;;   "whole lines"
-
-;;   ;; The following might do something smarter for LISPs
-;;   ("k" kill-whole-line "kill another whole line" :color red)
-;;   ("/" undo "get that line back" :color red
-;;    ;; override bind so not bound outside the hydra
-;;    :bind nil))
-
 (defun spw/save-dir ()
   "Copy buffer's directory to kill ring."
   (interactive)
   (kill-new default-directory)
   (message (concat "Saved \"" default-directory "\" to the kill ring")))
-
-(defun spw/tile ()
-  "Tile three buffers."
-  (interactive)
-  (delete-other-windows)
-  (split-window-right)
-  (other-window 1)
-  (call-interactively 'ido-switch-buffer)
-  (split-window-below)
-  (other-window 1)
-  (call-interactively 'ido-switch-buffer)
-  (other-window 1)
-  (persp-basewc-save)
-  (message "Perspective base window configuration saved; C-c q q to restore it"))
-
-;; Access the power of git grep: from
-;; <http://stackoverflow.com/a/25633595>
-
-;; alternative: https://www.ogre.com/node/447
-
-(defcustom git-grep-command "git --no-pager grep --no-color --line-number <C> <R> `git rev-parse --show-toplevel`"
-  "The command to run with `git-grep'.")
-(defun git-grep (regexp)
-  "Search for REGEXP using `git grep' in the current directory."
-  (interactive "sRegexp: ")
-  (unless (boundp 'grep-find-template) (grep-compute-defaults))
-  (let ((old-command grep-find-template))
-    (grep-apply-setting 'grep-find-template git-grep-command)
-    (rgrep regexp "*" """")
-    (grep-apply-setting 'grep-find-template old-command)))
 
 (defun spw/open-term-here ()
   "Open a fresh urxvt terminal in current directory."
@@ -1382,12 +1345,6 @@ Ensures the kill ring entry always ends with a newline."
   (call-process "urxvtcd" nil "*errors*" nil
                 "-cd" (expand-file-name  default-directory)
                 "-e"  "/bin/zsh"))
-
-(defun spw/world-time-list ()
-  (interactive)
-  (make-frame)
-  (other-frame 1)
-  (world-time-list))
 
 ;; Make `C-x z' repeat zap-up-to-char without requiring typing the
 ;; char again.  From Chris Done's Emacs config.
@@ -1498,7 +1455,6 @@ Ensures the kill ring entry always ends with a newline."
 (bind-key "M-/" 'hippie-expand)
 
 ;; smart versions of C-a, M-w from magnars
-(bind-key "C-a" 'magnars/move-beginning-of-line-dwim)
 (bind-key "M-w" 'spw/copy-line)
 
 ;; aligning Haskell
