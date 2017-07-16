@@ -1016,24 +1016,7 @@ actually calls `org-edit-src-code'."
 
 ;;; my buffer save cleanup functions
 
-(defun spw/delete-trailing-whitespace-except-current-line ()
-  "Delete trailing whitespace on all lines except the current one.
-
-Originally from <http://stackoverflow.com/a/3533815>."
-  (interactive)
-  (let ((begin (line-beginning-position))
-        (end (line-end-position)))
-    (save-excursion
-      (when (< (point-min) begin)
-        (save-restriction
-          (narrow-to-region (point-min) (1- begin))
-          (delete-trailing-whitespace)))
-      (when (> (point-max) end)
-        (save-restriction
-          (narrow-to-region (1+ end) (point-max))
-          (delete-trailing-whitespace))))))
-
-(defun spw/compact-blank-lines ()
+(defun spw--compact-blank-lines ()
   "Replace multiple empty blank lines in the buffer with single blank lines."
   (interactive)
   (save-excursion
@@ -1041,7 +1024,7 @@ Originally from <http://stackoverflow.com/a/3533815>."
     (while (search-forward-regexp "\n\n\n+" nil "noerror")
       (replace-match "\n\n"))))
 
-(defun spw/clean-lisp-dangling-brackets ()
+(defun spw--clean-lisp-dangling-brackets ()
   "Clean up dangling brackets."
   (interactive)
   (save-excursion
@@ -1054,46 +1037,33 @@ Originally from <http://stackoverflow.com/a/3533815>."
           (next-line)
           (delete-indentation))))))
 
-(defun spw/auto-cleanup ()
-  "Unoffensive automatic cleanups."
-  (interactive)
-  (case major-mode
-    (haskell-mode
-     (spw/delete-trailing-whitespace-except-current-line)
-     (spw/compact-blank-lines))
-    (python-mode
-     (spw/delete-trailing-whitespace-except-current-line)
-     (spw/compact-blank-lines))
-    (message-mode
-     (save-excursion
-       (message-goto-body)
-       (save-restriction
-         (narrow-to-region (point) (point-max))
-         ;; (fill-region (point-min) (point-max))
-         (whitespace-cleanup))))
-    (emacs-lisp-mode
-     (spw/delete-trailing-whitespace-except-current-line)
-     (spw/compact-blank-lines))))
+(defun spw--cleanup ()
+  "Clean up buffer, or region if mark is active, depending on major mode.
 
-(defun spw/manual-cleanup ()
-  "Clean up a buffer depending on major mode.
-
-Sufficiently aggressive clean-ups that should not be called
-automatically."
-  (interactive)
-  (spw/auto-cleanup)
-  (untabify (point-min) (point-max))
-  (unless (or (not (fboundp 'aggressive-indent-mode))
-              (eq major-mode 'haskell-mode)
-              aggressive-indent-mode)
-    (indent-region (point-min) (point-max)))
-  (case major-mode
-    (emacs-lisp-mode
-     (spw/clean-lisp-dangling-brackets))
-    (haskell-mode
-     (haskell-mode-stylish-buffer))))
-
-;; (add-hook 'before-save-hook 'spw/auto-cleanup)
+Note that `ws-butler-mode' is also at work."
+  (save-restriction
+    (when (use-region-p)
+      (narrow-to-region))
+    (case major-mode
+      (haskell-mode
+       (spw--compact-blank-lines)
+       (haskell-mode-stylish-buffer))
+      (python-mode
+       (spw--compact-blank-lines))
+      (emacs-lisp-mode
+       (spw--compact-blank-lines)
+       (spw--clean-lisp-dangling-brackets))
+      (cc-mode
+       (indent-region (point-min) (point-max))
+       (whitespace-cleanup))
+      (message-mode
+       (save-excursion
+         (message-goto-body)
+         (save-restriction
+           (narrow-to-region (point) (point-max))
+           ;; (fill-region (point-min) (point-max))
+           (whitespace-cleanup)))))))
+(bind-key "C-c g c" 'spw--cleanup)
 
 (defun spw--toggle-window-split ()
   "Toggle the orientation of a two-window split.
@@ -1569,7 +1539,6 @@ Ensures the kill ring entry always ends with a newline."
 
 (bind-key "C-c g g" 'spw/open-term-here)
 (bind-key "C-c g k" 'kill-emacs)
-(bind-key "C-c g c" 'spw/manual-cleanup)
 (bind-key "C-c g l" 'spw/tblesson)
 (bind-key "C-c g r" '(lambda ()
                        (interactive)
