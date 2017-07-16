@@ -1239,7 +1239,7 @@ Originally from <http://blog.gleitzman.com/post/35416335505/hunting-for-unicode-
                    (list zap-up-to-char-last-arg
                          zap-up-to-char-last-char)
                  (list (prefix-numeric-value current-prefix-arg)
-                       (read-char "Zap to char: " t))))
+                       (read-char "Zap up to char: " t))))
   ;; Avoid "obsolete" warnings for translation-table-for-input.
   (with-no-warnings
     (if (char-table-p translation-table-for-input)
