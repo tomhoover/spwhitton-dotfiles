@@ -755,8 +755,8 @@ https://github.com/company-mode/company-mode/issues/94#issuecomment-40884387"
                  (modes quote (haskell-mode literate-haskell-mode)))))
 
 ;;; Load up Haskell mode settings if Debian haskell-mode package
-;;; installed (and load here as after other packages these settings
-;;; depend on)
+;;; installed (and load here, as dependencies of these settings are
+;;; earlier in this init file)
 
 (use-package haskell-mode
   :if (spw--optional-pkg-available-p "haskell-mode")
@@ -843,7 +843,7 @@ https://github.com/company-mode/company-mode/issues/94#issuecomment-40884387"
                    (append '((company-capf company-dabbrev-code))
                            company-backends)))))
 
-;; key-chord to save my hands
+;; `key-chord' to save my hands
 
 (use-package key-chord
   :config
@@ -944,6 +944,7 @@ https://github.com/company-mode/company-mode/issues/94#issuecomment-40884387"
   :init
   (setq redtick-history-file nil)
   :config
+  ;; this is needed with no history file
   (remove-hook 'redtick-after-rest-hook #'redtick--save-history))
 
 
@@ -992,37 +993,26 @@ actually calls `org-edit-src-code'."
         (t (narrow-to-defun))))
 (bind-key "C-c n" 'mwf--narrow-or-widen-dwim)
 
-(defun spw/eval-surrounding-sexp (levels)
-  "Go up LEVELS sexps from point and eval.
+;;; backwards and forward deletions of words.  We want to delete, not kill
 
-Originally from http://stackoverflow.com/a/2172827"
-  (interactive "p")
-  (save-excursion
-    (if (looking-at "(")
-        (progn (forward-char 1) (eval-surrounding-sexp 1))
-      (up-list (abs levels))
-      (eval-last-sexp nil))))
-
-;;; backwards and forward deletions of words
-
-(defun spw/delete-word (arg)
+(defun spw--delete-word (arg)
   "Delete ARG characters forward until encountering the end of a word."
   (interactive "p")
   (delete-region (point) (progn (forward-word arg) (point))))
+;;; don't use `bind-key' as we want this to be overridable
+(global-set-key "\M-d" 'spw--delete-word)
 
-(defun spw/backward-delete-word (arg)
+(defun spw--backward-delete-word (arg)
   "Delete characters ARG backward until encountering the end of a word."
   (interactive "p")
-  (spw/delete-word (- arg)))
+  (spw--delete-word (- arg)))
+(bind-key "C-w" 'spw--backward-delete-word)
 
 ;; a nicer kill-region binding, and move the keyboard macro bindings
 ;; somewhere else
 (bind-key "C-x C-k" 'kill-region)
+;; resettle the previous occupant of C-x C-k
 (bind-key "C-c C-x C-k" 'kmacro-keymap)
-
-(bind-key "C-w" 'spw/backward-delete-word)
-
-;; (global-set-key "\M-d" 'spw/delete-word)
 
 ;;; my buffer save cleanup functions
 
