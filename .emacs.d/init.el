@@ -375,32 +375,6 @@ hooks listed in `lisp-major-mode-hooks'."
   :commands aggressive-indent-mode
   :init (spw--activate-in-lisp-modes 'aggressive-indent-mode))
 
-;;; boxquotes
-
-(use-package boxquote
-  :commands (boxquote-title
-             boxquote-region
-             boxquote-buffer
-             boxquote-insert-file
-             boxquote-insert-buffer
-             boxquote-kill-ring-save
-             boxquote-yank
-             boxquote-defun
-             boxquote-paragraph
-             boxquote-boxquote
-             boxquote-describe-function
-             boxquote-describe-variable
-             boxquote-describe-key
-             boxquote-shell-command
-             boxquote-where-is
-	     boxquote-text
-             boxquote-narrow-to-boxquote
-             boxquote-narrow-to-boxquote-content
-             boxquote-kill
-             boxquote-fill-paragraph
-             boxquote-unbox-region
-             boxquote-unbox))
-
 ;;; word count in modeline
 
 (use-package wc-mode
