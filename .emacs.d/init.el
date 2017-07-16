@@ -1202,28 +1202,18 @@ Originally from <http://blog.gleitzman.com/post/35416335505/hunting-for-unicode-
             (replace-regexp key value)))))
 (bind-key "C-c g u" 'gleitzman--unicode-hunt)
 
-;; Move lines around smartly.  Originally from
-;; <http://emacswiki.org/emacs/CopyingWholeLines>.
-
-(defun spw/copy-line (arg)
-  "Copy ARG lines into the kill ring, and move to the start of the next line.
-
-If region is active, instead call `kill-ring-save'.
-
-Appends to the kill ring entry on sequential calls.
-
-Ensures the kill ring entry always ends with a newline."
-  (interactive "p")
-  (if mark-active
+(defun spw--kill-ring-save (arg)
+  "As `kill-ring-save', but save to end of ARG lines if mark inactive."
+  (interactive "P")
+  (if (use-region-p)
       (call-interactively 'kill-ring-save)
-    (let ((beg (point))
-          (end (line-end-position arg)))
-      (if (eq last-command 'spw/copy-line)
-          (kill-append (buffer-substring beg end) (< end beg))
-        (kill-ring-save beg end))
-      (kill-append "\n" nil)
-      (beginning-of-line (or (and arg (1+ arg)) 2))
-      (if (and arg (not (= 1 arg))) (message "%d lines copied" arg)))))
+    (kill-ring-save (point)
+                    (save-excursion
+                      (if arg
+                          (forward-visible-line (prefix-numeric-value arg))
+                        (end-of-visible-line))
+                      (point)))))
+(bind-key "M-w" 'spw--kill-ring-save)
 
 (defun spw/save-dir ()
   "Copy buffer's directory to kill ring."
@@ -1342,9 +1332,6 @@ Ensures the kill ring entry always ends with a newline."
 
 ;; fallback expanding
 (bind-key "M-/" 'hippie-expand)
-
-;; smart versions of C-a, M-w from magnars
-(bind-key "M-w" 'spw/copy-line)
 
 ;; copy current directory for use in a shell or moving a file in dired
 (bind-key "C-c D" 'spw/save-dir)
