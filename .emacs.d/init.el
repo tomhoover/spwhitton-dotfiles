@@ -450,36 +450,28 @@ https://github.com/company-mode/company-mode/issues/94#issuecomment-40884387"
   :if (spw--optional-pkg-available-p "deft")
   :commands deft
   :bind ("C-c f" . deft)
+
   :init
-  (setq deft-extensions '("org" "mdwn")
-        deft-text-mode 'org-mode
-        deft-directory "~/doc/org/"
-        deft-recursive t
-        deft-use-filename-as-title nil
+  (setq
+   deft-extensions '("org" "mdwn")
+   deft-text-mode 'org-mode
+   deft-directory "~/doc/org/"
+   deft-recursive t
+   deft-use-filename-as-title nil
+   deft-auto-save-interval 20.0
+   deft-incremental-search t
+   deft-org-mode-title-prefix t
 
-        ;; trying snake_case for now (CamelCase means main
-        ;; agenda files)
-        deft-use-filter-string-for-filename t
-        deft-file-naming-rules '((noslash . "_")
-                                 (nospace . "_")
-                                 (case-fn . downcase))
+   ;; snake_case for deft notes; CamelCase for files included in
+   ;; main Org agenda
+   deft-use-filter-string-for-filename t
+   deft-file-naming-rules '((noslash . "_")
+                            (nospace . "_")
+                            (case-fn . downcase)))
 
-        deft-auto-save-interval 20.0
-        deft-incremental-search t
-        deft-org-mode-title-prefix t)
   :config
-  (bind-key "C-w" 'deft-filter-decrement-word deft-mode-map)
-
-  ;; With my xmonad setup, when `window-width' is x then only x-1
-  ;; characters will actually fit in the window.  Advise deft so its
-  ;; display doesn't wrap unreadably.
-  (defun deft-buffer-setup--fix-window-width (orig-fun &rest args)
-    (let ((width (window-width)))
-      ;; this is just an flet; see
-      ;; <http://endlessparentheses.com/understanding-letf-and-how-it-replaces-flet.html>
-      (cl-letf (((symbol-function 'window-width) (lambda  () (- width 1))))
-        (apply orig-fun args))))
-  (advice-add 'deft-buffer-setup :around #'deft-buffer-setup--fix-window-width))
+  ;; restore my C-w binding
+  (bind-key "C-w" 'deft-filter-decrement-word deft-mode-map))
 
 ;;; TRAMP
 
