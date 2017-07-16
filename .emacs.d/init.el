@@ -436,8 +436,8 @@ https://github.com/company-mode/company-mode/issues/94#issuecomment-40884387"
   :mode "\\.md"
 
   :init
-  (add-hook 'markdown-mode-hook 'turn-on-orgstruct)
-  (add-hook 'markdown-mode-hook 'turn-on-orgstruct++)
+  ;; (add-hook 'markdown-mode-hook 'turn-on-orgstruct)
+  ;; (add-hook 'markdown-mode-hook 'turn-on-orgstruct++)
   (add-hook 'markdown-mode-hook 'wc-mode)
 
   :config
