@@ -444,8 +444,64 @@ https://github.com/company-mode/company-mode/issues/94#issuecomment-40884387"
   (add-hook 'markdown-mode-hook 'wc-mode)
 
   :config
+  (defun spw--pandoc-compile (arg)
+    (interactive "P")
+    (cond
+     ((string= default-directory (expand-file-name "~/doc/papers/"))
+      (spw--pandoc-paper-compile arg))
+     ((string= default-directory (expand-file-name "~/doc/pres/"))
+      (spw--pandoc-presentation-compile arg))))
+  (defun spw--pandoc-paper-compile (arg)
+    "Compile a paper to PDF with pandoc into ~/tmp.
+
+If ARG, put into my annex instead.
+
+Lightweight alternative to both pandoc-mode and ox-pandoc.el.
+
+Generates calls to pandoc that look like this: pandoc -s --filter pandoc-citeproc --bibliography=$HOME/doc/spw.bib --filter pandoc-citeproc-preamble --template pessay -V documentclass=pessay input.[md|org] -o output.pdf"
+    (interactive "P")
+    (when (and (string= default-directory (expand-file-name "~/doc/papers/"))
+               (or (eq major-mode 'markdown-mode)
+                   (eq major-mode 'org-mode)))
+      (let ((output-file (f-filename (f-swap-ext (buffer-file-name) "pdf"))))
+        (compile (concat "make " output-file
+                         ;; We can easily reload the file in evince, and
+                         ;; the .view target means that Emacs thinks
+                         ;; compilation isn't finished until evince quits.
+                         ;; (if window-system ".view" "")
+                         )))))
+  ;; TODO use a Makefile for this too
+  (defun spw--pandoc-presentation-compile ()
+    "Compile a presentation to PDF and HTML with pandoc into ~/tmp.
+
+If ARG, put into my annex instead.
+
+Lightweight alternative to both pandoc-mode and ox-pandoc.el.
+
+Generates calls to pandoc that look like this: TODO"
+    (interactive)
+    (when (and (string= default-directory (expand-file-name "~/doc/pres/"))
+               (eq major-mode 'markdown-mode))
+      (let* ((pdf-output-file (f-join "~/tmp"
+                                      (f-filename (f-swap-ext (buffer-file-name) "pdf"))))
+             (html-output-file (f-swap-ext pdf-output-file "html")))
+
+        (call-process-shell-command
+         "pandoc" nil "*pandoc pdf output*" nil
+         "-s" "-t" "beamer" "-i"
+         (shell-quote-argument (buffer-file-name))
+         "-o" (shell-quote-argument pdf-output-file))
+
+        (call-process-shell-command
+         "pandoc" nil "*pandoc html output*" nil
+         "-s" "-t" "slidy"
+         "--self-contained" "-i"
+         (shell-quote-argument (buffer-file-name))
+         "-o" (shell-quote-argument html-output-file))
+
+        )))
   ;; This binding replaces use of `markdown-export'.
-  (bind-key "<f9>" 'spw/pandoc-compile markdown-mode-map))
+  (bind-key "<f9>" 'spw--pandoc-compile markdown-mode-map))
 
 ;;; Deft
 
@@ -567,8 +623,31 @@ https://github.com/company-mode/company-mode/issues/94#issuecomment-40884387"
   ;; as part of daily cleanup, clean-up projects that no longer exist
   (add-hook 'midnight-hook 'projectile-cleanup-known-projects)
 
-  ;; bind opening programming projects (also see projectile() in .zshrc)
-  (bind-key "n" 'spw/open-programming-project projectile-command-map))
+  ;; Find and open projects in ~/src/ that aren't yet known to
+  ;; projectile.  Inspired by
+  ;; <https://alanpearce.uk/post/opening-projects-with-projectile>.
+  ;; (also see projectile() in .zshrc
+  (setq programming-projects-dir (expand-file-name "~/src"))
+  (defun spw--get-programming-projects (dir)
+    "Find all projectile projects in DIR that are presently unknown to projectile."
+    (-filter (lambda (d)
+               (and (file-directory-p d)
+                    (not (-contains?
+                          projectile-known-projects
+                          (f-slash (replace-regexp-in-string (expand-file-name "~") "~" d))))
+                    (-any? (lambda (f) (funcall f d))
+                           projectile-project-root-files-functions)))
+             (directory-files dir t "^[^.]")))
+  (defun spw--open-programming-project (arg)
+    "Open a programming project that is presently unknown to projectile.
+
+Passes ARG to `projectile-switch-project-by-name'."
+    (interactive "P")
+    (let ((project-dir
+           (projectile-completing-read "open new project: "
+                                       (spw--get-programming-projects programming-projects-dir))))
+      (projectile-switch-project-by-name project-dir arg)))
+  (bind-key "n" 'spw--open-programming-project projectile-command-map))
 
 ;;; completion with ido
 
@@ -1123,139 +1202,6 @@ Originally from <http://blog.gleitzman.com/post/35416335505/hunting-for-unicode-
             (replace-regexp key value)))))
 (bind-key "C-c g u" 'gleitzman--unicode-hunt)
 
-(defun prelude/eval-and-replace ()
-  "Replace the preceding sexp with its value."
-  (interactive)
-  (backward-kill-sexp)
-  (condition-case nil
-      (prin1 (eval (read (current-kill 0)))
-             (current-buffer))
-    (error (message "Invalid expression")
-           (insert (current-kill 0)))))
-
-(defun spw/persp-clone (new-name)
-  "Clone current perspective with the name NEW-NAME."
-  (interactive "sNew name: \n")
-  (make-persp
-   :name new-name
-   :buffers (persp-buffers persp-curr)
-   :window-configuration (current-window-configuration))
-  (persp-switch new-name))
-
-(defun crowding/local-set-minor-mode-key (mode key def)
-  "Overrides a minor mode MODE's binding to KEY with DEF for the local buffer.
-
-Does this by creating or altering keymaps stored in buffer-local
-`minor-mode-overriding-map-alist'.
-
-From <http://stackoverflow.com/a/14769115>."
-  (let* ((oldmap (cdr (assoc mode minor-mode-map-alist)))
-         (newmap (or (cdr (assoc mode minor-mode-overriding-map-alist))
-                     (let ((map (make-sparse-keymap)))
-                       (set-keymap-parent map oldmap)
-                       (push `(,mode . ,map) minor-mode-overriding-map-alist)
-                       map))))
-    (define-key newmap key def)))
-
-(defun spw/set-from-address ()
-  "Set e-mail From: address correctly by looking at other headers."
-  (interactive)
-  (save-excursion
-    (message-narrow-to-headers)
-    (goto-char (point-min))
-    (when (or (search-forward-regexp "^To:.*arizona.edu" nil t)
-              (search-forward-regexp "^Cc:.*arizona.edu" nil t)
-              (search-forward-regexp "^Bcc:.*arizona.edu" nil t))
-      (goto-char (point-min))
-      (search-forward-regexp "^From:.*$")
-      (replace-match "From: Sean Whitton <spwhitton@email.arizona.edu>"))
-    (widen)))
-
-;;; Find and open projects in ~/src/ that aren't yet known to
-;;; projectile.  Inspired by
-;;; <https://alanpearce.uk/post/opening-projects-with-projectile>.
-
-(defvar programming-projects-dir (expand-file-name "~/src"))
-
-(defun spw/get-programming-projects (dir)
-  "Find all projectile projects in DIR that are presently unknown to projectile."
-  (-filter (lambda (d)
-             (and (file-directory-p d)
-                  (not (-contains?
-                        projectile-known-projects
-                        (f-slash (replace-regexp-in-string (expand-file-name "~") "~" d))))
-                  (-any? (lambda (f) (funcall f d))
-                         projectile-project-root-files-functions)))
-           (directory-files dir t "^[^.]")))
-
-(defun spw/open-programming-project (arg)
-  "Open a programming project that is presently unknown to projectile.
-
-Passes ARG to `projectile-switch-project-by-name'."
-  (interactive "P")
-  (let ((project-dir
-         (projectile-completing-read "open new project: "
-                                     (spw/get-programming-projects programming-projects-dir))))
-    (projectile-switch-project-by-name project-dir arg)))
-
-(defun spw/pandoc-compile (arg)
-  (interactive "P")
-  (cond
-   ((string= default-directory (expand-file-name "~/doc/papers/"))
-    (spw/pandoc-paper-compile arg))
-   ((string= default-directory (expand-file-name "~/doc/pres/"))
-    (spw/pandoc-presentation-compile arg))))
-
-(defun spw/pandoc-paper-compile (arg)
-  "Compile a paper to PDF with pandoc into ~/tmp.
-
-If ARG, put into my annex instead.
-
-Lightweight alternative to both pandoc-mode and ox-pandoc.el.
-
-Generates calls to pandoc that look like this: pandoc -s --filter pandoc-citeproc --bibliography=$HOME/doc/spw.bib --filter pandoc-citeproc-preamble --template pessay -V documentclass=pessay input.[md|org] -o output.pdf"
-  (interactive "P")
-  (when (and (string= default-directory (expand-file-name "~/doc/papers/"))
-             (or (eq major-mode 'markdown-mode)
-                 (eq major-mode 'org-mode)))
-    (let ((output-file (f-filename (f-swap-ext (buffer-file-name) "pdf"))))
-      (compile (concat "make " output-file
-                       ;; We can easily reload the file in evince, and
-                       ;; the .view target means that Emacs thinks
-                       ;; compilation isn't finished until evince quits.
-                       ;; (if window-system ".view" "")
-                       )))))
-
-(defun spw/pandoc-presentation-compile ()
-  "Compile a presentation to PDF and HTML with pandoc into ~/tmp.
-
-If ARG, put into my annex instead.
-
-Lightweight alternative to both pandoc-mode and ox-pandoc.el.
-
-Generates calls to pandoc that look like this: TODO"
-  (interactive)
-  (when (and (string= default-directory (expand-file-name "~/doc/pres/"))
-             (eq major-mode 'markdown-mode))
-    (let* ((pdf-output-file (f-join "~/tmp"
-                                    (f-filename (f-swap-ext (buffer-file-name) "pdf"))))
-           (html-output-file (f-swap-ext pdf-output-file "html")))
-
-      (call-process-shell-command
-       "pandoc" nil "*pandoc pdf output*" nil
-       "-s" "-t" "beamer" "-i"
-       (shell-quote-argument (buffer-file-name))
-       "-o" (shell-quote-argument pdf-output-file))
-
-      (call-process-shell-command
-       "pandoc" nil "*pandoc html output*" nil
-       "-s" "-t" "slidy"
-       "--self-contained" "-i"
-       (shell-quote-argument (buffer-file-name))
-       "-o" (shell-quote-argument html-output-file))
-
-      )))
-
 ;; Move lines around smartly.  Originally from
 ;; <http://emacswiki.org/emacs/CopyingWholeLines>.
 
@@ -1614,6 +1560,20 @@ Ensures the kill ring entry always ends with a newline."
 (use-package message
   :mode ("/mutt-.*$" . message-mode)
   :init
+  (defun spw--set-catmail-from ()
+    "Set e-mail From: address to CatMail, by looking at other headers."
+    (interactive)
+    (save-excursion
+      (message-narrow-to-headers)
+      (goto-char (point-min))
+      (when (or (search-forward-regexp "^To:.*arizona.edu" nil t)
+                (search-forward-regexp "^Cc:.*arizona.edu" nil t)
+                (search-forward-regexp "^Bcc:.*arizona.edu" nil t))
+        (goto-char (point-min))
+        (search-forward-regexp "^From:.*$")
+        (replace-match "From: Sean Whitton <spwhitton@email.arizona.edu>"))
+      (widen)))
+
   ;; show trailing whitespace in message-mode (due to empty headers
   ;; and signature dashes, ws-butler disabled)
   (add-hook 'message-mode-hook (lambda ()
