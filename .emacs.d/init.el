@@ -1150,31 +1150,6 @@ Originally from <http://blog.gleitzman.com/post/35416335505/hunting-for-unicode-
     (error (message "Invalid expression")
            (insert (current-kill 0)))))
 
-(defun magnars/new-line-dwim ()
-  "Smart way to open lines below.  Originally by magnars."
-  (interactive)
-  (let* ((break-open-pair (or (and (looking-back "{" 1) (looking-at "}"))
-                              (and (looking-back ">" 1) (looking-at "<"))
-                              (and (looking-back "(" 1) (looking-at ")"))
-                              ;; we always break out in elisp since
-                              ;; it's easier to see for writing code,
-                              ;; and then my cleanup function will
-                              ;; handle the dangling parentheses
-                              (and (eq major-mode 'emacs-lisp-mode)
-                                   (looking-at ")"))
-                              (and (looking-back "\\[" 1) (looking-at "\\]"))))
-         (break-open-list (and (eq major-mode 'org-mode)
-                               (not break-open-pair))))
-    (if break-open-list
-        (org-meta-return)
-      (newline)
-      (when break-open-pair
-        (save-excursion
-          (newline)
-          (indent-for-tab-command))))
-    (indent-for-tab-command)))
-
-
 (defun spw/persp-clone (new-name)
   "Clone current perspective with the name NEW-NAME."
   (interactive "sNew name: \n")
@@ -1435,9 +1410,6 @@ Ensures the kill ring entry always ends with a newline."
 
 ;; I don't often want to quit
 (bind-key "C-x C-c" 'delete-frame)
-
-;; opening new lines below
-(bind-key "M-RET" 'magnars/new-line-dwim)
 
 ;; `reindent-then-newline-and-indent' tends to get things wrong more
 ;; often than it gets things right with my typing habits.  I hit <TAB>
