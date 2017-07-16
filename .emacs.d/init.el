@@ -1062,6 +1062,7 @@ actually calls `org-edit-src-code'."
   (interactive "p")
   (delete-region (point) (progn (forward-word arg) (point))))
 ;;; don't use `bind-key' as we want this to be overridable
+;;; TODO do we really want M-d to delete, or should it kill?
 (global-set-key "\M-d" 'spw--delete-word)
 
 (defun spw--backward-delete-word (arg)
