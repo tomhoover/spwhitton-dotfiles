@@ -1265,6 +1265,8 @@ Goes backward if ARG is negative; error if CHAR not found."
   (setq zap-up-to-char-last-char char)
   (setq zap-up-to-char-last-arg arg)
   (setq this-command 'zap-up-to-char-repeatable))
+;; note that our C-a binding renders default M-m binding redundant
+(bind-key "M-m" 'zap-up-to-char-repeatable)
 
 (defun spw/strip-text-properties (txt)
   "From http://stackoverflow.com/questions/8372722/print-only-text-discarding-text-properties"
@@ -1335,9 +1337,6 @@ Goes backward if ARG is negative; error if CHAR not found."
 
 ;; copy current directory for use in a shell or moving a file in dired
 (bind-key "C-c D" 'spw/save-dir)
-
-;; don't need default M-m binding as have smarter C-a
-(bind-key "M-m" 'zap-up-to-char-repeatable)
 
 (bind-key "C-c ." 'repeat)
 
