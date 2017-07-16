@@ -733,53 +733,9 @@ https://github.com/company-mode/company-mode/issues/94#issuecomment-40884387"
 (use-package visual-regexp
   :if (spw--optional-pkg-available-p "visual-regexp"))
 
-;;; advanced key binding techniques with hydra
+;;; undo/redo window layout changes
 
-;; TODO stop using hydra (and remove from propellor conf)
-
-(use-package hydra
-  :if (spw--optional-pkg-available-p "hydra")
-  :config
-  (setq hydra-windows-config nil)
-  (defun spw/maybe-delete-other-windows ()
-    (interactive)
-    (if (= (count-windows) 1)
-        (set-window-configuration hydra-windows-config)
-      (setq hydra-windows-config (current-window-configuration))
-      (delete-other-windows)))
-
-  ;; Broken because of byte-compilation?  defhydra macro not properly declared?
-
-  ;; (defhydra hydra-windows (global-map "C-x" :color red)
-  ;;   "windows"
-  ;;   ("o" other-window "next" :color red)
-  ;;   ("O" (lambda () (interactive) (other-window -1)) "previous" :color red)
-  ;;   ("S" spw/toggle-window-split "toggle" :color red)
-  ;;   ("0" delete-window "del" :color red)
-  ;;   ("1" spw/maybe-delete-other-windows "max" :color red)
-  ;;   ("2" split-window-below "horiz" :color red)
-  ;;   ("3" split-window-right "vert" :color red))
-
-  ;;; winner mode: undo window configuration changes
-
-  (winner-mode 1)
-
-  ;; Undo the bindings so that the hydra bindings take precedence
-  ;; (define-key winner-mode-map (kbd "C-c <left>") nil)
-  ;; (define-key winner-mode-map (kbd "C-c <right>") nil)
-
-  ;; (defhydra hydra-winner (global-map "C-c" :color red)
-  ;;   "winner"
-  ;;   ("<left>" winner-undo "back" :color red)
-
-  ;;   ;; We need a lambda here to override `winner-redo''s check that
-  ;;   ;; the last command was winner-undo, since the last command will
-  ;;   ;; be `hydra-winner/winner-undo' if we replace the lambda with
-  ;;   ;; just `winner-undo'
-  ;;   ("<right>" (lambda () (interactive)
-  ;;                (let ((last-command 'winner-undo))
-  ;;                  (winner-redo))) "forward" :color red))
-  )
+(winner-mode 1)
 
 ;;; aligning rule for Haskell adapted from Haskell mode wiki
 
