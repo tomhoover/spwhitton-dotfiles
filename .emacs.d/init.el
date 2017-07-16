@@ -331,21 +331,13 @@ hooks listed in `lisp-major-mode-hooks'."
   :if (spw--optional-pkg-available-p "magit")
   :demand
   :config
-  ;; by default, don't pass -f to `git remote add`
-  (setq magit-remote-arguments nil)
+  (setq
+   ;; by default, don't pass -f to `git remote add`
+   magit-remote-arguments nil
 
-  ;; Fix magit-version: doesn't work when magit is a subtree
-  (defun magit-version ()
-    (setq magit-version "2.3.1")
-    (when (called-interactively-p 'any)
-      (message "Magit %s, Git %s, Emacs %s"
-               (or magit-version "(unknown)")
-               (or (magit-git-version) "(unknown)")
-               emacs-version)))
-
-  (setq magit-completing-read-function 'magit-ido-completing-read
-        magit-push-always-verify nil
-        magit-revert-buffers 'silent)
+   magit-completing-read-function 'magit-ido-completing-read
+   magit-push-always-verify nil
+   magit-revert-buffers 'silent)
 
   (use-package magit-annex
     :if (spw--optional-pkg-available-p "magit-annex")))
