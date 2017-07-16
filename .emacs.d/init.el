@@ -211,6 +211,22 @@
 ;; insert closing pairs automatically only in programming modes
 (add-hook 'prog-mode-hook 'electric-pair-local-mode)
 
+;; make a list of lisp editing modes
+(setq lisp-major-mode-hooks '(emacs-lisp-mode-hook
+                              lisp-mode-hook
+                              lisp-interaction-mode-hook
+                              ielm-mode-hook
+                              scheme-mode-hook
+                              inferior-scheme-mode-hook))
+
+(defmacro spw--activate-in-lisp-modes (minor-mode)
+  "Add hooks to activate MINOR-MODE in all the major modes with
+hooks listed in `lisp-major-mode-hooks'."
+  `(dolist (hook lisp-major-mode-hooks)
+    (add-hook hook ,minor-mode)))
+
+(spw--activate-in-lisp-modes 'eldoc-mode)
+
 (defmacro spw--paredit-unsteal (map)
   "Reclaim core Emacs bindings from Paredit-like keymap MAP."
   `(progn
@@ -232,12 +248,7 @@
   :if (spw--optional-pkg-available-p "paredit")
   :commands paredit-mode
   :init
-  (add-hook 'emacs-lisp-mode-hook 'paredit-mode)
-  (add-hook 'lisp-mode-hook 'paredit-mode)
-  (add-hook 'lisp-interaction-mode-hook 'paredit-mode)
-  (add-hook 'ielm-mode-hook 'paredit-mode)
-  (add-hook 'scheme-mode-hook 'paredit-mode)
-  (add-hook 'inferior-scheme-mode-hook 'paredit-mode)
+  (spw--activate-in-lisp-modes 'paredit-mode)
   :config
   (spw--paredit-unsteal paredit-mode-map))
 
@@ -350,8 +361,10 @@
 
 (use-package rainbow-delimiters
   :if (spw--optional-pkg-available-p "rainbow-delimiters")
-  :init (setq-default frame-background-mode 'dark)
-  :commands rainbow-delimiters-mode)
+  :commands rainbow-delimiters-mode
+  :init
+  (setq-default frame-background-mode 'dark)
+  (spw--activate-in-lisp-modes 'rainbow-delimiters-mode))
 
 ;;; and colour those colours
 
@@ -366,22 +379,8 @@
 
 (use-package aggressive-indent
   :if (spw--optional-pkg-available-p "aggressive-indent")
-  :commands aggressive-indent-mode)
-
-;;; ElDoc and rainbow delimiters activation
-
-(dolist (hook '(emacs-lisp-mode-hook
-                lisp-mode-hook
-                lisp-interaction-mode-hook
-                ielm-mode-hook
-                scheme-mode-hook
-                inferior-scheme-mode-hook))
-  (add-hook hook
-            (lambda ()
-              (eldoc-mode 1)
-	      (when (fboundp 'aggressive-indent-mode)
-		(aggressive-indent-mode 1))
-              (rainbow-delimiters-mode 1))))
+  :commands aggressive-indent-mode
+  :init (spw--activate-in-lisp-modes 'aggressive-indent-mode))
 
 ;;; boxquotes
 
