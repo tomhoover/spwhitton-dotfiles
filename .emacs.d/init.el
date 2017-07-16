@@ -1952,6 +1952,7 @@ Ensures the kill ring entry always ends with a newline."
 
 ;; never want to send any e-mail
 (unbind-key "C-x m")
+(unbind-key "C-x 4 m")
 
 ;; fallback expanding
 (bind-key "M-/" 'hippie-expand)
