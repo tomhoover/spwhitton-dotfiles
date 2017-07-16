@@ -1216,18 +1216,13 @@ Originally from <http://blog.gleitzman.com/post/35416335505/hunting-for-unicode-
                       (point)))))
 (bind-key "M-w" 'spw--kill-ring-save)
 
-(defun spw/save-dir ()
-  "Copy buffer's directory to kill ring."
-  (interactive)
-  (kill-new default-directory)
-  (message (concat "Saved \"" default-directory "\" to the kill ring")))
-
-(defun spw/open-term-here ()
+(defun spw--open-term-here ()
   "Open a fresh urxvt terminal in current directory."
   (interactive)
   (call-process "urxvtcd" nil "*errors*" nil
                 "-cd" (expand-file-name  default-directory)
                 "-e"  "/bin/zsh"))
+(bind-key "C-c g g" 'spw--open-term-here)
 
 ;; Make `C-x z' repeat zap-up-to-char without requiring typing the
 ;; char again.  From Chris Done's Emacs config.
@@ -1344,7 +1339,6 @@ Originally from <http://blog.gleitzman.com/post/35416335505/hunting-for-unicode-
 
 ;;; launching
 
-(bind-key "C-c g g" 'spw/open-term-here)
 (bind-key "C-c g k" 'kill-emacs)
 (bind-key "C-c g l" 'spw/tblesson)
 (bind-key "C-c g r" '(lambda ()
