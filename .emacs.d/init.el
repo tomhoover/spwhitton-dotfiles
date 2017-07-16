@@ -75,6 +75,9 @@
 
 ;;;; ---- basic settings ----
 
+;; TRAMP and zsh are not friends
+(setenv "SHELL" "/bin/bash")
+
 ;;; customisation -- must be loaded early so that zenburn theme is
 ;;; considered safe
 
@@ -486,10 +489,6 @@ https://github.com/company-mode/company-mode/issues/94#issuecomment-40884387"
 
   ;; see docstring for `tramp-remote-path'
   (add-to-list 'tramp-remote-path 'tramp-own-remote-path)
-
-  ;; TRAMP and zsh are not friends so might as well switch
-  ;; over here
-  (setenv "SHELL" "/bin/bash")
 
   ;; try to disable vc (from TRAMP FAQ)
   (setq vc-ignore-dir-regexp
