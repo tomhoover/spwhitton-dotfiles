@@ -1123,76 +1123,26 @@ This is a workaround for `wc-mode''s performance issues."
       (push-mark end nil t))))
 (bind-key "M-i" 'spw--mark-whole-lines)
 
-(defun mwf/narrow-or-widen-dwim (p)
-  "If the buffer is narrowed, it widens.  Otherwise, it narrows intelligently.
-Intelligently means: region, org-src-block, org-subtree, or defun,
-whichever applies first.
-Narrowing to org-src-block actually calls `org-edit-src-code'.
+(defun mwf--narrow-or-widen-dwim (p)
+  "Unless P, widen if buffer is narrowed.  Otherwise, narrow intelligently.
 
-With prefix P, don't widen, just narrow even if buffer is already
-narrowed."
+Intelligently means: region, org-src-block, org-subtree, or
+defun, whichever applies first.  Narrowing to org-src-block
+actually calls `org-edit-src-code'."
   (interactive "P")
   (declare (interactive-only))
   (cond ((and (buffer-narrowed-p) (not p)) (widen))
         ((region-active-p)
          (narrow-to-region (region-beginning) (region-end)))
         ((derived-mode-p 'org-mode)
-         ;; `org-edit-src-code' is not a real narrowing command.
-         ;; Remove this first conditional if you don't want it.
+         ;; note that `org-edit-src-code' is not a real narrowing command
          (cond ((ignore-errors (org-edit-src-code))
                 (delete-other-windows))
                ((org-at-block-p)
                 (org-narrow-to-block))
                (t (org-narrow-to-subtree))))
         (t (narrow-to-defun))))
-
-;;; toggle some features on and off to make Emacs better at prose editing
-
-(defun spw/writing-on ()
-  "Activate my prose writing features."
-  (wc-mode 1)
-  (variable-pitch-mode 1)
-  (setq-local cursor-type 'bar)
-  (unless (or (eq system-type 'windows-nt)
-              (not (fboundp 'set-fringe-mode)))
-    ;; (centered-window-mode 1)
-    ;; indent mode need only be turned off if we're using centered
-    ;; window mode
-    (when (eq major-mode 'org-mode)
-      (org-indent-mode 0)))
-  (if (and (or (eq system-type 'windows-nt)
-               (not (fboundp 'set-fringe-mode)))
-           (> (window-width) 120))
-      (spw/centre-window nil)))
-
-(defun spw/writing-off ()
-  "Deactivate my prose writing features."
-  (wc-mode 0)
-  (variable-pitch-mode 0)
-  (setq-local cursor-type 'box)
-  (unless (or (eq system-type 'windows-nt)
-              (not (fboundp 'set-fringe-mode)))
-    ;; (centered-window-mode 0)
-    ;; indent mode need only be turned off if we're using centered
-    ;; window mode
-    (when (eq major-mode 'org-mode)
-      ;; TODO: finesse this.  don't turn it on if it wouldn't be on by default
-      (org-indent-mode 1)))
-  (if (and (or (eq system-type 'windows-nt)
-               (not (fboundp 'set-fringe-mode)))
-           (> (window-width) 120))
-      (delete-other-windows)))
-
-(defun spw/writing-toggle ()
-  "Toggle on and off my prose writing features."
-  (interactive)
-  (let ((activate (if (boundp 'buffer-face-mode) buffer-face-mode)))
-    (if activate
-        (spw/writing-off)
-      (spw/writing-on))))
-;; note: activate this in a whole file tree by putting
-;; e.g. `((org-mode . ((eval . (spw/writing-toggle)))))` in
-;; .dir-locals.el
+(bind-key "C-c n" 'mwf--narrow-or-widen-dwim)
 
 (defun spw/eval-surrounding-sexp (levels)
   "Go up LEVELS sexps from point and eval.
@@ -1960,9 +1910,6 @@ Ensures the kill ring entry always ends with a newline."
 ;; smart versions of C-a, M-w from magnars
 (bind-key "C-a" 'magnars/move-beginning-of-line-dwim)
 (bind-key "M-w" 'spw/copy-line)
-
-;; don't think about narrowing and widening
-(bind-key "C-c n" 'mwf/narrow-or-widen-dwim)
 
 ;; aligning Haskell
 (bind-key "C-c a" 'spw/align-dwim)
