@@ -737,23 +737,6 @@ https://github.com/company-mode/company-mode/issues/94#issuecomment-40884387"
 
 (winner-mode 1)
 
-;;; aligning rule for Haskell adapted from Haskell mode wiki
-
-(use-package align
-  :config
-  (add-to-list 'align-rules-list
-               '(haskell-defns
-                 (regexp . "\\(\\s-+\\)\\(::\\|∷\\|=\\)\\s-+")
-                 (modes quote (haskell-mode literate-haskell-mode))))
-  (add-to-list 'align-rules-list
-               '(haskell-arrows
-                 (regexp . "^[^:\n]+\\(\\s-+\\)\\(->\\)\\s-+")
-                 (modes quote (haskell-mode literate-haskell-mode))))
-  (add-to-list 'align-rules-list
-               '(haskell-left-arrows
-                 (regexp . "\\(\\s-+\\)\\(<-\\|←\\)\\s-+")
-                 (modes quote (haskell-mode literate-haskell-mode)))))
-
 ;;; Load up Haskell mode settings if Debian haskell-mode package
 ;;; installed (and load here, as dependencies of these settings are
 ;;; earlier in this init file)
@@ -1159,18 +1142,6 @@ Originally from <http://blog.gleitzman.com/post/35416335505/hunting-for-unicode-
    :window-configuration (current-window-configuration))
   (persp-switch new-name))
 
-(defun spw/align-dwim ()
-  "Align, if region inactive first mark paragraph."
-  (interactive)
-  ;; should do this kind of aligning with spaces only
-  (let ((indent-tabs-mode nil))
-    (if (region-active-p)
-        (let ((align-region-separate 'entire))
-          (call-interactively 'align))
-      (save-excursion
-        (mark-paragraph)
-        (call-interactively 'align)))))
-
 (defun crowding/local-set-minor-mode-key (mode key def)
   "Overrides a minor mode MODE's binding to KEY with DEF for the local buffer.
 
@@ -1428,10 +1399,6 @@ Ensures the kill ring entry always ends with a newline."
 
 ;; smart versions of C-a, M-w from magnars
 (bind-key "M-w" 'spw/copy-line)
-
-;; aligning Haskell
-(bind-key "C-c a" 'spw/align-dwim)
-(bind-key "C-c A" 'align-regexp)
 
 ;; copy current directory for use in a shell or moving a file in dired
 (bind-key "C-c D" 'spw/save-dir)
