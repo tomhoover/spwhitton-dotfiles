@@ -204,39 +204,6 @@
 
 ;;;; ---- packages ----
 
-;;; instead of vim text objects
-
-(use-package expand-region
-  :if (spw--optional-pkg-available-p "expand-region")
-  :bind ("M-i" . er/expand-region)
-  :init
-  (setq expand-region-contract-fast-key (kbd "o"))
-
-  ;; fill out the region to the beginning and ends of the
-  ;; lines at either end of it when we're not using
-  ;; expand-region but we've activated the mark (but only do
-  ;; this once)
-  (defun er/expand-region--fill-out-region (orig-fun &rest args)
-    (if (or (not (region-active-p))
-            (eq last-command 'er/expand-region))
-        (apply orig-fun args)
-      (if (< (point) (mark))
-          (let ((beg (point)))
-            (goto-char (mark))
-            (end-of-line)
-            (forward-char 1)
-            (push-mark)
-            (goto-char beg)
-            (beginning-of-line))
-        (let ((end (point)))
-          (goto-char (mark))
-          (beginning-of-line)
-          (push-mark)
-          (goto-char end)
-          (end-of-line)
-          (forward-char 1)))))
-  (advice-add 'er/expand-region :around #'er/expand-region--fill-out-region))
-
 ;;; sexp management
 
 (electric-pair-mode 1)
@@ -1133,7 +1100,28 @@ This is a workaround for `wc-mode''s performance issues."
 
 
 
-;;;; ---- functions ----
+;;;; ---- functions and bindings ----
+
+;;; for dealing with blocks of lines (inspired by vim, which does a
+;;; better job of handling these than Emacs)
+
+(defun spw--mark-whole-lines ()
+  (interactive)
+  (if (use-region-p)
+      (progn
+        (when (> (point) (mark))
+          (exchange-point-and-mark))
+        (beginning-of-line)
+        (let ((end (save-excursion
+                     (goto-char (mark))
+                     (beginning-of-line 2)
+                     (point))))
+          (push-mark end nil t)))
+    (beginning-of-line 2)
+    (let ((end (point)))
+      (beginning-of-line 0)
+      (push-mark end nil t))))
+(bind-key "M-i" 'spw--mark-whole-lines)
 
 (defun mwf/narrow-or-widen-dwim (p)
   "If the buffer is narrowed, it widens.  Otherwise, it narrows intelligently.
