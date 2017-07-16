@@ -125,9 +125,6 @@
 (setq mouse-autoselect-window t
       focus-follows-mouse t)
 
-;; initial frame width -- not much use with ~/bin/emacscd
-;; (if window-system (set-frame-width (selected-frame) 80))
-
 ;; y/n rather than yes/no
 (fset 'yes-or-no-p 'y-or-n-p)
 
@@ -167,12 +164,13 @@
 (use-package zenburn-theme
   :if (spw--optional-pkg-available-p "zenburn-theme")
   :init
-  ;; add a hook to avoid having to call `package-initialize' (see
-  ;; README.Debian for elpa-zenburn-theme, and Debian bug #847690)
+  ;; we enable the theme using an `after-init-hook' because otherwise
+  ;; we have to call `package-initialize`.  See README.Debian for
+  ;; elpa-zenburn-theme, and Debian bug #847690
   (add-hook 'after-init-hook (lambda () (load-theme 'zenburn))))
 
-
-;;; I'm in Arizona (this is mainly for Org-mode)
+;;; I'm in Arizona (this is mainly for using Org-mode on hosts that
+;;; have a UTC clock)
 
 (unless (eq system-type 'windows-nt)
   (set-time-zone-rule "/usr/share/zoneinfo/America/Phoenix"))
@@ -182,8 +180,8 @@
 (use-package recentf
   :init
   (setq
-   ;; in an attempt to make TRAMP a bit faster, don't keep remote
-   ;; files in the recentf list (`file-readable-p' is there by default)
+   ;; in an attempt to make TRAMP a bit faster, don't ever keep remote
+   ;; files in the recentf list
    recentf-keep '(file-remote-p file-readable-p)
 
    ;; keep recentf's file out of ~
