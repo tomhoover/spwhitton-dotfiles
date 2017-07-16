@@ -1257,57 +1257,10 @@ automatically."
 
 ;; (add-hook 'before-save-hook 'spw/auto-cleanup)
 
-;;; Typing Hangul
+(defun spw--toggle-window-split ()
+  "Toggle the orientation of a two-window split.
 
-(defun spw/input-method-setup ()
-  "Set up or tear down hangeul input method."
-  (cond ((equal current-language-environment "English")
-         (set-input-method nil))
-        ((equal current-language-environment "Korean")
-         (set-input-method "korean-hangul"))))
-(add-hook 'set-language-environment-hook 'spw/input-method-setup)
-
-(defun spw/toggle-language-environment ()
-  "Toggle typing hangeul."
-  (interactive)
-  (set-language-environment
-   (if (equal current-language-environment "English")
-       "Korean" "English")))
-
-;; <menu> should activate ibus Korean typing but in case we want the
-;; Emacs version, bind that to S-<menu>.  Hanja key is the same as the
-;; key imenu uses: Alt Gr.  I might want to use this as a compose key
-;; outside of Emacs but only when Hangeul typing is disabled so it's
-;; okay to find it for this purpose.
-
-(bind-key "S-<menu>" 'spw/toggle-language-environment)
-(bind-key "<Multi_key>" 'hangul-to-hanja-conversion)
-
-;; kill the binding korea-utils.el seems to be setting
-
-(global-unset-key (kbd "S-SPC"))
-
-(defun spw/centre-window (arg)
-  "Make editing window 95 cols wide and centre it in the frame.
-
-With argument ARG, also bound it on the right."
-  (interactive "P")
-  (delete-other-windows)
-  (split-window-horizontally)
-  (if arg (split-window-horizontally))
-  (shrink-window-horizontally (- (window-width) (/ (- (frame-width) 97) 2)))
-  (switch-to-buffer "*blank*")
-  (toggle-read-only 1)
-  (setq mode-line-format nil)
-  (other-window 1)
-  (when arg
-    (shrink-window-horizontally (- (window-width) 95))
-    (other-window 1)
-    (switch-to-buffer "*blank*")
-    (other-window -1)))
-
-(defun spw/toggle-window-split ()
-  "Toggle the orientation of a two-window split."
+Author unknown."
   (interactive)
   (if (= (count-windows) 2)
       (let* ((this-win-buffer (window-buffer))
@@ -1331,6 +1284,7 @@ With argument ARG, also bound it on the right."
           (set-window-buffer (next-window) next-win-buffer)
           (select-window first-win)
           (if this-win-2nd (other-window 1))))))
+(bind-key "C-c s" 'spw--toggle-window-split)
 
 ;;; join up setqs when editing Emacs config
 
