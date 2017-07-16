@@ -938,8 +938,6 @@ https://github.com/company-mode/company-mode/issues/94#issuecomment-40884387"
              helm-dash-installed-docsets))
 
 (use-package debpaste
-  ;; packaging this blocked by #419510
-  :disabled t
   :if (spw--optional-pkg-available-p "debpaste")
   :commands (debpaste-display-paste
              debpaste-paste-region
