@@ -206,8 +206,10 @@
 
 ;;; sexp management
 
-(electric-pair-mode 1)
 (show-paren-mode 1)
+
+;; insert closing pairs automatically only in programming modes
+(add-hook 'prog-mode-hook 'electric-pair-local-mode)
 
 (defmacro spw--paredit-unsteal (map)
   "Reclaim core Emacs bindings from Paredit-like keymap MAP."
