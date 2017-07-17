@@ -1271,50 +1271,44 @@ Goes backward if ARG is negative; error if CHAR not found."
 ;; note that our C-a binding renders default M-m binding redundant
 (bind-key "M-m" 'zap-up-to-char-repeatable)
 
-(defun spw/strip-text-properties (txt)
+;; used in init-org.el
+(defun spw--strip-text-properties (txt)
   "From http://stackoverflow.com/questions/8372722/print-only-text-discarding-text-properties"
   (set-text-properties 0 (length txt) nil txt)
   txt)
 
-(defun spw/dotfiles-rebase ()
+(defun spw--dotfiles-rebase ()
   "Rebase & push dotfiles."
   (interactive)
   (let ((default-directory (expand-file-name "~/src/dotfiles/"))
         (buffer (get-buffer-create "*dotfiles rebase*")))
     (display-buffer "*dotfiles rebase*")
     (async-shell-command "git-dotfiles-rebase" "*dotfiles rebase*")))
-
-(defun spw/fast-mr-sync ()
-  "Rebase & push dotfiles."
-  (interactive)
-  (let ((default-directory (expand-file-name "~"))
-        (buffer (get-buffer-create "*fmr sync*")))
-    (display-buffer "*fmr sync*")
-    (async-shell-command "MR_FAST=true mr sync" "*fmr sync*")))
+(bind-key "C-c g d" 'spw--dotfiles-rebase)
 
 ;;; defeat variable-pitch-mode for avy and Org tables and source
 ;;; blocks, per http://stackoverflow.com/a/16819449
 
-(defun my-adjoin-to-list-or-symbol (element list-or-symbol)
-  (let ((list (if (not (listp list-or-symbol))
-                  (list list-or-symbol)
-                list-or-symbol)))
-    (require 'cl-lib)
-    (cl-adjoin element list)))
+;; (defun my-adjoin-to-list-or-symbol (element list-or-symbol)
+;;   (let ((list (if (not (listp list-or-symbol))
+;;                   (list list-or-symbol)
+;;                 list-or-symbol)))
+;;     (require 'cl-lib)
+;;     (cl-adjoin element list)))
 
-(defun face-override-variable-pitch (face)
-  (set-face-attribute
-   face nil
-   :inherit
-   (my-adjoin-to-list-or-symbol
-    'fixed-pitch
-    (face-attribute face :inherit))))
+;; (defun face-override-variable-pitch (face)
+;;   (set-face-attribute
+;;    face nil
+;;    :inherit
+;;    (my-adjoin-to-list-or-symbol
+;;     'fixed-pitch
+;;     (face-attribute face :inherit))))
 
 
 
 ;;;; ---- personal settings ----
 
-;;; no tabs please
+;;; no tabs by default
 
 (setq-default indent-tabs-mode nil)
 
@@ -1322,6 +1316,7 @@ Goes backward if ARG is negative; error if CHAR not found."
 
 ;; I don't often want to quit
 (bind-key "C-x C-c" 'delete-frame)
+(bind-key "C-c g k" 'kill-emacs)
 
 ;; `reindent-then-newline-and-indent' tends to get things wrong more
 ;; often than it gets things right with my typing habits.  I hit <TAB>
@@ -1338,27 +1333,7 @@ Goes backward if ARG is negative; error if CHAR not found."
 ;; fallback expanding
 (bind-key "M-/" 'hippie-expand)
 
-;; copy current directory for use in a shell or moving a file in dired
-(bind-key "C-c D" 'spw/save-dir)
-
 (bind-key "C-c ." 'repeat)
-
-;;; launching
-
-(bind-key "C-c g k" 'kill-emacs)
-(bind-key "C-c g l" 'spw/tblesson)
-(bind-key "C-c g r" '(lambda ()
-                       (interactive)
-                       (projectile-persp-switch-project "~/src/dotfiles")
-                       (find-file "~/src/dotfiles/.emacs.d/init.el")
-                       (eval-buffer)))
-(bind-key "C-c g d" 'spw/dotfiles-rebase)
-(bind-key "C-c o s" 'spw/fast-mr-sync)
-
-(bind-key "C-c S l" 'spw/tblesson)
-(bind-key "C-c S S" 'spw/auto-textbook)
-(bind-key "C-c S s" 'spw/textbook)
-(bind-key "C-c S t" 'spw/auto-teachers-book)
 
 ;;; mode-specific
 
@@ -1376,17 +1351,10 @@ Goes backward if ARG is negative; error if CHAR not found."
 (bind-key "C-c e f" 'eval-defun)
 (bind-key "C-c e r" 'eval-region)
 (bind-key "C-c e b" 'eval-buffer)
-(bind-key "C-c E" 'prelude/eval-and-replace)
 
 ;;; insertion
 
 (bind-key "C-c i h" 'add-file-local-variable-prop-line)
-
-;;; Conditionally disable C-z as interacts badly with xmonad
-(defun suspend-frame--not-if-xmonad (orig-fun &rest args)
-  (unless window-system
-    (apply orig-fun args)))
-(advice-add 'suspend-frame :around #'suspend-frame--not-if-xmonad)
 
 ;;; abbreviations
 

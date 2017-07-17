@@ -402,7 +402,7 @@
 
 (defun spw/org-get-todo-keyword ()
   (let ((todo-state (save-match-data (ignore-errors (org-get-todo-state)))))
-    (spw/strip-text-properties todo-state)))
+    (spw--strip-text-properties todo-state)))
 
 (defun bh/is-project-p ()
   "Any task with a todo keyword subtask"
