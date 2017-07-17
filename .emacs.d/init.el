@@ -407,7 +407,7 @@ to `company-complete'.  For another approach, see
 https://github.com/company-mode/company-mode/issues/94#issuecomment-40884387"
     (company-mode 1)
     (define-key (current-local-map) (kbd "M-/") 'company-complete))
-  (add-hook 'prog-mode-hook 'spw/company-prog-setup)
+  (add-hook 'prog-mode-hook 'spw--activate-company)
 
   ;; retain my C-w binding; move company's C-w binding
   (define-key company-active-map "\C-w" nil)
@@ -1490,9 +1490,9 @@ Goes backward if ARG is negative; error if CHAR not found."
   (when (featurep 'org)
     ;; gotta remove this advice first since `org-save-all-org-buffers'
     ;; calls `save-some-buffers'
-    (advice-remove 'save-some-buffers #'spw/save-org-buffers-first)
+    (advice-remove 'save-some-buffers #'spw--save-org-buffers-first)
     (org-save-all-org-buffers)
-    (advice-add 'save-some-buffers :before #'spw/save-org-buffers-first)))
+    (advice-add 'save-some-buffers :before #'spw--save-org-buffers-first)))
 (advice-add 'save-some-buffers :before #'spw--save-org-buffers-first)
 
 ;;; show column numbers as well as line numbers in the mode line
