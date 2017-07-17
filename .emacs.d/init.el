@@ -1623,18 +1623,9 @@ superflous blank quoted lines."
       (forward-line)))
   (bind-key "C-c C-b" 'spw--message-goto-body--skip-mml-secure message-mode-map)
 
-  ;; default is not much use and I keep hitting it by mistake
+  ;; default C-c C-s binding is not much use, and I keep hitting it
+  ;; accidently
   (bind-key "C-c C-s" 'message-goto-subject message-mode-map))
-
-(defun djcb/snip (b e summ)
-  "Replace region B to E with SUMM like this: [snip:summary (n lines)]."
-  (interactive "r\nsSummary:")
-  (let ((n (count-lines b e)))
-    (delete-region b e)
-    (insert (format "[snip%s (%d line%s)]"
-                    (if (= 0 (length summ)) "" (concat ": " summ))
-                    n
-                    (if (= 1 n) "" "s")))))
 
 ;;; C-c C-c to save-and-exit emacsclient (like <esc>ZZ in vim)
 
@@ -1717,8 +1708,8 @@ superflous blank quoted lines."
 
 ;;; Perl
 
-;; cperl-mode doesn't try to indent POD lines; that's good enough for
-;; me o/
+;; using cperl-mode instead of perl-mode because the former doesn't
+;; try to indent lines within a POD
 
 (add-to-list 'auto-mode-alist '("\\.\\([pP][Llm]\\|al\\)\\'" . cperl-mode))
 (add-to-list 'interpreter-mode-alist '("perl" . cperl-mode))
