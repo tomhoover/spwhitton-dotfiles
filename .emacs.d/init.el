@@ -1394,12 +1394,12 @@ Goes backward if ARG is negative; error if CHAR not found."
 
 ;;; miscellaneous personal settings
 
-;; isearch should leave you at the beginning of the match
-(add-hook 'isearch-mode-end-hook 'spw/isearch-match-beginning)
-(defun spw/isearch-match-beginning ()
-  "Move point to beginning of isearch match."
-  (when isearch-other-end
-    (when isearch-forward (goto-char isearch-other-end))))
+;; ;; isearch should leave you at the beginning of the match
+;; (add-hook 'isearch-mode-end-hook 'spw/isearch-match-beginning)
+;; (defun spw/isearch-match-beginning ()
+;;   "Move point to beginning of isearch match."
+;;   (when isearch-other-end
+;;     (when isearch-forward (goto-char isearch-other-end))))
 
 ;; save script files as executable automatically
 (add-hook 'after-save-hook
