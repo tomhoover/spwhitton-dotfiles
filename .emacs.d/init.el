@@ -1214,6 +1214,9 @@ Originally from <http://blog.gleitzman.com/post/35416335505/hunting-for-unicode-
                           (forward-visible-line (prefix-numeric-value arg))
                         (end-of-visible-line))
                       (point)))))
+;; with the region inactive, we have M-i M-w to copy the whole line
+;; including its line break, and M-w to copy to the end of the line
+;; without moving point
 (bind-key "M-w" 'spw--kill-ring-save)
 
 (defun spw--open-term-here ()
