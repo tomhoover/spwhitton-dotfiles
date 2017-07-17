@@ -1746,6 +1746,3 @@ superflous blank quoted lines."
 ;; guide mandates them, so make a slightly modified style
 (c-add-style "linux-tabs" '("linux" (indent-tabs-mode . t)))
 (setq c-default-style "linux-tabs")
-
-(provide 'init)
-;;; init.el ends here
