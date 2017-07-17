@@ -1432,13 +1432,13 @@ Goes backward if ARG is negative; error if CHAR not found."
 ;; templates when creating new files
 ;; (auto-insert-mode 1)
 
-;; disable for python mode where it makes a mess
-(defun electric-indent-ignore-python ()
-  "Ignore electric indentation for `python-mode'."
-  (if (equal major-mode 'python-mode)
-      `no-indent'
-    nil))
-;;(add-hook 'electric-indent-functions 'electric-indent-ignore-python)
+;; ;; disable for python mode where it makes a mess
+;; (defun electric-indent-ignore-python ()
+;;   "Ignore electric indentation for `python-mode'."
+;;   (if (equal major-mode 'python-mode)
+;;       `no-indent'
+;;     nil))
+;; ;;(add-hook 'electric-indent-functions 'electric-indent-ignore-python)
 
 ;; browser
 (setq browse-url-generic-program "firefox"
