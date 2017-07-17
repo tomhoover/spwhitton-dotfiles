@@ -1485,7 +1485,7 @@ Goes backward if ARG is negative; error if CHAR not found."
 
 ;;; avoid some prompts when saving all buffers
 
-(defun spw/save-org-buffers-first (&rest ignore)
+(defun spw--save-org-buffers-first (&rest ignore)
   "Save all Org buffers without prompting."
   (when (featurep 'org)
     ;; gotta remove this advice first since `org-save-all-org-buffers'
@@ -1493,7 +1493,7 @@ Goes backward if ARG is negative; error if CHAR not found."
     (advice-remove 'save-some-buffers #'spw/save-org-buffers-first)
     (org-save-all-org-buffers)
     (advice-add 'save-some-buffers :before #'spw/save-org-buffers-first)))
-(advice-add 'save-some-buffers :before #'spw/save-org-buffers-first)
+(advice-add 'save-some-buffers :before #'spw--save-org-buffers-first)
 
 ;;; show column numbers as well as line numbers in the mode line
 
