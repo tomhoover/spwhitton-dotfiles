@@ -1618,6 +1618,7 @@ superflous blank quoted lines."
   ;; them in my sent mail folder
   (setq mml-secure-openpgp-encrypt-to-self t)
 
+  :config
   ;; C-c C-b should skip over mml's sign/encrypt lines (it is a bad
   ;; idea to advise message-goto-body as various functions assume it
   ;; does not skip over sign/encrypt lines
