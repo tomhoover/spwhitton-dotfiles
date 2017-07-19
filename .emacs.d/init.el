@@ -1016,6 +1016,10 @@ Passes ARG to `projectile-switch-project-by-name'."
 ;;; for dealing with blocks of lines (inspired by vim, which does a
 ;;; better job of handling these than Emacs)
 
+;; possible enhancement: M-i goes into a transient mode where C-n and
+;; C-p are like 'j' and 'k' in vim's mode accessed with 'V' (I think
+;; "visual line mode")
+
 (defun spw--mark-whole-lines ()
   (interactive)
   (if (use-region-p)
@@ -1393,6 +1397,8 @@ Goes backward if ARG is negative; error if CHAR not found."
   (advice-add 'kill-buffer :before #'kill-buffer--clear-modified))
 
 ;;; miscellaneous personal settings
+
+;; following is commented out so that I can use isearch instead of expand-region
 
 ;; ;; isearch should leave you at the beginning of the match
 ;; (add-hook 'isearch-mode-end-hook 'spw/isearch-match-beginning)
