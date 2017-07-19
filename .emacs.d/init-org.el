@@ -1092,13 +1092,13 @@ spaces in it and to remove any colons."
               (save-buffer)
               (message "remove")))))))
 
-;; defeat variable-pitch-mode for tables and source blocks, per
-;; http://stackoverflow.com/a/16819449
+;; ;; defeat variable-pitch-mode for tables and source blocks, per
+;; ;; http://stackoverflow.com/a/16819449
 
-(face-override-variable-pitch 'org-code)
-(face-override-variable-pitch 'org-block)
-(face-override-variable-pitch 'org-table)
-;;(face-override-variable-pitch 'org-block-background)
+;; (face-override-variable-pitch 'org-code)
+;; (face-override-variable-pitch 'org-block)
+;; (face-override-variable-pitch 'org-table)
+;; ;;(face-override-variable-pitch 'org-block-background)
 
 (defun spw/org-agenda-priority-filter (arg)
   (interactive "P")
