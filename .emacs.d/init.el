@@ -147,6 +147,7 @@
 (diminish 'visual-line-mode)
 
 ;; Terminus
+;; TODO should check if font is available
 (add-to-list 'default-frame-alist '(font . "Terminus-11"))
 
 ;; disable GUI elements
