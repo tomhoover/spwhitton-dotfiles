@@ -519,7 +519,7 @@ different occasions."
       ;; before the SCHEDULED:, the regexp won't match (if the
       ;; DEADLINE: comes second, it will match).  So skip over
       ;; DEADLINE, if it appears
-      (when (looking-at (org-re-timestamp 'deadlined))
+      (when (looking-at (org-re-timestamp 'deadline))
         (forward-sexp 3)
         (forward-char))
 
