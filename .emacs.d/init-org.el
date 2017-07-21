@@ -1169,5 +1169,9 @@ spaces in it and to remove any colons."
 
 (bind-key "C-c M-e" 'spw/pandoc-paper-compile org-mode-map)
 
+;;; this binding seems to have dropped out of upstream?
+
+(bind-key (kbd "C-c C-SPC") 'org-mark-subtree org-mode-map)
+
 (provide 'init-org)
 ;;; init-org.el ends here
