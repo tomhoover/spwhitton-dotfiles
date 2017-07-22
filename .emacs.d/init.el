@@ -71,6 +71,8 @@
 ;;    ("MELPA Stable" . 5)
 ;;    ("MELPA" . 0)))
 
+(package-initialize)
+
 
 
 ;;;; ---- basic settings ----
@@ -167,11 +169,7 @@
 
 (use-package zenburn-theme
   :if (spw--optional-pkg-available-p "zenburn-theme")
-  :init
-  ;; we enable the theme using an `after-init-hook' because otherwise
-  ;; we have to call `package-initialize`.  See README.Debian for
-  ;; elpa-zenburn-theme, and Debian bug #847690
-  (add-hook 'after-init-hook (lambda () (load-theme 'zenburn))))
+  :init (load-theme 'zenburn))
 
 ;;; I'm in Arizona (this is mainly for using Org-mode on hosts that
 ;;; have a UTC clock)
