@@ -94,7 +94,7 @@
       (file))
      ("\\.hwp\\'" "hanword"
       (file))
-     ("\\.\\(jpg\\|JPG\\|jpeg\\|png\\|gif\\)" "feh"
+     ("\\.\\(jpg\\|JPG\\|jpeg\\|png\\|gif\\)" "eog"
       (file)))))
  '(org-agenda-sticky t)
  '(org-agenda-time-grid
