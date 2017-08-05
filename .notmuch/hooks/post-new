@@ -1,0 +1,15 @@
+#!/bin/sh
+
+. $HOME/.shenv
+
+# mark all sent mail as read
+notmuch tag -unread -- folder:sent
+
+# mark all drafts as drafts, and as read
+notmuch tag -unread +draft -- folder:drafts
+
+# mark all spam as spam
+notmuch tag +spam -- folder:spam
+
+# mark all trash as trash
+notmuch tag +deleted -- folder:trash

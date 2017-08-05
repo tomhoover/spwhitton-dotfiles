@@ -26,6 +26,10 @@
 
 (use-package org-inlinetask)
 
+;;; links to notmuch messages
+
+(use-package org-notmuch :load-path "/usr/share/org-mode/lisp")
+
 ;;; links to mairix messages by message-id in Org
 
 ;;(use-package org-mairix-el
@@ -253,7 +257,12 @@
  org-entities-user '(("space" "\\ " nil " " " " " " " "))
 
  org-export-with-toc nil         ; default to no table of contents
- org-footnote-section "Notes")
+ org-footnote-section "Notes"
+
+ org-capture-templates-contexts
+ '(("t" "m" ((in-mode . "notmuch-show-mode")))
+   ("t" ((not-in-mode . "notmuch-show-mode")))
+   ("m" ((in-mode . "notmuch-show-mode")))))
 
 ;; Org setting bookmarks that I never use makes for git merge
 ;; conflicts that I don't need to spend time resolving.  Eventually I
@@ -638,6 +647,9 @@ different occasions."
 %?")
    ("n" "Information to be refiled" entry (file "~/doc/org/refile.org")
     "* %^{Title}
+%?")
+   ("m" "Task from mail to be refiled" entry (file "~/doc/org/refile.org")
+    "* TODO [[notmuch:id:%:message-id][%^{Title|\"%:subject\" from %:fromname}]]
 %?")
    ("a" "Appointment" entry (file+datetree "~/doc/org/diary.org")
     "* %^{Time} %^{Title & location}

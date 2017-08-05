@@ -348,6 +348,17 @@ hooks listed in `lisp-major-mode-hooks'."
 ;;; in more than one window
 
 (use-package pointback
+  ;; this breaks `notmuch-tree-mode' (when notmuch moves to a new
+  ;; message (e.g. upon hitting 'n'), it deletes the split message
+  ;; view, creates a new split, and displays the message there.  But
+  ;; deleting the split windows causes pointback mode to move point in
+  ;; the original window, so point is no longer on the message
+  ;; displayed.  This leads to various strange behaviours) and due to
+  ;; limitations of `define-globalized-minor-mode', it is not clear
+  ;; how to cleanly disable pointback only in `notmuch-tree-mode'
+  ;; buffers (see https://stackoverflow.com/a/6839968).  So just
+  ;; disable for now
+  :disabled t
   :commands global-pointback-mode
   :defer 5
   :config
@@ -1008,6 +1019,70 @@ Passes ARG to `projectile-switch-project-by-name'."
   ;; this is needed with no history file
   (remove-hook 'redtick-after-rest-hook #'redtick--save-history))
 
+(use-package notmuch
+  :if (spw--optional-pkg-available-p "notmuch")
+  :bind (("C-c m" . notmuch-jump-search)
+         ("C-c z" . notmuch-tree))
+  :init
+  ;; these let bindings avoid the need to add saved searches to the
+  ;; database, so that our database remains recreteable from just my
+  ;; Maildirs
+  (let ((lists "to:(lists.debian.org or lists.alioth.debian.org) and not to:-announce and not to:spwhitton@spwhitton.name and not to:spwhitton@email.arizona.edu")
+        (feeds "from:rss@spwhitton.name"))
+    (setq notmuch-saved-searches
+          `((:name "all unread" :key "u" :search-type tree
+                   :query "tag:unread")
+            (:name "personal unread" :key "p" :search-type tree
+                   :query ,(concat
+                            "tag:unread and not to:spwhitton@email.arizona.edu and not ("
+                            lists
+                            ") and not ("
+                            feeds
+                            ")"))
+            (:name "UA unread" :key "U" :search-type tree
+                   :query "tag:unread and to:spwhitton@email.arizona.edu")
+            (:name "listserv unread" :key "l" :search-type tree
+                   :query ,(concat "tag:unread and (" lists ")"))
+            (:name "feeds unread" :key "f" :search-type tree
+                   :query ,(concat "tag:unread and (" feeds ")"))
+            ;; (:name "flagged" :key "F" :search-type tree
+            ;;        :query "tag:flagged" )
+            (:name "sent" :key "s" :search-type tree
+                   :query "from:spwhitton@spwhitton.name or from:spwhitton@email.arizona.edu")
+            ;; (:name "drafts" :key "d" :search-type tree
+            ;;        :query "tag:draft")
+            ;; (:name "all mail" :key "a" :search-type tree
+            ;;        :query "*")
+            )))
+
+  (use-package notmuch-message
+    :config
+    (bind-key "C-c C-s" 'message-goto-subject notmuch-message-mode-map))
+
+  (setq notmuch-tagging-keys
+        '(("u" ("+unread") "Mark as unread")
+          ("s" ("+spam") "Mark as spam")
+          ("m" ("+killed") "Kill thread") ; 'm' for 'mute'
+          ("d" ("+deleted") "Send to trash")))
+
+  ;; this ensures that hitting C-x m right after Emacs starts yields a
+  ;; message with the correct From: address and User-Agent header, etc.
+  (defun compose-mail--load-notmuch (&rest ignore)
+    (require 'notmuch))
+  (advice-add 'compose-mail :before #'compose-mail--load-notmuch)
+
+  ;; always decrypt & verify PGP parts
+  (setq notmuch-crypto-process-mime t)
+  ;; have Emacs set envelope-from to be on the safe side
+  (setq mail-specify-envelope-from t
+        message-sendmail-envelope-from 'header
+        mail-envelope-from 'header)
+
+  :config
+  ;; some bindings
+  (bind-key "S-SPC" 'notmuch-tree-scroll-message-window-back notmuch-tree-mode-map)
+  (bind-key "g" (notmuch-tree-close-message-pane-and #'notmuch-show-reply) notmuch-tree-mode-map))
+
 
 
 ;;;; ---- functions and bindings ----
@@ -1580,7 +1655,7 @@ Goes backward if ARG is negative; error if CHAR not found."
   ;; slightly modify C-c C-z behaviour: fix Mutt and Emacs which both
   ;; think that there doesn't need to be a newline before the
   ;; signature dashes
-  (add-hook 'message-mode-hook 'spw/fix-initial-signature)
+  ;; (add-hook 'message-mode-hook 'spw/fix-initial-signature)
   ;; (advice-add 'message-kill-to-signature :after #'spw/fix-signature-kill)
 
   (defun spw/debbugs-no-ack ()
@@ -1631,7 +1706,67 @@ superflous blank quoted lines."
 
   ;; default C-c C-s binding is not much use, and I keep hitting it
   ;; accidently
-  (bind-key "C-c C-s" 'message-goto-subject message-mode-map))
+  (bind-key "C-c C-s" 'message-goto-subject message-mode-map)
+
+  (use-package message-templ
+    :if (spw--optional-pkg-available-p "message-templ")
+    :commands message-templ-config-exec
+    :init
+    (setq message-templ-alist '(("default"
+                                 ("From" . "Sean Whitton <spwhitton@spwhitton.name>"))
+                                ("UA"
+                                 ("From" . "Sean Whitton <spwhitton@email.arizona.edu>"))
+                                ("Debian"
+                                 ("From" . "Sean Whitton <spwhitton@debian.org>"))))
+    (setq message-templ-config-alist '(("^To:.*@.*\\(\.edu\\|\.ac\.uk\\)"
+                                        (lambda ()
+                                          (message-templ-apply "UA")
+                                          (mml-unsecure-message))))))
+
+  (defun spw--message-normalise ()
+    (interactive)
+    (message-fill-yanked-message)
+    (spw--compact-blank-lines)
+    ;; sign messages by default
+    (mml-secure-message-sign-pgpmime)
+    ;; set up From address and disable signing where appropriate
+    (message-templ-config-exec)
+    (save-excursion
+      (spw--message-goto-body--skip-mml-secure)
+      (let ((body (point)))
+        ;; if the message begins with quoted text, insert a basic
+        ;; salutation
+        (when (looking-at "^\\(<#[^\n]+>\n\\)*On .* wrote:$")
+          (insert "Hello,\n\n"))
+        (message-goto-signature)
+        (unless (eobp)
+          (end-of-line -1))
+        ;; delete trailing whitespace in message body, when that
+        ;; message body exists (this protects signature dashes and
+        ;; empty headers)
+        (when (< body (point))
+          (delete-trailing-whitespace body (point)))
+        ;; ensure there is a newline before the signature dashes
+        (unless (bolp)
+          (insert "\n")))))
+
+  ;; try to strip signatures when citing
+  (setq notmuch-mua-cite-function 'message-cite-original-without-signature)
+
+  ;; with defaults, this gets us "On X, Y wrote:" lines
+  (setq message-citation-line-function 'message-insert-formatted-citation-line)
+
+  ;; run this when setting up the message.  we could run it in a hook
+  ;; run before the message is sent, but I always want to review the
+  ;; results of the cleanup
+  ;;
+  ;; note that certain aspects of the normalisation won't take effect
+  ;; at this stage of message buffer setup, such as adding the salutation
+  (add-hook 'message-setup-hook 'spw--message-normalise)
+
+  ;; this key is normally used to insert a Newsgroups: header, but I
+  ;; don't need that
+  (bind-key "C-c C-n" 'spw--message-normalise message-mode-map))
 
 ;;; C-c C-c to save-and-exit emacsclient (like <esc>ZZ in vim)
 
