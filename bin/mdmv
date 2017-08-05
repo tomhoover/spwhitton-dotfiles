@@ -49,6 +49,6 @@ for msg in sys.argv[1:-1]:
         eprint(us + ": somehow, dest " + msg_dest + " already exists")
         sys.exit(1)
     else:
-        os.rename(msg_name, msg_dest)
+        os.rename(msg, msg_dest)
 
     counter = counter + 1
