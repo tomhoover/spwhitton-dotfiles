@@ -35,6 +35,12 @@ bindsym $mod+Return exec urxvt
 # start an Emacs frame
 bindsym $mod+Shift+Return exec emacsclient -c -a '' -n -e '(switch-to-buffer nil)'
 
+# lock screen -- relies on xss-lock
+bindsym $mod+l exec loginctl lock-session
+
+# go to sleep -- xss-lock will lock screen
+bindsym $mod+F4 exec systemctl suspend
+
 # kill focused window
 bindsym Mod1+F4 kill
 
