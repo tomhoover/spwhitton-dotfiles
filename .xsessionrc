@@ -3,3 +3,13 @@
 export PATH="${HOME}/bin:${PATH}"
 
 xset b off
+xset r rate 380 25
+setxkbmap -option ctrl:nocaps
+xset dpms 600
+xss-lock -- i3lock -c 000000 -n --image=$HOME/local/lock.png &
+/usr/libexec/gnome-settings-daemon &
+nitrogen --restore
+redshift-gtk
+
+eval $(gnome-keyring-daemon --start --components=gpg,pkcs11,secrets,ssh)
+export GNOME_KEYRING_CONTROL GNOME_KEYRING_PID GPG_AGENT_INFO SSH_AUTH_SOCK
