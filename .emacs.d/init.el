@@ -1083,10 +1083,53 @@ Passes ARG to `projectile-switch-project-by-name'."
         message-sendmail-envelope-from 'header
         mail-envelope-from 'header)
 
+  (setq notmuch-archive-tags '("-unread"))
+  (setq notmuch-maildir-use-notmuch-insert t
+        notmuch-fcc-dirs "sent -unread")
+
+  ;; Harald Hanche-Olsen <https://emacs.stackexchange.com/a/3339>
+  (defmacro add-hook-run-once (hook function &optional append local)
+    "Like add-hook, but remove the hook after it is called"
+    (let ((sym (make-symbol "#once")))
+      `(progn
+         (defun ,sym ()
+           (remove-hook ,hook ',sym ,local)
+           (funcall ,function))
+         (add-hook ,hook ',sym ,append ,local))))
+
+  (defun spw--notmuch-next-command-kills--remove ()
+    (setq notmuch-archive-tags '("-unread")))
+  (defun spw--notmuch-next-command-kills--add ()
+    (setq notmuch-archive-tags '("-unread" "+killed"))
+    (add-hook-run-once
+     'post-command-hook
+     'spw--notmuch-next-command-kills--remove))
+  (defun spw--notmuch-next-command-kills ()
+    (interactive)
+    (message "Next archive command will also kill")
+    (add-hook-run-once
+     'pre-command-hook
+     'spw--notmuch-next-command-kills--add))
+
+  ;; (defun spw--notmuch-next-command-kills ()
+  ;;   (interactive)
+  ;;   (let ((old notmuch-archive-tags))
+  ;;     (message "Next archive command will also kill")
+  ;;     (add-to-list 'notmuch-archive-tags "+killed")
+  ;;     (set-transient-map nil nil
+  ;;                        (lambda ()
+  ;;                          (setq notmuch-archive-tags old)))))
+
+
+
   :config
   ;; some bindings
   (bind-key "S-SPC" 'notmuch-tree-scroll-message-window-back notmuch-tree-mode-map)
-  (bind-key "g" (notmuch-tree-close-message-pane-and #'notmuch-show-reply) notmuch-tree-mode-map))
+  (bind-key "g" (notmuch-tree-close-message-pane-and #'notmuch-show-reply) notmuch-tree-mode-map)
+
+  (bind-key "K" 'spw--notmuch-next-command-kills notmuch-tree-mode-map)
+  (bind-key "K" 'spw--notmuch-next-command-kills notmuch-search-mode-map)
+  (bind-key "K" 'spw--notmuch-next-command-kills notmuch-show-mode-map))
 
 
 
