@@ -1409,10 +1409,6 @@ Goes backward if ARG is negative; error if CHAR not found."
 ;; fixup-whitespace seems to make just-one-space redundant
 (bind-key "M-SPC" 'fixup-whitespace)
 
-;; never want to send any e-mail
-(unbind-key "C-x m")
-(unbind-key "C-x 4 m")
-
 ;; fallback expanding
 (bind-key "M-/" 'hippie-expand)
 
