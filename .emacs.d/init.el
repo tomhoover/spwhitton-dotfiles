@@ -1065,6 +1065,11 @@ Passes ARG to `projectile-switch-project-by-name'."
           ("m" ("+killed") "Kill thread") ; 'm' for 'mute'
           ("d" ("+deleted") "Send to trash")))
 
+  ;; default is t, but given that notmuch searches run to the
+  ;; beginning of time, and we are likely to want recent mail, we want
+  ;; newer e-mails at the top
+  (setq notmuch-search-oldest-first nil)
+
   ;; this ensures that hitting C-x m right after Emacs starts yields a
   ;; message with the correct From: address and User-Agent header, etc.
   (defun compose-mail--load-notmuch (&rest ignore)
