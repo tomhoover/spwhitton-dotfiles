@@ -1805,7 +1805,11 @@ superflous blank quoted lines."
   ;; results of the cleanup
   ;;
   ;; note that certain aspects of the normalisation won't take effect
-  ;; at this stage of message buffer setup, such as adding the salutation
+  ;; at this stage of message buffer setup, such as adding the
+  ;; salutation
+  ;;
+  ;; main reason for running this now is to reduce the chance I send
+  ;; my message unsigned
   (add-hook 'message-setup-hook 'spw--message-normalise)
 
   ;; this key is normally used to insert a Newsgroups: header, but I
