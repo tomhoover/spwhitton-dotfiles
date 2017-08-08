@@ -17,6 +17,12 @@ if [ "$(hostname -f)" = "athena.silentflame.com" ]; then
         dtach -a $HOME/local/irssi.dtach.socket
     fi
 else
-    # on a workstation, get connected to ma
-    mosh athena /home/spwhitton/bin/ii
+    # on a workstation, get connected to athena
+    if [[ $- == *i* ]]; then
+        mosh athena /home/spwhitton/bin/ii
+    else
+        # urgentOnBell not working right now
+        urxvt -title "irssi" ++urgentOnBell -e /bin/sh \
+              -c "mosh athena /home/spwhitton/bin/ii"
+    fi
 fi
