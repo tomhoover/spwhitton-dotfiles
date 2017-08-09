@@ -13,3 +13,9 @@ notmuch tag +spam -- folder:spam
 
 # mark all trash as trash
 notmuch tag +deleted -- folder:trash
+
+# propagate the 'killed' tag to all messages in the killed message's thread
+killed_threads=$(notmuch search --output=threads tag:killed)
+if [ ! -z "$killed_threads" ]; then
+    notmuch tag -unread -- $killed_threads
+fi

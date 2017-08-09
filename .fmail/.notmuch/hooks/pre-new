@@ -23,12 +23,6 @@ if [ ! -z "$floating_drafts" ]; then
     mdmv $floating_drafts $HOME/.fmail/drafts
 fi
 
-# propagate the 'killed' tag to all messages in the killed message's thread
-killed_threads=$(notmuch search --output=threads tag:killed)
-if [ ! -z "$killed_threads" ]; then
-    notmuch tag -unread -- $killed_threads
-fi
-
 # ensure all spam is in the spam folder to train FastMail's spam filter
 floating_spam=$(notmuch search --output=files -- tag:spam and not folder:spam)
 if [ ! -z "$floating_spam" ]; then
