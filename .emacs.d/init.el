@@ -1022,7 +1022,7 @@ Passes ARG to `projectile-switch-project-by-name'."
 (use-package notmuch
   :if (spw--optional-pkg-available-p "notmuch")
   :bind (("C-c m" . notmuch-jump-search)
-         ("C-c z" . notmuch-tree))
+         ("C-c s" . notmuch-search))
   :init
   ;; these let bindings avoid the need to add saved searches to the
   ;; database, so that our database remains recreteable from just my
@@ -1281,7 +1281,7 @@ Author unknown."
           (set-window-buffer (next-window) next-win-buffer)
           (select-window first-win)
           (if this-win-2nd (other-window 1))))))
-(bind-key "C-c s" 'spw--toggle-window-split)
+(bind-key "C-c S" 'spw--toggle-window-split)
 
 (defun magnars--move-beginning-of-line-dwim (arg)
   "Move point back to indentation or beginning of line.
