@@ -1780,6 +1780,10 @@ superflous blank quoted lines."
       (let ((body (point)))
         ;; if the message begins with quoted text, insert a basic
         ;; salutation
+
+        ;; TODO look for a salutation, instead, with: line starts wiht
+        ;; capital, ends with comma, followed by a blank line
+
         (when (looking-at "^\\(<#[^\n]+>\n\\)*On .* wrote:$")
           (insert "Hello,\n\n"))
         (message-goto-signature)
