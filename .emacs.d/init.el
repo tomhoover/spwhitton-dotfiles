@@ -1030,16 +1030,16 @@ Passes ARG to `projectile-switch-project-by-name'."
   (let ((lists "to:(lists.debian.org or lists.alioth.debian.org) and not to:-announce and not to:spwhitton@spwhitton.name and not to:spwhitton@email.arizona.edu")
         (feeds "from:rss@spwhitton.name"))
     (setq notmuch-saved-searches
-          `((:name "all unread" :key "u" :search-type tree
+          `((:name "all unread" :key "u" :search-type nil
                    :query "tag:unread")
-            (:name "personal unread" :key "p" :search-type tree
+            (:name "personal unread" :key "p" :search-type nil
                    :query ,(concat
                             "tag:unread and not to:spwhitton@email.arizona.edu and not ("
                             lists
                             ") and not ("
                             feeds
                             ")"))
-            (:name "UA unread" :key "U" :search-type tree
+            (:name "UA unread" :key "U" :search-type nil
                    :query "tag:unread and to:spwhitton@email.arizona.edu")
             (:name "listserv unread" :key "l" :search-type tree
                    :query ,(concat "tag:unread and (" lists ")"))
