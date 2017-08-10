@@ -14,7 +14,7 @@ export GPG_TTY=$(tty)
 # colours
 if ! [[ "$TERM" == "dumb" ]]; then
     autoload -U colors; colors
-    export PS1="%{$fg[${1:-yellow}]%}%m %{$fg[${1:-green}]%}%~ %{$fg[${1:-blue}]%}%#%{$reset_color%} "
+    export PS1="%(?..%? )%{$fg[${1:-yellow}]%}%m %{$fg[${1:-green}]%}%~ %{$fg[${1:-blue}]%}%#%{$reset_color%} "
 fi
 
 # add newer GHC to PATH if interactive shell (can't just add in .shenv
