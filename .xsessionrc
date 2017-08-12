@@ -34,9 +34,10 @@ if which xfconf-query; then
 fi
 
 # ... and then hook i3lock into logind
-if [ -L "$HOME/local/lock.png" ]; then
-    # note that i3lock needs a file in PNG format
-    xss-lock -- i3lock -t -c 000000 -n --image=$HOME/local/lock.png &
+if [ -f "$HOME/local/lock.png" ]; then
+    # note that i3lock needs a file in PNG format.  tiling doesn't
+    # work well; resize image file to monitor dimensions
+    xss-lock -- i3lock -c 000000 -n --image=$HOME/local/lock.png &
 else
     xss-lock -- i3lock -c 000000 -n &
 fi
