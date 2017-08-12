@@ -53,6 +53,10 @@ export GNOME_KEYRING_CONTROL GNOME_KEYRING_PID GPG_AGENT_INFO SSH_AUTH_SOCK
 
 gnome-settings-daemon &
 
+# ---- brightness keys
+
+xfce4-power-manager &
+
 # ---- clear SSH keys out of gnome-keyring-daemon when idle (per GNOME
 # ---- bug #525574 it can't do this itself yet)
 
