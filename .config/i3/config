@@ -35,6 +35,10 @@ bindsym $mod+Return exec urxvt
 # start an Emacs frame
 bindsym $mod+Shift+Return exec emacsclient -c -a '' -n -e '(switch-to-buffer nil)'
 
+# start a graphical file manager
+# might consider making $mod+g start an i3 mode for launching other programs I use often
+bindsym $mod+g exec nautilus
+
 # lock screen -- relies on xss-lock
 bindsym $mod+l exec loginctl lock-session
 
