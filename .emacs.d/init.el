@@ -1111,6 +1111,34 @@ Passes ARG to `projectile-switch-project-by-name'."
      'pre-command-hook
      'spw--notmuch-next-command-kills--add))
 
+  (defun spw--notmuch-next-command-unread--remove ()
+    (setq notmuch-archive-tags '("-unread")))
+  (defun spw--notmuch-next-command-unread--add ()
+    (setq notmuch-archive-tags '("+unread"))
+    (add-hook-run-once
+     'post-command-hook
+     'spw--notmuch-next-command-unread--remove))
+  (defun spw--notmuch-next-command-unread ()
+    (interactive)
+    (message "Next archive command will instead mark as unread")
+    (add-hook-run-once
+     'pre-command-hook
+     'spw--notmuch-next-command-unread--add))
+
+  (defun spw--notmuch-next-command-spam--remove ()
+    (setq notmuch-archive-tags '("-unread")))
+  (defun spw--notmuch-next-command-spam--add ()
+    (setq notmuch-archive-tags '("-unread" "+spam"))
+    (add-hook-run-once
+     'post-command-hook
+     'spw--notmuch-next-command-spam--remove))
+  (defun spw--notmuch-next-command-spam ()
+    (interactive)
+    (message "Next archive command will also mark as spam")
+    (add-hook-run-once
+     'pre-command-hook
+     'spw--notmuch-next-command-spam--add))
+
   ;; (defun spw--notmuch-next-command-kills ()
   ;;   (interactive)
   ;;   (let ((old notmuch-archive-tags))
@@ -1129,7 +1157,15 @@ Passes ARG to `projectile-switch-project-by-name'."
 
   (bind-key "K" 'spw--notmuch-next-command-kills notmuch-tree-mode-map)
   (bind-key "K" 'spw--notmuch-next-command-kills notmuch-search-mode-map)
-  (bind-key "K" 'spw--notmuch-next-command-kills notmuch-show-mode-map))
+  (bind-key "K" 'spw--notmuch-next-command-kills notmuch-show-mode-map)
+
+  (bind-key "U" 'spw--notmuch-next-command-unread notmuch-tree-mode-map)
+  (bind-key "U" 'spw--notmuch-next-command-unread notmuch-search-mode-map)
+  (bind-key "U" 'spw--notmuch-next-command-unread notmuch-show-mode-map)
+
+  (bind-key "S" 'spw--notmuch-next-command-spam notmuch-tree-mode-map)
+  (bind-key "S" 'spw--notmuch-next-command-spam notmuch-search-mode-map)
+  (bind-key "S" 'spw--notmuch-next-command-spam notmuch-show-mode-map))
 
 
 
