@@ -172,9 +172,14 @@ bindsym XF86AudioLowerVolume exec --no-startup-id pactl -- set-sink-volume 0 -5%
 bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle
 
 # send some stuff to workspace 1
+assign [class="^URxvt$" instance="^irssi$"] 1
 assign [class="Firefox"] 1
 assign [class="Evolution"] 1
-assign [class="^URxvt$" instance="^irssi$"] 1
+
+# jump back to specific windows on first workspace
+bindsym $mod+h [class="^URxvt$" instance="^irssi$"] focus
+bindsym $mod+j [class="Firefox"] focus
+bindsym $mod+k [class="Evolution"] focus
 
 # workspace default layouts (currently only workspace 1)
 exec_always ~/per-workspace-layout.pl
