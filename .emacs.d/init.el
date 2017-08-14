@@ -1045,13 +1045,13 @@ Passes ARG to `projectile-switch-project-by-name'."
                             ")"))
             (:name "UA unread" :key "w" :search-type nil
                    :query "tag:unread and (to:spwhitton@email.arizona.edu or from:email.arizona.edu)")
-            (:name "Debian unread" :key "d" :search-type tree
+            (:name "Debian unread" :key "d" :search-type nil
                    :query ,(concat "tag:unread and (" debian ")"))
-            (:name "feeds unread" :key "f" :search-type tree
+            (:name "feeds unread" :key "f" :search-type nil
                    :query ,(concat "tag:unread and (" feeds ")"))
             ;; (:name "flagged" :key "F" :search-type tree
             ;;        :query "tag:flagged" )
-            (:name "sent" :key "s" :search-type tree
+            (:name "sent" :key "s" :search-type nil
                    :query "from:spwhitton@spwhitton.name or from:spwhitton@email.arizona.edu")
             ;; (:name "drafts" :key "d" :search-type tree
             ;;        :query "tag:draft")
