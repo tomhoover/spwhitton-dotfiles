@@ -182,4 +182,4 @@ bindsym $mod+j [class="Firefox"] focus
 bindsym $mod+k [class="Evolution"] focus
 
 # workspace default layouts (currently only workspace 1)
-exec_always ~/per-workspace-layout.pl
+exec_always ~/bin/per-workspace-layout.pl
