@@ -171,4 +171,10 @@ bindsym XF86AudioRaiseVolume exec --no-startup-id pactl -- set-sink-volume 0 +5%
 bindsym XF86AudioLowerVolume exec --no-startup-id pactl -- set-sink-volume 0 -5%
 bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle
 
+# send some stuff to workspace 1
+assign [class="Firefox"] 1
+assign [class="Evolution"] 1
+assign [class="^URxvt$" instance="^irssi$"] 1
+
+# workspace default layouts (currently only workspace 1)
 exec_always ~/per-workspace-layout.pl
