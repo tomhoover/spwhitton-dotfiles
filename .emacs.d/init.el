@@ -1030,7 +1030,7 @@ Passes ARG to `projectile-switch-project-by-name'."
   (let ((debian
          (concat
           "(to:lists.debian.org or to:lists.alioth.debian.org or to:bugs.debian.org"
-          " or from:bugs.debian.org or from:ftp-master.debian.org)"
+          " or from:bugs.debian.org or from:ftp-master.debian.org or from:release.debian.org)"
           " and not to:-announce"))
         (feeds "from:rss@spwhitton.name"))
     (setq notmuch-saved-searches
