@@ -76,3 +76,7 @@ nitrogen --restore
 redshift-gtk &                  # co-ords from config file
 nm-applet &
 caffeine-indicator &
+
+firefox &
+emacs --daemon &
+evolution &
