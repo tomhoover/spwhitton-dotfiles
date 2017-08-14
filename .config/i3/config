@@ -177,7 +177,7 @@ assign [class="Firefox"] 1
 assign [class="Evolution"] 1
 
 # jump back to specific windows on first workspace
-bindsym $mod+h [class="^URxvt$" instance="^irssi$"] focus
+# bindsym $mod+h [class="^URxvt$" instance="^irssi$"] focus
 bindsym $mod+j [class="Firefox"] focus
 bindsym $mod+k [class="Evolution"] focus
 
