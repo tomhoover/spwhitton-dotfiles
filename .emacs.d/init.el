@@ -1027,22 +1027,26 @@ Passes ARG to `projectile-switch-project-by-name'."
   ;; these let bindings avoid the need to add saved searches to the
   ;; database, so that our database remains recreteable from just my
   ;; Maildirs
-  (let ((lists "to:(lists.debian.org or lists.alioth.debian.org) and not to:-announce and not to:spwhitton@spwhitton.name and not to:spwhitton@email.arizona.edu")
+  (let ((debian
+         (concat
+          "(to:lists.debian.org or to:lists.alioth.debian.org or to:bugs.debian.org"
+          " or from:bugs.debian.org or from:ftp-master.debian.org)"
+          " and not to:-announce"))
         (feeds "from:rss@spwhitton.name"))
     (setq notmuch-saved-searches
-          `((:name "all unread" :key "u" :search-type nil
+          `((:name "all unread" :key "U" :search-type nil
                    :query "tag:unread")
-            (:name "personal unread" :key "p" :search-type nil
+            (:name "personal unread" :key "u" :search-type nil
                    :query ,(concat
-                            "tag:unread and not to:spwhitton@email.arizona.edu and not ("
-                            lists
+                            "tag:unread and not to:spwhitton@email.arizona.edu and not from:email.arizona.edu and not ("
+                            debian
                             ") and not ("
                             feeds
                             ")"))
-            (:name "UA unread" :key "U" :search-type nil
-                   :query "tag:unread and to:spwhitton@email.arizona.edu")
-            (:name "listserv unread" :key "l" :search-type tree
-                   :query ,(concat "tag:unread and (" lists ")"))
+            (:name "UA unread" :key "w" :search-type nil
+                   :query "tag:unread and (to:spwhitton@email.arizona.edu or from:email.arizona.edu)")
+            (:name "Debian unread" :key "d" :search-type tree
+                   :query ,(concat "tag:unread and (" debian ")"))
             (:name "feeds unread" :key "f" :search-type tree
                    :query ,(concat "tag:unread and (" feeds ")"))
             ;; (:name "flagged" :key "F" :search-type tree
