@@ -1,0 +1,15 @@
+#!/bin/sh
+
+set -e
+
+while read -r line; do
+    gpg --no-default-keyring --primary-keyring ~/tmp/offcaff.kbx \
+        --recv-key $line
+done
+
+gpg --no-default-keyring --primary-keyring ~/tmp/offcaff.kbx \
+    --output ~/tmp/offcaff.gpg \
+    --export
+
+rm ~/tmp/offcaff.kbx
+echo "file for sneakernet: ~/tmp/offcaff.gpg"
