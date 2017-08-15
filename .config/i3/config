@@ -28,10 +28,6 @@ bindsym $mod+Return exec urxvt
 # start an Emacs frame
 bindsym $mod+Shift+Return exec emacsclient -c -a '' -n -e '(switch-to-buffer nil)'
 
-# start a graphical file manager
-# might consider making $mod+g start an i3 mode for launching other programs I use often
-bindsym $mod+g exec nautilus
-
 # lock screen -- relies on xss-lock
 bindsym $mod+l exec loginctl lock-session
 
@@ -162,6 +158,23 @@ bindsym $mod+r mode "resize"
 bar {
         status_command i3status
 }
+
+# launchers
+set $mode_launch Launch application:  (f) file manager  (x) arandr  (m) ncmpcpp
+mode "$mode_launch" {
+        # start a graphical file manager
+        bindsym f exec nautilus , mode "default"
+
+        # launch xrandr graphical config
+        bindsym x exec arandr , mode "default"
+
+        # launch mpd client
+        bindsym m exec urxvt -e ncmpcpp , mode "default"
+
+        bindsym Ctrl+g mode "default"
+}
+
+bindsym $mod+m mode "$mode_launch"
 
 # audio
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl -- set-sink-volume 0 +5%
