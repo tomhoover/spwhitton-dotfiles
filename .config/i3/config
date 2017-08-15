@@ -176,6 +176,22 @@ mode "$mode_launch" {
 
 bindsym $mod+m mode "$mode_launch"
 
+# managing outputs (thanks h01ger and Qubes i3 config)
+set $mode_display Manage displays: (h/j) VGA on/off  (n/m) laptop display on/off  (x) arandr
+mode "$mode_display" {
+        bindsym h exec --no-startup-id xrandr --output VGA-1  --auto --left-of LVDS-1, exec normalise-x, mode "default"
+        bindsym n exec --no-startup-id xrandr --output LVDS-1 --auto, exec normalise-x, mode "default"
+        bindsym j exec --no-startup-id xrandr --output VGA-1  --auto --off, exec normalise-x, mode "default"
+        bindsym m exec --no-startup-id xrandr --output LVDS-1  --auto --off, exec normalise-x, mode "default"
+
+        # launch xrandr graphical config
+        bindsym x exec arandr , mode "default"
+
+        bindsym Ctrl+g mode "default"
+}
+
+bindsym $mod+x mode "$mode_display"
+
 # audio
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl -- set-sink-volume 0 +5%
 bindsym XF86AudioLowerVolume exec --no-startup-id pactl -- set-sink-volume 0 -5%
