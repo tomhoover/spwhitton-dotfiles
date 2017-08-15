@@ -1,0 +1,47 @@
+#!/bin/sh
+
+set -e
+
+. $HOME/.shenv
+
+SOURCE="$HOME/lib/annex/doc/mail"
+TARGET="$HOME/.fmail/annex"
+
+[ "${FLOCKER}" != "$0" ] && exec env FLOCKER="$0" flock -en "$0" "$0" "$@" || :
+
+mkdir -p $TARGET
+touch $TARGET/.duplicity-ignore
+
+for mbox in $SOURCE/*.gz; do
+    name=$(basename $mbox | cut -d. -f1)
+
+    # check whether we got halfway there, or we finished it
+    if [ -e "$TARGET/$name.lock" ]; then
+        rm -rf $TARGET/$name*
+    elif [ -e "$TARGET/$name" ]; then
+        continue
+    fi
+
+    # indicate this one is being worked on
+    touch "$TARGET/$name.lock"
+
+    gunzip --to-stdout $mbox >$TARGET/$name.mbox
+    mb2md -s $TARGET/$name.mbox -d $TARGET/$name
+    rm $TARGET/$name.mbox
+
+    # add 'read' flags, strip 'flagged' flags, and ensure we get an
+    # error if notmuch tries to edit.  We have to use find(1), which
+    # is significantly slower than a wildcard, because otherwise we
+    # can hit "Argument list too long" for some of my mboxes
+    find $TARGET/$name -type f \
+         -exec rename 's/,([^S,]*)$/,$1S/' {} \;
+    find $TARGET/$name -type f \
+         -exec rename 's/,([^,]*)F([^,]*)$/,$1$2/' {} \;
+    find $TARGET/$name -type f \
+         -exec chmod 400 {} \;
+    find $TARGET/$name -type d \
+         -exec chmod 500 {} \;
+
+    # indicate this one is done
+    rm "$TARGET/$name.lock"
+done

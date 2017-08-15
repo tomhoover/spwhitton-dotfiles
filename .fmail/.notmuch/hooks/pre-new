@@ -36,3 +36,5 @@ if [ ! -z "$floating_deleted" ]; then
 fi
 
 movemail
+
+( expand-annex-mboxes >/dev/null 2>&1 || exit 0 ) &
