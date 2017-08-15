@@ -2,23 +2,7 @@
 
 . $HOME/.shenv
 
-# ---- no bell please
-
-xset b off
-
-# ---- keyboard settings
-
-xset r rate 380 25
-setxkbmap -option ctrl:nocaps
-xmodmap ~/.xmodmaprc
-
-# enable numlock if using USB keyboard
-lsusb | grep -q "Chicony Electronics Co., Ltd" \
-    && numlockx on
-
-# ---- monitor settings
-
-xset dpms 600
+normalise-x
 
 # ---- screen locking
 
