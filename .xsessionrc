@@ -22,6 +22,15 @@ xset dpms 600
 
 # ---- screen locking
 
+# Due to the ways the X root window and i3lock work, if we use
+# wallpaper then we have to resize it, set the root window and restart
+# i3lock each time an external monitor is added or removed.  That
+# requires some serious logic and probably isn't worth it.  Since I
+# plug and unplug my laptop from an external monitor a lot, just use
+# solid colour for now.  Could easily add some commits to set a
+# background and lockscreen on the dotfiles branches of machines that
+# have only one monitor
+
 # kill any other lockers that might have snuck in
 pkill -u $USER light-locker
 pkill -u $USER xscreensaver
@@ -34,13 +43,7 @@ if which xfconf-query; then
 fi
 
 # ... and then hook i3lock into logind
-if [ -f "$HOME/local/lock.png" ]; then
-    # note that i3lock needs a file in PNG format.  tiling doesn't
-    # work well; resize image file to monitor dimensions
-    xss-lock -- i3lock -c 000000 -n --image=$HOME/local/lock.png &
-else
-    xss-lock -- i3lock -c 000000 -n &
-fi
+xss-lock -- i3lock -c 3f3f3f -n &
 
 # ---- GNOME daemons & GTK
 
@@ -72,7 +75,6 @@ fi
 
 # ---- startup applications
 
-nitrogen --restore
 redshift-gtk &                  # co-ords from config file
 nm-applet &
 caffeine-indicator &
