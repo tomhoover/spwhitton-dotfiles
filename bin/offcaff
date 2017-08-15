@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# credits: David Bremner -- https://www.cs.unb.ca/~bremner/blog/posts/offcaff/
+
+infile=$1
+
+keys=$(gpg --with-colons  $infile | sed -n 's/^pub//p' | cut -f5 -d: )
+
+gpg --homedir $HOME/.caff/gnupghome --import $infile
+
+caff -R -m no "${keys[*]}"
+
+today=$(date +"%Y-%m-%d")
+output="$(pwd)/keys-$today.tar"
+for key in ${keys[*]}; do
+    (cd $HOME/.caff/keys/;   tar rvf "$output" $today/$key.mail*)
+done
