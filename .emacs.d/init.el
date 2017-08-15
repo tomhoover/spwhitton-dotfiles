@@ -1034,24 +1034,24 @@ Passes ARG to `projectile-switch-project-by-name'."
           " and not to:-announce"))
         (feeds "from:rss@spwhitton.name"))
     (setq notmuch-saved-searches
-          `((:name "all unread" :key "U" :search-type nil :sort-order 'oldest-first
+          `((:name "all unread" :key "U" :search-type nil :sort-order oldest-first
                    :query "tag:unread")
-            (:name "personal unread" :key "u" :search-type nil :sort-order 'oldest-first
+            (:name "personal unread" :key "u" :search-type nil :sort-order oldest-first
                    :query ,(concat
                             "tag:unread and not to:spwhitton@email.arizona.edu and not from:email.arizona.edu and not ("
                             debian
                             ") and not ("
                             feeds
                             ")"))
-            (:name "UA unread" :key "w" :search-type nil :sort-order 'oldest-first
+            (:name "UA unread" :key "w" :search-type nil :sort-order oldest-first
                    :query "tag:unread and (to:spwhitton@email.arizona.edu or from:email.arizona.edu)")
-            (:name "Debian unread" :key "d" :search-type nil :sort-order 'oldest-first
+            (:name "Debian unread" :key "d" :search-type nil :sort-order oldest-first
                    :query ,(concat "tag:unread and (" debian ")"))
-            (:name "feeds unread" :key "f" :search-type nil :sort-order 'oldest-first
+            (:name "feeds unread" :key "f" :search-type nil :sort-order oldest-first
                    :query ,(concat "tag:unread and (" feeds ")"))
             ;; (:name "flagged" :key "F" :search-type tree
             ;;        :query "tag:flagged" )
-            (:name "sent" :key "s" :search-type nil :sort-order 'newest-first
+            (:name "sent" :key "s" :search-type nil :sort-order newest-first
                    :query "from:spwhitton@spwhitton.name or from:spwhitton@email.arizona.edu")
             ;; (:name "drafts" :key "d" :search-type tree
             ;;        :query "tag:draft")
