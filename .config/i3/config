@@ -193,3 +193,7 @@ bindsym $mod+k [class="Evolution"] focus
 
 # workspace default layouts (currently only workspace 1)
 exec_always ~/bin/per-workspace-layout.pl
+
+# idempotent settings scripts on every reload (then I can call this
+# after (un)plugging a peripheral by simply reloading i3)
+exec_always normalise-x
