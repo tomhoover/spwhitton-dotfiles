@@ -11,5 +11,5 @@ else
         (killall --user $USER mbsync 2>/dev/null && sleep 5) || true
         killall -9 --user $USER mbsync 2>/dev/null || true
     fi
-    mbsync --quiet fastmail
+    mbsync fastmail
 fi
