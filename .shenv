@@ -122,10 +122,6 @@ LD_RUN_PATH="$HOME/local/lib/"
 export LD_RUN_PATH
 LD_LIBRARY_PATH="$HOME/local/lib/"
 export LD_LIBRARY_PATH
-GTK_IM_MODULE=xim
-export GTK_IM_MODULE
-QT_IM_MODULE=xim
-export QT_IM_MODULE
 BROWSER="firefox"
 export BROWSER
 TERMCMD="urxvt"
