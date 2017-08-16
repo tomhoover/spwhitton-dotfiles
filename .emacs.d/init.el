@@ -1066,7 +1066,6 @@ Passes ARG to `projectile-switch-project-by-name'."
         (let ((buffer-read-only nil)) (erase-buffer))))
     (notmuch-show-pipe-message t "gpg --decrypt | gpg --import")
     (display-buffer "*notmuch-pipe*"))
-  (bind-key "C-c |" 'spw--notmuch-import-gpg notmuch-show-mode-map)
 
   (use-package notmuch-message
     :config
@@ -1167,6 +1166,7 @@ Passes ARG to `projectile-switch-project-by-name'."
   ;; some bindings
   (bind-key "S-SPC" 'notmuch-tree-scroll-message-window-back notmuch-tree-mode-map)
   (bind-key "g" (notmuch-tree-close-message-pane-and #'notmuch-show-reply) notmuch-tree-mode-map)
+  (bind-key "C-c |" 'spw--notmuch-import-gpg notmuch-show-mode-map)
 
   (bind-key "K" 'spw--notmuch-next-command-kills notmuch-tree-mode-map)
   (bind-key "K" 'spw--notmuch-next-command-kills notmuch-search-mode-map)
