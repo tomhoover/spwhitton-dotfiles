@@ -13,6 +13,13 @@ mkdir -p $TARGET
 touch $TARGET/.duplicity-ignore
 
 for mbox in $SOURCE/*.gz; do
+
+    # catch case where annex is not there
+    if [ "$mbox" = "$SOURCE/*.gz" ]; then
+        echo "no annex?"
+        exit 0
+    fi
+
     name=$(basename $mbox | cut -d. -f1)
 
     # check whether we got halfway there, or we finished it
