@@ -254,6 +254,7 @@ if ( defined $loc ) {
 
     backup_repo("https://anonscm.debian.org/git/python-modules/packages/pytest-helpers-namespace.git", "alioth");
 
+    backup_repo("https://anonscm.debian.org/git/dbnpolicy/policy.git", "alioth");
 }
 
 # TODO luksClose if necessary & umount
