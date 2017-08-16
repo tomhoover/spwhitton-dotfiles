@@ -8,16 +8,22 @@ set +e
 
 # ---- choose editor depending on what's available
 
+if [ "$DESKTOP_SESSION" = "i3" ]; then
+    ec_args="-c"
+else
+    ec_args="-t"
+fi
+
 emacsclient=$(which emacsclient 2>/dev/null)
 mg=$(which mg 2>/dev/null)
 # best case: emacsclient and mg available
 if [ -x "$emacsclient" -a -x "$mg" ]; then
-    EDITOR="emacsclient -amg -t"
+    EDITOR="emacsclient -amg $ec_args"
     ALTERNATE_EDITOR="mg"
 else
     # only emacsclient, so change alternate editor
     if [ -x "$emacsclient" ]; then
-        EDITOR="emacsclient -avi -t"
+        EDITOR="emacsclient -avi $ec_args"
         ALTERNATE_EDITOR="vi"
     else
         # no emacsclient, so see if we can fall back to mg
@@ -30,6 +36,7 @@ else
         fi
     fi
 fi
+unset ec_args
 unset emacsclient
 unset mg
 export EDITOR
