@@ -4,7 +4,7 @@ HOME=/home/spwhitton
 LOGNAME=spwhitton
 
 1       20      duply   nice ionice -c 3 chronic duply-run
-1       60      mairix  nice ionice -c 3 sh -c mairix 2>/dev/null
+# 1       60      mairix  nice ionice -c 3 sh -c mairix 2>/dev/null
 
 # this renders iris completely useless at annoying times
 # try again on a newer kernel with background writeback improvements
