@@ -27,8 +27,8 @@ IMAPAccount      fastmail
 Host             imap.fastmail.com
 User             spwhitton@fastmail.com
 PassCmd          "cat ~/local/auth/fmailsyncpass"
-UseIMAPS         yes	
-RequireSSL       yes
+SSLType          IMAPS
+SSLVersions      TLSv1.2
 CertificateFile  /etc/ssl/certs/ca-certificates.crt
 
 IMAPStore        fmimap
