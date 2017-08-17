@@ -18,5 +18,3 @@
 # add tags to new messages in particular folders
 
 movemail
-
-( expand-annex-mboxes >/dev/null 2>&1 || exit 0 ) &

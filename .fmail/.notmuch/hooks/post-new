@@ -19,3 +19,7 @@ killed_threads=$(notmuch search --output=threads tag:killed)
 if [ ! -z "$killed_threads" ]; then
     notmuch tag -unread -- $killed_threads
 fi
+
+# start a background process to expand-annex-mboxes; mail in these
+# will be processed on the next `notmuch new` run
+( expand-annex-mboxes >/dev/null 2>&1 || exit 0 ) &
