@@ -12,28 +12,10 @@
 
 # Note that another aspect of this setup is not using an 'inbox' tag.
 
-# In this script, we move mail according to tags that may have been
-# added since the last 'notmuch new' run.  Then we sync with my IMAP
-# server.  Then in the post-new script we add tags to new messages in
-# particular folders
-
-# ensure all drafts are in the drafts folder
-floating_drafts=$(notmuch search --output=files -- tag:draft and not folder:drafts)
-if [ ! -z "$floating_drafts" ]; then
-    mdmv $floating_drafts $HOME/.fmail/drafts
-fi
-
-# ensure all spam is in the spam folder to train FastMail's spam filter
-floating_spam=$(notmuch search --output=files -- tag:spam and not folder:spam)
-if [ ! -z "$floating_spam" ]; then
-    mdmv $floating_spam $HOME/.fmail/spam
-fi
-
-# ensure all deleted messages are in the trash folder
-floating_deleted=$(notmuch search --output=files -- tag:deleted and not folder:trash)
-if [ ! -z "$floating_deleted" ]; then
-    mdmv $floating_deleted $HOME/.fmail/trash
-fi
+# In this script (actually within movemail), we move mail according to
+# tags that may have been added since the last 'notmuch new' run.
+# Then we sync with my IMAP server.  Then in the post-new script we
+# add tags to new messages in particular folders
 
 movemail
 
