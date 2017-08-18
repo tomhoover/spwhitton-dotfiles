@@ -13,5 +13,5 @@ gpg --trust-model always --no-default-keyring \
     --output ~/tmp/offcaff.gpg \
     --export
 
-rm ~/tmp/offcaff.kbx
+rm ~/tmp/offcaff.kbx ~/tmp/offcaff.kbx~
 echo "file for sneakernet: ~/tmp/offcaff.gpg"
