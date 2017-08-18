@@ -277,6 +277,12 @@ skip = ! mine
 checkout = git clone https://git.spwhitton.name/wiki
 skip = ! mine
 
+# --- radicale collections
+
+[$HOME/lib/radicale]
+checkout = git clone athenap:radicale radicale
+skip = ! on spwhitton@athena
+
 # --- primary git annex
 
 # TODO: consider using /usr/share/mr/git-annex helper to simplify this
