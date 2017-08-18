@@ -54,3 +54,8 @@ Regards,
 EOM
 
 $CONFIG{'mail'} = 'yes';
+
+# this means that we can't selectively sign UIDs -- either avoid
+# sending out the mail (and delete caff's public keyring containing
+# those sigs) or turn this off when signing those keys
+$CONFIG{'gpg-sign-args'} = "save";
