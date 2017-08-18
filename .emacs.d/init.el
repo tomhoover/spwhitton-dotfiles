@@ -1867,7 +1867,10 @@ superflous blank quoted lines."
 
   ;; this key is normally used to insert a Newsgroups: header, but I
   ;; don't need that
-  (bind-key "C-c C-n" 'spw--message-normalise message-mode-map))
+  (bind-key "C-c C-n" 'spw--message-normalise message-mode-map)
+
+  ;; default dir for saving attachments
+  (setq mm-default-directory "~/tmp/"))
 
 ;;; C-c C-c to save-and-exit emacsclient (like <esc>ZZ in vim)
 
