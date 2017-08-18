@@ -720,7 +720,12 @@ Passes ARG to `projectile-switch-project-by-name'."
 
   ;; disable during Org capture
   (add-to-list 'ido-ubiquitous-command-overrides
-               '(disable prefix "org-capture")))
+               '(disable prefix "org-capture"))
+
+  ;; disable while saving an attachment -- this doesn't actually work
+  ;; atm
+  (add-to-list 'ido-ubiquitous-command-overrides
+               '(disable exact "mm-save-part")))
 
 (use-package smex
   :bind ("C-x C-m" . smex))
