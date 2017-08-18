@@ -223,8 +223,8 @@ fixups =
         git config gcrypt.publish-participants true
         git config gcrypt.participants 0x0F56D0553B6D411B
 autoci =
-        git add .passwddb.pet .labbook.gpg
-        git commit -a -m "auto passwddb and labbook commit on $(hostname -s)" || true
+        git add .passwddb.pet .labbook.gpg .gnupg/pubring.kbx
+        git commit -a -m "auto passwddb, pubring and labbook commit on $(hostname -s)" || true
 pre_update = mr autoci
 
 # since dotfiles repo also stows into ~/.gnupg, and athpriv repo stows
