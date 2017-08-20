@@ -191,7 +191,7 @@ alias radio4="mpc_play_stream http://bbcmedia.ic.llnwd.net/stream/bbcmedia_radio
 alias worldservice="mpc_play_stream http://bbcwssc.ic.llnwd.net/stream/bbcwssc_mp1_ws-eieuk"
 
 # Manipulate Policy bugs.  (from Russ Allbery)
-policy-bts () {
+bts-policy () {
     bts user debian-policy@packages.debian.org , package debian-policy , "$@"
 }
 
