@@ -1713,6 +1713,10 @@ Goes backward if ARG is negative; error if CHAR not found."
   (add-hook 'message-mode-hook (lambda ()
                                  (setq-local show-trailing-whitespace t)))
 
+  ;; TODO tidy up all this config
+  ;; TODO C-c C-c disabled when match mutt in filename (and indeed,
+  ;; when visiting a file at all, as notmuch buffer doesn't do that afaict)
+
   ;; used in message-mode yasnippets
   (defun spw/recipient-first-name ()
     (save-excursion
