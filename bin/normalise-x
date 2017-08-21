@@ -20,5 +20,5 @@ lsusb | grep -q "Chicony Electronics Co., Ltd" \
 
 # ---- monitor settings
 
-xset dpms 300
+xset dpms 600
 xsetroot -solid \#3f3f3f
