@@ -126,9 +126,14 @@
 ;;; misc display and interface settings
 
 ;; focus follow mouse
-
 (setq mouse-autoselect-window t
       focus-follows-mouse t)
+
+;; note that this works only for self-insert chars, not other
+;; bindings, and it comes back after switching away from Emacs.  But
+;; mouse-avoidance-mode is more annoying than helpful for other
+;; keypresses
+(setq make-pointer-invisible t)
 
 ;; y/n rather than yes/no
 (fset 'yes-or-no-p 'y-or-n-p)
