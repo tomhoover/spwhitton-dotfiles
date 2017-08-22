@@ -99,7 +99,8 @@
                  ("@Emacs"        . ?E) ; SSH Emacs only
                  ("@workstation"  . ?M) ; on my fully set-up personal (m)achine
                  (:endgroup)
-                 ("UA"            . ?W)) ; academic work
+                 ("UA"            . ?W) ; academic work
+                 ("Debian"        . ?D))
 
  ;; enable speed commands and bind N to narrow to subtree
  org-use-speed-commands t
