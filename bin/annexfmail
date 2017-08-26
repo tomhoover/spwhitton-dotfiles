@@ -12,8 +12,8 @@ if pgrep mbsync >/dev/null; then
     exit 1
 fi
 
-mbsync --quiet fastmail
-mv "$HOME/.mbsyncrc" "$HOME/.mbsyncrc~"
+movemail
+touch ~/.nomovemail
 
 # 2. set constants
 
@@ -88,4 +88,4 @@ archivemail \
 #mv "$HOME/.mbsyncrc~" "$HOME/.mbsyncrc"
 
 status now commit and sync ~/lib/annex
-status and re-enable ~/.mbsyncrc
+status and rm ~/.nomovemail

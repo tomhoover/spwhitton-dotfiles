@@ -2,6 +2,11 @@
 
 . $HOME/.shenv
 
+if [ -e "$HOME/.nomovemail" ]; then
+    echo >&2 "no movemail"
+    exit 1
+fi
+
 # if using notmuch on this machine, sync its database to maildir
 if [ -f "~/.fmail/.notmuch/xapian/iamglass" ]; then
     # ensure all drafts are in the drafts folder
