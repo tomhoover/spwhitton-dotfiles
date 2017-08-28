@@ -2,8 +2,6 @@
 
 . $HOME/.shenv
 
-normalise-x
-
 # ---- screen locking
 
 # Due to the ways the X root window and i3lock work, if we use
@@ -31,13 +29,15 @@ xss-lock -- i3lock -c 3f3f3f -n &
 
 # ---- GNOME daemons & GTK
 
-# Have the GNOME keyring daemon cache our GPG key passphrase for no
-# more than 20 minutes.  Cache time cannot be controlled for SSH keys
-gsettings set org.gnome.crypto.cache gpg-cache-ttl 1200
-gsettings set org.gnome.crypto.cache gpg-cache-method 'timeout'
+# atm Debian's Xsession machinery seems to be handling this
 
-eval $(gnome-keyring-daemon --start --components=gpg,pkcs11,secrets,ssh)
-export GNOME_KEYRING_CONTROL GNOME_KEYRING_PID GPG_AGENT_INFO SSH_AUTH_SOCK
+# # Have the GNOME keyring daemon cache our GPG key passphrase for no
+# # more than 20 minutes.  Cache time cannot be controlled for SSH keys
+# gsettings set org.gnome.crypto.cache gpg-cache-ttl 1200
+# gsettings set org.gnome.crypto.cache gpg-cache-method 'timeout'
+
+# eval $(gnome-keyring-daemon --start --components=gpg,pkcs11,secrets,ssh)
+# export GNOME_KEYRING_CONTROL GNOME_KEYRING_PID GPG_AGENT_INFO SSH_AUTH_SOCK
 
 gnome-settings-daemon &
 
@@ -51,20 +51,13 @@ xfce4-power-manager &
 pkill -u $USER idlesshclear
 idlesshclear &
 
-# ---- audio
-
-if ! pgrep -u $USER pulseaudio; then
-    pulseaudio &
-fi
-
 # ---- startup applications
 
 redshift-gtk &                  # co-ords from config file
 nm-applet &
 caffeine-indicator &
-ibus-daemon &
 
-firefox &
 emacs --daemon &
 evolution &
-pgrep mpd || mpd
+pgrep mpd || mpd &
+firefox &

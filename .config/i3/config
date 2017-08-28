@@ -121,7 +121,7 @@ bindsym $mod+Shift+0 move container to workspace 10
 bindsym $mod+Shift+semicolon move container to workspace back_and_forth
 
 # reload the configuration file
-bindsym $mod+Shift+c reload
+bindsym $mod+Shift+c reload; exec --no-startup-id ~/bin/i3-startup-always
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
 bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
@@ -207,9 +207,8 @@ assign [class="Evolution"] 1
 bindsym $mod+j [class="Firefox"] focus
 bindsym $mod+k [class="Evolution"] focus
 
-# workspace default layouts (currently only workspace 1)
-exec_always ~/bin/per-workspace-layout.pl
+# idempotent settings script
+exec_always --no-startup-id ~/bin/i3-startup-always
 
-# idempotent settings scripts on every reload (then I can call this
-# after (un)plugging a peripheral by simply reloading i3)
-exec_always normalise-x
+# do-it-once settings and startup script
+exec --no-startup-id ~/bin/i3-startup-once
