@@ -29,15 +29,13 @@ xss-lock -- i3lock -c 3f3f3f -n &
 
 # ---- GNOME daemons & GTK
 
-# atm Debian's Xsession machinery seems to be handling this
+# Have the GNOME keyring daemon cache our GPG key passphrase for no
+# more than 20 minutes.  Cache time cannot be controlled for SSH keys
+gsettings set org.gnome.crypto.cache gpg-cache-ttl 1200
+gsettings set org.gnome.crypto.cache gpg-cache-method 'timeout'
 
-# # Have the GNOME keyring daemon cache our GPG key passphrase for no
-# # more than 20 minutes.  Cache time cannot be controlled for SSH keys
-# gsettings set org.gnome.crypto.cache gpg-cache-ttl 1200
-# gsettings set org.gnome.crypto.cache gpg-cache-method 'timeout'
-
-# eval $(gnome-keyring-daemon --start --components=gpg,pkcs11,secrets,ssh)
-# export GNOME_KEYRING_CONTROL GNOME_KEYRING_PID GPG_AGENT_INFO SSH_AUTH_SOCK
+eval $(gnome-keyring-daemon --start --components=gpg,pkcs11,secrets,ssh)
+export GNOME_KEYRING_CONTROL GNOME_KEYRING_PID GPG_AGENT_INFO SSH_AUTH_SOCK
 
 gnome-settings-daemon &
 
