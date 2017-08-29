@@ -35,6 +35,12 @@ gnome-settings-daemon &
 
 xfce4-power-manager &
 
+# ---- input methods
+
+# work around Debian bug #812826
+pkill -u $USER ibus-daemon
+IBUS_ENABLE_SYNC_MODE=0 ibus-daemon --xim --daemonize
+
 # ---- startup applications
 
 redshift-gtk &                  # co-ords from config file
