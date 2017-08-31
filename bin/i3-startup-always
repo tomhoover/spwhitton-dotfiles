@@ -17,6 +17,11 @@ xmodmap ~/.xmodmaprc
 # enable numlock if using USB keyboard
 . /etc/X11/Xsession.d/55numlockx
 
+# disable caps lock if I accidently hit it before running this script
+if xset -q | grep "Caps Lock: *on" >/dev/null; then
+    xdotool key Caps_Lock
+fi
+
 # ---- monitor settings
 
 xset dpms 600
