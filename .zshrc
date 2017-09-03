@@ -203,6 +203,22 @@ dgit-view () {
     git checkout unquilted
 }
 
+dhtunpack () {
+    mkdir -p /tmp/cabal
+    cd /tmp/cabal
+    cabal unpack $1
+    cd $1*
+    dir=$(pwd)
+    dir=$(basename $dir)
+    package=${dir%-*}
+    version=${dir##*-}
+    mkdir -p ~/src/package-plan/patches/$package/$version
+    ln -s ~/src/package-plan/patches/$package/$version patches
+    if [ -e ~/src/package-plan/additional-cabals/$package-$version.cabal ]; then
+        cp ~/src/package-plan/additional-cabals/$package-$version.cabal $package.cabal
+        fi
+}
+
 # --- load zsh features
 
 # Change word boundary characters. Nabbed from
