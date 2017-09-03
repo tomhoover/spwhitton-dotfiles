@@ -1044,9 +1044,9 @@ Passes ARG to `projectile-switch-project-by-name'."
           " and not to:-announce"))
         (feeds "from:rss@spwhitton.name"))
     (setq notmuch-saved-searches
-          `((:name "all unread" :key "U" :search-type nil :sort-order oldest-first
+          `((:name "all unread" :key "u" :search-type nil :sort-order oldest-first
                    :query "tag:unread")
-            (:name "personal unread" :key "u" :search-type nil :sort-order oldest-first
+            (:name "personal unread" :key "p" :search-type nil :sort-order oldest-first
                    :query ,(concat
                             "tag:unread and not to:spwhitton@email.arizona.edu and not from:email.arizona.edu and not ("
                             debian
