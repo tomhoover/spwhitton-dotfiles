@@ -204,19 +204,23 @@ dgit-view () {
 }
 
 dhtunpack () {
-    mkdir -p /tmp/cabal
-    cd /tmp/cabal
-    cabal unpack $1
-    cd $1*
-    dir=$(pwd)
-    dir=$(basename $dir)
-    package=${dir%-*}
-    version=${dir##*-}
-    mkdir -p ~/src/package-plan/patches/$package/$version
-    ln -s ~/src/package-plan/patches/$package/$version patches
-    if [ -e ~/src/package-plan/additional-cabals/$package-$version.cabal ]; then
-        cp ~/src/package-plan/additional-cabals/$package-$version.cabal $package.cabal
+    if [ -e /tmp/cabal/$1* ]; then
+        cd /tmp/cabal/$1*
+    else
+        mkdir -p /tmp/cabal
+        cd /tmp/cabal
+        cabal unpack $1
+        cd $1*
+        dir=$(pwd)
+        dir=$(basename $dir)
+        package=${dir%-*}
+        version=${dir##*-}
+        mkdir -p ~/src/package-plan/patches/$package/$version
+        ln -s ~/src/package-plan/patches/$package/$version patches
+        if [ -e ~/src/package-plan/additional-cabals/$package-$version.cabal ]; then
+            cp ~/src/package-plan/additional-cabals/$package-$version.cabal $package.cabal
         fi
+    fi
 }
 
 # --- load zsh features
