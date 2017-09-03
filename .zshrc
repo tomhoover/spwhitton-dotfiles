@@ -204,8 +204,9 @@ dgit-view () {
 }
 
 dhtunpack () {
-    if [ -e /tmp/cabal/$1* ]; then
-        cd /tmp/cabal/$1*
+    exists=/tmp/cabal/$1*
+    if [ -e $exists ]; then
+        cd $exists
     else
         mkdir -p /tmp/cabal
         cd /tmp/cabal
