@@ -277,6 +277,22 @@ skip = ! workstation
 checkout = git clone https://git.spwhitton.name/wiki
 skip = ! mine
 
+# --- ~/src repos with special push commands
+
+[$HOME/src/dgit]
+checkout = git clone https://git.spwhitton.name/dgit
+# ian's git server gives an error when my script tries to find the
+# tags there
+push = git push-all --no-tags
+skip = lazy
+
+[$HOME/src/ublock-origin]
+checkout = git clone 'https://anonscm.debian.org/git/pkg-mozext/ublock-origin.git' 'ublock-origin'
+# beta, rc and alpha tags get deleted by upstream so there will very
+# often be unpushed tags
+push = git push-all --no-tags
+skip = lazy
+
 # --- radicale collections
 
 [$HOME/lib/radicale]

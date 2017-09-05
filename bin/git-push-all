@@ -100,24 +100,26 @@ foreach my $remote ( keys %pushes ) {
 # TODO definitely split out because should be run as a safety catch by
 # src-unregistered
 
-my @tags = grep { !(m|archive/debian/\S+|) } $git->tag;
-my @remotes = $git->remote;
-my @pushed_tags;
+unless ( "--no-tags" ~~ @ARGV ) {
+    my @tags = grep { !(m|archive/debian/\S+|) } $git->tag;
+    my @remotes = $git->remote;
+    my @pushed_tags;
 
-foreach my $remote ( @remotes ) {
-    unless ( $remote eq "dgit" ) {
-        my @this_remote_tags = apply { s|\^\{\}$||; s|[a-f0-9]+\trefs/tags/|| }
-          $git->ls_remote( { tags => 1 }, $remote );
-        push @pushed_tags, @this_remote_tags;
+    foreach my $remote ( @remotes ) {
+        unless ( $remote eq "dgit" ) {
+            my @this_remote_tags = apply { s|\^\{\}$||; s|[a-f0-9]+\trefs/tags/|| }
+              $git->ls_remote( { tags => 1 }, $remote );
+            push @pushed_tags, @this_remote_tags;
+        }
     }
-}
 
-@pushed_tags = uniq @pushed_tags;
-my @unpushed_tags = array_minus ( @tags, @pushed_tags );
+    @pushed_tags = uniq @pushed_tags;
+    my @unpushed_tags = array_minus ( @tags, @pushed_tags );
 
-if ( scalar @unpushed_tags > 0 ) {
-    print "E: the following tags have not been pushed to any remote:\n";
-    print join(", ", @unpushed_tags);
-    print "\n";
-    exit 1;
+    if ( scalar @unpushed_tags > 0 ) {
+        print "E: the following tags have not been pushed to any remote:\n";
+        print join(", ", @unpushed_tags);
+        print "\n";
+        exit 1;
+    }
 }
