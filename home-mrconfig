@@ -269,7 +269,7 @@ fixups =
     git config propellor.forbid-dirty-spin true
 
 # this could be more fine-grained
-skip = ! mine
+skip = ! workstation
 
 # --- personal website source
 
