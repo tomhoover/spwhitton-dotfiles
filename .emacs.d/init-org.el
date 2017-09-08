@@ -676,7 +676,9 @@ different occasions."
 
 (defun spw/find-non-agenda-todos ()
   "Find Org files that aren't in `org-agenda-files` that probably
-  should be"
+  should be
+
+Ignore SOMEDAYs as might have those in old notes but not important to include them"
   (interactive)
   (let ((default-directory org-directory)
         (args-together))
@@ -692,7 +694,7 @@ different occasions."
                        " -not -regex '" (expand-file-name org-directory) "/archive/.*'"
                        " -not -regex '" (expand-file-name org-directory) "/philos/.*'"
                        " -not -name reading.org"
-                       " -not -name archive.org -not -regex '" (expand-file-name org-directory) "/[ABCDEFGHIJKLMNOPQRSTUVWXYZ].*' -exec egrep -nH -e \"\\* \(TODO\|SOMEDAY\|WAITING\|SOONDAY\) \" {} +"))))
+                       " -not -name archive.org -not -regex '" (expand-file-name org-directory) "/[ABCDEFGHIJKLMNOPQRSTUVWXYZ].*' -exec egrep -nH -e \"\\* \(TODO\|WAITING\) \" {} +"))))
 
 (defun org-agenda--run-find-non-agenda-todos (&rest ignore)
   "Call grep to find Org files that aren't in `org-agenda-files'
