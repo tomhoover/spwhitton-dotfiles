@@ -1716,6 +1716,8 @@ Goes backward if ARG is negative; error if CHAR not found."
 
   ;; show trailing whitespace in message-mode (due to empty headers
   ;; and signature dashes, ws-butler disabled)
+  ;; TODO normalise-message sets this
+  ;; TODO comment normlaise-message that it replaces mutt's "review" view
   (add-hook 'message-mode-hook (lambda ()
                                  (setq-local show-trailing-whitespace t)))
 
