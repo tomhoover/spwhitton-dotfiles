@@ -200,13 +200,16 @@ bindsym XF86AudioRaiseVolume exec --no-startup-id pactl -- set-sink-volume 0 +5%
 bindsym XF86AudioLowerVolume exec --no-startup-id pactl -- set-sink-volume 0 -5%
 bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle
 
-# send some stuff to workspace 1
-assign [class="^URxvt$" instance="^irssi$"] 1
+# send some stuff to workspace 1 (except for temporary terminals,
+# these are the only windows I have open on the first workspace)
+assign [class="^URxvt$" title="^irssi$"] 1
 assign [class="Firefox"] 1
 assign [class="Evolution"] 1
 
-# jump back to specific windows on first workspace
-# bindsym $mod+h [class="^URxvt$" instance="^irssi$"] focus
+# jump back to specific windows on first workspace (except for
+# temporary terminals, these are the only windows I have open on the
+# first workspace)
+bindsym $mod+n [class="^URxvt$" title="^irssi$"] focus
 bindsym $mod+j [class="Firefox"] focus
 bindsym $mod+k [class="Evolution"] focus
 
