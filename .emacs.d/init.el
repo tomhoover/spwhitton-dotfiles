@@ -1719,6 +1719,11 @@ Goes backward if ARG is negative; error if CHAR not found."
   (add-hook 'message-mode-hook (lambda ()
                                  (setq-local show-trailing-whitespace t)))
 
+  ;; disable openwith-mode when sending mail (attach the PDF, rather
+  ;; than opening it..)
+  (require 'mm-util)
+  (add-to-list 'mm-inhibit-file-name-handlers 'openwith-file-handler)
+
   ;; TODO tidy up all this config
   ;; TODO C-c C-c disabled when match mutt in filename (and indeed,
   ;; when visiting a file at all, as notmuch buffer doesn't do that afaict)
