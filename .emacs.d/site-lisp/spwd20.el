@@ -38,27 +38,29 @@
 
 Accepts roll20's extension for rolling multiple dice and keeping
 the best N of them, e.g., 4d6k3."
-  (let* ((exps (s-slice-at "[+-]" exp))
-         (ours (s-chop-prefixes (list "+" "-") (car exps)))
-         (sign (if (string= (substring exp 0 1) "-")
-                   -1 1)))
-    (+ (if (s-index-of "d" ours)
-           (let* ((split (s-split "[dk]" ours))
-                  (times (string-to-int (seq-elt split 0)))
-                  (sides (string-to-int (seq-elt split 1)))
-                  (keep (if (> (length split) 2)
-                            (string-to-int (seq-elt split 2))
-                          nil))
-                  (rolls))
-             (while (> times 0)
-               (let ((roll (+ 1 (random (- sides 1)))))
-                 (push roll rolls)))
-             (-sum
-              (if keep
-                  (seq-drop (sort rolls) keep)
-                rolls)))
-         (string-to-int ours))
-       (-sum (seq-map 'spwd20--roll (cdr exps))))))
+  (let ((exps (seq-map (lambda (s) (s-chop-prefix "+" s))
+                       (s-slice-at "[+-]" exp))))
+    (-sum (seq-map 'spwd20--roll-inner exps))))
+
+(defun spwd20--roll-inner (exp)
+  (let* ((sign (if (s-prefix-p "-" exp) -1 1))
+         (ours (s-chop-prefix "-" exp))
+         (split (seq-map 'string-to-int (s-split "[dk]" ours)))
+         (times (seq-elt split 0))
+         (sides (ignore-errors (seq-elt split 1)))
+         (keep (ignore-errors (seq-elt split 2)))
+         (rolls))
+    (* sign
+       (if (not sides)
+           times
+         (while (> times 0)
+           (let ((roll (+ 1 (random (- sides 1)))))
+             (push roll rolls))
+           (setq times (- times 1)))
+         (-sum
+          (if keep
+              (seq-drop (sort rolls '<) (- times keep))
+            rolls))))))
 
 ;;;###autoload
 (define-minor-mode spwd20-mode
