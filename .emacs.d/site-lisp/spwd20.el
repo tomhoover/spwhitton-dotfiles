@@ -29,6 +29,37 @@
 
 ;;; Code:
 
+(require 's)
+(require 'seq)
+(require 'dash)
+
+(defun spwd20--roll (exp)
+  "Evaluate dice roll expression EXP.
+
+Accepts roll20's extension for rolling multiple dice and keeping
+the best N of them, e.g., 4d6k3."
+  (let* ((exps (s-slice-at "[+-]" exp))
+         (ours (s-chop-prefixes (list "+" "-") (car exps)))
+         (sign (if (string= (substring exp 0 1) "-")
+                   -1 1)))
+    (+ (if (s-index-of "d" ours)
+           (let* ((split (s-split "[dk]" ours))
+                  (times (string-to-int (seq-elt split 0)))
+                  (sides (string-to-int (seq-elt split 1)))
+                  (keep (if (> (length split) 2)
+                            (string-to-int (seq-elt split 2))
+                          nil))
+                  (rolls))
+             (while (> times 0)
+               (let ((roll (+ 1 (random (- sides 1)))))
+                 (push roll rolls)))
+             (-sum
+              (if keep
+                  (seq-drop (sort rolls) keep)
+                rolls)))
+         (string-to-int ours))
+       (-sum (seq-map 'spwd20--roll (cdr exps))))))
+
 ;;;###autoload
 (define-minor-mode spwd20-mode
   ""
