@@ -57,7 +57,7 @@ the best N of them, e.g., 4d6k3."
        (if (not sides)
            times
          (while (> times 0)
-           (let ((roll (+ 1 (random (- sides 1)))))
+           (let ((roll (1+ (random (- sides 1)))))
              (push roll rolls))
            (setq times (- times 1)))
          (-sum
@@ -94,24 +94,84 @@ the best N of them, e.g., 4d6k3."
                     (list name-input init-input hd-input))))
     (dolist (pc spwd20-party)
       (let ((init (read-string (concat (car pc) "'s initiative roll: "))))
-        (push (list "" (car pc) (int-to-string (car (cdr pc))) init "-" "-")
+        (push (list "" (car pc) (spwd20--num-to-term (cdr pc)) init "-" "-")
               rows)))
-    (insert "Round of combat: 1\n\n|Creature|Mod|Init|HP|Damage|Status|\n|-\n")
+    (insert
+     "Round of combat: 1\n|Turn|Creature|Mod|Init|HP|Damage|Status|\n|-\n")
     (dolist (row rows)
       (dolist (cell row)
         (insert "|" cell))
-      (insert "|\n"))))
+      (insert "|\n"))
+    (delete-char -1)
+    (org-table-goto-column 4)
+    (org-table-sort-lines nil ?N)
+    (org-table-goto-line 2)
+    (org-table-goto-column 1)
+    (insert ">>>>")                     ; four chars in 'Turn'
+    (org-table-align)))
+
+(defun spwd20-initiative-advance ()
+  (interactive "*")
+  (when (org-at-table-p)
+    (let* ((back (search-backward ">>>>" (org-table-begin) t))
+           (forward (search-forward ">>>>" (org-table-end) t))
+           (cur (if back back forward)))
+      (goto-char cur)
+      (skip-chars-backward ">")
+      (delete-char 4)
+      (if (save-excursion (org-table-goto-line (1+ (org-table-current-line))))
+          (progn
+            (forward-line 1)
+            (org-table-next-field)
+            (insert ">>>>"))
+        (save-excursion
+          (search-backward "Round of combat:")
+          (search-forward-regexp "[0-9]+")
+          (skip-chars-backward "0-9")
+          (replace-match
+           (int-to-string (1+ (string-to-int (match-string 0))))))
+        (org-table-goto-line 2)
+        (insert ">>>>"))))
+  (org-table-align))
+
+(defun spwd20-damage (dmg)
+  (interactive "*nDamage dealt: ")
+  (when (org-at-table-p)
+    (org-table-goto-column 6)
+    (when (looking-at "[0-9]+")
+      (replace-match
+       (int-to-string (+ dmg (string-to-int (match-string 0))))))))
+
+(defun spwd20-roll (exp)
+  (interactive "sRoll: ")
+  ;; just pass to `spwd20--roll' and then pretty print
+  )
+
+(defun spwd20-d20 ()
+  (interactive)
+  ;; roll d20, and show advantage and disadvantage (show result in
+  ;; bold or something)
+  )
+
+(defun spwd20-initiative-dwim ()
+  (interactive "*")
+  (if (org-at-table-p)
+      (spwd20-initiative-advance)
+    (spwd20-initiative)))
 
 (defun spwd20--num-to-term (n)
-  (if (>= n 0)
-      (concat "+" (int-to-string n))
-    (int-to-string n)))
+  (let ((k (if (stringp n) (string-to-int n) n)))
+    (if (>= k 0)
+        (concat "+" (int-to-string k))
+      (int-to-string k))))
 
 ;;;###autoload
 (define-minor-mode spwd20-mode
   ""
   :lighter " d20"
   (when spwd20-mode
+    ;; TODO bind `spwd20-initiative-dwim' `spwd20-roll', `spwd20-d20',
+    ;; `spwd20-damage'
     (message "activating")))
 
 (provide 'spwd20)
