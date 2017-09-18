@@ -163,7 +163,10 @@
              (projectile-project-name)))))
  '(safe-local-variable-values
    (quote
-    ((bug-reference-bug-regexp . "#\\(?2:[0-9]+\\)")
+    ((spwd20-party
+      ("Zahrat" . 4)
+      ("Anon" . 2))
+     (bug-reference-bug-regexp . "#\\(?2:[0-9]+\\)")
      (wc-word-goal . 750)
      (wc-modeline-format . "%w/%gw")
      (wc-modeline-format . %w/%gw)

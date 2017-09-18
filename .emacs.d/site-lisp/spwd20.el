@@ -62,6 +62,9 @@ the best N of them, e.g., 4d6k3."
               (seq-drop (sort rolls '<) (- times keep))
             rolls))))))
 
+(defun spwd20-initiative ()
+  "Generates an Org-mode table with initiative order and monster HP.")
+
 ;;;###autoload
 (define-minor-mode spwd20-mode
   ""
