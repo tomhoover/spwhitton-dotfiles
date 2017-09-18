@@ -77,14 +77,19 @@ the best N of them, e.g., 4d6k3."
                hd-input (read-string (concat name-input "'s hit points: "))
                num-input (string-to-int
                           (read-string (concat "How many " name-input "? "))))
-         (while (> num-input 0)
-           (let ((init (int-to-string
-                        (spwd20--roll (concat
-                                       "1d20"
-                                       (spwd20--num-to-term init-input)))))
-                 (hp (int-to-string (spwd20--roll hd-input))))
-             (push (list "" name-input init-input init hp "0") rows))
-           (setq num-input (- num-input 1))))
+         ;; in 5e, all monsters of the same kind have the same
+         ;; initiative
+         ;; TODO defcustom to toggle this for other editions
+         (let ((init (int-to-string
+                      (spwd20--roll (concat
+                                     "1d20"
+                                     (spwd20--num-to-term init-input))))))
+           (while (> num-input 0)
+             (let ((hp (int-to-string (spwd20--roll hd-input))))
+               (push (list
+                      "" name-input (spwd20--num-to-term init-input) init hp "0")
+                     rows))
+             (setq num-input (- num-input 1)))))
        while (-all? (lambda (x) (> (length x) 0))
                     (list name-input init-input hd-input))))
     (dolist (pc spwd20-party)
