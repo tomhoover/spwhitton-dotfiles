@@ -47,6 +47,10 @@
 (defcustom spwd20-party nil
   "Party initiative modifiers.")
 
+(defcustom spwd20-dice-sound
+  "~/lib/annex/doc/sounds/147531__ziembee__diceland.wav"
+  "Path to a sound file that `play-sound-file' can play.")
+
 (defvar spwd20-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "<f9>") 'spwd20-initiative-dwim)
@@ -170,7 +174,8 @@ the best N of them, e.g., 4d6k3."
 Accepts roll20's extension for rolling multiple dice and keeping
 the best N of them, e.g., 4d6k3."
   (interactive "sRoll: ")
-  (message "%s = %s" exp (int-to-string (spwd20--roll exp))))
+  (message "%s = %s" exp (int-to-string (spwd20--roll exp)))
+  (play-sound-file spwd20-dice-sound))
 
 (defun spwd20-d20 ()
   "Roll two d20, showing result with advantage and disadvantage, and with neither."
@@ -186,7 +191,8 @@ the best N of them, e.g., 4d6k3."
                      (concat (propertize fst* 'face 'bold) " " snd*)
                    (concat fst* " " (propertize snd* 'face 'bold)))))
     (message "No adv./disadv.: %s\t\tWith advantage: %s\t\tWith disadvantage: %s"
-             fst* adv disadv)))
+             fst* adv disadv))
+  (play-sound-file spwd20-dice-sound))
 
 (defun spwd20-initiative-dwim ()
   "Start a new combat or advance the turn tracker, based on point."
