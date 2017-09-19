@@ -6,6 +6,7 @@
 ;; URL:
 ;; Version: 0.1
 ;; Package-Version: 0.1
+;; Package-Requires: (s seq dash)
 ;; Keywords:
 
 ;; This file is NOT part of GNU Emacs.
@@ -27,6 +28,16 @@
 
 ;;; Commentary:
 
+;;; A minor mode intended for use in an Org-mode file in which you are
+;;; keeping your GM notes for a d20 game.
+
+;;; Example file footer:
+;;;
+;;;     # Local Variables:
+;;;     # eval: (spwd20-mode 1)
+;;;     # spwd20-party: (("Zahrat" . 2) ("Ennon" . 4) ("Artemis" . 5))
+;;;     # End:
+
 ;;; Code:
 
 (require 's)
@@ -35,6 +46,15 @@
 
 (defcustom spwd20-party nil
   "Party initiative modifiers.")
+
+(defvar spwd20-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "<f9>") 'spwd20-initiative-dwim)
+    (define-key map (kbd "<f10>") 'spwd20-damage)
+    (define-key map (kbd "<f11>") 'spwd20-roll)
+    (define-key map (kbd "<f12>") 'spwd20-d20)
+    map)
+  "Keymap for `spwd20-mode'.")
 
 (defun spwd20--roll (exp)
   "Evaluate dice roll expression EXP.
@@ -111,6 +131,7 @@ the best N of them, e.g., 4d6k3."
     (org-table-align)))
 
 (defun spwd20-initiative-advance ()
+  "Advance the turn tracker in an initiative table."
   (interactive "*")
   (when (org-at-table-p)
     (let* ((back (search-backward ">>>>" (org-table-begin) t))
@@ -135,6 +156,7 @@ the best N of them, e.g., 4d6k3."
   (org-table-align))
 
 (defun spwd20-damage (dmg)
+  "Apply damage to the monster/NPC in the initiative table row at point."
   (interactive "*nDamage dealt: ")
   (when (org-at-table-p)
     (org-table-goto-column 6)
@@ -143,17 +165,31 @@ the best N of them, e.g., 4d6k3."
        (int-to-string (+ dmg (string-to-int (match-string 0))))))))
 
 (defun spwd20-roll (exp)
+  "Prompt, evaluate and display dice roll expression EXP.
+
+Accepts roll20's extension for rolling multiple dice and keeping
+the best N of them, e.g., 4d6k3."
   (interactive "sRoll: ")
-  ;; just pass to `spwd20--roll' and then pretty print
-  )
+  (message "%s = %s" exp (int-to-string (spwd20--roll exp))))
 
 (defun spwd20-d20 ()
+  "Roll two d20, showing result with advantage and disadvantage, and with neither."
   (interactive)
-  ;; roll d20, and show advantage and disadvantage (show result in
-  ;; bold or something)
-  )
+  (let* ((fst (spwd20--roll "1d20"))
+         (snd (spwd20--roll "1d20"))
+         (fst* (int-to-string fst))
+         (snd* (int-to-string snd))
+         (adv (if (>= fst snd)
+                  (concat (propertize fst* 'face 'bold) " " snd*)
+                (concat fst* " " (propertize snd* 'face 'bold))))
+         (disadv (if (<= fst snd)
+                     (concat (propertize fst* 'face 'bold) " " snd*)
+                   (concat fst* " " (propertize snd* 'face 'bold)))))
+    (message "No adv./disadv.: %s\t\tWith advantage: %s\t\tWith disadvantage: %s"
+             fst* adv disadv)))
 
 (defun spwd20-initiative-dwim ()
+  "Start a new combat or advance the turn tracker, based on point."
   (interactive "*")
   (if (org-at-table-p)
       (spwd20-initiative-advance)
@@ -167,12 +203,9 @@ the best N of them, e.g., 4d6k3."
 
 ;;;###autoload
 (define-minor-mode spwd20-mode
-  ""
-  :lighter " d20"
-  (when spwd20-mode
-    ;; TODO bind `spwd20-initiative-dwim' `spwd20-roll', `spwd20-d20',
-    ;; `spwd20-damage'
-    (message "activating")))
+  "Bind convenience functions for running a d20-like game in an
+Org-mode document."
+  :lighter " d20")
 
 (provide 'spwd20)
 ;;; spwd20.el ends here
