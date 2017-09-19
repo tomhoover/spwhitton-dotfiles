@@ -486,6 +486,8 @@ Generates calls to pandoc that look like this: pandoc -s --filter pandoc-citepro
                          ;; (if window-system ".view" "")
                          )))))
   ;; TODO use a Makefile for this too
+  ;; That turns out to be hard because GNU Makefiles are hopeless for
+  ;; filenames containing spaces -- like all my presentations
   (defun spw--pandoc-presentation-compile ()
     "Compile a presentation to PDF and HTML with pandoc into ~/tmp.
 
