@@ -1193,6 +1193,8 @@ Passes ARG to `projectile-switch-project-by-name'."
   (bind-key "S" 'spw--notmuch-next-command-spam notmuch-search-mode-map)
   (bind-key "S" 'spw--notmuch-next-command-spam notmuch-show-mode-map))
 
+(use-package spwd20 :commands spwd20-mode)
+
 
 
 ;;;; ---- functions and bindings ----
