@@ -71,7 +71,9 @@ the best N of them, e.g., 4d6k3."
 
 (defun spwd20--roll-inner (exp)
   (let* ((sign (if (s-prefix-p "-" exp) -1 1))
-         (ours (s-chop-prefix "-" exp))
+         (ours (let ((chopped (s-chop-prefix "-" exp)))
+                 (if (string= (substring chopped 0 1) "d")
+                     (concat "1" chopped) chopped)))
          (split (seq-map 'string-to-int (s-split "[dk]" ours)))
          (times (seq-elt split 0))
          (sides (ignore-errors (seq-elt split 1)))
