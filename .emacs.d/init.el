@@ -465,7 +465,7 @@ https://github.com/company-mode/company-mode/issues/94#issuecomment-40884387"
      ((string= default-directory (expand-file-name "~/doc/papers/"))
       (spw--pandoc-paper-compile arg))
      ((string= default-directory (expand-file-name "~/doc/pres/"))
-      (spw--pandoc-presentation-compile arg))))
+      (spw--pandoc-presentation-compile))))
   (defun spw--pandoc-paper-compile (arg)
     "Compile a paper to PDF with pandoc into ~/tmp.
 
