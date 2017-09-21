@@ -1195,6 +1195,13 @@ Passes ARG to `projectile-switch-project-by-name'."
 
 (use-package spwd20 :commands spwd20-mode)
 
+;;; epubs
+
+(use-package nov
+  :if (spw--optional-pkg-available-p "nov")
+  :mode ("\\.epub" . nov-mode)
+  :init (setq nov-text-width 80))
+
 
 
 ;;;; ---- functions and bindings ----
