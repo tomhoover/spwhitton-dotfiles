@@ -44,6 +44,7 @@
 ;; first posted?  TODO find out, and package for Debian if possible
 
 (use-package hl-sentence
+  :disabled t
   :commands hl-sentence-mode
   :demand
   :config
