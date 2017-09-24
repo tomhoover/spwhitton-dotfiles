@@ -1,0 +1,8 @@
+[Unit]
+Description=Send and receive mail when the network comes up
+
+[Service]
+ExecStart=/home/spwhitton/bin/movemail
+
+[Install]
+WantedBy=network-online.target

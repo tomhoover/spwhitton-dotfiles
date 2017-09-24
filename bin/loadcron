@@ -61,8 +61,10 @@ fi
 case "$(hostname -f)" in
     "iris.silentflame.com")
         systemctl --user enable duplicity.timer
+        systemctl --user enable movemail.service
         ;;
     "zephyr.silentflame.com")
         systemctl --user enable duplicity.timer
+        systemctl --user enable movemail.service
         ;;
 esac
