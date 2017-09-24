@@ -1501,6 +1501,28 @@ Goes backward if ARG is negative; error if CHAR not found."
 ;;     'fixed-pitch
 ;;     (face-attribute face :inherit))))
 
+(defun spw/recipient-first-name ()
+  "Attempt to extract the first name of the recipient of a `message-mode' message.
+
+Used in my `message-mode' yasnippets."
+  (save-excursion
+    (message-goto-to)
+    (message-beginning-of-line)
+    ;; handle Microsoft Exchange
+    (when (looking-at "\"")
+      (forward-word 1)
+      (forward-char 2))
+    (let* ((beg (point))
+           (end (progn (forward-word 1) (point)))
+           (name (filter-buffer-substring beg end)))
+      (cond
+       ;; exceptions for people who have longer forms of their names
+       ;; in their From: headers
+       ((string= name "Nathaniel") "Nathan")
+       ((string= name "Thomas") "Tom")
+       ;; default
+       (t name)))))
+
 
 
 ;;;; ---- personal settings ----
@@ -1706,96 +1728,90 @@ Goes backward if ARG is negative; error if CHAR not found."
   (auto-fill-mode 1))
 (add-hook 'emacs-lisp-mode-hook 'spw/turn-on-comment-filling)
 
-;;; mail mode for mutt
+;;; mail mode for mutt & notmuch
 
 (use-package message
   :mode ("/mutt-.*$" . message-mode)
   :init
-  (defun spw--set-catmail-from ()
-    "Set e-mail From: address to CatMail, by looking at other headers."
+  ;; automatic formatting/templating of messages
+  (use-package message-templ
+    :if (spw--optional-pkg-available-p "message-templ")
+    :commands message-templ-config-exec
+    :init
+    (setq message-templ-alist
+          '(("default"
+             ("From" . "Sean Whitton <spwhitton@spwhitton.name>"))
+            ("UA"
+             ("From" . "Sean Whitton <spwhitton@email.arizona.edu>"))
+            ("Debian"
+             ("From" . "Sean Whitton <spwhitton@debian.org>"))))
+    (setq message-templ-config-alist
+          '(("^\\(To\\|Cc\\|Bcc\\):.*@.*\\(\.edu\\|\.ac\.uk\\)"
+             (lambda ()
+               (message-templ-apply "UA")
+               (mml-unsecure-message))))))
+
+  (add-hook 'message-mode-hook 'auto-fill-mode)
+  (add-hook 'message-mode-hook 'footnote-mode)
+  (add-hook 'message-mode-hook 'message-goto-body)
+
+  :config
+  ;; code to automatically format a message
+
+  (make-variable-buffer-local
+   (defvar spw--message-normalised nil
+     "Whether `spw--message-normalise' has been run in this buffer."))
+
+  (defun notmuch-mua-send-and-exit--check-normalised (orig-fun &rest args)
+    "Prompt before sending a message if `spw--normalise-message' not yet called."
+    (when (or (bound-and-true-p spw--message-normalised)
+              (y-or-n-p "Send message without having invoked `spw-message-normalise'?"))
+      (apply orig-fun args)))
+  (advice-add 'notmuch-mua-send-and-exit :around
+              #'notmuch-mua-send-and-exit--check-normalised)
+
+  (defun spw--normalise-message ()
+    "Autoformat a message before sending.
+
+The state after this function has been called is meant to be like
+mutt's review view after exiting EDITOR."
     (interactive)
+    (setq spw--message-normalised t)
+    ;; sign messages by default
+    (mml-secure-message-sign-pgpmime)
+    ;; set up From address, etc.; this also undoes the PGP signature
+    ;; tag where necessary
+    (message-templ-config-exec)
+    (spw--compact-blank-lines)
     (save-excursion
-      (message-narrow-to-headers)
-      (goto-char (point-min))
-      (when (or (search-forward-regexp "^To:.*arizona.edu" nil t)
-                (search-forward-regexp "^Cc:.*arizona.edu" nil t)
-                (search-forward-regexp "^Bcc:.*arizona.edu" nil t))
-        (goto-char (point-min))
-        (search-forward-regexp "^From:.*$")
-        (replace-match "From: Sean Whitton <spwhitton@email.arizona.edu>"))
-      (widen)))
+      (spw--message-goto-body--skip-mml-secure)
+      (let ((body (point)))
+        ;; ensure there is at least a basic salutation
+        (unless (looking-at "^[A-Z].+,\n\n")
+          (insert "Hello,\n\n"))
+        (message-goto-signature)
+        (unless (eobp)
+          (end-of-line -1))
+        ;; delete trailing whitespace in message body, when that
+        ;; message body exists (this protects signature dashes and
+        ;; empty headers)
+        (when (< body (point))
+          (delete-trailing-whitespace body (point)))
+        ;; make any remaining trailing whitespace visible to the user
+        (setq-local show-trailing-whitespace t)
+        ;; ensure there is a newline before the signature dashes
+        (unless (bolp)
+          (insert "\n"))))
+    (undo-boundary)
+    (message-fill-yanked-message)
+    (message "Hit undo if the quoted message was too aggressively wrapped"))
+  ;; I do not need a key to insert Newsgroups:
+  (bind-key "C-c C-n" 'spw--normalise-message message-mode-map)
 
-  ;; show trailing whitespace in message-mode (due to empty headers
-  ;; and signature dashes, ws-butler disabled)
-  ;; TODO normalise-message sets this
-  ;; TODO comment normlaise-message that it replaces mutt's "review" view
-  (add-hook 'message-mode-hook (lambda ()
-                                 (setq-local show-trailing-whitespace t)))
-
-  ;; disable openwith-mode when sending mail (attach the PDF, rather
-  ;; than opening it..)
-  (require 'mm-util)
-  (add-to-list 'mm-inhibit-file-name-handlers 'openwith-file-handler)
-
-  ;; TODO tidy up all this config
-  ;; TODO C-c C-c disabled when match mutt in filename (and indeed,
-  ;; when visiting a file at all, as notmuch buffer doesn't do that afaict)
-
-  ;; used in message-mode yasnippets
-  (defun spw/recipient-first-name ()
-    (save-excursion
-      (message-goto-to)
-      (message-beginning-of-line)
-      ;; handle Microsoft Exchange
-      (when (looking-at "\"")
-        (forward-word 1)
-        (forward-char 2))
-      (let* ((beg (point))
-             (end (progn (forward-word 1) (point)))
-             (name (filter-buffer-substring beg end)))
-        (cond
-         ;; exceptions for people who have longer forms of their names
-         ;; in their From: headers
-         ((string= name "Nathaniel") "Nathan")
-         ((string= name "Thomas") "Tom")
-         ;; default
-         (t name)))))
-
-  (defun spw/fix-initial-signature (&rest ignore)
-    "Ensure enough space above signature to type."
-    (when (looking-at "
--- ")
-      (open-line 1)))
-  (defun spw/fix-signature-kill (&rest ignore)
-    "Ensure enough space above signature to type."
-    (unless (looking-back "
-
-")
-      (newline))
-    (unless (looking-back "
-
-")
-      (newline))
-    (spw/fix-initial-signature))
-
-  ;; slightly modify C-c C-z behaviour: fix Mutt and Emacs which both
-  ;; think that there doesn't need to be a newline before the
-  ;; signature dashes
-  ;; (add-hook 'message-mode-hook 'spw/fix-initial-signature)
-  ;; (advice-add 'message-kill-to-signature :after #'spw/fix-signature-kill)
-
-  (defun spw/debbugs-no-ack ()
-    (save-excursion
-      (message-goto-to)
-      (when (looking-back ".*bugs\.debian\.org.*")
-        (message-carefully-insert-headers (list (cons 'X-Debbugs-No-Ack "thanks"))))
-      (message-goto-cc)
-      (when (looking-back ".*bugs\.debian\.org.*")
-        (message-carefully-insert-headers (list (cons 'X-Debbugs-No-Ack "thanks"))))))
+  ;; advice
 
   (defun message-newline-and-reformat--delete-superflous-newlines (&rest ignore)
-    "Have `message-newline-and-reformat' get rid of some more
-superflous blank quoted lines."
+    "Have `message-newline-and-reformat' get rid of some more superflous blank quoted lines."
     (save-excursion
       (beginning-of-line)
       (when (looking-at ">[[:space:]]*$")
@@ -1803,22 +1819,8 @@ superflous blank quoted lines."
   (advice-add 'message-newline-and-reformat
               :before #'message-newline-and-reformat--delete-superflous-newlines)
 
-  (setq mail-header-separator "")
+  ;; bindings
 
-  (add-hook 'message-mode-hook
-            (lambda ()
-              (auto-fill-mode)
-              ;; (spw/set-from-address)
-              (footnote-mode)
-              ;; annoying for WNPP; I want the bug number
-              ;; (spw/debbugs-no-ack)
-              (message-goto-body)))
-
-  ;; ensure encrypted messages are also encrypted to me, so I can read
-  ;; them in my sent mail folder
-  (setq mml-secure-openpgp-encrypt-to-self t)
-
-  :config
   ;; C-c C-b should skip over mml's sign/encrypt lines (it is a bad
   ;; idea to advise message-goto-body as various functions assume it
   ;; does not skip over sign/encrypt lines
@@ -1834,51 +1836,10 @@ superflous blank quoted lines."
   ;; accidently
   (bind-key "C-c C-s" 'message-goto-subject message-mode-map)
 
-  (use-package message-templ
-    :if (spw--optional-pkg-available-p "message-templ")
-    :commands message-templ-config-exec
-    :init
-    (setq message-templ-alist '(("default"
-                                 ("From" . "Sean Whitton <spwhitton@spwhitton.name>"))
-                                ("UA"
-                                 ("From" . "Sean Whitton <spwhitton@email.arizona.edu>"))
-                                ("Debian"
-                                 ("From" . "Sean Whitton <spwhitton@debian.org>"))))
-    (setq message-templ-config-alist '(("^To:.*@.*\\(\.edu\\|\.ac\.uk\\)"
-                                        (lambda ()
-                                          (message-templ-apply "UA")
-                                          (mml-unsecure-message))))))
+  ;; miscellaneous preferences
 
-  (defun spw--message-normalise ()
-    (interactive)
-    (message-fill-yanked-message)
-    (spw--compact-blank-lines)
-    ;; sign messages by default
-    (mml-secure-message-sign-pgpmime)
-    ;; set up From address and disable signing where appropriate
-    (message-templ-config-exec)
-    (save-excursion
-      (spw--message-goto-body--skip-mml-secure)
-      (let ((body (point)))
-        ;; if the message begins with quoted text, insert a basic
-        ;; salutation
-
-        ;; TODO look for a salutation, instead, with: line starts wiht
-        ;; capital, ends with comma, followed by a blank line
-
-        (when (looking-at "^\\(<#[^\n]+>\n\\)*On .* wrote:$")
-          (insert "Hello,\n\n"))
-        (message-goto-signature)
-        (unless (eobp)
-          (end-of-line -1))
-        ;; delete trailing whitespace in message body, when that
-        ;; message body exists (this protects signature dashes and
-        ;; empty headers)
-        (when (< body (point))
-          (delete-trailing-whitespace body (point)))
-        ;; ensure there is a newline before the signature dashes
-        (unless (bolp)
-          (insert "\n")))))
+  ;; follow the rest of the world
+  (setq message-forward-before-signature nil)
 
   ;; try to strip signatures when citing
   (setq notmuch-mua-cite-function 'message-cite-original-without-signature)
@@ -1886,29 +1847,23 @@ superflous blank quoted lines."
   ;; with defaults, this gets us "On X, Y wrote:" lines
   (setq message-citation-line-function 'message-insert-formatted-citation-line)
 
-  ;; run this when setting up the message.  we could run it in a hook
-  ;; run before the message is sent, but I always want to review the
-  ;; results of the cleanup
-  ;;
-  ;; note that certain aspects of the normalisation won't take effect
-  ;; at this stage of message buffer setup, such as adding the
-  ;; salutation
-  ;;
-  ;; main reason for running this now is to reduce the chance I send
-  ;; my message unsigned
-  (add-hook 'message-setup-hook 'spw--message-normalise)
-
-  ;; this key is normally used to insert a Newsgroups: header, but I
-  ;; don't need that
-  (bind-key "C-c C-n" 'spw--message-normalise message-mode-map)
-
   ;; default dir for saving attachments
-  (setq mm-default-directory "~/tmp/"))
+  (setq mm-default-directory "~/tmp/")
+
+  ;; ensure encrypted messages are also encrypted to me, so I can read
+  ;; them in my sent mail folder
+  (setq mml-secure-openpgp-encrypt-to-self t)
+
+  ;; disable openwith-mode when sending mail (i.e. attach the PDF,
+  ;; rather than opening it in evince and aborting the send)
+  (require 'mm-util)
+  (add-to-list 'mm-inhibit-file-name-handlers 'openwith-file-handler))
 
 ;;; C-c C-c to save-and-exit emacsclient (like <esc>ZZ in vim)
 
-;; hopefully won't interact badly with major mode C-c C-c binding;
-;; might need to change the map this gets bound into
+;; this overrides the major mode's C-c C-c binding (this is important
+;; for message-mode, so that the message doesn't get sent by notmuch,
+;; bypassing mutt's invocation of emacsclient)
 
 (add-hook 'server-switch-hook
           (lambda ()
