@@ -867,9 +867,11 @@ Passes ARG to `projectile-switch-project-by-name'."
    haskell-mode-contextual-import-completion nil
 
    ;; enable standard features from haskell-mode docs
-   haskell-process-suggest-remove-import-lines t
-   haskell-process-auto-import-loaded-modules t
-   haskell-process-log t
+   ;; TODO temporarily commented out to try to figure out why
+   ;; haskell-mode hangs so often
+   ;; haskell-process-suggest-remove-import-lines t
+   ;; haskell-process-auto-import-loaded-modules t
+   ;; haskell-process-log t
 
    ;; guess whether this is a stack or pure cabal project
    haskell-process-type 'auto)
