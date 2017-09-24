@@ -139,3 +139,5 @@
 	fsckObjects = true
 [transfer]
 	fsckObjects = true
+[magit]
+	hideCampaign = true
