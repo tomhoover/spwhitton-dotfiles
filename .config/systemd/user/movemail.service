@@ -3,6 +3,8 @@ Description=Send and receive mail when the network comes up
 
 [Service]
 ExecStart=/home/spwhitton/bin/movemail
+# TODO what does systemd do if this exits non-zero?  hopefully just
+# tries again next time but might need to instruct it to do that
 
 [Install]
 WantedBy=network-online.target

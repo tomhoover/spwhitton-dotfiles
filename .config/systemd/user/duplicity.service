@@ -3,3 +3,5 @@ Description=Run duplicity to back up my home directory
 
 [Service]
 ExecStart=/home/spwhitton/bin/duply-run
+# TODO what does systemd do if this exits non-zero?  hopefully just
+# tries again next time but might need to instruct it to do that
