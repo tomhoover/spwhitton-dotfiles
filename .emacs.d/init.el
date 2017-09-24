@@ -1721,7 +1721,7 @@ Used in my `message-mode' yasnippets."
 
 ;;;; ---- modes configuration ----
 
-;;; auto fill comments in modes with a reliable comment syntax
+;;; auto fill comments in those modes with a reliable comment syntax
 
 (defun spw/turn-on-comment-filling ()
   "Turn on filling comments."
