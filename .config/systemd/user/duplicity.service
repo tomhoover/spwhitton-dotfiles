@@ -1,0 +1,5 @@
+[Unit]
+Description=Run duplicity to back up my home directory
+
+[Service]
+ExecStart=/home/spwhitton/bin/duply-run

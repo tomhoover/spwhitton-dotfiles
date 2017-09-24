@@ -1,0 +1,12 @@
+[Unit]
+Description=Trigger backing up my home directory
+Wants=network-online.target
+After=network-online.target
+
+[Timer]
+OnBootSec=10min
+OnUnitActiveSec=20h
+Unit=duplicity.service
+
+[Install]
+WantedBy=multi-user.target
