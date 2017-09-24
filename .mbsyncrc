@@ -54,6 +54,10 @@ Slave            :fmmaildir:sent
 #   Slave :fmmaildir:
 #   Patterns * !INBOX
 
+Channel          lists
+Master           :fmimap:Lists
+Slave            :fmmaildir:lists
+
 # Channel          fmaila
 # Master           :fmimap:Archive
 # Slave            :fmmaildir:archive
@@ -66,17 +70,17 @@ Channel          fmailt
 Master           :fmimap:Trash
 Slave            :fmmaildir:trash
 
-Channel          debian
-Master           :fmimap:Lists/Debian
-Slave            :fmmaildir:debian
+# Channel          debian
+# Master           :fmimap:Lists/Debian
+# Slave            :fmmaildir:debian
 
-Channel          dbulk
-Master           :fmimap:Lists/Debian/Bulk
-Slave            :fmmaildir:debian/bulk
+# Channel          dbulk
+# Master           :fmimap:Lists/Debian/Bulk
+# Slave            :fmmaildir:debian/bulk
 
-Channel          haskell
-Master           :fmimap:Lists/Haskell
-Slave            :fmmaildir:haskell
+# Channel          haskell
+# Master           :fmimap:Lists/Haskell
+# Slave            :fmmaildir:haskell
 
 Channel          feeds
 Master           :fmimap:Feeds
@@ -100,10 +104,11 @@ Channel          fmaili
 Channel          fmails
 Channel          fmaild
 Channel          fmailt
+Channel          lists
 # Channel          fmaila
-Channel          debian
-Channel          dbulk
-Channel          haskell
+# Channel          debian
+# Channel          dbulk
+# Channel          haskell
 # Channel          notes
 Channel          feeds
 Channel          spamtraining

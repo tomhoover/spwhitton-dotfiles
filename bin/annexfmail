@@ -30,9 +30,7 @@ suffix=$(date +-%b-%Y | sed 's/\(.*\)/\L\1/')
 if [ -e "$OUTPUT/archive${suffix}.gz" ] \
        || [ -e "$OUTPUT/sent${suffix}.gz" ] \
        || [ -e "$OUTPUT/feeds${suffix}.gz" ] \
-       || [ -e "$OUTPUT/debian${suffix}.gz" ] \
-       || [ -e "$OUTPUT/debian.bulk${suffix}.gz" ] \
-       || [ -e "$OUTPUT/haskell${suffix}.gz" ]; then
+       || [ -e "$OUTPUT/lists${suffix}.gz" ]; then
     echo "annexfmail: looks like you've already made an archive recently" >&2
     echo "annexfmail: to avoid issues with git-annex, wait until next month"
     exit 1
@@ -65,22 +63,8 @@ archivemail \
     --days=31 \
     --output-dir=$OUTPUT \
     --preserve-unread \
-    --archive-name=debian${suffix} \
-    $INPUT/debian
-
-archivemail \
-    --days=31 \
-    --output-dir=$OUTPUT \
-    --preserve-unread \
-    --archive-name=debian.bulk${suffix} \
-    $INPUT/debian/.bulk
-
-archivemail \
-    --days=31 \
-    --output-dir=$OUTPUT \
-    --preserve-unread \
-    --archive-name=haskell${suffix} \
-    $INPUT/haskell
+    --archive-name=lists${suffix} \
+    $INPUT/lists
 
 # cd $OUTPUT
 # git annex add archive${suffix}.gz sent${suffix}.gz debian${suffix}.gz feeds${suffix}.gz
