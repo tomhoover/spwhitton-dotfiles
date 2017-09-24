@@ -309,7 +309,8 @@ hooks listed in `lisp-major-mode-hooks'."
              org-save-all-org-buffers   ; for ~/bin/sync-docs
              spw/org-agenda-file-to-front
              spw/org-remove-file
-             spw/new-philos-notes)
+             spw/new-philos-notes
+             orgstruct++-mode)
   :config (load "~/.emacs.d/init-org.el"))
 
 ;;; more useful unique buffer names
@@ -1754,6 +1755,9 @@ Used in my `message-mode' yasnippets."
   (add-hook 'message-mode-hook 'auto-fill-mode)
   (add-hook 'message-mode-hook 'footnote-mode)
   (add-hook 'message-mode-hook 'message-goto-body)
+  ;; need orgstruct++ rather than just orgstruct so that filling
+  ;; doesn't break lists
+  (add-hook 'message-mode-hook 'orgstruct++-mode)
 
   :config
   ;; code to automatically format a message
