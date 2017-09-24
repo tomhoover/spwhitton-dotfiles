@@ -43,9 +43,9 @@ for mbox in $SOURCE/*.gz; do
     # is significantly slower than a wildcard, because otherwise we
     # can hit "Argument list too long" for some of my mboxes
     find $TARGET/$name -type f \
-         -exec rename 's/,([^S,]*)$/,$1S/' {} \;
+         -exec prename 's/,([^S,]*)$/,$1S/' {} \;
     find $TARGET/$name -type f \
-         -exec rename 's/,([^,]*)F([^,]*)$/,$1$2/' {} \;
+         -exec prename 's/,([^,]*)F([^,]*)$/,$1$2/' {} \;
     find $TARGET/$name -type f \
          -exec chmod 400 {} \;
     find $TARGET/$name -type d \
