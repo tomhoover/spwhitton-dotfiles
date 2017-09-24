@@ -1173,8 +1173,6 @@ Passes ARG to `projectile-switch-project-by-name'."
   ;;                        (lambda ()
   ;;                          (setq notmuch-archive-tags old)))))
 
-
-
   :config
   ;; some bindings
   (bind-key "S-SPC" 'notmuch-tree-scroll-message-window-back notmuch-tree-mode-map)
@@ -1192,6 +1190,8 @@ Passes ARG to `projectile-switch-project-by-name'."
   (bind-key "S" 'spw--notmuch-next-command-spam notmuch-tree-mode-map)
   (bind-key "S" 'spw--notmuch-next-command-spam notmuch-search-mode-map)
   (bind-key "S" 'spw--notmuch-next-command-spam notmuch-show-mode-map))
+
+;;; my d20 roleplaying functions
 
 (use-package spwd20 :commands spwd20-mode)
 
