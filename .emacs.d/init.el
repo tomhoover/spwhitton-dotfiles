@@ -1804,13 +1804,12 @@ mutt's review view after exiting EDITOR."
         (setq-local show-trailing-whitespace t)
         ;; ensure there is a newline before the signature dashes
         (unless (bolp)
-          (insert "\n"))))
-    ;; TODO prevent this from wrapping the salutation onto same line
-    ;; as mml secure tag.  Until then, stuck using C-c C-q
-    ;; (undo-boundary)
-    ;; (message-fill-yanked-message)
-    ;; (message "Hit undo if the quoted message was too aggressively wrapped")
-    )
+          (insert "\n"))
+        (undo-boundary)
+        (save-restriction
+          (narrow-to-region body (point))
+          (message-fill-yanked-message))
+        (message "Hit undo if the quoted message was too aggressively wrapped"))))
   ;; I do not need a key to insert Newsgroups:
   (bind-key "C-c C-n" 'spw--normalise-message message-mode-map)
 
