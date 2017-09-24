@@ -859,6 +859,9 @@ Passes ARG to `projectile-switch-project-by-name'."
    haskell-indentation-left-offset 4
    haskell-indentation-show-indentations nil
 
+   ;; haskell-mode is forever hanging, so enable some logging
+   haskell-process-log t
+
    ;; we rely on `haskell-mode-goto-loc' for our M-. binding, but still
    ;; generate a TAGS file for completion
    haskell-tags-on-save t
