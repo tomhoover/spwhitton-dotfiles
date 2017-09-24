@@ -1752,7 +1752,6 @@ Used in my `message-mode' yasnippets."
                (message-templ-apply "UA")
                (mml-unsecure-message))))))
 
-  (add-hook 'message-mode-hook 'auto-fill-mode)
   (add-hook 'message-mode-hook 'footnote-mode)
   (add-hook 'message-mode-hook 'message-goto-body)
   ;; need orgstruct++ rather than just orgstruct so that filling
@@ -1886,9 +1885,8 @@ mutt's review view after exiting EDITOR."
 
 ;;; text mode
 
-(add-hook 'text-mode 'turn-on-auto-fill)
+(add-hook 'text-mode-hook 'turn-on-auto-fill)
 (diminish 'auto-fill-function)
-;; (add-hook 'text-mode 'refill-mode)
 
 ;;; dired
 
