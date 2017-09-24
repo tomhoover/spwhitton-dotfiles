@@ -57,14 +57,9 @@ if [ -d "$dir" ]; then
     ) | crontab -
 fi
 
-# TODO store the user units that should be activated on a host in a file
-case "$(hostname -f)" in
-    "iris.silentflame.com")
-        systemctl --user enable duplicity.timer
-        systemctl --user enable movemail.service
-        ;;
-    "zephyr.silentflame.com")
-        systemctl --user enable duplicity.timer
-        systemctl --user enable movemail.service
-        ;;
-esac
+units=$HOME/.config/host-user-units/`hostname -f`
+if [ -e "$units" ]; then
+    cat "$units" | while read unit; do
+        systemctl --user enable "$unit"
+    done
+fi
