@@ -192,7 +192,7 @@ the best N of them, e.g., 4d6k3."
          (disadv (if (<= fst snd)
                      (concat (propertize fst* 'face 'bold) " " snd*)
                    (concat fst* " " (propertize snd* 'face 'bold)))))
-    (message "No adv./disadv.:   %s\t\tWith advantage:   %s\t\tWith disadvantage:   %s"
+    (message "No adv./disadv.:   %s\tWith advantage:   %sWith disadvantage:   %s"
              fst* adv disadv))
   (play-sound-file spwd20-dice-sound))
 
