@@ -1810,7 +1810,7 @@ mutt's review view after exiting EDITOR."
           (narrow-to-region body (point))
           (message-fill-yanked-message))
         (message "Hit undo if the quoted message was too aggressively wrapped"))))
-  ;; I do not need a key to insert Newsgroups:
+  ;; I do not need a key to insert the Newsgroups: header
   (bind-key "C-c C-n" 'spw--normalise-message message-mode-map)
 
   ;; advice
