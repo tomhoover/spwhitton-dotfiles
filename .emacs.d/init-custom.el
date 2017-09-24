@@ -164,6 +164,11 @@
  '(safe-local-variable-values
    (quote
     ((spwd20-party
+      ("Zahrat" . 0)
+      ("Anca" . 1)
+      ("Anduin" . 1)
+      ("Dona" . 0))
+     (spwd20-party
       ("Zahrat" . 4)
       ("Anon" . 2))
      (bug-reference-bug-regexp . "#\\(?2:[0-9]+\\)")
