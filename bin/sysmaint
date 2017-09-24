@@ -244,6 +244,10 @@ if ( defined $loc ) {
     backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/helm-dash.git", "alioth");
     backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/redtick.git", "alioth");
     backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/message-templ.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/esxml.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/emacs-db.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/emacs-kv.git", "alioth");
+    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/nov-el.git", "alioth");
 
     backup_repo("https://anonscm.debian.org/git/pkg-mozext/classic-theme-restorer.git", "alioth");
     backup_repo("https://anonscm.debian.org/git/pkg-mozext/keysnail.git", "alioth");
