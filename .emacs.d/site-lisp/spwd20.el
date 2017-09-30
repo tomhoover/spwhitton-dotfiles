@@ -54,6 +54,7 @@
 (defvar spwd20-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "<f9>") 'spwd20-initiative-dwim)
+    (define-key map (kbd "S-<f9>") 'spwd20-initiative-add)
     (define-key map (kbd "<f10>") 'spwd20-damage)
     (define-key map (kbd "<f11>") 'spwd20-roll)
     (define-key map (kbd "<f12>") 'spwd20-d20)
@@ -201,6 +202,42 @@ the best N of them, e.g., 4d6k3."
   (interactive "*")
   (if (org-at-table-p)
       (spwd20-initiative-advance)
+    (spwd20-initiative)))
+
+(defun spwd20-initiative-add ()
+  "Add a monster to an existing combat."
+  (interactive "*")
+  (if (org-at-table-p)
+      (let* ((name-input (read-string "Monster/NPC name: "))
+             (init-input (read-string (concat name-input "'s init modifier: ")))
+             (hd-input (read-string (concat name-input "'s hit points: ")))
+             (num-input (string-to-int
+                         (read-string (concat "How many " name-input "? ")))))
+        (save-excursion
+          ;; ensure we're not on header row (following won't go past end
+          ;; of table)
+          (org-table-goto-line (1+ (org-table-current-line)))
+          (org-table-goto-line (1+ (org-table-current-line)))
+          (let ((init (int-to-string
+                       (spwd20--roll (concat
+                                      "1d20"
+                                      (spwd20--num-to-term init-input))))))
+            (while (> num-input 0)
+              (org-table-insert-row)
+              (org-table-next-field)
+              (insert name-input)
+              (org-table-next-field)
+              (insert (spwd20--num-to-term init-input))
+              (org-table-next-field)
+              (insert init)
+              (org-table-next-field)
+              (insert (int-to-string (spwd20--roll hd-input)))
+              (org-table-next-field)
+              (insert "0")
+              (setq num-input (- num-input 1))))
+          (org-table-goto-column 4)
+          (org-table-sort-lines nil ?N)
+          (org-table-align)))
     (spwd20-initiative)))
 
 (defun spwd20--num-to-term (n)
