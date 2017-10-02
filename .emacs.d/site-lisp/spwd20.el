@@ -162,13 +162,13 @@ the best N of them, e.g., 4d6k3."
         (insert ">>>>"))))
   (org-table-align))
 
-;;; TODO doesn't work with numbers right-aligned in damage column
 ;;; TODO should surround monster name in tildes when damage >= HP
 (defun spwd20-damage (dmg)
   "Apply damage to the monster/NPC in the initiative table row at point."
   (interactive "*nDamage dealt: ")
   (when (org-at-table-p)
     (org-table-goto-column 6)
+    (skip-chars-forward " ")
     (when (looking-at "[0-9]+")
       (replace-match
        (int-to-string (+ dmg (string-to-int (match-string 0))))))))
