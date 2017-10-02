@@ -141,25 +141,30 @@ the best N of them, e.g., 4d6k3."
   "Advance the turn tracker in an initiative table."
   (interactive "*")
   (when (org-at-table-p)
-    (let* ((back (search-backward ">>>>" (org-table-begin) t))
-           (forward (search-forward ">>>>" (org-table-end) t))
-           (cur (if back back forward)))
-      (goto-char cur)
-      (skip-chars-backward ">")
-      (delete-char 4)
-      (if (save-excursion (org-table-goto-line (1+ (org-table-current-line))))
-          (progn
-            (forward-line 1)
-            (org-table-next-field)
+    (loop
+     do (let* ((back (search-backward ">>>>" (org-table-begin) t))
+               (forward (search-forward ">>>>" (org-table-end) t))
+               (cur (if back back forward)))
+          (goto-char cur)
+          (skip-chars-backward ">")
+          (delete-char 4)
+          (if (save-excursion (org-table-goto-line (1+ (org-table-current-line))))
+              (progn
+                (forward-line 1)
+                (org-table-next-field)
+                (insert ">>>>"))
+            (save-excursion
+              (search-backward "Round of combat:")
+              (search-forward-regexp "[0-9]+")
+              (skip-chars-backward "0-9")
+              (replace-match
+               (int-to-string (1+ (string-to-int (match-string 0))))))
+            (org-table-goto-line 2)
             (insert ">>>>"))
-        (save-excursion
-          (search-backward "Round of combat:")
-          (search-forward-regexp "[0-9]+")
-          (skip-chars-backward "0-9")
-          (replace-match
-           (int-to-string (1+ (string-to-int (match-string 0))))))
-        (org-table-goto-line 2)
-        (insert ">>>>"))))
+          )
+     while (save-excursion
+             (org-table-goto-column 2)
+             (looking-at "~"))))
   (org-table-align))
 
 (defun spwd20-damage (dmg)
