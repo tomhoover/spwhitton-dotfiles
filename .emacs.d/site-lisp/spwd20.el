@@ -162,7 +162,6 @@ the best N of them, e.g., 4d6k3."
         (insert ">>>>"))))
   (org-table-align))
 
-;;; TODO should surround monster name in tildes when damage >= HP
 (defun spwd20-damage (dmg)
   "Apply damage to the monster/NPC in the initiative table row at point."
   (interactive "*nDamage dealt: ")
@@ -170,8 +169,18 @@ the best N of them, e.g., 4d6k3."
     (org-table-goto-column 6)
     (skip-chars-forward " ")
     (when (looking-at "[0-9]+")
-      (replace-match
-       (int-to-string (+ dmg (string-to-int (match-string 0))))))))
+      (let ((total-damage (+ dmg (string-to-int (match-string 0)))))
+        (replace-match (int-to-string total-damage))
+        (save-excursion
+          (org-table-goto-column 5)
+          (skip-chars-forward " ")
+          (when (and (looking-at "[0-9]+")
+                     (>= total-damage (string-to-int (match-string 0))))
+            (org-table-goto-column 2)
+            (insert "~")
+            (forward-word 1)
+            (insert "~")))))
+    (org-table-align)))
 
 (defun spwd20-roll (exp)
   "Prompt, evaluate and display dice roll expression EXP.
