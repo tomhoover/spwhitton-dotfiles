@@ -160,8 +160,7 @@ the best N of them, e.g., 4d6k3."
               (replace-match
                (int-to-string (1+ (string-to-int (match-string 0))))))
             (org-table-goto-line 2)
-            (insert ">>>>"))
-          )
+            (insert ">>>>")))
      while (save-excursion
              (org-table-goto-column 2)
              (looking-at "~"))))
