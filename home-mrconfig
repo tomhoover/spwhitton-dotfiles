@@ -299,6 +299,12 @@ skip = lazy
 checkout = git clone athenap:radicale radicale
 skip = ! on spwhitton@athena
 
+# --- D2L grading
+
+[$HOME/lib/grading]
+checkout = git clone athenap:grading grading
+skip = lazy
+
 # --- primary git annex
 
 # TODO: consider using /usr/share/mr/git-annex helper to simplify this
