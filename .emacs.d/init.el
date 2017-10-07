@@ -1796,7 +1796,9 @@ mutt's review view after exiting EDITOR."
       (let ((body (point)))
         ;; ensure there is at least a basic salutation
         (unless (looking-at "^[A-Z].+,\n\n")
-          (insert "Hello,\n\n"))
+          (insert "Hello,\n\n")
+          (when (looking-at "\n")
+            (delete-blank-lines)))
         (message-goto-signature)
         (unless (eobp)
           (end-of-line -1))
