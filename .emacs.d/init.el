@@ -1785,8 +1785,11 @@ The state after this function has been called is meant to be like
 mutt's review view after exiting EDITOR."
     (interactive)
     (setq spw--message-normalised t)
-    ;; sign messages by default
-    (mml-secure-message-sign-pgpmime)
+    ;; sign messages by default, though avoid clobbering a
+    ;; 'signencrypt' tag added when replying to an encrypted message
+    (if (mml-secure-is-encrypted-p)
+        (mml-secure-message-sign-encrypt)
+      (mml-secure-message-sign-pgpmime))
     ;; set up From address, etc.; this also undoes the PGP signature
     ;; tag where necessary
     (message-templ-config-exec)
