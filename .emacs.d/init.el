@@ -1796,6 +1796,14 @@ mutt's review view after exiting EDITOR."
     (spw--compact-blank-lines)
     (save-excursion
       (spw--message-goto-body--skip-mml-secure)
+      ;; also skip over Debian BTS control lines, which shouldn't be
+      ;; wrapped
+      (when (looking-at "^[cC]ontrol: .+$")
+        (while (looking-at "^[cC]ontrol: .+$")
+          (forward-line 1))
+        (if (looking-at "\n")
+            (forward-line 1)
+          (newline)))
       (let ((body (point)))
         ;; ensure there is at least a basic salutation
         (unless (looking-at "^[A-Z].+,\n\n")
