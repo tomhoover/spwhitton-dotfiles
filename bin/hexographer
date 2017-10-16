@@ -1,0 +1,8 @@
+#!/bin/sh
+
+# hexographer stores its prefs in '~/?/.java'; possibly a fault in my
+# firejail profile
+
+firejail --profile=~/.config/firejail/hexographer.profile \
+         /bin/bash -c \
+         "mkdir '?' && cp -R .java '?' && java -jar -Xmx2000M ~/lib/annex/big/software/hexographer.jar"
