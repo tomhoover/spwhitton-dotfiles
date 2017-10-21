@@ -203,12 +203,12 @@ the best N of them, e.g., 4d6k3."
          (fst* (int-to-string fst))
          (snd* (int-to-string snd))
          (adv (if (>= fst snd)
-                  (concat (propertize fst* 'face 'bold) " " snd*)
-                (concat fst* " " (propertize snd* 'face 'bold))))
+                  (concat (propertize fst* 'face 'bold) "  " snd*)
+                (concat fst* "  " (propertize snd* 'face 'bold))))
          (disadv (if (<= fst snd)
-                     (concat (propertize fst* 'face 'bold) " " snd*)
-                   (concat fst* " " (propertize snd* 'face 'bold)))))
-    (message "No adv./disadv.:   %s\tWith advantage:   %sWith disadvantage:   %s"
+                     (concat (propertize fst* 'face 'bold) "  " snd*)
+                   (concat fst* "  " (propertize snd* 'face 'bold)))))
+    (message "No adv./disadv.:  %s\tAdv.:  %s\tDisadv.:  %s"
              fst* adv disadv))
   (play-sound-file spwd20-dice-sound))
 
