@@ -98,7 +98,8 @@
 \RequirePackage{newtxtext}      % would be good to use 'osf' option for old style figures: see newtxdoc.pdf
 \RequirePackage[sc,sf,bf,compact,medium]{titlesec}
 \RequirePackage{textcomp}
-\RequirePackage[norule,splitrule,stable,multiple]{footmisc}
+\RequirePackage[norule,splitrule,stable]{footmisc}
+\RequirePackage{fnpct}
 %% \RequirePackage[utf8]{inputenc}
 %% \RequirePackage{ellipsis}
 %% \RequirePackage{stmaryrd}
