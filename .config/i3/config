@@ -68,6 +68,15 @@ bindsym $mod+Shift+Down move down
 bindsym $mod+Shift+Up move up
 bindsym $mod+Shift+Right move right
 
+# moving windows into containers and making the layout of those containers tabbed
+# note that will do something that is not sensible if the container is already tabbed
+bindsym $mod+Ctrl+Shift+i focus left , split h , layout tabbed , focus right , move left
+bindsym $mod+Ctrl+Shift+Left focus left , split h , layout tabbed , focus right , move left
+bindsym $mod+Ctrl+Shift+Down focus down , split v , layout tabbed , focus up , move down
+bindsym $mod+Ctrl+Shift+Up focus up , split v , layout tabbed , focus down , move up
+bindsym $mod+Ctrl+Shift+o focus right , split h , layout tabbed , focus left , move right
+bindsym $mod+Ctrl+Shift+Right focus right , split h , layout tabbed , focus left , move right
+
 # split in horizontal orientation
 bindsym $mod+h split h
 
@@ -179,20 +188,6 @@ mode "$mode_launch" {
 
 bindsym $mod+m mode "$mode_launch"
 
-# merge-into-tabbed
-set $mode_tabbed Window movement keys will make target container have tabbed layout
-mode "$mode_tabbed" {
-        bindsym $mod+Shift+i focus left , split h , layout tabbed , focus right , move left , mode "default"
-        bindsym $mod+Shift+Left focus left , split h , layout tabbed , focus right , move left , mode "default"
-        bindsym $mod+Shift+Down focus down , split v , layout tabbed , focus up , move down , mode "default"
-        bindsym $mod+Shift+Up focus up , split v , layout tabbed , focus down , move up  , mode "default"
-        bindsym $mod+Shift+o focus right , split h , layout tabbed , focus left , move right , mode "default"
-        bindsym $mod+Shift+Right focus right , split h , layout tabbed , focus left , move right , mode "default"
-
-        bindsym Ctrl+g mode "default"
-}
-
-bindsym $mod+Shift+m mode "$mode_tabbed"
 
 # managing outputs (thanks h01ger and Qubes i3 config)
 set $mode_display Manage displays: (j/k) VGA on/off  (n/m) laptop display on/off  (x) arandr
