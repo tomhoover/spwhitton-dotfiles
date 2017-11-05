@@ -38,6 +38,11 @@
 ;;;     # spwd20-party: (("Zahrat" . 2) ("Ennon" . 4) ("Artemis" . 5))
 ;;;     # End:
 
+;;; TODO
+;;; number monsters; prepend 'bloodied' to status column; also strike
+;;; out monster number when one dies; dice expression roller shows results for
+;;; each die
+
 ;;; Code:
 
 (require 's)
