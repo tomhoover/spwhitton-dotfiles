@@ -14,8 +14,10 @@ xset r rate 380 25
 setxkbmap -option ctrl:nocaps
 xmodmap ~/.xmodmaprc
 
-# enable numlock if using USB keyboard
-. /etc/X11/Xsession.d/55numlockx
+# enable numlock if using USB keyboard, with an exception
+if ! lsusb | grep -q "SiGma Micro Keyboard TRACER Gamma Ivory"; then
+    . /etc/X11/Xsession.d/55numlockx
+fi
 
 # disable caps lock if I accidently hit it before running this script
 if xset -q | grep "Caps Lock: *on" >/dev/null; then
