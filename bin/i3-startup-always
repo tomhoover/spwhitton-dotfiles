@@ -26,8 +26,19 @@ fi
 
 # ---- monitor settings
 
+# if this machine is always plugged into the same monitor, may
+# `convert ~/lib/annex/doc/img/wallpaper/foo -resize 1366x768\!
+# ~/local/wallpaper.png`.  Otherwise, stick to a solid colour, because
+# doing otherwise requires resizing the image file, setting the root
+# window and restarting i3lock every time an external monitor is
+# plugged or unplugged
+
 xset dpms 600
-xsetroot -solid \#3f3f3f
+if [ -e "$HOME/local/wallpaper.png" ]; then
+    feh --bg-scale $HOME/local/wallpaper.png
+else
+    xsetroot -solid \#3f3f3f
+fi
 
 # ---- workspace default layouts (currently only workspace 1)
 

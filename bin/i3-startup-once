@@ -4,14 +4,12 @@
 
 # ---- screen locking
 
-# Due to the ways the X root window and i3lock work, if we use
-# wallpaper then we have to resize it, set the root window and restart
-# i3lock each time an external monitor is added or removed.  That
-# requires some serious logic and probably isn't worth it.  Since I
-# plug and unplug my laptop from an external monitor a lot, just use
-# solid colour for now.  Could easily add some commits to set a
-# background and lockscreen on the dotfiles branches of machines that
-# have only one monitor
+# if this machine is always plugged into the same monitor, may
+# `convert ~/lib/annex/doc/img/wallpaper/foo -resize 1366x768\!
+# ~/local/wallpaper.png`.  Otherwise, stick to a solid colour, because
+# doing otherwise requires resizing the image file, setting the root
+# window and restarting i3lock every time an external monitor is
+# plugged or unplugged
 
 # kill any other lockers that might have snuck in
 pkill -u $USER light-locker
@@ -25,7 +23,11 @@ if which xfconf-query; then
 fi
 
 # ... and then hook i3lock into logind
-xss-lock -- i3lock -c 3f3f3f -n &
+if [ -e "$HOME/local/wallpaper.png" ]; then
+    xss-lock -- i3lock -i $HOME/local/wallpaper.png &
+else
+    xss-lock -- i3lock -c 3f3f3f -n &
+fi
 
 # ---- GTK
 
