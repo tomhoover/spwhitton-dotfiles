@@ -43,7 +43,8 @@ shell none
 
 disable-mnt
 private-dev
-private-etc profile,fonts,alternatives,java-9-openjdk,java-8-openjdk,java-7-openjdk
+# following causes hexographer to use ~/?/.java instead of ~/.java
+#private-etc profile,fonts,alternatives,java-9-openjdk,java-8-openjdk,java-7-openjdk
 private-tmp
 
 noexec ${HOME}
