@@ -39,9 +39,9 @@
 ;;;     # End:
 
 ;;; TODO
-;;; number monsters; prepend 'bloodied' to status column; also strike
-;;; out monster number when one dies; dice expression roller shows results for
-;;; each die
+;;; number monsters (Wight 1, Wight 2, etc.); prepend 'bloodied' to
+;;; status column; also strike out monster number when one dies; dice
+;;; expression roller shows results for each die
 
 ;;; Code:
 
