@@ -37,6 +37,10 @@
 ;;;     # eval: (spwd20-mode 1)
 ;;;     # spwd20-party: (("Zahrat" . 2) ("Ennon" . 4) ("Artemis" . 5))
 ;;;     # End:
+;;;
+;;; Example first line of file:
+;;;
+;;;     # -*- mode: org; mode: spwd20; spwd20-party: (("Zahrat" . 0) ("Anca" . 1)) -*-
 
 ;;; TODO
 ;;; number monsters (Wight 1, Wight 2, etc.); prepend 'bloodied' to
