@@ -901,19 +901,29 @@ Passes ARG to `projectile-switch-project-by-name'."
   (require 'subword)
   (diminish 'subword-mode)
 
-  ;; standard Haskell repl interaction bindings
+;;; standard Haskell repl interaction bindings
+
+  ;; first use `C-c C-l' and/oror `C-c C-b' to enable the use of
+  ;; bindings like `M-.' and `C-c C-c'.  Note that this is quite slow
+  ;; so use sparingly; basically when getting an editing session going
   (bind-key "C-c C-l" 'haskell-process-load-or-reload  haskell-mode-map)
   (bind-key "C-c C-b" 'haskell-interactive-bring       haskell-mode-map)
-  (bind-key "C-c C-i" 'haskell-process-do-info         haskell-mode-map)
-  (bind-key "C-c C-c" 'haskell-process-cabal-build     haskell-mode-map)
-  (bind-key "C-c C-k" 'haskell-interactive-mode-clear  haskell-mode-map)
-  (bind-key "C-c C"   'haskell-process-cabal           haskell-mode-map)
 
-  ;; same again for `haskell-cabal-mode'
+  ;; then, use `C-c C-c' to see whether your code compiles/run a type
+  ;; check.  Navigate between errors using `M-g n' and `M-g p'.  This
+  ;; is much more performant
+  (bind-key "C-c C-c" 'haskell-process-cabal-build     haskell-mode-map)
+
+  ;; less useful keys
+  ;; (bind-key "C-c C-i" 'haskell-process-do-info         haskell-mode-map)
+  ;; (bind-key "C-c C-k" 'haskell-interactive-mode-clear  haskell-mode-map)
+  ;; (bind-key "C-c C"   'haskell-process-cabal           haskell-mode-map)
+
+  ;; those same bindings again for `haskell-cabal-mode'
   (bind-key "C-c C-b" 'haskell-interactive-bring       haskell-cabal-mode-map)
-  (bind-key "C-c C-k" 'haskell-interactive-mode-clear  haskell-cabal-mode-map)
+  ;; (bind-key "C-c C-k" 'haskell-interactive-mode-clear  haskell-cabal-mode-map)
   (bind-key "C-c C-c" 'haskell-process-cabal-build     haskell-cabal-mode-map)
-  (bind-key "C-c C"   'haskell-process-cabal           haskell-cabal-mode-map)
+  ;; (bind-key "C-c C"   'haskell-process-cabal           haskell-cabal-mode-map)
 
 ;;; these two bindings require GHCi 8 or newer (or GHCi-ng)
 
@@ -921,7 +931,7 @@ Passes ARG to `projectile-switch-project-by-name'."
   (bind-key "M-."     'haskell-mode-goto-loc           interactive-haskell-mode-map)
 
   ;; pass C-u to insert a missing type signature
-  (bind-key "C-c C-t" 'haskell-mode-show-type-at       interactive-haskell-mode-map)
+  ;; (bind-key "C-c C-t" 'haskell-mode-show-type-at       interactive-haskell-mode-map)
 
   ;; ensure that company falls back to dabbrevs when haskell-mode cannot
   ;; complete, such as in where clauses (this is straight from
