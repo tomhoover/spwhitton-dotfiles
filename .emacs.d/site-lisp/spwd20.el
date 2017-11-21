@@ -42,9 +42,7 @@
 ;;;
 ;;;     # -*- mode: org; mode: spwd20; spwd20-party: (("Zahrat" . 0) ("Anca" . 1)) -*-
 
-;;; TODO
-;;; number monsters (Wight 1, Wight 2, etc.); dice
-;;; expression roller shows results for each die
+;;; TODO dice expression roller shows results for each die
 
 ;;; Code:
 
@@ -118,13 +116,15 @@ the best N of them, e.g., 4d6k3."
          (let ((init (int-to-string
                       (spwd20--roll (concat
                                      "1d20"
-                                     (spwd20--num-to-term init-input))))))
-           (while (> num-input 0)
+                                     (spwd20--num-to-term init-input)))))
+               (monster num-input))
+           (while (>= monster 1)
              (let ((hp (int-to-string (spwd20--roll hd-input))))
                (push (list
-                      "" name-input (spwd20--num-to-term init-input) init hp "0")
+                      "" (concat name-input " " (int-to-string monster))
+                      (spwd20--num-to-term init-input) init hp "0")
                      rows))
-             (setq num-input (- num-input 1)))))
+             (setq monster (1- monster)))))
        while (-all? (lambda (x) (> (length x) 0))
                     (list name-input init-input hd-input))))
     (dolist (pc spwd20-party)
@@ -259,11 +259,14 @@ the best N of them, e.g., 4d6k3."
           (let ((init (int-to-string
                        (spwd20--roll (concat
                                       "1d20"
-                                      (spwd20--num-to-term init-input))))))
-            (while (> num-input 0)
+                                      (spwd20--num-to-term init-input)))))
+                (monster num-input))
+            (while (>= monster 1)
               (org-table-insert-row)
               (org-table-next-field)
               (insert name-input)
+              (insert " ")
+              (insert (int-to-string monster))
               (org-table-next-field)
               (insert (spwd20--num-to-term init-input))
               (org-table-next-field)
@@ -272,7 +275,7 @@ the best N of them, e.g., 4d6k3."
               (insert (int-to-string (spwd20--roll hd-input)))
               (org-table-next-field)
               (insert "0")
-              (setq num-input (- num-input 1))))
+              (setq monster (1- monster))))
           (org-table-goto-column 4)
           (org-table-sort-lines nil ?N)
           (org-table-align)))
