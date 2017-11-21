@@ -862,6 +862,8 @@ Passes ARG to `projectile-switch-project-by-name'."
    ;; haskell-mode is forever hanging, so enable some logging
    haskell-process-log t
 
+   ;; tidy up the REPL buffer
+   haskell-process-show-debug-tips nil
 
    ;; this tends to get in the way
    haskell-mode-contextual-import-completion nil
