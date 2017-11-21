@@ -43,8 +43,7 @@
 ;;;     # -*- mode: org; mode: spwd20; spwd20-party: (("Zahrat" . 0) ("Anca" . 1)) -*-
 
 ;;; TODO
-;;; number monsters (Wight 1, Wight 2, etc.); prepend 'bloodied' to
-;;; status column; also strike out monster number when one dies; dice
+;;; number monsters (Wight 1, Wight 2, etc.); dice
 ;;; expression roller shows results for each die
 
 ;;; Code:
@@ -187,13 +186,28 @@ the best N of them, e.g., 4d6k3."
         (save-excursion
           (org-table-goto-column 5)
           (skip-chars-forward " ")
-          (when (and (looking-at "[0-9]+")
-                     (>= total-damage (string-to-int (match-string 0))))
-            (org-table-goto-column 2)
-            (insert "~")
-            (forward-word 1)
-            (insert "~")))))
+          (when (looking-at "[0-9]+")
+            (let ((max-hp (string-to-int (match-string 0))))
+              (message "max-hp is %d; total-damage is %d" max-hp total-damage)
+              (if (>= total-damage max-hp)
+                  (progn
+                    (org-table-goto-column 2)
+                    (insert "~")
+                    (org-table-end-of-current-cell-content)
+                    (insert "~"))
+                (when (>= total-damage (/ max-hp 2))
+                  (org-table-goto-column 7)
+                  (org-table-end-of-current-cell-content)
+                  (unless (looking-back "|")
+                    (insert "; "))
+                  (insert "bloodied"))))))))
     (org-table-align)))
+
+(defun org-table-end-of-current-cell-content ()
+  (interactive)
+  (search-forward "|" (save-excursion (end-of-line) (point)))
+  (forward-char -2)
+  (skip-chars-backward " "))
 
 (defun spwd20-roll (exp)
   "Prompt, evaluate and display dice roll expression EXP.
