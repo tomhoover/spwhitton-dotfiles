@@ -914,7 +914,8 @@ Passes ARG to `projectile-switch-project-by-name'."
 
   ;; then, use `C-c C-c' to see whether your code compiles/run a type
   ;; check.  Navigate between errors using `M-g n' and `M-g p'.  This
-  ;; is much more performant
+  ;; is much more performant.  (`haskell-compile' is an alternative
+  ;; but it does not autodetect whether the project is cabal or stack)
   (bind-key "C-c C-c" 'haskell-process-cabal-build     haskell-mode-map)
 
   ;; less useful keys
