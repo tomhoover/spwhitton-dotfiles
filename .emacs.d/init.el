@@ -905,7 +905,10 @@ Passes ARG to `projectile-switch-project-by-name'."
 
   ;; first use `C-c C-l' and/oror `C-c C-b' to enable the use of
   ;; bindings like `M-.' and `C-c C-c'.  Note that this is quite slow
-  ;; so use sparingly; basically when getting an editing session going
+  ;; so use sparingly; basically when getting an editing session
+  ;; going.  In general `C-c C-b' will be enough to make `C-c C-c'
+  ;; work properly and is a bit faster; `C-c C-l' is needed to make
+  ;; `M-.' work
   (bind-key "C-c C-l" 'haskell-process-load-or-reload  haskell-mode-map)
   (bind-key "C-c C-b" 'haskell-interactive-bring       haskell-mode-map)
 
