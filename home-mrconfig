@@ -441,7 +441,8 @@ update = git pull "$@"
 skip = ! (mine || on spwhitton@shortgeese)
 
 # set file modification times to last commit for deft.el
-fixups = git-utime
+# (no longer using deft)
+#fixups = git-utime
 
 # before pulling, automatically commit in the same way that my cron job does
 pre_update = (! win32) && doccheckin
