@@ -519,13 +519,16 @@ Generates calls to pandoc that look like this: TODO"
   ;; This binding replaces use of `markdown-export'.
   (bind-key "<f9>" 'spw--pandoc-compile markdown-mode-map))
 
-;;; helm-ag for searching through Org notes (replaces Deft which has
-;;; become too slow)
+;;; `helm-projectile-ag' for searching through Org notes (replaces
+;;; Deft which has become too slow)
 
-(use-package helm-ag
-  :if (spw--optional-pkg-available-p "helm-ag")
+(use-package helm-projectile
+  :if (and
+       (spw--optional-pkg-available-p "helm-ag")
+       (spw--optional-pkg-available-p "helm-projectile"))
   :bind (("C-c f" . spw--search-notes)
-         ("C-c F" . spw--new-note)))
+         ("C-c F" . spw--new-note))
+  :init (use-package helm-ag))
 
 ;;; TRAMP
 
