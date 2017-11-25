@@ -417,6 +417,7 @@ fixups =
     fi
 
 skip = (! workstation)
+pre_update = mr autoci
 
 # --- source code repositories registered to their own mr config file
 
