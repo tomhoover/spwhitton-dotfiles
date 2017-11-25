@@ -1,5 +1,10 @@
 # -*- mode: conf -*-
 
+# /usr/pkg/bin before other system directories so get correct version
+# of e.g. Emacs
+
+PATH=$HOME/bin:$HOME/local/pkg/bin:$HOME/local/pkg/sbin:/usr/pkg/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
+
 #*/15 * * * * chronic doccheckin
 #@hourly chronic mbsync fastmail
 

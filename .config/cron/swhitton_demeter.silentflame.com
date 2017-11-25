@@ -6,3 +6,7 @@ MAILTO=spwhitton@spwhitton.name
 #@reboot cd $HOME/lib/dionysus 2>/dev/null && git annex watch || true
 #@reboot cd $HOME/lib/rt 2>/dev/null && git annex watch || true
 #@reboot cd $HOME/lib/wikiannex 2>/dev/null && git annex watch || true
+
+@weekly sariulccron /home/swhitton/html/sariul/cgi-bin
+
+@reboot emacs --daemon

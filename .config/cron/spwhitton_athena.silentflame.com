@@ -1,3 +1,6 @@
+PATH=$HOME/local/bin:$HOME/.local/bin:$HOME/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
+MAILTO=spwhitton@spwhitton.name
+
 */15 * * * * chronic doccheckin
 @hourly chronic mbsync fastmail
 

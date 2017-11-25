@@ -1,10 +1,7 @@
 #!/bin/sh
 
-# Construct a crontab based on files in ~/.config/cron and load it
-# into cron.  The file ~/.config/cron/username/fqdn is appended to the
-# common file in the same directory. Note that the common file may
-# have "$HOME" in it, as in "PATH=$HOME/bin". cron is too dumb to deal
-# with that, so the expansion is handled by this script.
+# Load a crontab from ~/.config/cron.  Replace "$HOME" with actual
+# homedir because cron can't deal with $HOME in crontabs
 
 # This script was originally written by Joey Hess:
 # http://git.kitenet.net/?p=joey/home.git;a=blob;f=bin/loadcron
@@ -24,26 +21,13 @@ if [ ! -z "`crontab -l`" ] && ! crontab -l | grep -q "$WARNING"; then
     fi
 fi
 
-dir=$HOME/.config/cron/`whoami`
-if [ -d "$dir" ]; then
-    hostfile="$dir/`hostname -f`"
-    if [ ! -e "$hostfile" ]; then
-        echo "loadcron: $hostfile does not exist, not loading" >&2
-    fi
+tab=$HOME/.config/cron/$(whoami)_$(hostname -f)
+if [ -e "$tab" ]; then
     (
 	echo "$WARNING"
-	echo
-	if [ -e "$dir/common" ]; then
-	    echo "# From $dir/common:"
-	    sed "s!\$HOME!$HOME!g" < "$dir/common"
-	    echo
-	fi
-	hostfile="$dir/`hostname -f`"
-	if [ -e "$hostfile" ]; then
-	    echo "# From $hostfile:"
-	    cat "$hostfile"
-	    echo
-	fi
+        echo
+	echo "# From $tab:"
+	sed "s!\$HOME!$HOME!g" < "$tab"
         # anacron: disabled because I don't have any useful anacron
         # jobs on any hosts at present
         # hostanacrontab=$HOME/.config/anacron/$(whoami)_$(hostname -f)
@@ -55,11 +39,13 @@ if [ -d "$dir" ]; then
         #     echo
         # fi
     ) | crontab -
+else
+    echo "loadcron: $tab does not exist, not loading" >&2
 fi
 
-units=$HOME/.config/host-user-units/`hostname -f`
-if [ -e "$units" ]; then
-    cat "$units" | while read unit; do
-        systemctl --user enable "$unit"
-    done
-fi
+# units=$HOME/.config/host-user-units/`hostname -f`
+# if [ -e "$units" ]; then
+#     cat "$units" | while read unit; do
+#         systemctl --user enable "$unit"
+#     done
+# fi
