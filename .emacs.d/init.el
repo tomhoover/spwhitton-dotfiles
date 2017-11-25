@@ -1535,12 +1535,16 @@ Used in my `message-mode' yasnippets."
 (defun spw--search-notes ()
   "Invoke ag to incrementally search through my Org notes."
   (interactive)
+  (unless (boundp 'org-directory)
+    (require 'org))
   (let ((projectile-project-root org-directory))
     (call-interactively 'helm-projectile-ag)))
 
 (defun spw--new-note (name)
   "Create a new Org note entitled NAME."
   (interactive "sTitle: ")
+  (unless (boundp 'org-directory)
+    (require 'org))
   (let* ((sanitised1
           (replace-regexp-in-string "\?" "" name))
          (sanitised2
