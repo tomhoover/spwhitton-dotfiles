@@ -4,9 +4,6 @@
 
 # --- global settings
 
-# custom command for git
-git_gc = git gc "$@"
-
 # avoid hangs due to SSH connection sharing
 jobs = 1
 
