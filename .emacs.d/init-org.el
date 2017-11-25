@@ -1062,21 +1062,6 @@ Ignore SOMEDAYs as might have those in old notes but not important to include th
 
 ;;;; ---- functions ----
 
-(defun spw/new-philos-notes (name)
-  "Create a file NAME.org in my philosophy notes directory.
-
-The purpose of this function is to allow that name easily to have
-spaces in it and to remove any colons."
-  (interactive "sTitle: ")
-  (let ((sanitised (replace-regexp-in-string "\?" "" (replace-regexp-in-string ":" "," name))))
-    (find-file (expand-file-name
-                (concat sanitised ".org")
-                (f-join org-directory "philos")))
-    (insert "philos")
-    (yas-expand)
-    (insert name)
-    (yas-next-field)))
-
 ;;; the default C-c [ and C-c ] expand the directory ~/doc/org in the
 ;;; org-agenda-files variable using the local path,
 ;;; e.g. /meta/s/spw/doc/org, which is not good when init-custom.el is

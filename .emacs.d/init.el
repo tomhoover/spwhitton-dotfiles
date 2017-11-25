@@ -301,15 +301,13 @@ hooks listed in `lisp-major-mode-hooks'."
          ("C-c o l" . org-store-link)
          ("C-c o a" . org-agenda)
          ("C-c o [" . spw/org-agenda-file-to-front)
-         ("C-c o ]" . spw/org-remove-file)
-         ("C-c o n" . spw/new-philos-notes))
+         ("C-c o ]" . spw/org-remove-file))
   :commands (org-capture
              org-store-link
              org-agenda
              org-save-all-org-buffers   ; for ~/bin/sync-docs
              spw/org-agenda-file-to-front
              spw/org-remove-file
-             spw/new-philos-notes
              orgstruct++-mode)
   :config (load "~/.emacs.d/init-org.el"))
 
@@ -521,34 +519,13 @@ Generates calls to pandoc that look like this: TODO"
   ;; This binding replaces use of `markdown-export'.
   (bind-key "<f9>" 'spw--pandoc-compile markdown-mode-map))
 
-;;; Deft
+;;; helm-ag for searching through Org notes (replaces Deft which has
+;;; become too slow)
 
-(use-package deft
-  :if (spw--optional-pkg-available-p "deft")
-  :commands deft
-  :bind ("C-c f" . deft)
-
-  :init
-  (setq
-   deft-extensions '("org" "mdwn")
-   deft-text-mode 'org-mode
-   deft-directory "~/doc/org/"
-   deft-recursive t
-   deft-use-filename-as-title nil
-   deft-auto-save-interval 20.0
-   deft-incremental-search t
-   deft-org-mode-title-prefix t
-
-   ;; snake_case for deft notes; CamelCase for files included in
-   ;; main Org agenda
-   deft-use-filter-string-for-filename t
-   deft-file-naming-rules '((noslash . "_")
-                            (nospace . "_")
-                            (case-fn . downcase)))
-
-  :config
-  ;; restore my C-w binding
-  (bind-key "C-w" 'deft-filter-decrement-word deft-mode-map))
+(use-package helm-ag
+  :if (spw--optional-pkg-available-p "helm-ag")
+  :bind (("C-c f" . spw--search-notes)
+         ("C-c F" . spw--new-note)))
 
 ;;; TRAMP
 
@@ -1541,6 +1518,29 @@ Used in my `message-mode' yasnippets."
        ((string= name "Thomas") "Tom")
        ;; default
        (t name)))))
+
+(defun spw--search-notes ()
+  "Invoke ag to incrementally search through my Org notes."
+  (interactive)
+  (let ((projectile-project-root org-directory))
+    (call-interactively 'helm-projectile-ag)))
+
+(defun spw--new-note (name)
+  "Create a new Org note entitled NAME."
+  (interactive "sTitle: ")
+  (let* ((sanitised1
+          (replace-regexp-in-string "\?" "" name))
+         (sanitised2
+          (replace-regexp-in-string ": " "," sanitised1))
+         (sanitised3
+          (replace-regexp-in-string ":" "," sanitised2))
+         (sanitised
+          (replace-regexp-in-string " " "_" sanitised3)))
+    (find-file (expand-file-name
+                (concat sanitised ".org")
+                org-directory))
+    (insert (concat "#+TITLE: " name))
+    (insert "\n")))
 
 
 
