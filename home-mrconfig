@@ -236,14 +236,12 @@ pre_stow = homedir_mkdirs
 checkout = git clone athena:propellor propellor --branch spw3conf
 post_checkout =
     cd propellor
+    # get new release tags for merging into 'spw3conf' and 'debian' branches
     git remote add -f upstream https://git.joeyh.name/git/propellor.git
-    # We create a cabal sandbox so that haskell-mode ignores
-    # stack.yaml.  All of propellor's deps are available system-wide
-    which cabal && cabal sandbox init || true
-    # from <https://propellor.branchable.com/coding_style/> we use a
-    # hook here because dgit's requirements mean on the debian branch
-    # we have to clean .cabal-sandbox etc. before a build (so we
-    # always have to use sbuild)
+    # This hook sets up .dir-locals.el to make it easier to follow
+    # Propellor's coding style.  We have to use a hook because
+    # .dir-locals.el and the cabal sandbox must be nuked when working
+    # with dgit on the 'debian' branch
     cp ~/lib/hooks/propellor-post-checkout ~/src/propellor/.git/hooks/post-checkout
     chmod 755 .git/hooks/post-checkout
     echo ".dir-locals.el" >> .git/info/exclude
