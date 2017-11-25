@@ -17,7 +17,7 @@ STOWSHA256SUM="8b89d79939cf9ae87d2f223bb36a3b2d0c66775b62aeb9953c6d33dab40d3c2b 
 
 # ---- Handle special case hosts
 
-# On athena, clone URLs are different as they come from /home/git (and
+# On athena, clone URLs are different as they come from /srv/git (and
 # pushInsteadOf won't work because that can't append the required
 # `.git').  So we must change to the athena branch now in order to get
 # a fixed .mrconfig.

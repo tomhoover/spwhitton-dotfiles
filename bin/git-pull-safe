@@ -7,7 +7,7 @@
 
 # This script is based on the value of git_update set by the myrepos
 # dgit plugin.  That library uses an unconditional `git pull` to match
-# global myrepos conventions.  The main reason for having that script
+# global myrepos conventions.  The main reason for having this script
 # is to override that unconditional `git pull`
 
 set -e

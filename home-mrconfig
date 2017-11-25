@@ -7,7 +7,8 @@
 # avoid hangs due to SSH connection sharing
 jobs = 1
 
-# custom actions to be configured repository-by-repository
+# custom actions to be configured repository-by-repository, that do
+# nothing by default
 git_sync = :
 git_rebase = :
 git_autoci = :
@@ -20,8 +21,10 @@ git_push = git push-all
 # files and stashes
 git_isclean = git is-clean
 
-# --- Experimental plugin for dgit repos
+# --- Plugin for dgit repos
 
+# actually shipped with upstream mr, but use an include command that
+# will always work
 include = cat ~/src/dotfiles/lib/mr/dgit
 
 # --- git-svn
@@ -30,13 +33,15 @@ include = [ -e "/usr/share/mr/git-svn" ] && cat /usr/share/mr/git-svn
 
 # --- Sensible pulls
 
-# Redefine git_update to avoid an unconditional `git pull` which can
+# Redefine git_update to avoid an unconditional `git pull`, which can
 # result in unwanted merge commits all over $HOME (this has to come
-# after we include the dgit lib, which also defines git_update)
+# after we include the dgit lib, which also redefines git_update)
 git_update = git pull-safe
 
 # --- Adam Spiers' plugin for managing dotfile symlinks with mr
 
+# actually shipped with upstream mr, but use an include command that
+# will always work
 include =
     # stow is not available on Windows
     if [ -e "$HOME/src/dotfiles/lib/mr/stow" \
@@ -198,8 +203,7 @@ checkout = git clone gcrypt::rsync://athena:/srv/gcrypt/priv.git priv
 stowable = true
 
 # this repository can't be checked out until we install
-# git-remote-gcrypt.  And thanks to gcrypt being slow, skip if I run
-# via fmr.
+# git-remote-gcrypt
 skip = (! gcrypt) || (! workstation)
 
 fixups =
@@ -229,10 +233,10 @@ pre_stow = homedir_mkdirs
 # --- hosts configuration
 
 [$HOME/src/propellor]
-# this has to be a full URL, as during a spin of a host, propellor
-# sets this as the remote in /usr/local/propellor and it must be
-# possible to pull from it without root having my .gitconfig checked
-# out
+# this has to be a full URL (rather than just 'athena:', as during a
+# spin of a host, propellor sets this as the remote in
+# /usr/local/propellor and it must be possible to pull from it without
+# root having my .gitconfig checked out
 checkout = git clone https://git.spwhitton.name/propellor propellor --branch spw3conf
 post_checkout =
     cd propellor
