@@ -19,20 +19,9 @@ git_autoci = :
 # from trying to push to read-only remotes
 git_push = git push-all
 
-# find dirty working directories, i.e., uncommitted changes and
-# untracked files
-# TODO possibly improve this by looking at git_status in /usr/bin/mr
-# TODO doesn't work for direct mode git annex repos (see `isclean =`
-# workarounds below, and on athena branch)
-git_isclean = 
-    (
-     # 1st line: check HEAD versus index
-     # 2nd line: index versus working tree
-     # 3rd line: untracked files
-        git diff-index --quiet --cached HEAD && \
-            git diff-files --quiet && \
-            test -z "$(git status --porcelain)"
-    ) || (git status --porcelain && exit 1)
+# find dirty working directories, i.e., uncommitted changes, untracked
+# files and stashes
+git_isclean = git is-clean
 
 # --- Experimental plugin for dgit repos
 
@@ -309,7 +298,6 @@ skip = lazy
 
 # TODO: consider using /usr/share/mr/git-annex helper to simplify this
 # configuration (override its update definition to avoid --content)
-# (and isclean defn can be generalised)
 
 [$HOME/lib/annex]
 checkout = git clone gcrypt::rsync://athena:/srv/gcrypt/annex.git annex
@@ -368,7 +356,6 @@ status = git annex status
 update = git annex sync --no-content
 push = git annex sync --content
 sync = sync-for-dionysus
-isclean = test -z "$(git annex status)" || (git annex status && exit 1)
 
 # origin remote is just for keeping a backup copy of metadata.  athena
 # remote, in $HOME on athena, contains a copy of content.  At present,
@@ -391,7 +378,6 @@ post_checkout =
 status = git annex status
 update = git annex --no-content sync
 push = git annex --no-content sync
-isclean = test -z "$(git annex status)" || (git annex status && exit 1)
 
 # origin remote is just for keeping a backup copy of metadata.  athena
 # remote, in $HOME on athena, contains a copy of content.  At present,
