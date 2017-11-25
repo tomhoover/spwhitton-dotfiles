@@ -593,7 +593,9 @@ Generates calls to pandoc that look like this: TODO"
 ;;; simple concept of projects
 
 (use-package projectile
-  :if (spw--optional-pkg-available-p "projectile")
+  :if (and
+       (spw--optional-pkg-available-p "f")
+       (spw--optional-pkg-available-p "projectile"))
   :commands projectile-vc
   :diminish projectile-mode
   :bind (("C-c p" . projectile-command-map)
@@ -601,6 +603,9 @@ Generates calls to pandoc that look like this: TODO"
          ("C-c v" . projectile-vc))
   :demand
   :config
+  ;; `spw--get-programming-projects' needs f
+  (use-package f)
+
   ;; fix bad interaction between projectile and tramp
   (defun projectile-project-root--tramp-fix (orig-fun &rest args)
     (unless (file-remote-p default-directory)
