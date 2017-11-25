@@ -258,14 +258,14 @@ skip = ! workstation
 # --- personal website source
 
 [$HOME/src/wiki]
-checkout = git clone https://git.spwhitton.name/wiki
+checkout = git clone athena:wiki
 skip = ! mine
 
 # --- ~/src repos with special push commands
 
 [$HOME/src/dgit]
-checkout = git clone https://git.spwhitton.name/dgit
-# ian's git server gives an error when my script tries to find the
+checkout = git clone athena:dgit
+# Ian's git server gives an error when my script tries to find the
 # tags there
 push = git push-all --no-tags
 skip = lazy
@@ -300,7 +300,7 @@ post_checkout =
     cd annex
     git annex init
     git annex enableremote athena rsyncurl=athena:/srv/rsync/annex
-skip = (! workstation)
+skip = ! workstation
 
 update = git annex sync --no-content origin
 push =
@@ -314,7 +314,7 @@ fixups =
     git config gcrypt.publish-participants true
     git config gcrypt.participants 0x0F56D0553B6D411B
     git config annex.startupscan false
-    git config annex.autocommit true # needed for ga sync
+    git config annex.autocommit true # needed for `git annex sync`
     git config remote.origin.annex-ignore true
 sync = git annex sync --no-content origin
 
@@ -322,7 +322,8 @@ sync = git annex sync --no-content origin
 
 [$HOME/lib/wikiannex]
 checkout = git clone athena:wikiannex.git
-status = git annex status       # direct mode on athena, so status won't work
+# this repo uses direct mode on athena, so status won't work
+status = git annex status
 post_checkout =
     cd wikiannex
     git annex init
@@ -354,7 +355,7 @@ sync = sync-for-dionysus
 
 # origin remote is just for keeping a backup copy of metadata.  athena
 # remote, in $HOME on athena, contains a copy of content.  At present,
-# origin remote only updated by weekly coldbkup script
+# origin remote only updated by sysmaint script (run weekly)
 fixups =
     git config push.default matching
     git config annex.startupscan false
@@ -376,7 +377,7 @@ push = git annex --no-content sync
 
 # origin remote is just for keeping a backup copy of metadata.  athena
 # remote, in $HOME on athena, contains a copy of content.  At present,
-# origin remote only updated by weekly coldbkup script
+# origin remote only updated by sysmaint script (run weekly)
 fixups =
     git config push.default matching
     git config annex.startupscan false
@@ -400,7 +401,7 @@ fixups =
     git config remote.origin.gcrypt-publish-participants true
     git config remote.origin.gcrypt-participants 0x0F56D0553B6D411B
     git config annex.startupscan false
-    git config annex.autocommit true # needed for ga sync
+    git config annex.autocommit true # needed for `git annex sync`
     git config remote.origin.annex-ignore true
     if [ -d "$(hostname -s)" ]; then
         mkdir -p $HOME/local/rt
@@ -433,7 +434,7 @@ skip = ! [ "$MR_ACTION" = "stowable" ]
 [$HOME/doc]
 checkout = git clone athenap:doc doc
 update = git pull "$@"
-skip = ! (mine || on spwhitton@shortgeese)
+skip = ! mine
 
 # set file modification times to last commit for deft.el
 # (commented out because no longer using deft)
