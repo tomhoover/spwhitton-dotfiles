@@ -44,8 +44,8 @@ git_update = git pull-safe
 # will always work
 include =
     # stow is not available on Windows
-    if [ -e "$HOME/src/dotfiles/lib/mr/stow" \
-         -a ! "$(perl -e 'print $^O')" = "msys" ]; then
+    if [ -e "$HOME/src/dotfiles/lib/mr/stow" ] \
+         && ! [ "$(perl -e 'print $^O')" = "msys" ]; then
         cat "$HOME/src/dotfiles/lib/mr/stow"
     fi
 
