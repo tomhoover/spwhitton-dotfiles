@@ -251,10 +251,10 @@ fixups =
     # check that the link isn't already in place before making the link
     # because otherwise we get an infinite loop of links that breaks propellor
     [ -L ~/.propellor ] || ln -sf ~/src/propellor ~/.propellor
+    # my preferences when using propellor for configuring my own machines
     git config propellor.spin-branch spw3conf
     git config propellor.forbid-dirty-spin true
 
-# this could be more fine-grained
 skip = ! workstation
 
 # --- personal website source
@@ -438,7 +438,7 @@ update = git pull "$@"
 skip = ! (mine || on spwhitton@shortgeese)
 
 # set file modification times to last commit for deft.el
-# (no longer using deft)
+# (commented out because no longer using deft)
 #fixups = git-utime
 
 # before pulling, automatically commit in the same way that my cron job does
@@ -470,5 +470,6 @@ push = movemail
 # didn't run one of the sync or update commands.
 skip = ! [ -d "$HOME/.fmail" ] || ! ( [ "$MR_ACTION" = "stowable" ] || [ "$MR_ACTION" = "push" ] || [ "$MR_ACTION" = "sync" ] || [ "$MR_ACTION" = "update" ] )
 
-# this is slower than other repos for which sync is defined
+# this is slower than other repos for which sync is defined, so have
+# it go last
 order = 12

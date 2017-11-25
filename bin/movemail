@@ -32,7 +32,11 @@ if offline; then
     echo >&2 ERROR: We\'re offline\; cannot sync mail
     exit 1
 else
+    # this shouldn't be necessary because there is
+    # /etc/network/if-up.d/postfix, but it's cheap so just call again
+    # here
     postqueue -f
+
     if pgrep -u $USER mbsync 2>/dev/null; then
         (killall --user $USER mbsync 2>/dev/null && sleep 5) || true
         killall -9 --user $USER mbsync 2>/dev/null || true
