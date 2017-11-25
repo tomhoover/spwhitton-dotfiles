@@ -466,8 +466,8 @@ skip = ! on faeroes             # TODO just check if host is *.sdf.org
 # --- my offline e-mail (& machine's postfix queue)
 
 [$HOME/.fmail]
-sync = movemail
-update = mbsync --quiet fastmail
+sync = notmuch new
+update = notmuch new
 push = movemail
 
 # Don't do anything if I don't use mbsync on this machine, or I
