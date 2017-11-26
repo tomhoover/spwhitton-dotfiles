@@ -519,17 +519,6 @@ Generates calls to pandoc that look like this: TODO"
   ;; This binding replaces use of `markdown-export'.
   (bind-key "<f9>" 'spw--pandoc-compile markdown-mode-map))
 
-;;; `helm-projectile-ag' for searching through Org notes (replaces
-;;; Deft which has become too slow)
-
-(use-package helm-projectile
-  :if (and
-       (spw--optional-pkg-available-p "helm-ag")
-       (spw--optional-pkg-available-p "helm-projectile"))
-  :bind (("C-c f" . spw--search-notes)
-         ("C-c F" . spw--new-note))
-  :init (use-package helm-ag))
-
 ;;; TRAMP
 
 (use-package tramp
@@ -606,6 +595,9 @@ Generates calls to pandoc that look like this: TODO"
          ("C-c v" . projectile-vc))
   :demand
   :config
+  ;; rebind to take advantage of helm-projectile library here
+  (bind-key "s s" 'helm-projectile-ag projectile-command-map)
+
   ;; `spw--get-programming-projects' needs f
   (use-package f)
 
@@ -659,6 +651,18 @@ Passes ARG to `projectile-switch-project-by-name'."
                                        (spw--get-programming-projects programming-projects-dir))))
       (projectile-switch-project-by-name project-dir arg)))
   (bind-key "n" 'spw--open-programming-project projectile-command-map))
+
+;;; `helm-projectile-ag' for searching through Org notes (replaces
+;;; Deft which has become too slow)
+
+(use-package helm-projectile
+  :if (and
+       (spw--optional-pkg-available-p "helm-ag")
+       (spw--optional-pkg-available-p "helm-projectile"))
+  :bind (("C-c f" . spw--search-notes)
+         ("C-c F" . spw--new-note))
+  :commands helm-projectile-ag
+  :init (use-package helm-ag))
 
 ;;; completion with ido
 
