@@ -2,10 +2,12 @@
 
 # --- $PATH
 
-if [ -d ~/local/bin ] ; then
-    PATH=~/local/bin:"${PATH}"
+if [ -d "$HOME/bin" ] ; then
+    PATH="$HOME/bin:$PATH"
+    export PATH
 fi
 
-if [ -d ~/bin ] ; then
-    PATH=~/bin:"${PATH}"
+if [ -d "$HOME/local/bin" ] ; then
+    PATH="$HOME/local/bin:$PATH"
+    export PATH
 fi
