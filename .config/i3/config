@@ -192,10 +192,10 @@ bindsym $mod+m mode "$mode_launch"
 # managing outputs (thanks h01ger and Qubes i3 config)
 set $mode_display Manage displays: (j/k) VGA on/off  (n/m) laptop display on/off  (x) arandr
 mode "$mode_display" {
-        bindsym j exec --no-startup-id xrandr --output VGA-1  --auto --left-of LVDS-1, exec i3-startup-always, mode "default"
-        bindsym n exec --no-startup-id xrandr --output LVDS-1 --auto, exec i3-startup-always, mode "default"
-        bindsym k exec --no-startup-id xrandr --output VGA-1  --auto --off, exec i3-startup-always, mode "default"
-        bindsym m exec --no-startup-id xrandr --output LVDS-1  --auto --off, exec i3-startup-always, mode "default"
+        bindsym j exec --no-startup-id xrandr --output VGA-1  --auto --left-of LVDS-1, exec ~/bin/i3-startup-always, mode "default"
+        bindsym n exec --no-startup-id xrandr --output LVDS-1 --auto, exec ~/bin/i3-startup-always, mode "default"
+        bindsym k exec --no-startup-id xrandr --output VGA-1  --auto --off, exec ~/bin/i3-startup-always, mode "default"
+        bindsym m exec --no-startup-id xrandr --output LVDS-1  --auto --off, exec ~/bin/i3-startup-always, mode "default"
 
         # launch xrandr graphical config
         bindsym x exec arandr , mode "default"
