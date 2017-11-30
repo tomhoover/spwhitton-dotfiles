@@ -210,15 +210,19 @@ bindsym XF86AudioRaiseVolume exec --no-startup-id pactl -- set-sink-volume 0 +5%
 bindsym XF86AudioLowerVolume exec --no-startup-id pactl -- set-sink-volume 0 -5%
 bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle
 
-# send some stuff to workspace 1 (except for temporary terminals,
-# these are the only windows I have open on the first workspace)
-assign [class="^URxvt$" title="^irssi$"] 1
-assign [class="Firefox"] 1
-assign [class="Evolution"] 1
+# workspace 10, the only workspace with a defined function, is for
+# - things I always have open like my web browser
+# - long-running processes like a big package build
+#
+# It uses the tabbed layout, but when I want to access programs I
+# always have open such as my web browser, I use shortcut keys that go
+# straight to that program.  To access other windows that I've dumped
+# there, I go to the tenth workspace as usual.
 
-# jump back to specific windows on first workspace (except for
-# temporary terminals, these are the only windows I have open on the
-# first workspace)
+assign [class="^URxvt$" title="^irssi$"] 10
+assign [class="Firefox"] 10
+assign [class="Evolution"] 10
+
 bindsym $mod+n [class="^URxvt$" title="^irssi$"] focus
 bindsym $mod+j [class="Firefox"] focus
 bindsym $mod+k [class="Evolution"] focus

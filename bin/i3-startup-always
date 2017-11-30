@@ -39,7 +39,3 @@ if [ -e "$HOME/local/wallpaper.png" ]; then
 else
     xsetroot -solid \#3f3f3f
 fi
-
-# ---- workspace default layouts (currently only workspace 1)
-
-per-workspace-layout.pl &

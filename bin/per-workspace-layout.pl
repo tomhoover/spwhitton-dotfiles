@@ -16,8 +16,8 @@ use AnyEvent::I3;
 use v5.10;
 
 my %layouts = (
-    # web browser, Evolution, irssi all full-screen tabs on first workspace
-    '1' => 'tabbed',
+    # workspace 10 is the only one with a defined function.  See i3 config
+    '10' => 'tabbed',
 );
 
 my $i3 = i3();

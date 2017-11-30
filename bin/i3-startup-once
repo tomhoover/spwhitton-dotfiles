@@ -43,6 +43,10 @@ xfce4-power-manager &
 pkill -u $USER ibus-daemon
 IBUS_ENABLE_SYNC_MODE=0 ibus-daemon --xim --daemonize
 
+# ---- workspace default layouts (only workspace 10; see i3 config)
+
+per-workspace-layout.pl &
+
 # ---- startup applications
 
 redshift-gtk &                  # co-ords from config file
