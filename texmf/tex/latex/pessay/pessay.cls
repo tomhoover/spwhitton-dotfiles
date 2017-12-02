@@ -106,6 +106,7 @@
 \RequirePackage{ifthen}
 %% \RequirePackage[all]{nowidow}
 \RequirePackage{fancyhdr}
+\RequirePackage{relsize}       % for \smaller in quotation font size
 \initialdouble                  % defined above; loads setspace package
 
 %% ---- Useful enumerations
@@ -167,4 +168,4 @@
 
 %% ---- Style inline quotations
 
-\expandafter\def\expandafter\quote\expandafter{\quote\onehalfspacing\small}
+\expandafter\def\expandafter\quote\expandafter{\quote\onehalfspacing\smaller[0.5]}
