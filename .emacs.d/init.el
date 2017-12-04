@@ -601,14 +601,6 @@ Generates calls to pandoc that look like this: TODO"
   ;; `spw--get-programming-projects' needs f
   (use-package f)
 
-  ;; I often invoke `projectile-find-file' outside of a project and
-  ;; then start typing a filename before realising that my keystrokes
-  ;; are going into the current buffer, not Ido (especially annoying
-  ;; when that buffer is my Org agenda).  So ensure that we always get
-  ;; completion, even if it's not necessarily completion on the files
-  ;; I want
-  (setq projectile-require-project-root nil)
-
   ;; fix bad interaction between projectile and tramp
   (defun projectile-project-root--tramp-fix (orig-fun &rest args)
     (unless (file-remote-p default-directory)
