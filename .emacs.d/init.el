@@ -1768,6 +1768,14 @@ Used in my `message-mode' yasnippets."
 (use-package message
   :mode ("/mutt-.*$" . message-mode)
   :init
+  ;; mutt uses a blank line to separate the headers from the message
+  ;; body; to ensure proper font locking and other behaviour, tell
+  ;; Emacs about that
+  (defun spw--mutt-mail-header-separator ()
+    (when (string-match-p "^mutt-" (buffer-name (current-buffer)))
+      (setq-local mail-header-separator "")))
+  (add-hook 'message-mode-hook 'spw--mutt-mail-header-separator)
+
   ;; automatic formatting/templating of messages
   (use-package message-templ
     :if (spw--optional-pkg-available-p "message-templ")
