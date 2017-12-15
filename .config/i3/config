@@ -29,6 +29,7 @@ bindsym $mod+Return exec urxvt
 bindsym $mod+Shift+Return exec emacsclient -c -a '' -n -e '(switch-to-buffer nil)'
 
 # lock screen -- relies on xss-lock
+# note that this won't lock other VTs (lock-session*s* requires root password)
 bindsym $mod+l exec loginctl lock-session
 
 # go to sleep -- xss-lock will lock screen
