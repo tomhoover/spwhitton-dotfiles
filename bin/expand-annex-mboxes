@@ -2,8 +2,6 @@
 
 set -e
 
-# TODO this process should ionice and nice itself
-
 . $HOME/.shenv
 
 SOURCE="$HOME/lib/annex/doc/mail"
