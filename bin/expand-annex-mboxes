@@ -22,6 +22,11 @@ for mbox in $SOURCE/*.gz; do
         exit 0
     fi
 
+    # catch file not on this machine (needs `git annex get`)
+    if ! [ -e "$mbox" ]; then
+        continue
+    fi
+
     name=$(basename $mbox | cut -d. -f1)
 
     # check whether we got halfway there, or we finished it
