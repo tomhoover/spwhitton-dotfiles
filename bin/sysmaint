@@ -90,6 +90,10 @@ if (@ARGV) {
                              );
 }
 
+# determine if we are going to do maintenance outside of $HOME
+status "establishing sudo authority";
+my $do_local_system_maintenance = system "sudo --list apt-get" == 0;
+
 # ---- pre-backup cleanup tasks
 
 $seq->add_should_zero("ls tmp");
@@ -268,6 +272,7 @@ status "info: you can unmount & eject $loc" if ( defined $loc );
 
 # ---- local system maintenance
 
+exit unless $do_local_system_maintenance;
 exit unless $term->ask_yn(
                           prompt =>
                           "Backups complete.  Perform local system maintainance?"
