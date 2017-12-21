@@ -85,7 +85,11 @@ foreach my $remote ( keys %pushes ) {
     # pushRemote of master branch, if that exists?)
     # I almost certainly want all tags on that remote (e.g. an alioth repo)
     my @branches = @{ $pushes{$remote} };
-    system "git push --follow-tags $remote @branches";
+    if ( "--no-verify" ~~ @ARGV ) {
+        system "git push --follow-tags --no-verify $remote @branches";
+    } else {
+        system "git push --follow-tags $remote @branches";
+    }
     exit 1 if ( $? != 0 );
 }
 
