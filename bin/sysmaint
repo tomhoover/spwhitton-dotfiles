@@ -92,7 +92,7 @@ if (@ARGV) {
 
 # determine if we are going to do maintenance outside of $HOME
 status "establishing sudo authority";
-my $do_local_system_maintenance = system "sudo --list apt-get" == 0;
+my $do_local_system_maintenance = (system "sudo --list apt-get") == 0;
 
 # ---- pre-backup cleanup tasks
 
