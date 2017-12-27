@@ -468,6 +468,8 @@
 
 (defun spw/skip-non-actionable ()
   "Skip:
+- anything tagged @Sheffield when I'm in Tucson
+- anything tagged @Tucson when I'm in Sheffield
 - standalone tasks with deadlines
 - projects
 - subtasks of projects that are not NEXT actions
@@ -490,7 +492,12 @@ different occasions."
            (if try
                try
              (save-excursion (forward-line 1) (point))))))
-    (if (or (bh/is-project-p)
+    (if (or (and (string= (system-name) "zephyr")
+                 (member "@Tucson" (org-get-tags)))
+            ;; iris is a laptop, but usually it's not in Sheffield
+            (and (or (string= (system-name) "iris") (string= (system-name) "hephaestus"))
+                 (member "@Sheffield" (org-get-tags)))
+            (bh/is-project-p)
             (and (bh/is-subproject-p)
                  (or
                   (not (string= (spw/org-get-todo-keyword) "NEXT"))
