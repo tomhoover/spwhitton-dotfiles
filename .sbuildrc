@@ -7,7 +7,7 @@ $pgp_options = ['-us', '-uc'];
 $build_arch_all = 1;
 $distribution = 'unstable';
 
-$run_lintian = 1;
+$run_lintian = 0;
 $lintian_opts = [
     '--allow-root',
     '--color=never',            # make the .build file more readable
