@@ -74,6 +74,11 @@
      pushInsteadOf = https://anonscm.debian.org/git/
      pushInsteadOf = https://anonscm.debian.org/cgit/
 
+[url "https://salsa.debian.org/"]
+     insteadOf = salsa:
+[url "git@salsa.debian.org:"]
+     pushInsteadOf = salsa:
+
 # temporary redirects
 [url "git@spwhitton.name:dotfiles.git"]
      insteadOf = https://github.com/spwhitton/dotfiles.git
