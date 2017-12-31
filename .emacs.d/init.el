@@ -709,20 +709,20 @@ Passes ARG to `projectile-switch-project-by-name'."
         flx-ido-threshhold 7500
         gc-cons-threshold 20000000))
 
-(use-package ido-ubiquitous
-  :if (spw--optional-pkg-available-p "ido-ubiquitous")
+(use-package ido-completing-read+
+  :if (spw--optional-pkg-available-p "ido-completing-read+")
   :config
   ;; enable
   (ido-ubiquitous-mode 1)
 
   ;; disable during Org capture
-  (add-to-list 'ido-ubiquitous-command-overrides
-               '(disable prefix "org-capture"))
+  (add-to-list 'ido-cr+-function-blacklist
+               "^org-capture")
 
   ;; disable while saving an attachment -- this doesn't actually work
   ;; atm
-  (add-to-list 'ido-ubiquitous-command-overrides
-               '(disable exact "mm-save-part")))
+  (add-to-list 'ido-cr+-function-blacklist
+               'mm-save-part))
 
 (use-package smex
   :bind ("C-x C-m" . smex))
