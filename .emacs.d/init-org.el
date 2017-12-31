@@ -118,7 +118,6 @@
                            ("m" . org-mark-subtree))
  org-agenda-include-all-todo nil
  org-agenda-files "~/doc/emacs-org-agenda-files"
- org-agenda-persistent-filter t
  org-agenda-diary-file "~/.labbook.gpg"
  org-agenda-insert-diary-strategy 'date-tree
  org-goto-auto-isearch t
