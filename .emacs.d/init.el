@@ -157,10 +157,9 @@
 ;; TODO should check if font is available
 (add-to-list 'default-frame-alist '(font . "Terminus-11"))
 
-;; disable GUI elements
+;; disable some GUI elements (retain menu bar)
 (when (fboundp 'set-scroll-bar-mode) (set-scroll-bar-mode nil))
 (when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
-(when (fboundp 'menu-bar-mode) (menu-bar-mode -1))
 
 ;;; cursor settings
 
