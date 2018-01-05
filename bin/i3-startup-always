@@ -6,7 +6,7 @@
 
 # ---- don't let other local users spawn windows on my main X session
 
-if [ "$(whoami)" = "spwhitton" ]; then
+if ! [ "$(whoami)" = "spw" ]; then
     xhost -local:
 fi
 
