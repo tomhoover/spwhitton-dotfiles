@@ -1821,6 +1821,7 @@ The state after this function has been called is meant to be like
 mutt's review view after exiting EDITOR."
     (interactive)
     (setq spw--message-normalised t)
+    (message-insert-signature t)
     ;; sign messages by default, though avoid clobbering a
     ;; 'signencrypt' tag added when replying to an encrypted message
     (if (mml-secure-is-encrypted-p)
@@ -1899,6 +1900,11 @@ mutt's review view after exiting EDITOR."
 
   ;; follow the rest of the world
   (setq message-forward-before-signature nil)
+
+  ;; don't insert when setting up the message buffer; either C-c C-w
+  ;; or `spw--normalise-message' will do it once the message has been
+  ;; written
+  (setq message-signature nil)
 
   ;; try to strip signatures when citing
   (setq notmuch-mua-cite-function 'message-cite-original-without-signature)
