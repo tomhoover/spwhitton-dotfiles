@@ -99,6 +99,7 @@ alias b="bts --mbox show"
 alias test-reproducible="reprotest auto . -- schroot sid"
 alias dinstall="curl https://ftp-master.debian.org/dinstall.status;echo -n 'Now: ';date -u"
 alias disable-propellor="sudo rm /etc/cron.d/propellor"
+alias ls="ls --literal"
 
 # This alias is more reliable than calling `server-start' in my Emacs
 # init file.  Previously, I was seeing Emacs fail to start with "Error
