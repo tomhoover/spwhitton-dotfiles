@@ -239,7 +239,8 @@
                               lisp-interaction-mode-hook
                               ielm-mode-hook
                               scheme-mode-hook
-                              inferior-scheme-mode-hook))
+                              inferior-scheme-mode-hook
+                              clojure-mode-hook))
 
 (defmacro spw--activate-in-lisp-modes (minor-mode)
   "Add hooks to activate MINOR-MODE in all the major modes with
@@ -1208,6 +1209,13 @@ Passes ARG to `projectile-switch-project-by-name'."
   :if (spw--optional-pkg-available-p "nov")
   :mode ("\\.epub" . nov-mode)
   :init (setq nov-text-width 80))
+
+;;; CIDER
+
+(use-package cider
+  :if (spw--optional-pkg-available-p "cider")
+  :init
+  (add-hook 'cider-repl-mode-hook 'paredit-mode))
 
 
 
