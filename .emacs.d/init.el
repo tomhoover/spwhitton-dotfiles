@@ -718,6 +718,8 @@ Passes ARG to `projectile-switch-project-by-name'."
   ;; disable during Org capture
   (add-to-list 'ido-cr+-function-blacklist
                "^org-capture")
+  (add-to-list 'ido-cr+-function-blacklist
+               'org-refile)
 
   ;; disable while saving an attachment -- this doesn't actually work
   ;; atm
