@@ -1,0 +1,9 @@
+#!/bin/sh
+
+for d in $HOME/.mozilla/firefox/*.default; do
+    (
+        cd $d
+        mkdir -p chrome
+        cp -f ~/src/dotfiles/lib/userChrome.css chrome/
+    )
+done
