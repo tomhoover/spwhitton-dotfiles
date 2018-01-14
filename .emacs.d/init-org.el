@@ -91,9 +91,8 @@
 
  org-tag-alist '((:startgroup)
                  ("@Tucson"       . ?T)
-                 ("@campus"       . ?C)
                  ("@Sheffield"    . ?S)
-                 ("@CClubRd"      . ?H)
+                 ("@LaAldea"      . ?H)
                  (:endgroup)
                  ("@iPad"         . ?I)
                  (:startgroup)
