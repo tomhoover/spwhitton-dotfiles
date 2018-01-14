@@ -95,10 +95,10 @@
                  ("@LaAldea"      . ?H)
                  (:endgroup)
                  ("@iPad"         . ?I)
-                 (:startgroup)
-                 ("@Emacs"        . ?E) ; SSH Emacs only
-                 ("@workstation"  . ?M) ; on my fully set-up personal (m)achine
-                 (:endgroup)
+                 ;; (:startgroup)
+                 ;; ("@Emacs"        . ?E) ; SSH Emacs only
+                 ;; ("@workstation"  . ?M) ; on my fully set-up personal (m)achine
+                 ;; (:endgroup)
                  ("UA"            . ?W) ; academic work
                  ("Debian"        . ?D))
 
