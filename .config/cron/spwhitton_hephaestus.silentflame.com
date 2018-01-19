@@ -2,6 +2,6 @@ PATH=$HOME/local/bin:$HOME/.local/bin:$HOME/bin:/usr/local/bin:/usr/bin:/bin:/us
 MAILTO=spwhitton@spwhitton.name
 
 */15 * * * * chronic doccheckin
-*/30 * * * * chronic mbsync fastmail
+*/30 * * * * chronic nice ionice -c 3 notmuch new
 
-@reboot rt
+#@reboot rt
