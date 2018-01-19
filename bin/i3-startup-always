@@ -38,6 +38,9 @@ fi
 # doing otherwise requires resizing the image file, setting the root
 # window and restarting i3lock every time an external monitor is
 # plugged or unplugged
+#
+# For images that look bad stretched, to get black borders: convert foo.jpg -resize 1920x1080 -background black -gravity center -extent 1920x1080 ~/local/wallpaper.png
+
 
 xset dpms 600
 if [ -e "$HOME/local/wallpaper.png" ]; then
