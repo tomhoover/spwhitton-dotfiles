@@ -1,0 +1,11 @@
+#!/bin/sh
+
+cat ~/tmp/unused | while read line; do
+    num=$(echo $line | cut -d\  -f1)
+    file=$(echo $line | cut -d\  -f2)
+
+    echo "===================================================="
+    echo "           FILE $num"
+    echo "===================================================="
+    git -c diff.renameLimit=3000 log --stat -S"$file"
+done
