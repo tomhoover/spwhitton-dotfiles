@@ -80,7 +80,7 @@
 ;; custom doesn't actually set all the faces it should, so we'll do
 ;; some manually
 ;;(set-face-foreground 'org-hide "#3f3f3f")
-(ignore-errors (set-face-font 'org-hide "Terminus-11"))
+;; (ignore-errors (set-face-font 'org-hide "Terminus-11"))
 
 (setq
  org-alphabetical-lists t
