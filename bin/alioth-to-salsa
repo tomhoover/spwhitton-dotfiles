@@ -1,6 +1,7 @@
 #!/bin/sh
 
 # original: http://www.df7cb.de/blog/2017/Salsa_batch_import.html
+# example usage: alioth-to-salsa deft.git pkg-emacsen/pkg emacsen-team
 
 set -eux
 
