@@ -1,0 +1,20 @@
+#!/bin/sh
+
+# original: http://www.df7cb.de/blog/2017/Salsa_batch_import.html
+
+set -eux
+
+
+PROJECT="${1%.git}"
+DESCRIPTION="$PROJECT packaging"
+ALIOTH_URL="https://anonscm.debian.org/git"
+ALIOTH_GROUP="$2"
+SALSA_GROUP="$3"
+SALSA_URL="https://salsa.debian.org/api/v4"
+SALSA_TOKEN=`cat ~/local/auth/salsa`
+SALSA_NAMESPACE=$(curl $SALSA_URL/groups?private_token=$SALSA_TOKEN | jq ".[] | select(.path == \"$SALSA_GROUP\") | .id")
+
+curl -f "$SALSA_URL/projects?private_token=$SALSA_TOKEN" \
+  --data "path=$PROJECT&namespace_id=$SALSA_NAMESPACE&description=$DESCRIPTION&import_url=$ALIOTH_URL/$ALIOTH_GROUP/$PROJECT&visibility=public"
+
+ssh alioth "~hertzog/bin/disable-repository /git/$ALIOTH_GROUP/$1 $SALSA_GROUP"
