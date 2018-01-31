@@ -188,7 +188,6 @@ the best N of them, e.g., 4d6k3."
           (skip-chars-forward " ")
           (when (looking-at "[0-9]+")
             (let ((max-hp (string-to-int (match-string 0))))
-              (message "max-hp is %d; total-damage is %d" max-hp total-damage)
               (if (>= total-damage max-hp)
                   (progn
                     (org-table-goto-column 2)
