@@ -197,9 +197,10 @@ the best N of them, e.g., 4d6k3."
                 (when (>= total-damage (/ max-hp 2))
                   (org-table-goto-column 7)
                   (org-table-end-of-current-cell-content)
-                  (unless (looking-back "|")
-                    (insert "; "))
-                  (insert "bloodied"))))))))
+                  (unless (looking-back "bloodied")
+                    (unless (looking-back "|")
+                      (insert "; "))
+                    (insert "bloodied")))))))))
     (org-table-align)))
 
 (defun org-table-end-of-current-cell-content ()
