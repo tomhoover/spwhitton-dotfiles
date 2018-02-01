@@ -169,3 +169,11 @@
 %% ---- Style inline quotations
 
 \expandafter\def\expandafter\quote\expandafter{\quote\onehalfspacing\smaller[0.5]}
+
+%% ---- Lists
+
+%% Try to bring item separation in line with line spacing
+
+\let\tempone\enumerate
+\let\temptwo\endenumerate
+\renewenvironment{enumerate}{\tempone\addtolength{\itemsep}{0.5\baselineskip}}{\temptwo}
