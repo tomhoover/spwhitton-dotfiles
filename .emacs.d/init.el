@@ -1076,10 +1076,12 @@ Passes ARG to `projectile-switch-project-by-name'."
             ;;        :query "tag:flagged" )
             (:name "sent" :key "s" :search-type nil :sort-order newest-first
                    :query "from:spwhitton@spwhitton.name or from:spwhitton@email.arizona.edu")
-            ;; (:name "drafts" :key "d" :search-type tree
-            ;;        :query "tag:draft")
-            ;; (:name "all mail" :key "a" :search-type tree
-            ;;        :query "*")
+            (:name "drafts" :key "D" :search-type nil :sort-order newest-first
+                   :query "tag:draft")
+            (:name "all unread" :key "U" :search-type nil :sort-order oldest-first
+                   :query "tag:unread")
+            (:name "all mail" :key "a" :search-type nil :sort-order newest-first
+                   :query "*")
             )))
 
   (defun spw--notmuch-import-gpg ()
