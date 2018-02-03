@@ -167,6 +167,11 @@
       ("Zahrat" . 0)
       ("Anca" . 1)
       ("Anduin" . 1)
+      ("Vito" . 2))
+     (spwd20-party
+      ("Zahrat" . 0)
+      ("Anca" . 1)
+      ("Anduin" . 1)
       ("Donna" . 0))
      (variable-pitch-mode . t)
      (spwd20-party
