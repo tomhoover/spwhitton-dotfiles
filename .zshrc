@@ -193,7 +193,7 @@ alias worldservice="mpc_play_stream http://bbcwssc.ic.llnwd.net/stream/bbcwssc_m
 
 # Manipulate Policy bugs.  (from Russ Allbery)
 bts-policy () {
-    bts user debian-policy@packages.debian.org , package debian-policy , "$@"
+    bts user debian-policy@packages.debian.org , source debian-policy , "$@"
 }
 
 dgit-view () {
