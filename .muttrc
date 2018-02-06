@@ -100,7 +100,8 @@ set pgp_replysignencrypted = yes
 set pgp_replyencrypt = yes
 set pgp_timeout = 120
 set fcc_clear = no
-set pgp_encrypt_self = yes
+# apparently unknown variable
+#set pgp_encrypt_self = yes
 set pgp_use_gpg_agent = yes
 #set pgp_strict_enc
 
