@@ -10,7 +10,7 @@ fi
 # if using notmuch on this machine, sync its database to maildir
 if [ -f "~/.fmail/.notmuch/xapian/iamglass" ]; then
     # ensure all drafts are in the drafts folder
-    floating_drafts=$(notmuch search --output=files -- tag:draft and not folder:drafts)
+    floating_drafts=$(notmuch search --output=files -- tag:draft and not folder:drafts and not tag:deleted)
     if [ ! -z "$floating_drafts" ]; then
         chronic mdmv $floating_drafts $HOME/.fmail/drafts
     fi
