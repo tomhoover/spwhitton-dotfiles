@@ -78,6 +78,7 @@
      insteadOf = salsa:
 [url "git@salsa.debian.org:"]
      pushInsteadOf = salsa:
+     pushInsteadOf = https://salsa.debian.org/
 
 # temporary redirects
 [url "git@spwhitton.name:dotfiles.git"]
