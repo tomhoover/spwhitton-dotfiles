@@ -17,6 +17,7 @@ no warnings "experimental::smartmatch";
 
 use Dpkg::Version;
 use Term::UI;
+use File::Which;
 use ShellSequence;
 use ScriptStatus;
 use File::Grep "fgrep";
@@ -306,7 +307,7 @@ $seq->add_should_succeed("sudo apt-get dist-upgrade");
 $seq->add_should_succeed("sudo apt-get -y autoremove");
 $seq->add_should_succeed("sudo apt-get autoclean");
 
-$seq->add_should_zero("mailq | grep -v 'Mail queue is empty'");
+which 'mailq' and $seq->add_should_zero("mailq | grep -v 'Mail queue is empty'");
 $seq->run();
 
 # ---- subroutines
