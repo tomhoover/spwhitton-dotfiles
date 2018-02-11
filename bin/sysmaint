@@ -43,13 +43,13 @@ use File::chdir;
 use Capture::Tiny qw/capture_merged capture/;
 use List::MoreUtils "apply";
 use File::Spec::Functions "rel2abs";
-use Sys::Hostname;
+use Switch;
 
 # ---- globals
 
 my $seq = ShellSequence->new();
 my $term = Term::ReadLine->new('brand');
-my $host = hostname;
+my $host = `hostname -f`;
 
 # ---- config
 
@@ -70,6 +70,29 @@ our $gcrypt = "/srv/gcrypt";
 # because I do not want this script to run `git annex init` in lots of
 # repos, creating bogus UUIDs
 my @annexes = qw/annex.git wikiannex.git dionysus.git/;
+
+# hosts configuration
+#
+# This config is meant to set the contents of three variables, the
+# default values and meanings of which are:
+#
+# - $can_sudo = 0;            whether we can become root using sudo(1) on this host
+# - $can_push = 1;            whether we can push any of our git repos in $HOME to
+#                             their origin remotes (if can push some, set to '1'
+#                             and use .mrconfig to avoid trying to push the others)
+# - $check_for_extdrive = 0;  whether we should expect to have an
+#                             external drive plugged in and referenced on the
+#                             command line
+
+our $can_sudo = 0;
+our $can_push = 1;
+our $check_for_extdrive = 0;
+switch ("$ENV{USER}\@$host") {
+    case /^develacc@/            { $can_push = 0; last }
+    case /\.silentflame\.com$/   { $can_sudo = 1; next }
+    case /iris\.silentflame\.com$/ { $check_for_extdrive = 1; next }
+    case /zephyr\.silentflame\.com$/ { $check_for_extdrive = 1; next }
+}
 
 # ---- prep
 
@@ -97,7 +120,7 @@ if (@ARGV) {
             exit 1;
         }
     }
-} elsif ($host ne "athena") {
+} elsif ($check_for_extdrive) {
     status "you didn't specify a drive to perform a coldbkup to as a command";
     status "line argument to this script";
     exit unless $term->ask_yn(
@@ -105,10 +128,6 @@ if (@ARGV) {
                               default => 'y',
                              );
 }
-
-# determine if we are going to do maintenance outside of $HOME
-status "establishing sudo authority";
-my $do_local_system_maintenance = (system "sudo --list apt-get") == 0;
 
 # ---- pre-backup cleanup tasks
 
@@ -167,9 +186,7 @@ $seq->add_should_succeed("mr -ms autoci");
 # `mr -ms isclean` checks for stuff to be checked in ...
 $seq->add_should_succeed("mr -ms isclean");
 $seq->add_should_succeed("mr -s up");
-# TODO use `ssh-add -l` instead.  Purpose of this is to avoid pushing
-# in develacc container
-( -e "$ENV{HOME}/.ssh/id_rsa" ) and $seq->add_should_succeed("mr -s push");
+$can_push and $seq->add_should_succeed("mr -s push");
 # ... then `mr -ms status` finds unpushed branches & stashes
 $seq->add_should_zero("mr -ms status");
 
@@ -293,7 +310,7 @@ status "info: you can unmount & eject $loc" if ( defined $loc );
 
 # ---- local system maintenance
 
-exit unless $do_local_system_maintenance;
+exit unless $can_sudo;
 exit unless $term->ask_yn(
                           prompt =>
                           "Backups complete.  Perform local system maintainance?"
