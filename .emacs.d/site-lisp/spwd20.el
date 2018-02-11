@@ -63,6 +63,7 @@
     (define-key map (kbd "S-<f9>") 'spwd20-initiative-add)
     (define-key map (kbd "<f10>") 'spwd20-damage)
     (define-key map (kbd "<f11>") 'spwd20-roll)
+    (define-key map (kbd "S-<f11>") 'spwd20-roll-last)
     (define-key map (kbd "<f12>") 'spwd20-d20)
     map)
   "Keymap for `spwd20-mode'.")
@@ -215,8 +216,15 @@ the best N of them, e.g., 4d6k3."
 Accepts roll20's extension for rolling multiple dice and keeping
 the best N of them, e.g., 4d6k3."
   (interactive "sRoll: ")
+  (setq spwd20-roll--last exp)
   (message "%s = %s" exp (int-to-string (spwd20--roll exp)))
   (play-sound-file spwd20-dice-sound))
+
+(defun spwd20-roll-last ()
+  (interactive)
+  (if (boundp 'spwd20-roll--last)
+      (spwd20-roll spwd20-roll--last)
+    (call-interactively 'spwd20-roll)))
 
 (defun spwd20-d20 ()
   "Roll two d20, showing result with advantage and disadvantage, and with neither."
