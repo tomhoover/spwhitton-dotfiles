@@ -344,6 +344,28 @@ $seq->add_should_succeed("sudo apt-get autoclean");
 which 'mailq' and $seq->add_should_zero("mailq | grep -v 'Mail queue is empty'");
 $seq->run();
 
+$seq->add_should_succeed("dpkg -l | awk '/^rc/ { print \$2 }'");
+$seq->run();
+$term->get_reply(
+                 prompt => "If packages shown, consider `apt-get purge \$(dpkg -l | awk '/^rc/ { print \$2 }')`",
+                 default => 'okay',
+                );
+
+$seq->add_should_succeed("aptitude search ?obsolete");
+$seq->run();
+$term->get_reply(
+                 prompt => "If packages shown, consider removing no longer available from the mirrors: `aptitude purge ?obsolete`",
+                 default => 'okay',
+                );
+
+$seq->add_should_succeed("dpkg-query -W '-f=\${Package}\\n\${Conffiles}\\n' | awk '/^[^ ]/{pkg=\$1}/ obsolete\$/{print pkg,\$0}'");
+$seq->run();
+$term->get_reply(
+                 prompt => "If output, consider deleting these obsolete conffiles and then reinstalling packages providing them.",
+                 default => 'okay',
+                );
+
+
 # ---- subroutines
 
 sub clean_orig_tars {
