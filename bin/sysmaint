@@ -35,8 +35,6 @@ my $host = hostname;
 
 # ---- config
 
-our @src_exceptions = qw/hscripts/;
-
 # where are our git repos?  a host defined in ~/.ssh/config
 our $git_host = "athena";
 
@@ -349,7 +347,6 @@ sub find_dirty_src {
                  || (-l $f && $f =~ /orig\.tar/)
                  # also permit gbp orig tarballs
                  || ($f =~ /orig\.gbp\.tar/)
-                 || $short ~~ @src_exceptions
                  || -d "$f/.git" || -d "$f/.hg" # handled by src-register-all
                ) {
             print "$f\n";
