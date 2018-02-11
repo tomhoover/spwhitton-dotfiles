@@ -1,14 +1,31 @@
 #!/usr/bin/perl
 
-# Sync up repositories, clean up temporary files, offline backups &
-# system maintenance which should not happen unattended
-
-# Notes:
+# This is meant to walk me through maintenance tasks that
+# can't/shouldn't happen unattended by means of Propellor and/or cron
+# jobs installed by Propellor.
 #
-# - if this script dies, it should be possible to run it from the beginning
-# - we assume that each offline backup drive has a unique filesystem
-#   label, and that it is mounted to a directory with name equal to this
-#   label (as udev does by default these days)
+# That includes, at least:
+#
+# - apt upgrades of bare metal hosts (other than automatic security
+#   upgrades)
+#
+# - checking in and backing up homedirs, which I need to do on all
+#   machines, not just those for which I am root
+#
+# - cleaning up temporary files
+#
+# - backups to devices usually kept offline
+#
+# Assumptions we make:
+#
+# - Each offline backup drive I use has a unique filesystem label.
+#   This means that exactly one drive will ever be mounted to
+#   /media/$USER/$foo on a given machine.
+#
+# Other notes:
+#
+# - If this script dies, it should be possible to just run it again
+#   from the beginning.
 
 use strict;
 use warnings;
