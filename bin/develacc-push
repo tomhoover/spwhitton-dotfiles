@@ -13,6 +13,8 @@ my $term = Term::ReadLine->new('brand');
 my $repo = shift @ARGV;
 chdir "/home/spw/src/$repo" or die "repo does not exist";
 system "cat .git/config | grep \"url =\"";
+system "cat .git/config | grep \"insteadOf\"";
+system "cat .git/config | grep \"pushInsteadOf\"";
 exit unless $term->ask_yn(
                               prompt => "Intend to push to these URIs?",
                               default => 'n',
