@@ -65,6 +65,7 @@
     (define-key map (kbd "<f11>") 'spwd20-roll)
     (define-key map (kbd "S-<f11>") 'spwd20-roll-last)
     (define-key map (kbd "<f12>") 'spwd20-d20)
+    (define-key map (kbd "S-<f12>") 'spwd20-d%)
     map)
   "Keymap for `spwd20-mode'.")
 
@@ -242,6 +243,11 @@ the best N of them, e.g., 4d6k3."
     (message "No adv./disadv.:  %s\tAdv.:  %s\tDisadv.:  %s"
              fst* adv disadv))
   (play-sound-file spwd20-dice-sound))
+
+(defun spwd20-d% ()
+  "Roll a percentile dice."
+  (interactive)
+  (spwd20-roll "1d100"))
 
 (defun spwd20-initiative-dwim ()
   "Start a new combat or advance the turn tracker, based on point."
