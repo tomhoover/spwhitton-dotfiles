@@ -19,3 +19,5 @@ curl -f "$SALSA_URL/projects?private_token=$SALSA_TOKEN" \
   --data "path=$PROJECT&namespace_id=$SALSA_NAMESPACE&description=$DESCRIPTION&import_url=$ALIOTH_URL/$ALIOTH_GROUP/$PROJECT&visibility=public"
 
 ssh alioth "~hertzog/bin/disable-repository /git/$ALIOTH_GROUP/$1 $SALSA_GROUP"
+
+git remote set-url origin salsa:$SALSA_GROUP/$PROJECT
