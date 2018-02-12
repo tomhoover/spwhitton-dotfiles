@@ -527,14 +527,14 @@ setopt                   \
 
 # --- compatibility
 
-# allow zenity to be called from cron
+# # allow zenity to be called from cron
 
-# per http://promberger.info/linux/2009/01/02/running-x-apps-like-zenity-from-crontab-solving-cannot-open-display-problem/
-if pgrep Xorg >/dev/null; then
-    xhost local:${USER} > /dev/null 2> /dev/null
-fi
-# per http://superuser.com/questions/111771/using-either-notify-send-or-zenity-in-cron
-echo $DBUS_SESSION_BUS_ADDRESS > ~/.tmp-dbus-addr
+# # per http://promberger.info/linux/2009/01/02/running-x-apps-like-zenity-from-crontab-solving-cannot-open-display-problem/
+# if which pgrep && pgrep Xorg >/dev/null; then
+#     xhost local:${USER} > /dev/null 2> /dev/null
+# fi
+# # per http://superuser.com/questions/111771/using-either-notify-send-or-zenity-in-cron
+# echo $DBUS_SESSION_BUS_ADDRESS > ~/.tmp-dbus-addr
 
 # Make BiBTeX and Org play nice together due to security change in
 # TeXLive 2010.  See
