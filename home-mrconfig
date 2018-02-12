@@ -456,9 +456,11 @@ skip = ! on faeroes             # TODO just check if host is *.sdf.org
 # --- my offline e-mail (& machine's postfix queue)
 
 [$HOME/.fmail]
-sync = notmuch new
-update = notmuch new
+sync = movemail
+update = movemail
 push = movemail
+# TODO post_update, post_sync etc. to run `notmuch new`, while
+# preventing the latter from calling `movemail` again
 
 # Don't do anything if I don't use mbsync on this machine, or I
 # didn't run one of the sync or update commands.
