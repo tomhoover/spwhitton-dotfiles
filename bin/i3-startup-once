@@ -29,12 +29,13 @@ fi
 # ---- startup applications
 
 redshift-gtk &                  # co-ords from config file
-[ "$USER" = "spw" ] || nm-applet &
 caffeine-indicator &
 
-emacs --daemon &
-[ "$USER" = "spw" ] || evolution &
 if ! [ "$USER" = "spw" ]; then
+    nm-applet &
     pgrep mpd || mpd &
+    evolution &
 fi
+
+emacs --daemon &
 firefox &
