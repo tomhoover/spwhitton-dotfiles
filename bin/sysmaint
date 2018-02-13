@@ -99,8 +99,11 @@ switch ("$ENV{USER}\@$host") {
 chdir $ENV{HOME};
 my ($loc, $drive_name, $short_drive_name);
 
-if (@ARGV) {
-    $loc = rel2abs(shift @ARGV);
+my @ARGV_positional = grep { $_ !~ m/^--/ } @ARGV;
+my @ARGV_options = grep { $_ =~ m/^--/ } @ARGV;
+
+if (@ARGV_positional) {
+    $loc = rel2abs(shift @ARGV_positional);
     $drive_name = $loc;
     $short_drive_name = basename $drive_name;
 
@@ -128,6 +131,11 @@ if (@ARGV) {
                               default => 'y',
                              );
 }
+
+User:
+
+goto System if ("--skip-user" ~~ @ARGV_options
+                || "--only-system" ~~ @ARGV_options);
 
 # ---- pre-backup cleanup tasks
 
@@ -313,11 +321,16 @@ status "info: you can unmount & eject $loc" if ( defined $loc );
 
 # ---- local system maintenance
 
-exit unless $can_sudo;
 exit unless $term->ask_yn(
                           prompt =>
                           "Backups complete.  Perform local system maintainance?"
                          );
+
+System:
+
+exit unless $can_sudo;
+exit if ("--skip-system" ~~ @ARGV_options);
+exit if ("--only-user" ~~ @ARGV_options);
 
 $seq->add_should_succeed("df -h");
 $seq->run();
@@ -367,7 +380,6 @@ $term->get_reply(
                  prompt => "If output, consider deleting these obsolete conffiles and then reinstalling packages providing them.",
                  default => 'okay',
                 );
-
 
 # ---- subroutines
 
