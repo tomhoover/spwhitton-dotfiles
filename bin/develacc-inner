@@ -1,0 +1,33 @@
+#!/usr/bin/perl
+
+# Config
+
+my $machine = "develacc";
+my $user = "spw";
+
+# Code, based on enter-foo script from Propellor's systemd-nspawn
+# support
+
+# default command: calling user's login shell
+push @ARGV, $ENV{'SHELL'} unless (@ARGV);
+
+# get args
+my $pid=`machinectl show $machine -p Leader | cut -d= -f2`;
+chomp $pid;
+my $home=`echo ~$user`;
+chomp $home;
+my $uid=`stat --printf="%u" $home`;
+chomp $uid;
+my $gid=`stat --printf="%g" $home`;
+chomp $gid;
+
+# nsenter time
+if (length $pid) {
+    foreach my $var (keys %ENV) {
+        delete $ENV{$var} unless $var eq 'PATH' || $var eq 'TERM';
+    }
+    exec('nsenter', '-S', $uid, '-G', $gid, "--wd=$home", '-p', '-u', '-n', '-i', '-m', '-t', $pid, @ARGV);
+} else {
+    die 'container not running';
+}
+exit(1);
