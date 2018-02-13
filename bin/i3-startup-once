@@ -20,7 +20,7 @@ xfce4-power-manager &
 
 # ---- input methods
 
-if ! [ "$USER" = "spw" ];
+if ! [ "$USER" = "spw" ]; then
    # work around Debian bug #812826
    pkill -u $USER ibus-daemon
    IBUS_ENABLE_SYNC_MODE=0 ibus-daemon --xim --daemonize
