@@ -101,6 +101,17 @@ alias dinstall="curl https://ftp-master.debian.org/dinstall.status;echo -n 'Now:
 alias disable-propellor="sudo rm /etc/cron.d/propellor"
 alias ls="ls --literal"
 
+# copy files into persistent part of develacc chroot, ensuring that we
+# don't give spw write access to packages
+copy-to-develacc () {
+    sudo cp -RL "$@" /home/spw/tmp/
+    for f in /home/spw/tmp/*; do
+        if ! [ "${f##*.}" = "deb" ]; then
+            sudo chown spw:spw "$f"
+        fi
+    done
+}
+
 # This alias is more reliable than calling `server-start' in my Emacs
 # init file.  Previously, I was seeing Emacs fail to start with "Error
 # reading from stdin."  See <http://emacs.stackexchange.com/a/12789>
