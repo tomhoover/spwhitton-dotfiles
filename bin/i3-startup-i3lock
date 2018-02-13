@@ -1,0 +1,32 @@
+#!/bin/sh
+
+. $HOME/.shenv
+
+# i3 screen locking setup
+
+# If this machine is always plugged into the same monitor, I can set a
+# wallpaper, like this:
+#
+#     convert ~/lib/annex/doc/img/wallpaper/foo -resize 1366x768\! \
+#         ~/local/wallpaper.png
+#
+# If this machine's monitor setup changes, we just use a solid colour
+# (otherwise we have to keep restarting i3lock).
+
+# kill any other lockers that might have snuck in
+pkill -u $USER light-locker
+pkill -u $USER xscreensaver
+
+# turn over lid switch handling to logind, if needed
+if which xfconf-query; then
+    xfconf-query -c xfce4-power-manager -n \
+                 -p /xfce4-power-manager/logind-handle-lid-switch \
+                 -t bool -s true
+fi
+
+# ... and then hook i3lock into logind
+if [ -e "$HOME/local/wallpaper.png" ]; then
+    xss-lock -- i3lock -i $HOME/local/wallpaper.png &
+else
+    xss-lock -- i3lock -c 3f3f3f -n &
+fi

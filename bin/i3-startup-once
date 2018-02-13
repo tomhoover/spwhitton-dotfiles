@@ -4,30 +4,11 @@
 
 # ---- screen locking
 
-# if this machine is always plugged into the same monitor, may
-# `convert ~/lib/annex/doc/img/wallpaper/foo -resize 1366x768\!
-# ~/local/wallpaper.png`.  Otherwise, stick to a solid colour, because
-# doing otherwise requires resizing the image file, setting the root
-# window and restarting i3lock every time an external monitor is
-# plugged or unplugged
+# spw means logged into develacc session, which does not have access
+# to the logind session, so cannot start a screen locker.  Instead,
+# /usr/local/bin/develacc-xsession starts the locker
 
-# kill any other lockers that might have snuck in
-pkill -u $USER light-locker
-pkill -u $USER xscreensaver
-
-# turn over lid switch handling to logind, if needed
-if which xfconf-query; then
-    xfconf-query -c xfce4-power-manager -n \
-                 -p /xfce4-power-manager/logind-handle-lid-switch \
-                 -t bool -s true
-fi
-
-# ... and then hook i3lock into logind
-if [ -e "$HOME/local/wallpaper.png" ]; then
-    xss-lock -- i3lock -i $HOME/local/wallpaper.png &
-else
-    xss-lock -- i3lock -c 3f3f3f -n &
-fi
+[ "$USER" = "spw" ] || i3-startup-i3lock
 
 # ---- GTK
 
@@ -39,17 +20,21 @@ xfce4-power-manager &
 
 # ---- input methods
 
-# work around Debian bug #812826
-pkill -u $USER ibus-daemon
-IBUS_ENABLE_SYNC_MODE=0 ibus-daemon --xim --daemonize
+if ! [ "$USER" = "spw" ];
+   # work around Debian bug #812826
+   pkill -u $USER ibus-daemon
+   IBUS_ENABLE_SYNC_MODE=0 ibus-daemon --xim --daemonize
+fi
 
 # ---- startup applications
 
 redshift-gtk &                  # co-ords from config file
-nm-applet &
+[ "$USER" = "spw" ] || nm-applet &
 caffeine-indicator &
 
 emacs --daemon &
-evolution &
-pgrep mpd || mpd &
+[ "$USER" = "spw" ] || evolution &
+if ! [ "$USER" = "spw" ]; then
+    pgrep mpd || mpd &
+fi
 firefox &
