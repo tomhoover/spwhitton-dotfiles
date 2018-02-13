@@ -138,15 +138,6 @@ lib =
 checkout = git clone https://git.spwhitton.name/dotfiles.git dotfiles
 stowable = true
 
-update =
-    # always make a go of updating master
-    branch="$(git rev-parse --abbrev-ref HEAD)"
-    git checkout master
-    git pull --ff-only
-    git checkout $branch
-push =
-    # always make a go of pushing master
-    git push origin master
 rebase =
     # usual rebasing pattern.  Per dotfiles repo policy (excluding
     # win32 case), the branch being rebased will always be rebaseable
@@ -154,11 +145,7 @@ rebase =
     # host
     branch="$(git rev-parse --abbrev-ref HEAD)"
     hostname="$(hostname -s)"
-    if [ "$branch" = "win32" -o "$branch" = "$(hostname -s)" ]; then
-        git rebase master
-    # fallback case: if we're on another branch but a host branch exists
-    elif git branch | grep -q "^  $hostname$"; then
-        git checkout $hostname
+    if [ "$branch" = "win32" -o "$branch" = "$hostname" -o "$branch" = "develacc-$hostname" ]; then
         git rebase master
     fi
 
