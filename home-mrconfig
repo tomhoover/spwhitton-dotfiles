@@ -139,7 +139,7 @@ checkout = git clone https://git.spwhitton.name/dotfiles.git dotfiles
 stowable = true
 # `git pull-safe` will often fail because host-specific branch needs
 # to be force-pushed.  So just try updating master
-up = git remote update && git merge-ff master
+update = git remote update && git merge-ff master
 
 rebase =
     # usual rebasing pattern.  Per dotfiles repo policy (excluding
