@@ -302,6 +302,7 @@ if ( defined $loc ) {
     backup_repo("https://salsa.debian.org/emacsen-team/helm", "salsa");
     backup_repo("https://salsa.debian.org/emacsen-team/epl", "salsa");
     backup_repo("https://salsa.debian.org/emacsen-team/deft", "salsa");
+    backup_repo("https://salsa.debian.org/emacsen-team/ebib", "salsa");
 
     backup_repo("https://anonscm.debian.org/git/pkg-mozext/classic-theme-restorer.git", "alioth");
     backup_repo("https://anonscm.debian.org/git/pkg-mozext/keysnail.git", "alioth");
