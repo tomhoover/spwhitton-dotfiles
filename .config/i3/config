@@ -213,7 +213,7 @@ bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle
 
 # workspace 10, the only workspace with a defined function, is for
 # - things I always have open like my web browser
-# - long-running processes like a big package build
+# - long-running processes like a big package build (TODO actually I have been using workspace 9 for this)
 #
 # It uses the tabbed layout, but when I want to access programs I
 # always have open such as my web browser, I use shortcut keys that go
