@@ -219,7 +219,8 @@ the best N of them, e.g., 4d6k3."
   (interactive "sRoll: ")
   (setq spwd20-roll--last exp)
   (message "%s = %s" exp (int-to-string (spwd20--roll exp)))
-  (play-sound-file spwd20-dice-sound))
+  (when spwd20-dice-sound
+    (play-sound-file spwd20-dice-sound)))
 
 (defun spwd20-roll-last ()
   (interactive)
@@ -242,7 +243,8 @@ the best N of them, e.g., 4d6k3."
                    (concat fst* "  " (propertize snd* 'face 'bold)))))
     (message "No adv./disadv.:  %s\tAdv.:  %s\tDisadv.:  %s"
              fst* adv disadv))
-  (play-sound-file spwd20-dice-sound))
+  (when spwd20-dice-sound
+    (play-sound-file spwd20-dice-sound)))
 
 (defun spwd20-d% ()
   "Roll a percentile dice."
