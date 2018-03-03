@@ -10,6 +10,12 @@
 #     convert ~/lib/annex/doc/img/wallpaper/foo -resize 1366x768\! \
 #         ~/local/wallpaper.png
 #
+# or
+#
+#     convert ~/lib/annex/doc/img/wallpaper/foo -resize 1366x768 \
+#         -background black -gravity center -extent 1366x768 \
+#         ~/local/wallpaper.png
+#
 # If this machine's monitor setup changes, we just use a solid colour
 # (otherwise we have to keep restarting i3lock).
 
