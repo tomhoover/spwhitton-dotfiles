@@ -303,6 +303,7 @@ if ( defined $loc ) {
     backup_repo("https://salsa.debian.org/emacsen-team/epl", "salsa");
     backup_repo("https://salsa.debian.org/emacsen-team/deft", "salsa");
     backup_repo("https://salsa.debian.org/emacsen-team/ebib", "salsa");
+    backup_repo("https://salsa.debian.org/emacsen-team/dh-make-elpa", "salsa");
 
     backup_repo("https://salsa.debian.org/haskell-team/git-annex", "salsa");
 
