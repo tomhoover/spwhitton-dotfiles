@@ -127,6 +127,13 @@ export BROWSER
 TERMCMD="urxvt"
 export TERMCMD
 
+# "Setting the monitor port to 0 turns the monitoring function off,
+# and autossh will only restart ssh upon ssh's exit."
+#
+# We rely on ServerAliveInterval and ServerAliveCountMax set in ~/.ssh/config
+AUTOSSH_PORT=0
+export AUTOSSH_PORT
+
 # ---- set pager
 
 lessf=$(which less)

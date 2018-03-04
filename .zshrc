@@ -68,7 +68,7 @@ alias mrs="mr -m status"
 alias screen="screen -U" # enable UTF-8
 alias tmux="tmux"
 alias rax="screen -URaAx"
-alias ta="tmux attach"
+alias ta="tmux attach-session"
 
 alias blogdates="rdate.py-dir ~/html/blog/entries"
 alias httpdir="sudo python -m SimpleHTTPServer 80"
@@ -110,6 +110,12 @@ copy-to-develacc () {
             sudo chown spw:spw "$f"
         fi
     done
+}
+
+# idea from
+# https://coderwall.com/p/aohfrg/smux-ssh-with-auto-reconnect-tmux-a-mosh-replacement
+smux () {
+    autossh -M 0 -t "$@" "tmux attach-session"
 }
 
 # This alias is more reliable than calling `server-start' in my Emacs
