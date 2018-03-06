@@ -163,7 +163,8 @@
              (projectile-project-name)))))
  '(safe-local-variable-values
    (quote
-    ((spwd20-party
+    ((eval spw--set-pandoc-compile-command)
+     (spwd20-party
       ("Zahrat" . 0)
       ("Anca" . 1)
       ("Anduin" . 1)
