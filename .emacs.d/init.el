@@ -458,32 +458,10 @@ https://github.com/company-mode/company-mode/issues/94#issuecomment-40884387"
   (add-hook 'markdown-mode-hook 'wc-mode)
 
   :config
-  (defun spw--pandoc-compile (arg)
-    (interactive "P")
-    (cond
-     ((string= default-directory (expand-file-name "~/doc/papers/"))
-      (spw--pandoc-paper-compile arg))
-     ((string= default-directory (expand-file-name "~/doc/pres/"))
-      (spw--pandoc-presentation-compile))))
-  (defun spw--pandoc-paper-compile (arg)
-    "Compile a paper to PDF with pandoc into ~/tmp.
-
-If ARG, put into my annex instead.
-
-Lightweight alternative to both pandoc-mode and ox-pandoc.el.
-
-Generates calls to pandoc that look like this: pandoc -s --filter pandoc-citeproc --bibliography=$HOME/doc/spw.bib --filter pandoc-citeproc-preamble --template pessay -V documentclass=pessay input.[md|org] -o output.pdf"
-    (interactive "P")
-    (when (and (string= default-directory (expand-file-name "~/doc/papers/"))
-               (or (eq major-mode 'markdown-mode)
-                   (eq major-mode 'org-mode)))
-      (let ((output-file (f-filename (f-swap-ext (buffer-file-name) "pdf"))))
-        (compile (concat "make " output-file
-                         ;; We can easily reload the file in evince, and
-                         ;; the .view target means that Emacs thinks
-                         ;; compilation isn't finished until evince quits.
-                         ;; (if window-system ".view" "")
-                         )))))
+  (defun spw--set-pandoc-compile-command ()
+    (setq-local compile-command
+                (concat "make " (f-filename (f-swap-ext (buffer-file-name) "pdf"))))
+    (local-set-key (kbd "<f9>") 'recompile))
   ;; TODO use a Makefile for this too
   ;; That turns out to be hard because GNU Makefiles are hopeless for
   ;; filenames containing spaces -- like all my presentations
@@ -515,9 +493,7 @@ Generates calls to pandoc that look like this: TODO"
          (shell-quote-argument (buffer-file-name))
          "-o" (shell-quote-argument html-output-file))
 
-        )))
-  ;; This binding replaces use of `markdown-export'.
-  (bind-key "<f9>" 'spw--pandoc-compile markdown-mode-map))
+        ))))
 
 ;;; TRAMP
 
