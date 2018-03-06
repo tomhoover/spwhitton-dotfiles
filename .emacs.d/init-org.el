@@ -806,6 +806,7 @@ Ignore SOMEDAYs as might have those in old notes but not important to include th
              '("wordlike"
                "\\documentclass[12pt,a4paper]{article}
                   \\usepackage{wordlike}
+\\usepackage{parskip}
 \\usepackage{fancyhdr}
 \\pagestyle{fancy}
 
