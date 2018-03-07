@@ -15,18 +15,6 @@ mkdir -p "$HOME/local/src" "$HOME/local/bin"
 STOWURL="http://ftp.gnu.org/gnu/stow/stow-2.2.0.tar.gz"
 STOWSHA256SUM="8b89d79939cf9ae87d2f223bb36a3b2d0c66775b62aeb9953c6d33dab40d3c2b  stow-2.2.0.tar.gz"
 
-# ---- Handle special case hosts
-
-# On athena, clone URLs are different as they come from /srv/git (and
-# pushInsteadOf won't work because that can't append the required
-# `.git').  So we must change to the athena branch now in order to get
-# a fixed .mrconfig.
-if [ "$(hostname -f)" = "athena.silentflame.com" ]; then
-    cd $HOME/src/dotfiles
-    git checkout athena
-    cd $HOME
-fi
-
 # ---- Ensure we have both mr(1) and stow(1) in our PATH
 
 if ! which stow >/dev/null; then

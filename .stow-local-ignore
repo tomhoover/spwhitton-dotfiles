@@ -1,6 +1,7 @@
 AppData
 home-mrconfig
 README
+bin/archive
 \.stow-global-ignore
 
 \.git
