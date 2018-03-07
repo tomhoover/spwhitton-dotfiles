@@ -31,8 +31,4 @@ if which xfconf-query; then
 fi
 
 # ... and then hook i3lock into logind
-if [ -e "$HOME/local/wallpaper.png" ]; then
-    xss-lock -- i3lock -i $HOME/local/wallpaper.png &
-else
-    xss-lock -- i3lock -c 3f3f3f -n &
-fi
+xss-lock -- i3-startup-i3lock-inner &
