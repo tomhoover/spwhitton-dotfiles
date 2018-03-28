@@ -1847,11 +1847,13 @@ mutt's review view after exiting EDITOR."
         ;; ensure there is a newline before the signature dashes
         (unless (bolp)
           (insert "\n"))
-        (undo-boundary)
-        (save-restriction
-          (narrow-to-region body (point))
-          (message-fill-yanked-message))
-        (message "Hit undo if the quoted message was too aggressively wrapped"))))
+        ;; I end up undoing this too often; let's try relying on C-c C-q instead
+        ;; (undo-boundary)
+        ;; (save-restriction
+        ;;   (narrow-to-region body (point))
+        ;;   (message-fill-yanked-message))
+        ;; (message "Hit undo if the quoted message was too aggressively wrapped")
+        )))
   ;; I do not need a key to insert the Newsgroups: header
   (bind-key "C-c C-n" 'spw--normalise-message message-mode-map)
 
