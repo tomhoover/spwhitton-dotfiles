@@ -25,6 +25,15 @@ fi
 #     fi
 # fi
 
+# TODO more robust way to find develacc -- perhaps drop a flagfile
+# /etc/in-develacc
+# TODO add to enter-develacc-i3 too?  needed?
+if [ "$(whoami)" = "spw" \
+                 -a "$(systemd-detect-virt)" = "systemd-nspawn" \
+                 -a "$(hostname -d)" = "silentflame.com" ]; then
+    umask 002
+fi
+
 # --- terminals
 
 # From dev.gentoo.org/~ciaranm/configs/bashrc
