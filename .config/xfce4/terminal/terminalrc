@@ -33,3 +33,6 @@ FontName=Terminus 12
 ShortcutsNoMnemonics=TRUE
 ShortcutsNoMenukey=TRUE
 ShortcutsNoHelpkey=TRUE
+ScrollingOnOutput=FALSE
+ScrollingLines=10000
+
