@@ -21,8 +21,7 @@ else
     if [[ $- == *i* ]]; then
         mosh athena /home/spwhitton/bin/ii
     else
-        # urgentOnBell not working right now
-        urxvt -title "irssi" ++urgentOnBell -e /bin/sh \
+        xfce4-terminal --title="irssi" -e /bin/sh \
               -c "mosh athena /home/spwhitton/bin/ii"
     fi
 fi

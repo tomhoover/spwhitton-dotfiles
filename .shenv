@@ -124,8 +124,10 @@ LD_LIBRARY_PATH="$HOME/local/lib/"
 export LD_LIBRARY_PATH
 BROWSER="firefox"
 export BROWSER
-TERMCMD="urxvt"
+TERMCMD="xfce4-terminal"
 export TERMCMD
+TERMINAL="xfce4-terminal"
+export TERMINAL
 
 # "Setting the monitor port to 0 turns the monitoring function off,
 # and autossh will only restart ssh upon ssh's exit."

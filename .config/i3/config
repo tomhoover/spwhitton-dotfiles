@@ -23,7 +23,7 @@ font pango:monospace 8
 floating_modifier $mod
 
 # start a terminal
-bindsym $mod+Return exec urxvt
+bindsym $mod+Return exec xfce4-terminal
 
 # start an Emacs frame
 bindsym $mod+Shift+Return exec emacsclient -c -a '' -n -e '(switch-to-buffer nil)'
@@ -179,10 +179,10 @@ mode "$mode_launch" {
         bindsym x exec arandr , mode "default"
 
         # launch mpd client
-        bindsym m exec urxvt -e ncmpcpp , mode "default"
+        bindsym m exec xfce4-terminal -e ncmpcpp , mode "default"
 
         # connect to athena's irssi
-        bindsym i exec urxvt -title "irssi" ++urgentOnBell -e /bin/sh -c "mosh athena /home/spwhitton/bin/ii" , mode "default"
+        bindsym i exec xfce4-terminal --title="irssi" -e /bin/sh -c "mosh athena /home/spwhitton/bin/ii" , mode "default"
 
         bindsym Ctrl+g mode "default"
 }
@@ -220,11 +220,11 @@ bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle
 # straight to that program.  To access other windows that I've dumped
 # there, I go to the tenth workspace as usual.
 
-assign [class="^URxvt$" title="^irssi$"] 10
+assign [class="^Xfce4-terminal$" title="^irssi$"] 10
 assign [class="Firefox"] 10
 assign [class="Evolution"] 10
 
-bindsym $mod+n [class="^URxvt$" title="^irssi$"] focus
+bindsym $mod+n [class="^Xfce4-terminal$" title="^irssi$"] focus
 bindsym $mod+j [class="Firefox"] focus
 bindsym $mod+k [class="Evolution"] focus
 

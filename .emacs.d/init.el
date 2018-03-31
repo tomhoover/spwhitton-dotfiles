@@ -1414,9 +1414,10 @@ Originally from <http://blog.gleitzman.com/post/35416335505/hunting-for-unicode-
 (defun spw--open-term-here ()
   "Open a fresh urxvt terminal in current directory."
   (interactive)
-  (call-process "urxvtcd" nil 0 nil
-                "-cd" (expand-file-name  default-directory)
-                "-e"  "/bin/zsh"))
+  (call-process "xfce4-terminal" nil 0 nil
+                (concat "--working-directory="
+                        (expand-file-name  default-directory))
+                "-e"  "/bin/bash"))
 (bind-key "C-c g g" 'spw--open-term-here)
 
 ;;; Make `C-x z' repeat zap-up-to-char without requiring typing the
