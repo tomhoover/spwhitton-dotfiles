@@ -28,8 +28,9 @@ HISTCONTROL=ignorespace:ignoredups
 # make less more friendly for non-text input files; see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(lesspipe)"
 
-# let spwhitton read and write spw's files created in develacc
-# TODO need to set umask in enter-develacc-i3 too?
+# let spwhitton read and write spw's files created in develacc.
+# Note that this is even sufficient for processes started by i3 to
+# have the right umask, afaict
 if in-develacc; then
     umask 002
 fi
