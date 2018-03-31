@@ -1,8 +1,8 @@
 [Configuration]
-ColorBackground=#404040
-ColorForeground=#F6F3E8
+ColorBackground=#3f3f3f
+ColorForeground=#dcdccc
 ColorCursor=#8f8fafaf9f9f
-ColorPalette=#3f3f3f3f3f3f;#e8e893939393;#9e9ecece9e9e;#f0f0dfdfafaf;#8c8cd0d0d3d3;#c0c0bebed1d1;#dfdfafaf8f8f;#efefefefefef;#3f3f3f3f3f3f;#e8e893939393;#9e9ecece9e9e;#f0f0dfdfafaf;#8c8cd0d0d3d3;#c0c0bebed1d1;#dfdfafaf8f8f;#efefefefefef
+ColorPalette=#1E2320;#705050;#60b48a;#dfaf8f;#506070;#dc8cc3;#8cd0d3;#dcdccc;#709080;#dca3a3;#c3bf9f;#f0dfaf;#94bff3;#ec93d3;#93e0e3;#ffffff
 MiscAlwaysShowTabs=FALSE
 MiscBell=FALSE
 MiscBellUrgent=FALSE
