@@ -42,3 +42,8 @@ alias grep="grep --colour=auto"
 alias g="git"
 alias ga="git annex"
 alias mg="$EDITOR"
+
+alias develacc='sudo machinectl shell spw@develacc \
+      $(sudo enter-develacc /bin/sh -c "getent passwd spw | cut -d: -f7")'
+alias develaccr='sudo machinectl shell root@develacc \
+      $(sudo enter-develacc /bin/sh -c "getent passwd root | cut -d: -f7")'
