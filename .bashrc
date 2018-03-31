@@ -26,7 +26,9 @@ fi
 HISTCONTROL=ignorespace:ignoredups
 
 # make less more friendly for non-text input files; see lesspipe(1)
-[ -x /usr/bin/lesspipe ] && eval "$(lesspipe)"
+if [ -x /usr/bin/lesspipe ]; then
+    eval "$(lesspipe)"
+fi
 
 # let spwhitton read and write spw's files created in develacc.
 # Note that this is even sufficient for processes started by i3 to
