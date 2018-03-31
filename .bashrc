@@ -7,6 +7,16 @@
 # space.  It is easy to distinguish the command from the prompt
 PS1='$(exit_code=$?; test $exit_code -eq 0 || printf %s $exit_code " ")\u@\h:\w>'
 
+# if this is an xterm set its title to user@host:dir
+# (this doesn't stop the likes of ncmpcpp setting a title)
+case "$TERM" in
+    xterm*|rxvt*)
+        PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h:\w\a\]$PS1"
+        ;;
+    *)
+        ;;
+esac
+
 # enable better completion
 if [ -f /etc/bash_completion ]; then
     . /etc/bash_completion
