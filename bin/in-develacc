@@ -1,0 +1,15 @@
+#!/bin/sh
+
+# are we inside my develacc chroot?
+
+# from /etc/bash.bashrc on Debian
+if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
+    debian_chroot=$(cat /etc/debian_chroot)
+fi
+
+if [ "$debian_chroot" = "develacc" ] \
+       && [ "$(systemd-detect-virt)" = "systemd-nspawn" ]; then
+    exit 0
+else
+    exit 1
+fi

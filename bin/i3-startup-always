@@ -6,9 +6,7 @@
 
 # ---- don't let other local users spawn windows on my main X session
 
-if ! [ "$(whoami)" = "spw" ]; then
-    xhost -local:
-fi
+in-develacc || xhost -local:
 
 # ---- no bell please
 
