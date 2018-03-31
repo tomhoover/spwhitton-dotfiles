@@ -53,3 +53,35 @@ alias develacc='sudo machinectl shell spw@develacc \
       $(sudo enter-develacc /bin/sh -c "getent passwd spw | cut -d: -f7")'
 alias develaccr='sudo machinectl shell root@develacc \
       $(sudo enter-develacc /bin/sh -c "getent passwd root | cut -d: -f7")'
+
+# --- more powerful aliases built with shell functions
+
+# run a package build and the full suite of checks that I can do
+# locally before an upload.  Generally I use this on an UNRELEASED
+# package and then use `dgit push-source` for the actual upload
+sbuild-preupload() {
+    local dgit=""
+    local sbuild=""
+    for key in "$@"; do
+        case $key in
+            --gbp|--dpm|--quilt=*)
+                dgit="$dgit $key"
+                shift
+                ;;
+            *)
+                sbuild="$sbuild $key"
+                shift
+                ;;
+        esac
+    done
+    case $(pwd) in
+        *src/DHG_packages/p*)
+            sbuild $sbuild \
+                   --no-run-lintian --run-piuparts --run-autopkgtest
+            ;;
+        *)
+            eval dgit $dgit sbuild $sbuild \
+                 --no-run-lintian --run-piuparts --run-autopkgtest
+    esac
+    lintian
+}
