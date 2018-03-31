@@ -108,6 +108,8 @@ alias ls="ls --literal"
 
 # copy files into persistent part of develacc chroot, ensuring that we
 # don't give spw write access to packages
+# THIS IS NOT SAFE there is a race.  file could be modified before chown.
+# instead, should be copying into /root
 copy-to-develacc () {
     sudo cp -RL "$@" /home/spw/tmp/
     for f in /home/spw/tmp/*; do
