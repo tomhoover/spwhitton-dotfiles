@@ -46,8 +46,8 @@ alias g="git"
 alias ga="git annex"
 alias mg="$EDITOR"
 
-alias sid-build-deps="sudo mk-build-deps -irt \
-      'apt-get -o Debug::pkgProblemResolver=yes -t sid --no-install-recommends'"
+alias sid-build-deps='sudo mk-build-deps -irt \
+      "apt-get -o Debug::pkgProblemResolver=yes -t sid --no-install-recommends"'
 
 alias develacc='sudo machinectl shell spw@develacc \
       $(sudo enter-develacc /bin/sh -c "getent passwd spw | cut -d: -f7")'
