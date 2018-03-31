@@ -30,13 +30,6 @@ if [ -x /usr/bin/lesspipe ]; then
     eval "$(lesspipe)"
 fi
 
-# let spwhitton read and write spw's files created in develacc.
-# Note that this is even sufficient for processes started by i3 to
-# have the right umask, afaict
-if in-develacc; then
-    umask 002
-fi
-
 # --- aliases
 
 alias ls="ls --color=auto --literal --classify"
