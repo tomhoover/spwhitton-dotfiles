@@ -182,7 +182,7 @@ mode "$mode_launch" {
         bindsym m exec xfce4-terminal -e ncmpcpp , mode "default"
 
         # connect to athena's irssi
-        bindsym i exec xfce4-terminal --title="irssi" -e /bin/sh -c "mosh athena /home/spwhitton/bin/ii" , mode "default"
+        bindsym i exec xfce4-terminal --title="irssi" -x /bin/sh -c "mosh athena /home/spwhitton/bin/ii" , mode "default"
 
         bindsym Ctrl+g mode "default"
 }

@@ -21,7 +21,7 @@ else
     if [[ $- == *i* ]]; then
         mosh athena /home/spwhitton/bin/ii
     else
-        xfce4-terminal --title="irssi" -e /bin/sh \
+        xfce4-terminal --title="irssi" -x /bin/sh \
               -c "mosh athena /home/spwhitton/bin/ii"
     fi
 fi
