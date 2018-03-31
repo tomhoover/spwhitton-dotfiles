@@ -78,3 +78,22 @@ sbuild-preupload() {
     esac
     lintian
 }
+
+# copy files into /home/spw/tmp for use in develacc container.  cp(1)
+# does not respect ACLs, so we need to set a temporary umask before
+# copying, and --no-preserve=mode to ensure that group-unreadable
+# files become group-readable (i.e. have cp(1) follow the umask we
+# just set).  Together with the setgid perms on /home/spw and
+# subdirectories, this should ensure that spw is able to manipulate
+# copied files and directories
+copy-to-develacc () {
+    (
+        umask 002
+        cp --no-preserve=mode -RL "$@" /home/spw/tmp
+    )
+}
+# copy files into /root/tmp in develacc container.  Mainly used for
+# .debs I want to install and test in that container
+copy-to-develaccr () {
+        sudo cp -RL "$@" /var/lib/container/develacc/root/tmp/
+}
