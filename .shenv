@@ -128,6 +128,10 @@ TERMCMD="xfce4-terminal"
 export TERMCMD
 TERMINAL="xfce4-terminal"
 export TERMINAL
+DEBFULLNAME="Sean Whitton"
+export DEBFULLNAME
+DEBEMAIL="spwhitton@spwhitton.name"
+export DEBEMAIL
 
 # "Setting the monitor port to 0 turns the monitoring function off,
 # and autossh will only restart ssh upon ssh's exit."

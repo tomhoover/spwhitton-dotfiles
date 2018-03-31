@@ -3,10 +3,6 @@
 
 # --- personal settings
 
-# for dch
-export DEBFULLNAME="Sean Whitton"
-export DEBEMAIL="spwhitton@spwhitton.name"
-
 # basic env
 source ~/.shenv
 export GPG_TTY=$(tty)
