@@ -20,3 +20,4 @@ set completion-query-items 120
 set page-completions off
 set print-completions-horizontally on
 set bell-style none
+set enable-bracketed-paste on
