@@ -3,65 +3,32 @@
 # load standard environment variables
 . $HOME/.shenv
 
-# don't put duplicate lines in the history. See bash(1) for more options
-export HISTCONTROL=ignoredups
-# ... and ignore same sucessive entries.
-export HISTCONTROL=ignoreboth
+# '>' is a nice prompt char because it need not be followed by a
+# space.  It is easy to distinguish the command from the prompt
+PS1='$(exit_code=$?; test $exit_code -eq 0 || printf %s $exit_code " ")\u@\h:\w>'
 
-# make less more friendly for non-text input files, see lesspipe(1)
-[ -x /usr/bin/lesspipe ] && eval "$(lesspipe)"
-
-# if this is an xterm set the title to user@host:dir
-case "$TERM" in
-    xterm*|rxvt*)
-        PROMPT_COMMAND='echo -ne "\033]0;${USER}@${HOSTNAME}: ${PWD/$HOME/~}\007"'
-        ;;
-    *)
-        ;;
-esac
-
-# enable power-completion (shouldn't be necessary)
+# enable better completion
 if [ -f /etc/bash_completion ]; then
     . /etc/bash_completion
 fi
 
-shopt -s globstar
+# history settings
+HISTCONTROL=ignorespace:ignoredups
 
-# --- colours originally from gentoo's default bashrc
+# make less more friendly for non-text input files; see lesspipe(1)
+[ -x /usr/bin/lesspipe ] && eval "$(lesspipe)"
 
-use_color=false
-safe_term=${TERM//[^[:alnum:]]/?}   # sanitize TERM
-match_lhs=""
-[[ -f ~/.dir_colors   ]] && match_lhs="${match_lhs}$(<~/.dir_colors)"
-[[ -f /etc/DIR_COLORS ]] && match_lhs="${match_lhs}$(</etc/DIR_COLORS)"
-[[ -z ${match_lhs}    ]] \
-    && type -P dircolors >/dev/null \
-    && match_lhs=$(dircolors --print-database)
-[[ $'\n'${match_lhs} == *$'\n'"TERM "${safe_term}* ]] && use_color=true
-
-if ${use_color} ; then
-    # Enable colors for ls, etc.  Prefer ~/.dir_colors #64489
-    if type -P dircolors >/dev/null ; then
-        if [[ -f ~/.dir_colors ]] ; then
-            eval $(dircolors -b ~/.dir_colors)
-        elif [[ -f /etc/DIR_COLORS ]] ; then
-            eval $(dircolors -b /etc/DIR_COLORS)
-        fi
-    fi
-
-    PS1='\[\033[00;33m\]\h \[\033[00;32m\]\w \[\033[00;34m\]\$\[\033[00m\] '
-
-    alias ls='ls --color=auto'
-    alias grep='grep --colour=auto'
-else
-    PS1='\h \w \$ '
+# let spwhitton read and write spw's files created in develacc
+# TODO need to set umask in enter-develacc-i3 too?
+if in-develacc; then
+    umask 002
 fi
-unset use_color safe_term match_lhs
 
 # --- aliases
 
-alias g='git'
-alias ga='git annex'
-alias workgit='cd ~/doc && git add . && git commit -a -m "work commit" --edit && git push origin master && cd ~/src/dotfiles && git push origin master'
-alias mg=$EDITOR
-alias fmr='MR_FAST=true mr'
+alias ls="ls --color=auto --literal --classify"
+alias grep="grep --colour=auto"
+
+alias g="git"
+alias ga="git annex"
+alias mg="$EDITOR"
