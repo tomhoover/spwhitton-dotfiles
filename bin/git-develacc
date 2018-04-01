@@ -60,7 +60,9 @@ git -C "$inside" config --local --unset "remote.outside.url" || true
 git -C "$inside" config --local "remote.outside.fetch" "+refs/heads/*:refs/remotes/outside/*"
 
 # update all remote-tracking refs inside develacc
-git -C "$inside" fetch "$outside" '+refs/remotes/*:refs/remotes/*' '+refs/heads/*:refs/remotes/outside/*'
+git -C "$inside" fetch --prune --tags "$outside" \
+    '+refs/remotes/*:refs/remotes/*' \
+    '+refs/heads/*:refs/remotes/outside/*'
 git -C "$inside" update-ref -d 'refs/remotes/develacc/*'
 
 # update develacc-tracking refs outside develacc
