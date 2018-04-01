@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # git-develacc -- manage repositories in develacc container
 
