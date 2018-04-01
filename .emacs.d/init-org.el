@@ -127,6 +127,8 @@
  org-cycle-global-at-bob t
  org-startup-folded t
 
+ org-inlinetask-default-state "TODO"
+
  ;; using indirect buffers for DnD and for now want them in their own
  ;; frames (use C-u)
  org-indirect-buffer-display 'dedicated-frame
