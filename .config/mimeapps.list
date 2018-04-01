@@ -1,3 +1,4 @@
 [Default Applications]
 application/pdf=evince.desktop
 image/png=eog.desktop
+image/jpeg=eog.desktop
