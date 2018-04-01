@@ -61,6 +61,7 @@ git -C "$inside" config --local "remote.outside.fetch" "+refs/heads/*:refs/remot
 
 # update all remote-tracking refs inside develacc
 git -C "$inside" fetch "$outside" '+refs/remotes/*:refs/remotes/*' '+refs/heads/*:refs/remotes/outside/*'
+git -C "$inside" update-ref -d 'refs/remotes/develacc/*'
 
 # update develacc-tracking refs outside develacc
 if ! [ "$(git remote | grep develacc)" ]; then
