@@ -42,6 +42,8 @@ alias mrs="mr -m status"
 
 alias sid-build-deps='mk-build-deps -ir -s sudo -t \
       "apt-get -o Debug::pkgProblemResolver=yes -t sid --no-install-recommends"'
+alias bts-policy="bts user debian-policy@packages.debian.org \
+      , package debian-policy , "
 
 alias develacc='sudo machinectl shell spw@develacc \
       $(sudo enter-develacc /bin/sh -c "getent passwd spw | cut -d: -f7")'
