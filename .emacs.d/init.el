@@ -154,7 +154,7 @@
 (diminish 'visual-line-mode)
 
 ;; Terminus
-;; if want slightly more spread out, increase to Terminus-11
+;; if want slightly more spread out, increase to Terminus-12
 ;; TODO should check if font is available
 (add-to-list 'default-frame-alist '(font . "Terminus-11"))
 
