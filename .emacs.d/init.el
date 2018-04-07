@@ -484,11 +484,11 @@ hooks listed in `lisp-major-mode-hooks'."
   ;; `spw--get-programming-projects' needs f
   (use-package f)
 
-  ;; fix bad interaction between projectile and tramp
-  (defun projectile-project-root--tramp-fix (orig-fun &rest args)
-    (unless (file-remote-p default-directory)
-      (apply orig-fun args)))
-  (advice-add 'projectile-project-root :around #'projectile-project-root--tramp-fix)
+  ;; ;; fix bad interaction between projectile and tramp
+  ;; (defun projectile-project-root--tramp-fix (orig-fun &rest args)
+  ;;   (unless (file-remote-p default-directory)
+  ;;     (apply orig-fun args)))
+  ;; (advice-add 'projectile-project-root :around #'projectile-project-root--tramp-fix)
 
   (projectile-global-mode 1)
   (setq projectile-switch-project-action 'projectile-dired
