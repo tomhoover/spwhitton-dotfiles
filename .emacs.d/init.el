@@ -126,8 +126,8 @@
 
 ;; note that this works only for self-insert chars, not other
 ;; bindings, and it comes back after switching away from Emacs.  But
-;; mouse-avoidance-mode is more annoying than helpful for other
-;; keypresses
+;; mouse-avoidance-mode, which does more than this, is more annoying
+;; than helpful for other keypresses
 (setq make-pointer-invisible t)
 
 ;; y/n rather than yes/no
