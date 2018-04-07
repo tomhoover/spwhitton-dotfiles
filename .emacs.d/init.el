@@ -375,28 +375,30 @@ hooks listed in `lisp-major-mode-hooks'."
   :if (spw--optional-pkg-available-p "company")
   :diminish company-mode
   :config
-  (defun spw--activate-company ()
-    "Setup company mode.
+  ;; disable activating company for the moment.  Keep company so
+  ;; notmuch can activate it
+  ;;   (defun spw--activate-company ()
+  ;;     "Setup company mode.
 
-Using this in preference to global-company-mode, with <tab> bound
-to `company-complete'.  For another approach, see
-https://github.com/company-mode/company-mode/issues/94#issuecomment-40884387"
-    (company-mode 1)
-    (define-key (current-local-map) (kbd "M-/") 'company-complete))
-  (add-hook 'prog-mode-hook 'spw--activate-company)
+  ;; Using this in preference to global-company-mode, with <tab> bound
+  ;; to `company-complete'.  For another approach, see
+  ;; https://github.com/company-mode/company-mode/issues/94#issuecomment-40884387"
+  ;;     (company-mode 1)
+  ;;     (define-key (current-local-map) (kbd "M-/") 'company-complete))
+  ;;   (add-hook 'prog-mode-hook 'spw--activate-company)
 
   ;; retain my C-w binding; move company's C-w binding
   (define-key company-active-map "\C-w" nil)
   (bind-key "M-o" 'company-show-location company-active-map)
 
-  ;; settings
-
   (setq company-idle-delay nil
         company-minimum-prefix-length 0
         company-echo-delay 0)
 
-  (add-to-list 'company-backends 'company-capf)
-  (add-to-list 'company-transformers 'company-sort-by-occurrence))
+  ;; do I want these?
+  ;; (add-to-list 'company-backends 'company-capf)
+  ;; (add-to-list 'company-transformers 'company-sort-by-occurrence)
+  )
 ;; usage notes:
 ;;
 ;; C-o during company isearch narrows to stuff matching that search;
