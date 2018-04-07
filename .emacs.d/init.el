@@ -75,9 +75,6 @@
 
 ;;;; ---- basic settings ----
 
-;; TRAMP and zsh are not friends
-(setenv "SHELL" "/bin/bash")
-
 ;;; customisation -- must be loaded early so that zenburn theme is
 ;;; considered safe
 
