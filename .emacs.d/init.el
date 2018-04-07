@@ -411,42 +411,17 @@ hooks listed in `lisp-major-mode-hooks'."
   :if (spw--optional-pkg-available-p "markdown-mode")
   :mode "\\.md"
   :config
-  (defun spw--set-pandoc-compile-command ()
+  ;; this is called by .dir-locals.el in ~/doc/{pres,papers} and
+  ;; relies on the Makefiles in those dirs
+  (defun spw--set-pandoc-compile-command (&rest exts)
+    (unless exts (setq exts (list "pdf")))
     (setq-local compile-command
-                (concat "make " (f-filename (f-swap-ext (buffer-file-name) "pdf"))))
-    (local-set-key (kbd "<f9>") 'recompile))
-  ;; TODO use a Makefile for this too
-  ;; That turns out to be hard because GNU Makefiles are hopeless for
-  ;; filenames containing spaces -- like all my presentations
-  (defun spw--pandoc-presentation-compile ()
-    "Compile a presentation to PDF and HTML with pandoc into ~/tmp.
-
-If ARG, put into my annex instead.
-
-Lightweight alternative to both pandoc-mode and ox-pandoc.el.
-
-Generates calls to pandoc that look like this: TODO"
-    (interactive)
-    (when (and (string= default-directory (expand-file-name "~/doc/pres/"))
-               (eq major-mode 'markdown-mode))
-      (let* ((pdf-output-file (f-join "~/tmp"
-                                      (f-filename (f-swap-ext (buffer-file-name) "pdf"))))
-             (html-output-file (f-swap-ext pdf-output-file "html")))
-
-        (call-process-shell-command
-         "pandoc" nil "*pandoc pdf output*" nil
-         "-s" "-t" "beamer" "-i"
-         (shell-quote-argument (buffer-file-name))
-         "-o" (shell-quote-argument pdf-output-file))
-
-        (call-process-shell-command
-         "pandoc" nil "*pandoc html output*" nil
-         "-s" "-t" "slidy"
-         "--self-contained" "-i"
-         (shell-quote-argument (buffer-file-name))
-         "-o" (shell-quote-argument html-output-file))
-
-        ))))
+                (concat "make "
+                        (mapconcat
+                         (lambda (ext)
+                           (f-filename (f-swap-ext (buffer-file-name) ext)))
+                         exts " ")))
+    (local-set-key (kbd "<f9>") 'recompile)))
 
 ;;; TRAMP
 
