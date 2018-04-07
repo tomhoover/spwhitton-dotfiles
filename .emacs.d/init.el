@@ -559,11 +559,14 @@ Generates calls to pandoc that look like this: TODO"
   :if (and
        (spw--optional-pkg-available-p "f")
        (spw--optional-pkg-available-p "projectile"))
-  :commands projectile-vc
   :diminish projectile-mode
   :bind (("C-c p" . projectile-command-map)
          ("C-c j" . projectile-find-file)
          ("C-c v" . projectile-vc))
+  ;; we have to demand because projectile-command-map is not a
+  ;; command, so is not autoloaded by the :bind above.  When Debian
+  ;; has a more recent use-package, we can use :bind-keymap instead
+  ;; and thereby drop this :demand
   :demand
   :config
   ;; rebind to take advantage of helm-projectile library here
