@@ -150,8 +150,8 @@
 
 ;; Terminus
 ;; if want slightly more compact, reduce to Terminus-11
-;; TODO should check if font is available
-(add-to-list 'default-frame-alist '(font . "Terminus-12"))
+(when (find-font (font-spec :name "Terminus-12"))
+  (add-to-list 'default-frame-alist '(font . "Terminus-12")))
 
 ;; disable some GUI elements (retain menu bar)
 (when (fboundp 'set-scroll-bar-mode) (set-scroll-bar-mode nil))
