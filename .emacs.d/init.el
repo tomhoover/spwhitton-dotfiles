@@ -154,8 +154,10 @@
   (add-to-list 'default-frame-alist '(font . "Terminus-12")))
 
 ;; disable some GUI elements (retain menu bar)
-(when (fboundp 'set-scroll-bar-mode) (set-scroll-bar-mode nil))
-(when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
+(when (fboundp 'set-scroll-bar-mode)
+  (set-scroll-bar-mode nil))
+(when (fboundp 'tool-bar-mode)
+  (tool-bar-mode -1))
 
 ;;; cursor settings
 
@@ -163,7 +165,8 @@
 (setq-default cursor-type 'box)
 
 ;; turn off blink-cursor-mode if it ended up on
-(when (fboundp 'blink-cursor-mode) (blink-cursor-mode 0))
+(when (fboundp 'blink-cursor-mode)
+  (blink-cursor-mode 0))
 
 ;;; zenburn
 
