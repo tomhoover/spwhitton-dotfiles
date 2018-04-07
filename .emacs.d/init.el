@@ -446,15 +446,13 @@ hooks listed in `lisp-major-mode-hooks'."
 
 (setq dired-recursive-deletes 'always
       dired-recursive-copies 'always
-      dired-dwim-target t)
+      dired-dwim-target t
+      dired-listing-switches "--group-directories-first -alh")
 
 ;; should be able to unzip with Z
 (with-eval-after-load "dired-aux"
   (add-to-list 'dired-compress-file-suffixes
                '("\\.zip\\'" ".zip" "unzip")))
-
-(use-package dired-sort-map
-  :init (setq dired-listing-switches "--group-directories-first -alh"))
 
 (use-package git-annex
   :if (spw--optional-pkg-available-p "git-annex"))
