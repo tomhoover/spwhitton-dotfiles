@@ -42,7 +42,6 @@ set smart_wrap
 set wrap=80
 unset markers
 set wait_key=no
-set print_command="muttprint"
 
 # use 'R' to recall, rather than asking to recall when we compose --
 # this makes it less inconvenient to have multiple drafts queued
