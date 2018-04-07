@@ -423,40 +423,6 @@ hooks listed in `lisp-major-mode-hooks'."
                          exts " ")))
     (local-set-key (kbd "<f9>") 'recompile)))
 
-;;; TRAMP
-
-(use-package tramp
-  :config
-  ;; from http://carloerodriguez.com/blog/2015/12/14/effective-ssh-connections-with-emacs/
-  (tramp-set-completion-function
-   "ssh"
-   '((tramp-parse-sconfig "/etc/ssh_config")
-     (tramp-parse-sconfig "~/.ssh/config")))
-  (setq tramp-default-method "ssh")
-
-  ;; see docstring for `tramp-remote-path'
-  (add-to-list 'tramp-remote-path 'tramp-own-remote-path)
-
-  ;; try to disable vc (from TRAMP FAQ)
-  (setq vc-ignore-dir-regexp
-        (format "\\(%s\\)\\|\\(%s\\)"
-                vc-ignore-dir-regexp
-                tramp-file-name-regexp))
-
-  ;; clean out remote paths from ~/.emacs.d/ido.last
-  ;; from JoeBloggs on the Emacs wiki
-  (defun spw--ido-remove-tramp-from-cache nil
-    "Remove any TRAMP entries from `ido-dir-file-cache'.
-    This stops tramp from trying to connect to remote hosts on emacs startup,
-    which can be very annoying."
-    (interactive)
-    (setq ido-dir-file-cache
-	  (cl-remove-if
-	   (lambda (x)
-	     (string-match "/\\(rsh\\|ssh\\|telnet\\|su\\|sudo\\|sshx\\|krlogin\\|ksu\\|rcp\\|scp\\|rsync\\|scpx\\|fcp\\|nc\\|ftp\\|smb\\|adb\\):" (car x)))
-	   ido-dir-file-cache)))
-  (advice-add 'ido-kill-emacs-hook :before #'spw--ido-remove-tramp-from-cache))
-
 ;;; ebib for editing BiBTeX databases
 
 (use-package ebib
