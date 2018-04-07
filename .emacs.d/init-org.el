@@ -1077,7 +1077,7 @@ Ignore SOMEDAYs as might have those in old notes but not important to include th
 ;;; paths in a file (see documentation for `org-agenda-files').  Two
 ;;; functions to do the work
 
-(defun spw/org-agenda-file-to-front ()
+(defun spw--org-agenda-file-to-front ()
   (interactive)
   (let ((path (abbreviate-file-name buffer-file-name)))
     (with-current-buffer (find-file-noselect org-agenda-files)
@@ -1090,7 +1090,7 @@ Ignore SOMEDAYs as might have those in old notes but not important to include th
               (save-buffer)
               (message "added")))))))
 
-(defun spw/org-remove-file ()
+(defun spw--org-remove-file ()
   (interactive)
   (let ((path (abbreviate-file-name buffer-file-name)))
     (with-current-buffer (find-file-noselect org-agenda-files)
