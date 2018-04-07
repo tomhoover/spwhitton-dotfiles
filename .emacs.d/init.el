@@ -174,10 +174,12 @@
   :if (spw--optional-pkg-available-p "zenburn-theme")
   :init (load-theme 'zenburn))
 
-;;; I'm in Arizona (this is mainly for using Org-mode on hosts that
-;;; have a UTC clock)
+;;; On remote hosts in the UTC timezone, assume I'm in Arizona.  This
+;;; is relevant for using Org-mode.  (Hosts in the UK will be in GMT,
+;;; not UTC.)
 
-(unless (eq system-type 'windows-nt)
+(when (and (not (eq system-type 'windows-nt))
+           (string= (car (cdr (current-time-zone))) "UTC"))
   (set-time-zone-rule "/usr/share/zoneinfo/America/Phoenix"))
 
 ;;; minimal session management
