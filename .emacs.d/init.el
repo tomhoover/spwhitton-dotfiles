@@ -601,6 +601,8 @@ Passes ARG to `projectile-switch-project-by-name'."
         ;; ido-use-faces nil
         flx-ido-threshold 7500))
 
+;; on stretch, should install elpa-ido-completing-read+ from sid in
+;; order for the following to work as expected
 (use-package ido-completing-read+
   :if (spw--optional-pkg-available-p "ido-completing-read+")
   :config
