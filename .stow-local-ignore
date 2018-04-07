@@ -2,8 +2,6 @@ AppData
 home-mrconfig
 README
 archive
-bin/archive
-texmf/archive
 \.stow-global-ignore
 
 \.git
