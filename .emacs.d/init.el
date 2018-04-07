@@ -403,11 +403,6 @@ https://github.com/company-mode/company-mode/issues/94#issuecomment-40884387"
 ;; mnemonic 'occur'.  C-M-s while outside of search to do the same
 ;; thing
 
-;;; Randomize the order of lines in a region
-
-(use-package randomize-region
-  :commands randomize-region)
-
 ;;; Markdown mode
 
 (use-package markdown-mode
