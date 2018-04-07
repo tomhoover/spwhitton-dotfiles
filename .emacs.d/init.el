@@ -296,19 +296,13 @@ hooks listed in `lisp-major-mode-hooks'."
 (use-package org
   ;; init-org.el uses `f-glob'
   :if (spw--optional-pkg-available-p "f")
-  :mode (("\\.org" . org-mode)
-         ("\\.org_archive" . org-mode))
+  :mode (("\\.org" . org-mode))
   :bind (("C-c o c" . org-capture)
          ("C-c o l" . org-store-link)
          ("C-c o a" . org-agenda)
          ("C-c o [" . spw--org-agenda-file-to-front)
          ("C-c o ]" . spw--org-remove-file))
-  :commands (org-capture
-             org-store-link
-             org-agenda
-             org-save-all-org-buffers   ; for ~/bin/sync-docs
-             spw/org-agenda-file-to-front
-             spw/org-remove-file
+  :commands (org-save-all-org-buffers   ; for ~/bin/sync-docs
              orgstruct++-mode)
   :config (load (concat user-emacs-directory "init-org.el")))
 
