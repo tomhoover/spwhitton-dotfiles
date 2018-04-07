@@ -506,7 +506,7 @@ hooks listed in `lisp-major-mode-hooks'."
   ;; Find and open projects in ~/src/ that aren't yet known to
   ;; projectile.  Inspired by
   ;; <https://alanpearce.uk/post/opening-projects-with-projectile>.
-  ;; (also see projectile() in .zshrc
+  ;; (also see projectile() in ~/src/dotfiles/archive/.zshrc)
   (setq programming-projects-dir (expand-file-name "~/src"))
   (defun spw--get-programming-projects (dir)
     "Find all projectile projects in DIR that are presently unknown to projectile."
