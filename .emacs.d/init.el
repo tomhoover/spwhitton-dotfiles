@@ -172,7 +172,11 @@
 
 (use-package zenburn-theme
   :if (spw--optional-pkg-available-p "zenburn-theme")
-  :init (load-theme 'zenburn))
+  :init
+  (load-theme 'zenburn)
+  ;; see description of `frame-background-mode' variable
+  (setq frame-background-mode 'dark)
+  (mapc 'frame-set-background-mode (frame-list)))
 
 ;;; On remote hosts in the UTC timezone, assume I'm in Arizona.  This
 ;;; is relevant for using Org-mode.  (Hosts in the UK will be in GMT,
@@ -369,7 +373,6 @@ hooks listed in `lisp-major-mode-hooks'."
   :if (spw--optional-pkg-available-p "rainbow-delimiters")
   :commands rainbow-delimiters-mode
   :init
-  (setq-default frame-background-mode 'dark)
   (spw--activate-in-lisp-modes 'rainbow-delimiters-mode))
 
 ;;; and colour those colours
