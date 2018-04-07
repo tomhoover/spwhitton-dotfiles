@@ -369,21 +369,6 @@ hooks listed in `lisp-major-mode-hooks'."
   :commands aggressive-indent-mode
   :init (spw--activate-in-lisp-modes 'aggressive-indent-mode))
 
-;;; word count in modeline
-
-(use-package wc-mode
-  :if (spw--optional-pkg-available-p "wc-mode")
-  :init
-  (defun spw--large-buffer-disable-wc-mode (orig-fun &rest args)
-    "Disable `wc-mode' if the buffer has a large number of words.
-
-This is a workaround for `wc-mode''s performance issues."
-    (unless (> (wc nil nil 1) 4000)
-      (apply orig-fun args)))
-  (advice-add 'wc-mode :around #'spw--large-buffer-disable-wc-mode)
-
-  (setq wc-modeline-format "%tw words"))
-
 ;;; company-mode for smart and easy completion
 
 (use-package company
@@ -428,12 +413,6 @@ https://github.com/company-mode/company-mode/issues/94#issuecomment-40884387"
 (use-package markdown-mode
   :if (spw--optional-pkg-available-p "markdown-mode")
   :mode "\\.md"
-
-  :init
-  ;; (add-hook 'markdown-mode-hook 'turn-on-orgstruct)
-  ;; (add-hook 'markdown-mode-hook 'turn-on-orgstruct++)
-  (add-hook 'markdown-mode-hook 'wc-mode)
-
   :config
   (defun spw--set-pandoc-compile-command ()
     (setq-local compile-command
