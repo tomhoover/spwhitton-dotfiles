@@ -6,7 +6,6 @@
 
     "+hooks": [
         "checksums",
-        "impatient"
     ],
 
     "__comment": "require explicit selection of ftp-master",
