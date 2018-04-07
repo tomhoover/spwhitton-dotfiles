@@ -327,9 +327,9 @@ hooks listed in `lisp-major-mode-hooks'."
 
 ;; thanks to openwith, the warning for large files can be at a much
 ;; larger threshold as the chances of hitting it are low (this is
-;; about 100MB)
+;; about 500MB)
 
-(setq large-file-warning-threshold 100000000)
+(setq large-file-warning-threshold 500000000)
 
 ;;; magit
 
