@@ -507,17 +507,18 @@ hooks listed in `lisp-major-mode-hooks'."
   ;; projectile.  Inspired by
   ;; <https://alanpearce.uk/post/opening-projects-with-projectile>.
   ;; (also see projectile() in ~/src/dotfiles/archive/.zshrc)
-  (setq programming-projects-dir (expand-file-name "~/src"))
+  (defconst programming-projects-dir (expand-file-name "~/src"))
   (defun spw--get-programming-projects (dir)
     "Find all projectile projects in DIR that are presently unknown to projectile."
-    (-filter (lambda (d)
-               (and (file-directory-p d)
-                    (not (-contains?
-                          projectile-known-projects
-                          (f-slash (replace-regexp-in-string (expand-file-name "~") "~" d))))
-                    (-any? (lambda (f) (funcall f d))
-                           projectile-project-root-files-functions)))
-             (directory-files dir t "^[^.]")))
+    (-filter
+     (lambda (d)
+       (and (file-directory-p d)
+            (not (-contains?
+                  projectile-known-projects
+                  (f-slash (replace-regexp-in-string (expand-file-name "~") "~" d))))
+            (-any? (lambda (f) (funcall f d))
+                   projectile-project-root-files-functions)))
+     (directory-files dir t "^[^.]")))
   (defun spw--open-programming-project (arg)
     "Open a programming project that is presently unknown to projectile.
 
