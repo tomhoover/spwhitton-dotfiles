@@ -14,11 +14,9 @@
 ;; This is for my personal, possibly patched versions of libraries.
 (add-to-list 'load-path (concat user-emacs-directory "site-lisp"))
 
-;; libs in ~/.emacs.d/lisp are overridden by system packages
+;; libs in ~/.emacs.d/initlibs are overridden by system packages
 ;; This is for fallback copies of libraries needed to init Emacs.
-;; Possible alternate name, if this is breaking Emacs conventions for
-;; dirs called 'lisp': initlibs
-(add-to-list 'load-path (concat user-emacs-directory "lisp") t)
+(add-to-list 'load-path (concat user-emacs-directory "initlibs") t)
 
 ;; be sure not to load stale byte-compiled lisp
 (setq load-prefer-newer t)
@@ -45,7 +43,7 @@
 ;; 
 ;; Such packages are not marked as optional, and `use-package' will
 ;; complain at startup if they are not available.  Fallback copies
-;; should be present in ~/.emacs.d/lisp.
+;; should be present in ~/.emacs.d/initlibs.
 
 (defun spw--optional-pkg-available-p (pkg)
   (or (bound-and-true-p use-package-always-ensure)
