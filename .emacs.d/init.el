@@ -467,6 +467,7 @@ hooks listed in `lisp-major-mode-hooks'."
 (use-package projectile
   :if (and
        (spw--optional-pkg-available-p "f")
+       (spw--optional-pkg-available-p "dash")
        (spw--optional-pkg-available-p "projectile"))
   :diminish projectile-mode
   :bind (("C-c p" . projectile-command-map)
@@ -481,8 +482,9 @@ hooks listed in `lisp-major-mode-hooks'."
   ;; rebind to take advantage of helm-projectile library here
   (bind-key "s s" 'helm-projectile-ag projectile-command-map)
 
-  ;; `spw--get-programming-projects' needs f
+  ;; `spw--get-programming-projects' needs f & dash
   (use-package f)
+  (use-package dash)
 
   ;; ;; fix bad interaction between projectile and tramp
   ;; (defun projectile-project-root--tramp-fix (orig-fun &rest args)
