@@ -310,7 +310,7 @@ hooks listed in `lisp-major-mode-hooks'."
              spw/org-agenda-file-to-front
              spw/org-remove-file
              orgstruct++-mode)
-  :config (load "~/.emacs.d/init-org.el"))
+  :config (load (concat user-emacs-directory "init-org.el")))
 
 ;;; more useful unique buffer names
 
