@@ -213,6 +213,10 @@
   ;; (setq save-place-forget-unreadable-files nil)
   (save-place-mode 1))
 
+;;; high garbage collection threshold for ido flx matching
+
+(setq gc-cons-threshold 20000000)
+
 
 
 ;;;; ---- packages ----
@@ -556,24 +560,24 @@ Passes ARG to `projectile-switch-project-by-name'."
 
 ;; override ido-use-filename-at-point for dired buffers
 ;; from http://emacs.stackexchange.com/a/5331
-(defun spw/ido-ignore-file-at-point ()
+(defun spw--ido-ignore-file-at-point ()
   "Disable ido-use-filename-at-point for the current buffer."
   (when (bound-and-true-p ido-use-filename-at-point)
     (setq-local ido-use-filename-at-point nil)))
-(add-hook 'dired-mode-hook #'spw/ido-ignore-file-at-point)
+(add-hook 'dired-mode-hook #'spw--ido-ignore-file-at-point)
 
 (setq ido-use-filename-at-point 'guess
-      ido-create-new-buffer 'always
-      ido-file-extensions-order '(".org" ".mdwn" ".hs" ".tex" ".py" )
+      ido-create-new-buffer 'never
+      ;; ido-file-extensions-order '(".org" ".mdwn" ".hs" ".tex" ".py" )
       ido-default-file-method 'selected-window
       ido-max-directory-size 100000
-      ido-auto-merge-delay-time 99999 ; only search when I tell you to M-s
+      ido-auto-merge-delay-time 99999 ; only search when I tell you to, M-s
       ido-use-virtual-buffers t
       ido-use-virtual-buffers-automatically t
       ido-enable-regexp nil
       ido-use-url-at-point nil
-      ido-max-file-prompt-width 0.1
-      ido-save-directory-list-file "~/.emacs.d/ido.last"
+      ;; ido-max-file-prompt-width 0.1
+      ido-save-directory-list-file (expand-file-name "~/.emacs.d/ido.last")
 
       ;; Don't invoke TRAMP to complete
       ido-enable-tramp-completion nil
@@ -583,7 +587,8 @@ Passes ARG to `projectile-switch-project-by-name'."
 
       ;; When moving through work directories with M-n/M-p, ignore those
       ;; that don't match the current input
-      ido-work-directory-match-only t)
+      ;; ido-work-directory-match-only t
+      )
 
 (ido-mode 1)
 (ido-everywhere 1)
@@ -593,9 +598,8 @@ Passes ARG to `projectile-switch-project-by-name'."
   :config
   (flx-ido-mode 1)
   (setq ido-enable-flex-matching t
-        ido-use-faces nil
-        flx-ido-threshhold 7500
-        gc-cons-threshold 20000000))
+        ;; ido-use-faces nil
+        flx-ido-threshold 7500))
 
 (use-package ido-completing-read+
   :if (spw--optional-pkg-available-p "ido-completing-read+")
