@@ -101,3 +101,13 @@ copy-to-develacc () {
 copy-to-develaccr () {
         sudo cp -RL "$@" /var/lib/container/develacc/root/tmp/
 }
+
+# tidy up if I deleted files from stowed repos without properly
+# restowing
+kill-broken-stowed-symlinks () {
+    find "$HOME" -xtype l | while read -r link; do
+        if readlink "$link" | grep --quiet "^[../]*/.STOW/"; then
+            rm "$link"
+        fi
+    done
+}
