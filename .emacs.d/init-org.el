@@ -71,6 +71,11 @@
 
 ;;;; ---- preferences ----
 
+;; this used to be needed
+
+;; (custom-set-faces
+;;  '(org-hide ((t (:foreground "#3f3f3f" :slant normal :weight normal :height 110 :width normal :foundry "xos4" :family "Terminus")))))
+
 ;; diminish `org-indent-mode' lighter
 
 (require 'diminish)
