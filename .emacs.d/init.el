@@ -346,27 +346,6 @@ hooks listed in `lisp-major-mode-hooks'."
   (use-package magit-annex
     :if (spw--optional-pkg-available-p "magit-annex")))
 
-;;; pointback mode: make sure that point is back where I left it when
-;;; switching between buffers where at least one buffer is displayed
-;;; in more than one window
-
-(use-package pointback
-  ;; this breaks `notmuch-tree-mode' (when notmuch moves to a new
-  ;; message (e.g. upon hitting 'n'), it deletes the split message
-  ;; view, creates a new split, and displays the message there.  But
-  ;; deleting the split windows causes pointback mode to move point in
-  ;; the original window, so point is no longer on the message
-  ;; displayed.  This leads to various strange behaviours) and due to
-  ;; limitations of `define-globalized-minor-mode', it is not clear
-  ;; how to cleanly disable pointback only in `notmuch-tree-mode'
-  ;; buffers (see https://stackoverflow.com/a/6839968).  So just
-  ;; disable for now
-  :disabled t
-  :commands global-pointback-mode
-  :defer 5
-  :config
-  (global-pointback-mode 1))
-
 ;;; colour those parentheses
 
 (use-package rainbow-delimiters
