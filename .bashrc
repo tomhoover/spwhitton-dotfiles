@@ -121,7 +121,7 @@ install-as-auto () {
         sudo apt-get --no-install-recommends install "$@"
         sudo apt-mark auto "$@"
     else
-        apt-get --no-install-recommends install "$@"
+        apt-get --no-install-recommends install "$@"
         apt-mark auto "$@"
         fi
 }
