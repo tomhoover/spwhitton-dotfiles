@@ -111,3 +111,17 @@ kill-broken-stowed-symlinks () {
         fi
     done
 }
+
+# install package(s) and immediately mark as auto installed, so it
+# will get cleaned up by the next autoclean.
+# --no-install-recommends is needed as otherwise packages are manually
+# --installed beyond those specified on the command line
+install-as-auto () {
+    if [[ $EUID -ne 0 ]]; then
+        sudo apt-get --no-install-recommends install "$@"
+        sudo apt-mark auto "$@"
+    else
+        apt-get --no-install-recommends install "$@"
+        apt-mark auto "$@"
+        fi
+}
