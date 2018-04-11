@@ -10,7 +10,7 @@
     ],
 
     "+hooks": [
-        "checksums",
+        "checksums"
     ],
 
     "__comment": "require explicit selection of ftp-master",
