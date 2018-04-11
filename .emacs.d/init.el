@@ -626,13 +626,6 @@ Passes ARG to `projectile-switch-project-by-name'."
 (use-package htmlize
   :if (spw--optional-pkg-available-p "htmlize"))
 
-;;; make indentation in python nice and visible
-
-(use-package highlight-indentation
-  :if (spw--optional-pkg-available-p "highlight-indentation")
-  :init
-  (add-hook 'python-mode-hook 'highlight-indentation-current-column-mode))
-
 ;;; buffer navigation
 
 ;; TODO consider these avy-keys from Endless Parentheses blog
