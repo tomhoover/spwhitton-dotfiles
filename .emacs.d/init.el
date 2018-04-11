@@ -681,11 +681,10 @@ Passes ARG to `projectile-switch-project-by-name'."
   :config
   (dired-async-mode 1))
 
-;;; zap-up-to-char is at least as useful as zap-to-char, so load it
-;;; out of misc.el.
+;;; smart C-a binding means we can bind M-m to something more useful
 
 (use-package misc
-  :commands zap-up-to-char)
+  :bind ("M-m" . zap-up-to-char))
 
 ;;; make Emacs regexps easier
 
@@ -1308,50 +1307,6 @@ Originally from <http://blog.gleitzman.com/post/35416335505/hunting-for-unicode-
                         (expand-file-name  default-directory))
                 "-e"  "/bin/bash"))
 (bind-key "C-c g g" 'spw--open-term-here)
-
-;;; Make `C-x z' repeat zap-up-to-char without requiring typing the
-;;; char again.  Originally from Chris Done's Emacs config, but
-;;; modified to always be case-sensitive (previously case-sensitivity
-;;; depended on the value of `case-fold-search')
-
-(defvar zap-up-to-char-last-char nil
-  "The last char used with zap-up-to-char-repeateable.")
-(defvar zap-up-to-char-last-arg 0
-  "The last direction used with zap-up-to-char-repeateable.")
-(defun zap-up-to-char-repeatable (arg char)
-  "As `zap-up-to-char', but repeatable with `repeat'.
-
-Goes backward if ARG is negative; error if CHAR not found."
-  (interactive (if (and (eq last-command 'zap-up-to-char-repeatable)
-                        (eq 'repeat real-this-command))
-                   (list zap-up-to-char-last-arg
-                         zap-up-to-char-last-char)
-                 (list (prefix-numeric-value current-prefix-arg)
-                       (read-char "Zap up to char: " t))))
-  ;; Avoid "obsolete" warnings for translation-table-for-input.
-  (with-no-warnings
-    (if (char-table-p translation-table-for-input)
-        (setq char (or (aref translation-table-for-input char) char))))
-  (let ((case-fold-search nil))
-    (let ((start (point))
-          (end (save-excursion
-                 (when (eq last-command 'zap-up-to-char-repeatable)
-                   (forward-char))
-                 (search-forward (char-to-string char) nil nil arg)
-                 (forward-char -1)
-                 (point))))
-      (cond
-       ((and (eq last-command 'zap-up-to-char-repeatable)
-             (eq 'repeat real-this-command))
-        (let ((last-command 'kill-region))
-          (kill-region start end)))
-       (t
-        (kill-region start end)))))
-  (setq zap-up-to-char-last-char char)
-  (setq zap-up-to-char-last-arg arg)
-  (setq this-command 'zap-up-to-char-repeatable))
-;; note that our C-a binding renders default M-m binding redundant
-(bind-key "M-m" 'zap-up-to-char-repeatable)
 
 ;; used in init-org.el
 (defun spw--strip-text-properties (txt)
