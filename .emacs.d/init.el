@@ -674,15 +674,12 @@ Passes ARG to `projectile-switch-project-by-name'."
 
 ;;; make dired copy and move asynchronously
 
-(use-package async
+(use-package dired-async
   :if (spw--optional-pkg-available-p "async")
-  :init (when (require 'dired-aux)
-          (require 'dired-async)))
-
-;;; give dired some nice keybindings for browsing images
-
-(use-package image-dired
-  :init (image-dired-setup-dired-keybindings))
+  :commands dired-async-mode
+  :defer 5
+  :config
+  (dired-async-mode 1))
 
 ;;; zap-up-to-char is at least as useful as zap-to-char, so load it
 ;;; out of misc.el.
