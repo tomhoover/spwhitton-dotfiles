@@ -1162,8 +1162,7 @@ actually calls `org-edit-src-code'."
   (spw--delete-word (- arg)))
 (bind-key "C-w" 'spw--backward-delete-word)
 
-;; a nicer kill-region binding, and move the keyboard macro bindings
-;; somewhere else
+;; a nicer kill-region binding
 (bind-key "C-x C-k" 'kill-region)
 ;; resettle the previous occupant of C-x C-k
 (bind-key "C-c C-x C-k" 'kmacro-keymap)
