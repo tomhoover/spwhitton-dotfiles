@@ -1,9 +1,4 @@
 {
-    "__comment": "permit source-only uploads",
-    "-hooks": [
-        "check-debs"
-    ],
-
     "__comment": "always check checksums to avoid totally broken uploads",
     "+hooks": [
         "checksums"
