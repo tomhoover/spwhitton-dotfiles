@@ -628,23 +628,22 @@ Passes ARG to `projectile-switch-project-by-name'."
 
 ;;; buffer navigation
 
-;; TODO consider these avy-keys from Endless Parentheses blog
-;; (setq avy-keys
-;;       '(?c ?a ?s ?d ?e ?f ?h ?w ?y ?j ?k ?l ?n ?m ?v ?r ?u ?p))
-
 (use-package avy
   :bind (("M-o" . spw/avy-goto-word)
-         ;; if one types numbers, avy-goto-line will switch to old M-g
-         ;; g behaviour so may override default M-g g binding
+         ;; if one types M-g g followed by numbers, avy-goto-line will
+         ;; switch to Emacs default M-g g behaviour.  So this
+         ;; rebinding of a standard key is purely additive
          ("M-g g" . avy-goto-line))
   :config
 
   (setq
    ;; Make avy overlays look more like ace-jump
    avy-style       'at-full
-   ;; Make avy work over all visible frames (nice with
-   ;; frames-only-mode)
-   avy-all-windows 'all-frames)
+   ;; Make avy work over all visible frames
+   avy-all-windows 'all-frames
+   ;; Increase the keys available such that less likely to need to
+   ;; type two (list from Endless Parentheses blog)
+   avy-keys '(?c ?a ?s ?d ?e ?f ?h ?w ?y ?j ?k ?l ?n ?m ?v ?r ?u ?p))
 
   ;; Attempt to restore ace-jump-mode functionality whereby M-o jumps
   ;; by word start, C-u M-o by any char in the word.  We're taking the
