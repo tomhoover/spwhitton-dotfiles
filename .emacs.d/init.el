@@ -588,7 +588,8 @@ Passes ARG to `projectile-switch-project-by-name'."
       ;; When moving through work directories with M-n/M-p, ignore those
       ;; that don't match the current input
       ;; ido-work-directory-match-only t
-      )
+
+      ido-enable-flex-matching t)
 
 (ido-mode 1)
 (ido-everywhere 1)
@@ -597,9 +598,10 @@ Passes ARG to `projectile-switch-project-by-name'."
   :if (spw--optional-pkg-available-p "flx")
   :config
   (flx-ido-mode 1)
-  (setq ido-enable-flex-matching t
-        ;; ido-use-faces nil
-        flx-ido-threshold 7500))
+  (setq
+   ;; disable ido faces to see flx highlights
+   ido-use-faces nil
+   flx-ido-threshold 7500))
 
 (use-package smex
   :bind ("C-x C-m" . smex))
