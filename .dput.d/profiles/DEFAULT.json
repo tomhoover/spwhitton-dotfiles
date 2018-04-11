@@ -4,11 +4,6 @@
         "check-debs"
     ],
 
-    "__comment": "permit uploads to stretch-backports with stable's dput-ng",
-    "-hooks": [
-        "allowed-distribution"
-    ],
-
     "+hooks": [
         "checksums"
     ],
