@@ -1323,23 +1323,7 @@ Originally from <http://blog.gleitzman.com/post/35416335505/hunting-for-unicode-
     (async-shell-command "git-dotfiles-rebase" "*dotfiles rebase*")))
 (bind-key "C-c g d" 'spw--dotfiles-rebase)
 
-;;; defeat variable-pitch-mode for avy and Org tables and source
-;;; blocks, per http://stackoverflow.com/a/16819449
-
-;; (defun my-adjoin-to-list-or-symbol (element list-or-symbol)
-;;   (let ((list (if (not (listp list-or-symbol))
-;;                   (list list-or-symbol)
-;;                 list-or-symbol)))
-;;     (require 'cl-lib)
-;;     (cl-adjoin element list)))
-
-;; (defun face-override-variable-pitch (face)
-;;   (set-face-attribute
-;;    face nil
-;;    :inherit
-;;    (my-adjoin-to-list-or-symbol
-;;     'fixed-pitch
-;;     (face-attribute face :inherit))))
+;;; message-mode functions
 
 (defun spw/recipient-first-name ()
   "Attempt to extract the first name of the recipient of a `message-mode' message.
