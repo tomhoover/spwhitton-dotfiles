@@ -454,21 +454,24 @@ hooks listed in `lisp-major-mode-hooks'."
 
 ;;; dired enhancements
 
-(setq dired-recursive-deletes 'always
-      dired-recursive-copies 'always
-      dired-dwim-target t
-      dired-listing-switches "--group-directories-first -alh")
-
-(add-hook 'dired-load-hook
-          (lambda ()
-            (load "dired-aux")
-            ;; should be able to unzip with Z
-            (add-to-list 'dired-compress-file-suffixes
-                         '("\\.zip\\'" ".zip" "unzip"))
-            (load "dired-x")
-            (setq-default dired-omit-mode t)
-            (setq dired-omit-files "^\\...+$")
-            (setq dired-isearch-filenames t)))
+(use-package dired
+  :defer
+  :init
+  (setq dired-recursive-deletes 'always
+        dired-recursive-copies 'always
+        dired-dwim-target t
+        dired-listing-switches "--group-directories-first -alh")
+  :config
+  (use-package dired-aux
+    :config
+    ;; should be able to unzip with Z
+    (add-to-list 'dired-compress-file-suffixes
+                 '("\\.zip\\'" ".zip" "unzip")))
+  (use-package dired-x
+    :config
+    (setq-default dired-omit-mode t)
+    (setq dired-omit-files "^\\...+$")
+    (setq dired-isearch-filenames t)))
 
 (use-package git-annex
   :if (spw--optional-pkg-available-p "git-annex"))
