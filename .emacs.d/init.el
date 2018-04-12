@@ -802,13 +802,14 @@ Passes ARG to `projectile-switch-project-by-name'."
                    (append '((company-capf company-dabbrev-code))
                            company-backends)))))
 
-;; `key-chord' to save my hands
+;; key chords
 
 (use-package key-chord
   :config
   (key-chord-mode 1)
   ;; access the C-c keymap with a comfortable key-chord
-  ;; TODO access buffer-local C-c map
+  ;; TODO access both mode-specific-map, and major mode's bindings that
+  ;; are prefixed with C-c
   (key-chord-define-global "jk" mode-specific-map))
 
 ;; good key chords from
