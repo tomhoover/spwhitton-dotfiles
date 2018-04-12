@@ -1466,15 +1466,6 @@ Used in my `message-mode' yasnippets."
 
 ;;; miscellaneous personal settings
 
-;; following is commented out so that I can use isearch instead of expand-region
-
-;; ;; isearch should leave you at the beginning of the match
-;; (add-hook 'isearch-mode-end-hook 'spw/isearch-match-beginning)
-;; (defun spw/isearch-match-beginning ()
-;;   "Move point to beginning of isearch match."
-;;   (when isearch-other-end
-;;     (when isearch-forward (goto-char isearch-other-end))))
-
 ;; save script files as executable automatically
 (add-hook 'after-save-hook
           'executable-make-buffer-file-executable-if-script-p)
