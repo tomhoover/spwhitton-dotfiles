@@ -8,7 +8,7 @@
 
 ;;; this config uses `f-glob'
 
-(use-package f)
+(require 'f)
 
 ;;; with the new exporter in Org version 8, must explicitly require
 ;;; the exporters I want to use
