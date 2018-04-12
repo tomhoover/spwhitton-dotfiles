@@ -1112,21 +1112,12 @@ actually calls `org-edit-src-code'."
         (t (narrow-to-defun))))
 (bind-key "C-c n" 'mwf--narrow-or-widen-dwim)
 
-;;; backwards and forward deletions of words.  We want to delete, not kill
+;;; killing of words and regions
 
-(defun spw--delete-word (arg)
-  "Delete ARG characters forward until encountering the end of a word."
-  (interactive "p")
-  (delete-region (point) (progn (forward-word arg) (point))))
-;;; don't use `bind-key' as we want this to be overridable
-;;; TODO do we really want M-d to delete, or should it kill?
-(global-set-key "\M-d" 'spw--delete-word)
-
-(defun spw--backward-delete-word (arg)
-  "Delete characters ARG backward until encountering the end of a word."
-  (interactive "p")
-  (spw--delete-word (- arg)))
-(bind-key "C-w" 'spw--backward-delete-word)
+;; Possible enhancement: C-w deletes back to the previous space
+;; character, while M-backspace does what spw--backward-delete-word
+;; does.  This is useful in bash
+(bind-key "C-w" 'backward-kill-word)
 
 ;; a nicer kill-region binding
 (bind-key "C-x C-k" 'kill-region)
