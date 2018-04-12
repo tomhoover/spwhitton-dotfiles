@@ -553,8 +553,7 @@ Passes ARG to `projectile-switch-project-by-name'."
   :if (and
        (spw--optional-pkg-available-p "helm-ag")
        (spw--optional-pkg-available-p "helm-projectile")
-       (boundp 'org-directory))         ; when have newer use-package,
-                                        ; can use :after instead
+       (boundp 'org-directory))
   :bind (("C-c f" . spw--search-notes)
          ("C-c F" . spw--new-note))
   :commands helm-projectile-ag
