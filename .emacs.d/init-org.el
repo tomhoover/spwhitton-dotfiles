@@ -60,19 +60,6 @@
                  ("UA"            . ?W) ; academic work
                  ("Debian"        . ?D))
 
- ;; enable speed commands and bind N to narrow to subtree
- org-use-speed-commands t
- org-speed-commands-user '(("N" . org-narrow-to-subtree)
-                           ("h" . hide-other)
-                           ("k" . org-kill-note-or-show-branches)
-                           ("s" . org-save-all-org-buffers)
-                           ("z" . org-add-note)
-                           ("c" . self-insert-command)
-                           ("C" . self-insert-command)
-                           ("1" . delete-other-windows)
-                           ("2" . split-window-vertically)
-                           ("3" . split-window-horizontally)
-                           ("m" . org-mark-subtree))
  org-agenda-include-all-todo nil
  org-agenda-files "~/doc/emacs-org-agenda-files"
  org-agenda-diary-file "~/.labbook.gpg"
