@@ -76,7 +76,12 @@
  org-inlinetask-default-state "TODO"
 
  org-agenda-dim-blocked-tasks nil
- org-stuck-projects (quote ("" nil nil ""))
+
+ ;; we don't actually use Org's built-in stuck project support,
+ ;; instead generating our own review agenda from scratch which
+ ;; includes the right tasks.  See the view assigned to the '#' key
+ org-stuck-projects (quote ("TODO" '("NEXT") nil ""))
+
  org-hide-emphasis-markers nil
  org-use-fast-todo-selection t
  org-treat-S-cursor-todo-selection-as-state-change nil
