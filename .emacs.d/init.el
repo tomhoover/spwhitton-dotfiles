@@ -754,11 +754,13 @@ Passes ARG to `projectile-switch-project-by-name'."
                         nil t)))
 
   ;; (add-hook 'haskell-mode-hook 'turn-on-haskell-doc)
-  (require 'haskell-interactive-mode)
-  (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
+  (use-package haskell-interactive-mode
+    :commands interactive-haskell-mode
+    :init
+    (add-hook 'haskell-mode-hook 'interactive-haskell-mode))
   (add-hook 'haskell-mode-hook 'subword-mode)
 
-;;; standard Haskell repl interaction bindings
+  ;; standard Haskell repl interaction bindings
 
   ;; first use `C-c C-l' and/oror `C-c C-b' to enable the use of
   ;; bindings like `M-.' and `C-c C-c'.  Note that this is quite slow
@@ -781,12 +783,13 @@ Passes ARG to `projectile-switch-project-by-name'."
   ;; (bind-key "C-c C"   'haskell-process-cabal           haskell-mode-map)
 
   ;; those same bindings again for `haskell-cabal-mode'
+
   (bind-key "C-c C-b" 'haskell-interactive-bring       haskell-cabal-mode-map)
   ;; (bind-key "C-c C-k" 'haskell-interactive-mode-clear  haskell-cabal-mode-map)
   (bind-key "C-c C-c" 'haskell-process-cabal-build     haskell-cabal-mode-map)
   ;; (bind-key "C-c C"   'haskell-process-cabal           haskell-cabal-mode-map)
 
-;;; these two bindings require GHCi 8 or newer (or GHCi-ng)
+  ;; these two bindings require GHCi 8 or newer (or GHCi-ng)
 
   ;; jump asynchronously; no need for a TAGS file
   (bind-key "M-."     'haskell-mode-goto-loc           interactive-haskell-mode-map)
