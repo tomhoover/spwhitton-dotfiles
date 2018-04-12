@@ -1175,6 +1175,8 @@ Note that `ws-butler-mode' is also at work."
            (whitespace-cleanup)))))))
 (bind-key "C-c g c" 'spw--cleanup)
 
+;;; more functions
+
 (defun spw--toggle-window-split ()
   "Toggle the orientation of a two-window split.
 
