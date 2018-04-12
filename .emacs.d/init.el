@@ -1668,21 +1668,10 @@ mutt's review view after exiting EDITOR."
   ;; I do not need a key to insert the Newsgroups: header
   (bind-key "C-c C-n" 'spw--normalise-message message-mode-map)
 
-  ;; advice
-
-  (defun message-newline-and-reformat--delete-superflous-newlines (&rest ignore)
-    "Have `message-newline-and-reformat' get rid of some more superflous blank quoted lines."
-    (save-excursion
-      (beginning-of-line)
-      (when (looking-at ">[[:space:]]*$")
-        (kill-line 1))))
-  (advice-add 'message-newline-and-reformat
-              :before #'message-newline-and-reformat--delete-superflous-newlines)
-
   ;; bindings
 
   ;; C-c C-b should skip over mml's sign/encrypt lines (it is a bad
-  ;; idea to advise message-goto-body as various functions assume it
+  ;; idea to advise `message-goto-body' as various functions assume it
   ;; does not skip over sign/encrypt lines
   ;; (e.g. `notmuch-mua-check-no-misplaced-secure-tag')
   (defun spw--message-goto-body--skip-mml-secure ()
