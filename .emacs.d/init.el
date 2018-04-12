@@ -1553,15 +1553,7 @@ Used in my `message-mode' yasnippets."
 
 
 
-;;;; ---- modes configuration ----
-
-;;; auto fill comments in those modes with a reliable comment syntax
-
-(defun spw/turn-on-comment-filling ()
-  "Turn on filling comments."
-  (setq-local comment-auto-fill-only-comments t)
-  (auto-fill-mode 1))
-(add-hook 'emacs-lisp-mode-hook 'spw/turn-on-comment-filling)
+;;;; ---- major modes configuration ----
 
 ;;; mail mode for mutt & notmuch
 
