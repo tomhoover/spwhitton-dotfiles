@@ -1,91 +1,45 @@
-;;; init-org --- Sean's Org-mode configuration
-
-;;; Commentary:
-
-;;; Code:
+;;; Sean's Org-mode configuration
 
 ;;;; ---- packages ----
 
-;;; this config uses `f-glob'
+;;; this config uses `f-glob' and `diminish'
 
 (require 'f)
+(require 'diminish)
 
 ;;; with the new exporter in Org version 8, must explicitly require
 ;;; the exporters I want to use
 
-(use-package ox-html)
-(use-package ox-latex)
-(use-package ox-ascii)
-(use-package ox-odt)
+(require 'ox-html)
+(require 'ox-latex)
+(require 'ox-ascii)
+(require 'ox-odt)
 
 ;;; checklist helper functions including automatic resetting
 
-(use-package org-checklist :load-path "/usr/share/org-mode/lisp")
+(require 'org-checklist)
 
 ;;; inline tasks
 
-(use-package org-inlinetask)
+(require 'org-inlinetask)
 
 ;;; links to notmuch messages
 
-(use-package org-notmuch :load-path "/usr/share/org-mode/lisp")
+(require 'org-notmuch)
 
-;;; links to mairix messages by message-id in Org
+;;; org-indent-mode
 
-;;(use-package org-mairix-el
-;;  :bind ("C-c m" . org-mairix-el-insert-link)
-;;  :commands (org-mairix-el-insert-link org-mairix-el-link org-mairix-el-open))
+(require 'org-indent)
 
-;;; highlight current sentence
+;;; I occasionally use org-habit
 
-;; This is in ~/.emacs.d/site-lisp because its copyright status is a
-;; bit murky.  The code comes from the Emacs Wiki, but was the
-;; "everything on Emacs Wiki is GPL" notice present when the code was
-;; first posted?  TODO find out, and package for Debian if possible
-
-(use-package hl-sentence
-  :disabled t
-  :commands hl-sentence-mode
-  :demand
-  :config
-  (add-hook 'org-mode-hook 'hl-sentence-mode)
-  (set-face-background 'hl-sentence-face "#4F4F4F"))
-
-;;; graphical calendar
-
-(use-package calfw
-  :disabled t
-  :init (load-library "calfw-org"))
-
-(defun spw/org-calfw ()
-  (interactive)
-  (let ((org-deadline-warning-days 0)
-        (org-agenda-files (list "~/doc/org/diary.org")))
-    (save-window-excursion
-      (cfw:open-org-calendar)
-      (switch-to-buffer "*cfw-calendar*")
-      (call-interactively 'htmlize-buffer)
-      (write-file "~/tmp/calendar.html"))))
+(require 'org-habit)
 
 
 
 ;;;; ---- preferences ----
 
-;; this used to be needed
-
-;; (custom-set-faces
-;;  '(org-hide ((t (:foreground "#3f3f3f" :slant normal :weight normal :height 110 :width normal :foundry "xos4" :family "Terminus")))))
-
-;; diminish `org-indent-mode' lighter
-
-(require 'diminish)
-(require 'org-indent)
 (diminish 'org-indent-mode)
-
-;; custom doesn't actually set all the faces it should, so we'll do
-;; some manually
-;;(set-face-foreground 'org-hide "#3f3f3f")
-;; (ignore-errors (set-face-font 'org-hide "Terminus-11"))
 
 (setq
  org-alphabetical-lists t
@@ -304,7 +258,6 @@
 
 ;;; Org habit
 
-(use-package org-habit)
 ;; (setq org-habit-graph-column nil)
 
 ;;;; ---- agenda and refile ----
