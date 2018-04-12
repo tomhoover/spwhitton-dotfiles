@@ -696,7 +696,7 @@ Passes ARG to `projectile-switch-project-by-name'."
 (winner-mode 1)
 
 ;;; Load up Haskell mode settings if Debian haskell-mode package
-;;; installed (and load here, as dependencies of these settings are
+;;; installed (and load here, as some dependencies of these settings
 ;;; earlier in this init file)
 
 (use-package haskell-mode
