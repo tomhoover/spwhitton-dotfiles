@@ -92,7 +92,6 @@
  org-startup-indented 1
  org-indent-indentation-per-level 2
  org-adapt-indentation nil
- org-directory "~/doc/org"
 
  org-tag-alist '((:startgroup)
                  ("@Tucson"       . ?T)

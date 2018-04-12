@@ -314,6 +314,10 @@ hooks listed in `lisp-major-mode-hooks'."
          ("C-c o ]" . spw--org-remove-file))
   :commands (org-save-all-org-buffers   ; for ~/bin/save-org-buffers
              orgstruct++-mode)
+  :init
+  ;; define this early so that `spw--search-notes' and `spw--new-note'
+  ;; can make use of it
+  (setq org-directory "~/doc/org")
   :config (load (concat user-emacs-directory "init-org.el")))
 
 ;;; more useful unique buffer names
@@ -542,11 +546,39 @@ Passes ARG to `projectile-switch-project-by-name'."
 (use-package helm-projectile
   :if (and
        (spw--optional-pkg-available-p "helm-ag")
-       (spw--optional-pkg-available-p "helm-projectile"))
+       (spw--optional-pkg-available-p "helm-projectile")
+       (boundp 'org-directory))         ; when have newer use-package,
+                                        ; can use :after instead
   :bind (("C-c f" . spw--search-notes)
          ("C-c F" . spw--new-note))
   :commands helm-projectile-ag
-  :init (use-package helm-ag))
+  :config
+  (use-package helm-ag)
+  (defun spw--search-notes ()
+    "Invoke ag to incrementally search through my Org notes."
+    (interactive)
+    (unless (boundp 'org-directory)
+      (require 'org))
+    (let ((projectile-project-root org-directory))
+      (call-interactively 'helm-projectile-ag)))
+  (defun spw--new-note (name)
+    "Create a new Org note entitled NAME."
+    (interactive "sTitle: ")
+    (unless (boundp 'org-directory)
+      (require 'org))
+    (let* ((sanitised1
+            (replace-regexp-in-string "\?" "" name))
+           (sanitised2
+            (replace-regexp-in-string ": " "," sanitised1))
+           (sanitised3
+            (replace-regexp-in-string ":" "," sanitised2))
+           (sanitised
+            (replace-regexp-in-string " " "_" sanitised3)))
+      (find-file (expand-file-name
+                  (concat sanitised ".org")
+                  org-directory))
+      (insert (concat "#+TITLE: " name))
+      (insert "\n"))))
 
 ;;; completion with ido
 
@@ -1346,33 +1378,6 @@ Used in my `message-mode' yasnippets."
        ((string= name "Thomas") "Tom")
        ;; default
        (t name)))))
-
-(defun spw--search-notes ()
-  "Invoke ag to incrementally search through my Org notes."
-  (interactive)
-  (unless (boundp 'org-directory)
-    (require 'org))
-  (let ((projectile-project-root org-directory))
-    (call-interactively 'helm-projectile-ag)))
-
-(defun spw--new-note (name)
-  "Create a new Org note entitled NAME."
-  (interactive "sTitle: ")
-  (unless (boundp 'org-directory)
-    (require 'org))
-  (let* ((sanitised1
-          (replace-regexp-in-string "\?" "" name))
-         (sanitised2
-          (replace-regexp-in-string ": " "," sanitised1))
-         (sanitised3
-          (replace-regexp-in-string ":" "," sanitised2))
-         (sanitised
-          (replace-regexp-in-string " " "_" sanitised3)))
-    (find-file (expand-file-name
-                (concat sanitised ".org")
-                org-directory))
-    (insert (concat "#+TITLE: " name))
-    (insert "\n")))
 
 
 
