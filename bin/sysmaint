@@ -329,16 +329,18 @@ status "info: you can unmount & eject $loc" if ( defined $loc );
 
 # ---- local system maintenance
 
-exit unless $term->ask_yn(
-                          prompt =>
-                          "Backups complete.  Perform local system maintainance?"
-                         );
-
 System:
 
 exit unless $can_sudo;
 exit if ("--skip-system" ~~ @ARGV_options);
 exit if ("--only-user" ~~ @ARGV_options);
+
+unless ("--only-system" ~~ @ARGV_options) {
+    exit unless $term->ask_yn(
+                          prompt =>
+                          "Backups complete.  Perform local system maintainance?"
+                         );
+}
 
 $seq->add_should_succeed("df -h");
 $seq->run();
