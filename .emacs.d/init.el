@@ -490,9 +490,9 @@ hooks listed in `lisp-major-mode-hooks'."
          ("C-c j" . projectile-find-file)
          ("C-c v" . projectile-vc))
   ;; we have to demand because projectile-command-map is not a
-  ;; command, so is not autoloaded by the :bind above.  When Debian
-  ;; has a more recent use-package, we can use :bind-keymap instead
-  ;; and thereby drop this :demand
+  ;; command, so is not autoloaded by the :bind above.  We could drop
+  ;; the :demand and use :bind-keymap but together with my keychord
+  ;; that seems to mean trouble
   :demand
   :config
   ;; rebind to take advantage of helm-projectile library here
