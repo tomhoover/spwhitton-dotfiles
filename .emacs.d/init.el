@@ -1277,6 +1277,8 @@ Originally from <http://blog.gleitzman.com/post/35416335505/hunting-for-unicode-
             (replace-regexp key value)))))
 (bind-key "C-c g u" 'gleitzman--unicode-hunt)
 
+;;; saving lines
+
 (defun spw--kill-ring-save (arg)
   "As `kill-ring-save', but save to end of ARG lines if mark inactive."
   (interactive "P")
@@ -1293,8 +1295,10 @@ Originally from <http://blog.gleitzman.com/post/35416335505/hunting-for-unicode-
 ;; without moving point
 (bind-key "M-w" 'spw--kill-ring-save)
 
+;;; opening terminals
+
 (defun spw--open-term-here ()
-  "Open a fresh urxvt terminal in current directory."
+  "Open a fresh xfce4 terminal in current directory."
   (interactive)
   (call-process "xfce4-terminal" nil 0 nil
                 (concat "--working-directory="
