@@ -900,9 +900,6 @@ Passes ARG to `projectile-switch-project-by-name'."
   :config
   (ws-butler-global-mode))
 
-(use-package cycle-quotes
-  :if (spw--optional-pkg-available-p "cycle-quotes")
-  :bind ("C-c '" . cycle-quotes))
 
 (use-package redtick
   :if (spw--optional-pkg-available-p "redtick")
