@@ -849,41 +849,6 @@ Passes ARG to `projectile-switch-project-by-name'."
   :init (dolist (hook '(emacs-lisp-mode-hook ielm-mode-hook))
           (add-hook hook 'elisp-slime-nav-mode)))
 
-(use-package world-time-mode
-  :if (spw--optional-pkg-available-p "world-time-mode")
-  :commands world-time-list
-  :bind ("C-c g t" . world-time-list))
-
-;; and set up time zones I'm interested in
-
-(if (eq system-type 'windows-nt)
-
-    (setq display-time-world-list '(("MST7" "Phoenix")
-                                    ("GMT0BST" "London")
-                                    ("CET-1CDT" "Paris")
-                                    ("KST-9" "Seoul")))
-
-  (setq display-time-world-list '(("America/Phoenix" "Phoenix")
-                                  ("Europe/London" "London")
-                                  ("Europe/Paris" "Paris")
-                                  ("Asia/Seoul" "Seoul"))))
-
-(use-package debpaste
-  :if (spw--optional-pkg-available-p "debpaste")
-  :commands (debpaste-display-paste
-             debpaste-paste-region
-             debpaste-paste-buffer
-             debpaste-delete-paste)
-  :init
-  (setq debpaste-user-name "spwhitton")
-  :config
-  ;; Straight from the README
-  (delete 'debpaste-display-received-info-in-minibuffer
-          debpaste-received-filter-functions)
-  (define-key debpaste-command-map "i"
-    'debpaste-display-received-info-in-buffer)
-  (define-key debpaste-command-map "l"
-    'debpaste-display-posted-info-in-buffer))
 ;;; automatic whitespace handling
 
 (use-package ws-butler
