@@ -1739,14 +1739,14 @@ mutt's review view after exiting EDITOR."
 
 ;;; LaTeX
 
-(setq TeX-auto-save t
-      TeX-parse-self t
-      LaTeX-indent-level 4
-      LaTeX-item-indent -2
-      TeX-newline-function 'reindent-then-newline-and-indent)
+;; (setq TeX-auto-save t
+;;       TeX-parse-self t
+;;       LaTeX-indent-level 4
+;;       LaTeX-item-indent -2
+;;       TeX-newline-function 'reindent-then-newline-and-indent)
 
-(add-hook 'LaTeX-mode-hook 'turn-on-auto-fill)
-(add-hook 'LaTeX-mode-hook 'TeX-PDF-mode)
+;; (add-hook 'LaTeX-mode-hook 'turn-on-auto-fill)
+;; (add-hook 'LaTeX-mode-hook 'TeX-PDF-mode)
 
 (setq TeX-output-view-style
       (quote
@@ -1755,10 +1755,10 @@ mutt's review view after exiting EDITOR."
 
 ;;; fixes for exporting from Org-mode
 
-;; (setq TeX-auto-save t)
-;; (setq TeX-parse-self t)
-(setq-default TeX-master t)
-(make-variable-buffer-local 'TeX-master)
+;; ;; (setq TeX-auto-save t)
+;; ;; (setq TeX-parse-self t)
+;; (setq-default TeX-master t)
+;; (make-variable-buffer-local 'TeX-master)
 
 ;;; the Emacs calculator
 
