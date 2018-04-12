@@ -7,8 +7,8 @@ MAILTO=spwhitton@spwhitton.name
 #@reboot cd $HOME/lib/rt 2>/dev/null && git annex watch || true
 #@reboot cd $HOME/lib/wikiannex 2>/dev/null && git annex watch || true
 
-* * * * *   srem --cron
-0 */2 * * * srem --refresh-emacs
+# * * * * *   srem --cron
+# 0 */2 * * * srem --refresh-emacs
 
 */15 * * * * chronic doccheckin
 */30 * * * * chronic nice ionice -c 3 notmuch new
