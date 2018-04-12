@@ -865,6 +865,7 @@ Passes ARG to `projectile-switch-project-by-name'."
   :config
   (ws-butler-global-mode))
 
+;;; pomodoro timer
 
 (use-package redtick
   :if (spw--optional-pkg-available-p "redtick")
