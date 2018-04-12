@@ -1019,6 +1019,20 @@ Passes ARG to `projectile-switch-project-by-name'."
 
   (setq notmuch-mua-user-agent-function 'notmuch-mua-user-agent-full)
 
+  ;; TODO upstream?
+  (defun message-newline-and-reformat--delete-superfluous-newlines (&rest ignore)
+    "Have `message-newline-and-reformat' get rid of some more superflous blank quoted lines."
+    (save-excursion
+      (forward-line -2)
+      (when (looking-at ">[[:space:]]*$")
+        (kill-line 1)))
+    (save-excursion
+      (forward-line 2)
+      (when (looking-at ">[[:space:]]*$")
+        (kill-line 1))))
+  (advice-add 'message-newline-and-reformat
+	      :after #'message-newline-and-reformat--delete-superfluous-newlines)
+
   ;; TODO generalise the following hack into something that can be
   ;; upstreamed
 
