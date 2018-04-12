@@ -88,6 +88,7 @@ our $can_sudo = 0;
 our $can_push = 1;
 our $check_for_extdrive = 0;
 switch ("$ENV{USER}\@$host") {
+    case /^root@/                     { $can_push = 0; last }
     case /^spw@.*\.silentflame\.com$/ { $can_push = 0; last } # develacc
     case /\.silentflame\.com$/        { $can_sudo = 1; next }
     case /iris\.silentflame\.com$/    { $check_for_extdrive = 1; next }
