@@ -1143,6 +1143,7 @@ actually calls `org-edit-src-code'."
                (t (org-narrow-to-subtree))))
         (t (narrow-to-defun))))
 (bind-key "C-c n" 'mwf--narrow-or-widen-dwim)
+(put 'narrow-to-region 'disabled nil)
 
 ;;; killing of words and regions
 
@@ -1805,7 +1806,6 @@ mutt's review view after exiting EDITOR."
 ;; disable line numbering primarily so that killing and copying stack
 ;; entries puts the number alone in the kill-ring
 (setq calc-line-numbering nil)
-(put 'narrow-to-region 'disabled nil)
 
 ;; on my "Amazon Basics" keyboard
 (bind-key "<XF86Calculator>" 'calc)
