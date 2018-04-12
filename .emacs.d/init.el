@@ -85,6 +85,13 @@
 ;; *scratch* easier to use
 (setq initial-major-mode 'text-mode)
 
+;;; other startup settings
+
+(setq ;; inhibit-startup-echo-area-message ""
+ ;; inhibit-startup-screen t
+ ;; initial-buffer-choice t
+ initial-scratch-message nil)
+
 ;;; put backups and autosaves in /tmp
 
 ;; set up tmp files dir
@@ -327,7 +334,20 @@ hooks listed in `lisp-major-mode-hooks'."
   :if (spw--optional-pkg-available-p "openwith")
   :commands openwith-mode
   :demand
-  :config (openwith-mode 1))
+  :config
+  (setq
+   openwith-associations
+   '(("\\.pdf\\'" "evince"
+      (file))
+     ("\\.\\(ogg\\|mp3\\|flac\\|mkv\\|webm\\|avi\\|mp4\\|wmv\\|flv\\)\\'" "vlc"
+      (file))
+     ("\\.\\(doc\\|docx\\|xls\\|xlsx\\|ppt\\|pptx\\|potx\\)\\'" "soffice"
+      (file))
+     ("\\.hwp\\'" "hanword"
+      (file))
+     ("\\.\\(jpg\\|JPG\\|jpeg\\|png\\|gif\\)" "eog"
+      (file))))
+  (openwith-mode 1))
 
 ;; thanks to openwith, the warning for large files can be at a much
 ;; larger threshold as the chances of hitting it are low (this is
@@ -984,6 +1004,8 @@ Passes ARG to `projectile-switch-project-by-name'."
     (require 'notmuch))
   (advice-add 'compose-mail :before #'compose-mail--load-notmuch)
 
+  (setq send-mail-function 'sendmail-send-it)
+
   ;; always decrypt & verify PGP parts
   (setq notmuch-crypto-process-mime t)
   ;; have Emacs set envelope-from to be on the safe side
@@ -994,6 +1016,8 @@ Passes ARG to `projectile-switch-project-by-name'."
   (setq notmuch-archive-tags '("-unread"))
   (setq notmuch-maildir-use-notmuch-insert t
         notmuch-fcc-dirs "sent -unread")
+
+  (setq notmuch-mua-user-agent-function 'notmuch-mua-user-agent-full)
 
   ;; TODO generalise the following hack into something that can be
   ;; upstreamed

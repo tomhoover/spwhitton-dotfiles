@@ -123,6 +123,7 @@
  org-agenda-files "~/doc/emacs-org-agenda-files"
  org-agenda-diary-file "~/.labbook.gpg"
  org-agenda-insert-diary-strategy 'date-tree
+ org-agenda-sticky t
  org-goto-auto-isearch t
  org-goto-interface 'outline
  org-archive-mark-done nil
@@ -155,6 +156,7 @@
  ;; org-log-refile 'time
  org-log-refile nil
  org-enforce-todo-dependencies t
+ org-enforce-todo-checkbox-dependencies t
  org-cycle-separator-lines 2
  org-blank-before-new-entry (quote ((heading)
                                     (plain-list-item)))
@@ -256,6 +258,8 @@
  org-latex-default-class "wordlike"
 
  org-export-headline-levels 3   ; set to 2 for spwoutline
+
+ org-odt-preferred-output-format "pdf"
 
  ;; org-export-latex-low-levels '("\\begin{lowitemize}\\setlength{\\parindent}{2em}" "\\end{lowitemize}" "\\item \\textbf{%s}\\indent %s")
 
