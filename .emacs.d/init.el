@@ -1452,6 +1452,7 @@ Used in my `message-mode' yasnippets."
   ;; modifying anything.  So save it, or for the very frequently
   ;; called `kill-buffer', clear modification flag for these bogus
   ;; modifications
+  ;; TODO fix this upstream
   (defun bookmark-write-file--save-bookmarks-buffer (&rest ignore)
     (when (get-buffer "emacs-bookmarks")
       (with-current-buffer (get-buffer "emacs-bookmarks")
