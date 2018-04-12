@@ -85,10 +85,6 @@
 ;; *scratch* easier to use
 (setq initial-major-mode 'text-mode)
 
-;;; load terminal fixes
-
-(load-file (concat user-emacs-directory "init-term.el"))
-
 ;;; put backups and autosaves in /tmp
 
 ;; set up tmp files dir
