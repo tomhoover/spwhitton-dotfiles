@@ -876,6 +876,8 @@ Passes ARG to `projectile-switch-project-by-name'."
   ;; this is needed with no history file
   (remove-hook 'redtick-after-rest-hook #'redtick--save-history))
 
+;;; notmuch
+
 (use-package notmuch
   :if (spw--optional-pkg-available-p "notmuch")
   :bind (("C-c m" . notmuch-jump-search)
@@ -907,8 +909,8 @@ Passes ARG to `projectile-switch-project-by-name'."
                    :query ,(concat "tag:unread and (" debian ")"))
             (:name "feeds unread" :key "f" :search-type nil :sort-order oldest-first
                    :query ,(concat "tag:unread and (" feeds ")"))
-            ;; (:name "flagged" :key "F" :search-type tree
-            ;;        :query "tag:flagged" )
+            (:name "flagged" :key "F" :search-type tree
+                   :query "tag:flagged" )
             (:name "sent" :key "s" :search-type nil :sort-order newest-first
                    :query "from:spwhitton@spwhitton.name or from:spwhitton@email.arizona.edu")
             (:name "drafts" :key "D" :search-type nil :sort-order newest-first
@@ -916,8 +918,7 @@ Passes ARG to `projectile-switch-project-by-name'."
             (:name "all unread" :key "U" :search-type nil :sort-order oldest-first
                    :query "tag:unread")
             (:name "all mail" :key "a" :search-type nil :sort-order newest-first
-                   :query "*")
-            )))
+                   :query "*"))))
 
   (defun spw--notmuch-import-gpg ()
     (interactive)
