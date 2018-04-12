@@ -1824,15 +1824,16 @@ mutt's review view after exiting EDITOR."
 ;; using cperl-mode instead of perl-mode because the former doesn't
 ;; try to indent lines within a POD
 
-(add-to-list 'auto-mode-alist '("\\.\\([pP][Llm]\\|al\\)\\'" . cperl-mode))
-(add-to-list 'interpreter-mode-alist '("perl" . cperl-mode))
-(add-to-list 'interpreter-mode-alist '("perl5" . cperl-mode))
-(add-to-list 'interpreter-mode-alist '("miniperl" . cperl-mode))
-
-(setq cperl-indent-level 4)
-(setq cperl-indent-wrt-brace t)
-(setq cperl-lineup-step 1)
-;; (setq cperl-continued-statement-offset 4)
+(use-package cperl-mode
+  :mode "\\.\\([pP][Llm]\\|al\\)\\'"
+  :interpreter (("perl" . cperl-mode)
+                ("perl5" . cperl-mode)
+                ("miniperl" . cperl-mode))
+  :init
+  ;; (setq cperl-continued-statement-offset 4)
+  (setq cperl-indent-level 4)
+  (setq cperl-indent-wrt-brace t)
+  (setq cperl-lineup-step 1))
 
 ;;; changelogs
 
