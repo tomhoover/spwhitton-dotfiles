@@ -1357,7 +1357,7 @@ Originally from <http://blog.gleitzman.com/post/35416335505/hunting-for-unicode-
 
 ;;; message-mode functions
 
-(defun spw/recipient-first-name ()
+(defun spw--recipient-first-name ()
   "Attempt to extract the first name of the recipient of a `message-mode' message.
 
 Used in my `message-mode' yasnippets."

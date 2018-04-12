@@ -1,3 +1,3 @@
-Hello ${1:`(spw/recipient-first-name)`},
+Hello ${1:`(spw--recipient-first-name)`},
 
 $0
