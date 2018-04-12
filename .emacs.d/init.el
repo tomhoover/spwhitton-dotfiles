@@ -1836,11 +1836,11 @@ mutt's review view after exiting EDITOR."
 
 ;;; changelogs
 
-(defun spw/change-log-setup ()
+(defun spw--change-log-setup ()
   (setq-local indent-tabs-mode nil)
   (setq-local left-margin 2)
   (orgstruct++-mode 1))
-(add-hook 'change-log-mode-hook 'spw/change-log-setup)
+(add-hook 'change-log-mode-hook 'spw--change-log-setup)
 
 (setq debian-changelog-mailing-address "spwhitton@spwhitton.name")
 
