@@ -459,10 +459,16 @@ hooks listed in `lisp-major-mode-hooks'."
       dired-dwim-target t
       dired-listing-switches "--group-directories-first -alh")
 
-;; should be able to unzip with Z
-(with-eval-after-load "dired-aux"
-  (add-to-list 'dired-compress-file-suffixes
-               '("\\.zip\\'" ".zip" "unzip")))
+(add-hook 'dired-load-hook
+          (lambda ()
+            (load "dired-aux")
+            ;; should be able to unzip with Z
+            (add-to-list 'dired-compress-file-suffixes
+                         '("\\.zip\\'" ".zip" "unzip"))
+            (load "dired-x")
+            (setq-default dired-omit-mode t)
+            (setq dired-omit-files "^\\...+$")
+            (setq dired-isearch-filenames t)))
 
 (use-package git-annex
   :if (spw--optional-pkg-available-p "git-annex"))
@@ -1725,17 +1731,6 @@ mutt's review view after exiting EDITOR."
 
 (add-hook 'text-mode-hook 'turn-on-auto-fill)
 (diminish 'auto-fill-function)
-
-;;; dired
-
-(use-package dired-x)
-(setq-default dired-omit-mode t)
-(setq dired-omit-files "^\\...+$")
-(setq dired-isearch-filenames 'dwim)
-
-;; dired omit mode mapping conflicts with my avy binding
-(define-key dired-mode-map (kbd "M-o") 'nil)
-(bind-key "C-c g o" 'dired-omit-mode dired-mode-map)
 
 ;;; LaTeX
 
