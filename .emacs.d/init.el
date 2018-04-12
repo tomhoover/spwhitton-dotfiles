@@ -695,15 +695,21 @@ Passes ARG to `projectile-switch-project-by-name'."
 
 (winner-mode 1)
 
+;;; subword-mode
+
+(use-package subword
+  :diminish subword-mode)
+
 ;;; Load up Haskell mode settings if Debian haskell-mode package
 ;;; installed (and load here, as some dependencies of these settings
 ;;; earlier in this init file)
 
-(use-package haskell-mode
+(use-package haskell
   :if (spw--optional-pkg-available-p "haskell-mode")
   :mode (("\\.hs" . haskell-mode)
          ("\\.lhs" . literate-haskell-mode)
          ("\\.cabal" . haskell-cabal-mode))
+  :diminish interactive-haskell-mode
   :config
   ;; TODO polish, and package for Debian
   (use-package haskell-tab-indent
@@ -751,11 +757,6 @@ Passes ARG to `projectile-switch-project-by-name'."
   (require 'haskell-interactive-mode)
   (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
   (add-hook 'haskell-mode-hook 'subword-mode)
-
-  (require 'haskell)
-  (diminish 'interactive-haskell-mode)
-  (require 'subword)
-  (diminish 'subword-mode)
 
 ;;; standard Haskell repl interaction bindings
 
