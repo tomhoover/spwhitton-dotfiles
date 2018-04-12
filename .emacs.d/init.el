@@ -1479,7 +1479,7 @@ Used in my `message-mode' yasnippets."
 
 ;; mark settings
 (setq transient-mark-mode t
-      set-mark-command-repeat-pop t)
+      set-mark-command-repeat-pop nil)
 
 ;; recursive minibuffers
 (setq enable-recursive-minibuffers t)
