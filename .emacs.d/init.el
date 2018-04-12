@@ -312,7 +312,7 @@ hooks listed in `lisp-major-mode-hooks'."
          ("C-c o a" . org-agenda)
          ("C-c o [" . spw--org-agenda-file-to-front)
          ("C-c o ]" . spw--org-remove-file))
-  :commands (org-save-all-org-buffers   ; for ~/bin/sync-docs
+  :commands (org-save-all-org-buffers   ; for ~/bin/save-org-buffers
              orgstruct++-mode)
   :config (load (concat user-emacs-directory "init-org.el")))
 
