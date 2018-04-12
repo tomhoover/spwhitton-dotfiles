@@ -375,7 +375,7 @@ $term->get_reply(
                  default => 'okay',
                 );
 
-$seq->add_should_succeed("aptitude search ?obsolete");
+$seq->add_should_succeed("aptitude search ?obsolete || true");
 $seq->run();
 $term->get_reply(
                  prompt => "If packages shown, consider removing no longer available from the mirrors: `aptitude purge ?obsolete`",
