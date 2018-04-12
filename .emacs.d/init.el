@@ -872,9 +872,11 @@ Passes ARG to `projectile-switch-project-by-name'."
   :bind ("C-c P" . redtick-mode)
   :init
   (setq redtick-history-file nil)
-  :config
+  ;; :config
   ;; this is needed with no history file
-  (remove-hook 'redtick-after-rest-hook #'redtick--save-history))
+  ;; TODO fix upstream code
+  ;; (remove-hook 'redtick-after-rest-hook #'redtick--save-history)
+  )
 
 ;;; notmuch
 
@@ -959,6 +961,9 @@ Passes ARG to `projectile-switch-project-by-name'."
   (setq notmuch-archive-tags '("-unread"))
   (setq notmuch-maildir-use-notmuch-insert t
         notmuch-fcc-dirs "sent -unread")
+
+  ;; TODO generalise the following hack into something that can be
+  ;; upstreamed
 
   ;; Harald Hanche-Olsen <https://emacs.stackexchange.com/a/3339>
   (defmacro add-hook-run-once (hook function &optional append local)
