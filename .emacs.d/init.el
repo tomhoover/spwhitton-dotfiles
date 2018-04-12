@@ -602,6 +602,7 @@ Passes ARG to `projectile-switch-project-by-name'."
       ido-create-new-buffer 'never
       ;; ido-file-extensions-order '(".org" ".mdwn" ".hs" ".tex" ".py" )
       ido-default-file-method 'selected-window
+      ido-default-buffer-method 'selected-window
       ido-max-directory-size 100000
       ido-auto-merge-delay-time 99999 ; only search when I tell you to, M-s
       ido-use-virtual-buffers t
@@ -1542,7 +1543,6 @@ Used in my `message-mode' yasnippets."
 (setq scroll-preserve-screen-position t)
 
 (setq switch-to-visible-buffer nil)
-(setq ido-default-buffer-method 'selected-window)
 
 ;; dabbrev should be case-insensitive
 (setq dabbrev-case-fold-search t)
