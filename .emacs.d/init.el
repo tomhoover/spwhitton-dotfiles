@@ -1547,18 +1547,6 @@ Used in my `message-mode' yasnippets."
 
 (ansi-color-for-comint-mode-on)
 
-;;; avoid some prompts when saving all buffers
-
-(defun spw--save-org-buffers-first (&rest ignore)
-  "Save all Org buffers without prompting."
-  (when (featurep 'org)
-    ;; gotta remove this advice first since `org-save-all-org-buffers'
-    ;; calls `save-some-buffers'
-    (advice-remove 'save-some-buffers #'spw--save-org-buffers-first)
-    (org-save-all-org-buffers)
-    (advice-add 'save-some-buffers :before #'spw--save-org-buffers-first)))
-(advice-add 'save-some-buffers :before #'spw--save-org-buffers-first)
-
 ;;; show column numbers as well as line numbers in the mode line
 
 (setq column-number-mode t)
