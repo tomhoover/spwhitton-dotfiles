@@ -5,10 +5,8 @@
 use strict;
 use warnings;
 
-use File::Glob;
-
-chomp( my $version = `dpkg-parsechangelog -SVersion`);
-chomp( my $package = `dpkg-parsechangelog -SSource` );
-chomp( my $arch    = `dpkg --print-architecture` );
+chomp( my $version = `dpkg-parsechangelog -SVersion` );
+chomp( my $package = `dpkg-parsechangelog -SSource`  );
+chomp( my $arch    = `dpkg --print-architecture`     );
 
 system "less ../${package}_${version}_$arch.build";
