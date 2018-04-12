@@ -1416,11 +1416,9 @@ Used in my `message-mode' yasnippets."
 
 (bind-key "C-c t e" 'toggle-debug-on-error)
 (bind-key "C-c t i" 'org-indent-mode)
-(bind-key "C-c t w" 'spw/writing-toggle)
 
 ;;; evaluation
 
-(bind-key "C-c e e" 'spw/eval-surrounding-sexp)
 (bind-key "C-c e f" 'eval-defun)
 (bind-key "C-c e r" 'eval-region)
 (bind-key "C-c e b" 'eval-buffer)
