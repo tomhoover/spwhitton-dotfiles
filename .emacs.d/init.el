@@ -1204,7 +1204,32 @@ Author unknown."
           (set-window-buffer (next-window) next-win-buffer)
           (select-window first-win)
           (if this-win-2nd (other-window 1))))))
-(bind-key "C-c S" 'spw--toggle-window-split)
+(bind-key "s" 'spw--toggle-window-split ctl-x-4-map)
+
+;; there are many variations on this online
+(defun spw--rotate-windows (arg)
+  "Rotate your windows, reversing direction if ARG.
+
+By Robert Bost, based on work by Steve Yegge, Colin Doering and others."
+  (interactive "P")
+  (if (not (> (count-windows) 1))
+      (message "You can't rotate a single window!")
+    (let* ((rotate-times (prefix-numeric-value arg))
+           (direction (if (or (< rotate-times 0) (equal arg '(4)))
+                          'reverse 'identity)))
+      (dotimes (_ (abs rotate-times))
+        (dotimes (i (- (count-windows) 1))
+          (let* ((w1 (elt (funcall direction (window-list)) i))
+                 (w2 (elt (funcall direction (window-list)) (+ i 1)))
+                 (b1 (window-buffer w1))
+                 (b2 (window-buffer w2))
+                 (s1 (window-start w1))
+                 (s2 (window-start w2))
+                 (p1 (window-point w1))
+                 (p2 (window-point w2)))
+            (set-window-buffer-start-and-point w1 b2 s2 p2)
+            (set-window-buffer-start-and-point w2 b1 s1 p1)))))))
+(bind-key "t" 'spw--rotate-windows ctl-x-4-map)
 
 (defun magnars--move-beginning-of-line-dwim (arg)
   "Move point back to indentation or beginning of line.
