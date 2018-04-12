@@ -1527,8 +1527,8 @@ Used in my `message-mode' yasnippets."
 
 (setq select-active-regions t
       mouse-drag-copy-region t
-      x-select-enable-primary nil
-      x-select-enable-clipboard t
+      select-enable-primary nil
+      select-enable-clipboard t
       mouse-yank-at-point t
       yank-pop-change-selection t
       save-interprogram-paste-before-kill t
