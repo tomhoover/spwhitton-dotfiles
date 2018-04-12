@@ -884,11 +884,12 @@ Passes ARG to `projectile-switch-project-by-name'."
     'debpaste-display-received-info-in-buffer)
   (define-key debpaste-command-map "l"
     'debpaste-display-posted-info-in-buffer))
+;;; automatic whitespace handling
 
 (use-package ws-butler
   :if (spw--optional-pkg-available-p "ws-butler")
-  :demand
   :diminish ws-butler-mode
+  :demand
   :init
   ;; message-mode is sensitive to trailing whitespace in sig dashes
   ;; and empty headers.  markdown-mode is sensitive in empty headers
@@ -896,7 +897,8 @@ Passes ARG to `projectile-switch-project-by-name'."
   ;; indicate paragraph flow (obscure Markdown feature)
   (setq ws-butler-global-exempt-modes
         '(markdown-mode message-mode))
-  :config (ws-butler-global-mode))
+  :config
+  (ws-butler-global-mode))
 
 (use-package cycle-quotes
   :if (spw--optional-pkg-available-p "cycle-quotes")
