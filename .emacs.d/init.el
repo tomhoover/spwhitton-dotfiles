@@ -1312,6 +1312,8 @@ Originally from <http://blog.gleitzman.com/post/35416335505/hunting-for-unicode-
   (set-text-properties 0 (length txt) nil txt)
   txt)
 
+;;; rebasing dotfiles
+
 (defun spw--dotfiles-rebase ()
   "Rebase & push dotfiles."
   (interactive)
