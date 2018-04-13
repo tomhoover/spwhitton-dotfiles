@@ -214,15 +214,6 @@
 
 ;;;; ---- agenda and refile ----
 
-(defun org-agenda--switch-projectile-project (&rest ignore)
-  "Switch perspective project before compiling the agenda."
-  ;; don't do it if we're already there so that the buffer we're
-  ;; switching from remains top of the buffer list
-  (unless
-      (ignore-errors (string= "~/doc/" (abbreviate-file-name (projectile-project-root))))
-    (projectile-switch-project-by-name "~/doc")))
-;; (advice-add 'org-agenda :before #'org-agenda--switch-projectile-project)
-
 (setq
  org-agenda-custom-commands
  '(("a" "Primary agenda view"
