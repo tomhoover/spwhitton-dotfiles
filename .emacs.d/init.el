@@ -396,6 +396,14 @@ hooks listed in `lisp-major-mode-hooks'."
   :commands aggressive-indent-mode
   :init (spw--activate-in-lisp-modes 'aggressive-indent-mode))
 
+;;; fill comments
+
+(defun spw--turn-on-comment-filling ()
+  "Turn on filling comments."
+  (setq-local comment-auto-fill-only-comments t)
+  (auto-fill-mode 1))
+(spw--activate-in-lisp-modes 'spw--turn-on-comment-filling)
+
 ;;; company-mode for smart and easy completion
 
 (use-package company
