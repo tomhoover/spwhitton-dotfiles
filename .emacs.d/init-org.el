@@ -213,39 +213,10 @@
  org-capture-templates-contexts
  '(("t" "m" ((in-mode . "notmuch-show-mode")))
    ("t" ((not-in-mode . "notmuch-show-mode")))
-   ("m" ((in-mode . "notmuch-show-mode")))))
+   ("m" ((in-mode . "notmuch-show-mode"))))
 
-;; Org setting bookmarks that I never use makes for git merge
-;; conflicts that I don't need to spend time resolving.  Eventually I
-;; plan to write a git merge driver to do it for me but until then,
-;; just don't set the bookmarks.
-(setq org-bookmark-names-plist nil)
-
-;;; add all my notes files to Org text search (e.g. C-c a /)
-
-;; first clear out the (agenda-archives) from such searches; I only
-;; have one so can easily search it manually
-(setq org-agenda-text-search-extra-files nil)
-
-(when (file-exists-p abbrev-file-name)
-  (with-current-buffer (find-file-noselect org-agenda-files)
-    (dolist (file (directory-files org-directory nil "\\.org$" t))
-      (save-excursion
-        (goto-char (point-min))
-        ;; search for the file name in ~/doc/org-agenda-files.  If it's
-        ;; there, don't add to the list: agenda files are included in
-        ;; text searches automatically
-        (if (not (search-forward file nil t))
-            (add-to-list 'org-agenda-text-search-extra-files (concat "~/doc/org/" file)))))))
-
-;; remove my massive archive files; can search that manually if
-;; necessary
-(dolist (file (f-glob "~/doc/org/archive/archive*.org"))
-  (delete file org-agenda-text-search-extra-files))
-
-;;; Org habit
-
-;; (setq org-habit-graph-column nil)
+ ;; I don't use these bookmarks and they cause git merge conflicts
+ org-bookmark-names-plist nil)
 
 ;;;; ---- agenda and refile ----
 
