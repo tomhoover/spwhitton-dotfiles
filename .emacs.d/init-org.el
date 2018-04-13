@@ -183,9 +183,6 @@
  ;; Allow refile to create parent tasks with confirmation
  org-refile-allow-creating-parent-nodes (quote confirm)
 
- ido-enable-tramp-completion t
- ido-confirm-unique-completion nil
- ido-show-dot-for-dired nil
  org-export-with-LaTeX-fragments t
  ;; org-export-initial-scope 'subtree
  org-html-inline-images 'maybe ; need this to export images correctly for PyBlosxom

@@ -642,6 +642,10 @@ Passes ARG to `projectile-switch-project-by-name'."
       ;; that don't match the current input
       ;; ido-work-directory-match-only t
 
+      ;; ido-enable-tramp-completion t
+      ido-confirm-unique-completion nil
+      ido-show-dot-for-dired nil
+
       ido-enable-flex-matching t)
 
 (ido-mode 1)
