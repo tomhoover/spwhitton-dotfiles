@@ -41,22 +41,23 @@
 
 (setq
  org-alphabetical-lists t
- org-startup-indented 1
+ org-startup-indented t
  org-indent-indentation-per-level 2
  org-adapt-indentation nil
 
- org-tag-alist '((:startgroup)
-                 ("@Tucson"       . ?t)
-                 ("@Sheffield"    . ?s)
-                 ("@LaAldea"      . ?h)
-                 (:endgroup)
-                 ("@iPad"         . ?i)
-                 ;; (:startgroup)
-                 ;; ("@Emacs"        . ?e) ; SSH Emacs only
-                 ;; ("@workstation"  . ?m) ; on my fully set-up personal (m)achine
-                 ;; (:endgroup)
-                 ("UA"            . ?w) ; academic work
-                 ("Debian"        . ?d))
+ org-tag-alist
+ '((:startgroup)
+   ("@Tucson"       . ?t)
+   ("@Sheffield"    . ?s)
+   ("@LaAldea"      . ?h)
+   (:endgroup)
+   ("@iPad"         . ?i)
+   ;; (:startgroup)
+   ;; ("@Emacs"        . ?e) ; SSH Emacs only
+   ;; ("@workstation"  . ?m) ; on my fully set-up personal (m)achine
+   ;; (:endgroup)
+   ("UA"            . ?w) ; academic work
+   ("Debian"        . ?d))
 
  org-agenda-include-all-todo nil
  org-agenda-files "~/doc/emacs-org-agenda-files"
@@ -78,14 +79,14 @@
  ;; we don't actually use Org's built-in stuck project support,
  ;; instead generating our own review agenda from scratch which
  ;; includes the right tasks.  See the view assigned to the '#' key
- org-stuck-projects (quote ("TODO" '("NEXT") nil ""))
+ org-stuck-projects '("TODO" '("NEXT") nil "")
 
  org-hide-emphasis-markers nil
  org-use-fast-todo-selection t
  org-treat-S-cursor-todo-selection-as-state-change nil
  org-treat-insert-todo-heading-as-state-change t
  org-fast-tag-selection-include-todo nil
- org-show-entry-below (quote ((default)))
+ org-show-entry-below '((default))
  org-log-into-drawer t
  ;; org-log-state-notes-insert-after-drawers t
  org-log-states-order-reversed nil
@@ -123,19 +124,12 @@
 
  org-remove-highlights-with-change nil
  org-read-date-prefer-future t
- ;; TODO needs updating for Org-mode version 9 (see changelog)
- ;; org-file-apps (quote ((auto-mode . emacs)
- ;;                       ("\\.mm\\'" . system)
- ;;                       ("\\.x?html?\\'" . system)
- ;;                       ("\\.pdf\\'" . system)
- ;;                       ("\\.jpg\\'" . "/usr/bin/feh %s")
- ;;                       ("\\.png\\'" . "/usr/bin/feh %s")
- ;;                       ("\\.gif\\'" . "/usr/bin/feh %s")))
- org-list-demote-modify-bullet (quote (("-" . "+")
-                                       ("+" . "*")
-                                       ("*" . "-")
-                                       ("1." . "-")
-                                       ("1)" . "-")))
+ org-list-demote-modify-bullet
+ '(("-" . "+")
+   ("+" . "*")
+   ("*" . "-")
+   ("1." . "-")
+   ("1)" . "-"))
  org-list-use-circular-motion t
  org-M-RET-may-split-line '((default . t))
  ;; we just use a completely custom agenda view
@@ -162,9 +156,6 @@
  org-todo-keyword-faces '(("SOMEDAY" . (:foreground "#94BFF3" :weight bold)) ; zenburn-blue+1
                           ("NEXT" . (:foreground "#F0DFAF" :weight bold))) ; zenburn-yellow
 
- ;; Include agenda archive files when searching for things
- org-agenda-text-search-extra-files (quote (agenda-archives))
-
  ;; weekends in a different colour
  org-agenda-date-weekend t
  org-default-notes-file (concat org-directory "/refile.org")
@@ -174,13 +165,13 @@
  org-refile-targets (quote ((org-agenda-files :maxlevel . 5) (nil :maxlevel . 5)))
 
  ;; Targets start with the file name - allows creating level 1 tasks
- org-refile-use-outline-path (quote file)
+ org-refile-use-outline-path 'file
 
  ;; This has to be nil to work with helm (http://lists.gnu.org/archive/html/emacs-orgmode/2014-06/msg00846.html)
  ;; org-outline-path-complete-in-steps nil
 
  ;; Allow refile to create parent tasks with confirmation
- org-refile-allow-creating-parent-nodes (quote confirm)
+ org-refile-allow-creating-parent-nodes 'confirm
 
  org-export-with-LaTeX-fragments t
  org-latex-pdf-process '("texi2dvi --pdf --clean --batch %f" "rm %f" "rm -rf auto")
