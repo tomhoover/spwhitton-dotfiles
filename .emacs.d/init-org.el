@@ -185,14 +185,8 @@
  org-refile-allow-creating-parent-nodes (quote confirm)
 
  org-export-with-LaTeX-fragments t
- ;; org-export-initial-scope 'subtree
- org-html-inline-images 'maybe ; need this to export images correctly for PyBlosxom
- ;; doesn't appear to work atm (possibly being cancelled out by
- ;; org-export-date-timestamp-format)
- org-html-metadata-timestamp-format "%A %Y-%m-%d"
  org-latex-pdf-process '("texi2dvi --pdf --clean --batch %f" "rm %f" "rm -rf auto")
  org-export-date-timestamp-format "%e %B %Y"
- org-html-footnotes-section "<h3>%s</h3>\n%s"
  org-export-with-smart-quotes t
  org-export-htmlize-output-type 'css
 
