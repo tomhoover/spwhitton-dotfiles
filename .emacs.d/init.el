@@ -317,6 +317,7 @@ hooks listed in `lisp-major-mode-hooks'."
          ("C-c o ]" . spw--org-remove-file))
   :commands (org-save-all-org-buffers   ; for ~/bin/save-org-buffers
              orgstruct++-mode)
+  :diminish org-indent-mode
   :init
   ;; define this early so that `spw--search-notes' and `spw--new-note'
   ;; can make use of it

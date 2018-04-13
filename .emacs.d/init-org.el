@@ -39,8 +39,6 @@
 
 ;;;; ---- preferences ----
 
-(diminish 'org-indent-mode)
-
 (setq
  org-alphabetical-lists t
  org-startup-indented 1
