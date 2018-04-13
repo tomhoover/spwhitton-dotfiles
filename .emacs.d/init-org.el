@@ -101,8 +101,8 @@
  org-enforce-todo-dependencies t
  org-enforce-todo-checkbox-dependencies t
  org-cycle-separator-lines 2
- org-blank-before-new-entry (quote ((heading)
-                                    (plain-list-item)))
+ ;; org-blank-before-new-entry (quote ((heading)
+ ;;                                    (plain-list-item)))
  org-insert-heading-respect-content nil
  org-reverse-note-order nil
  org-show-following-heading t
@@ -119,9 +119,9 @@
  org-remove-highlights-with-change nil
  org-M-RET-may-split-line '((default . nil))
  org-table-export-default-format "orgtbl-to-csv"
- org-link-frame-setup '((gnus . gnus-other-frame)
-                        (vm . vm-visit-folder-other-frame)
-                        (file . find-file-other-window))
+ ;; org-link-frame-setup '((gnus . gnus-other-frame)
+ ;;                        (vm . vm-visit-folder-other-frame)
+ ;;                        (file . find-file-other-window))
 
  org-remove-highlights-with-change nil
  org-read-date-prefer-future t
@@ -140,10 +140,11 @@
                                        ("1)" . "-")))
  org-list-use-circular-motion t
  org-M-RET-may-split-line '((default . t))
- org-agenda-todo-ignore-with-date nil
- org-agenda-todo-ignore-deadlines nil
- org-agenda-todo-ignore-scheduled 'future
- org-agenda-todo-list-sublevels nil
+ ;; we just use a completely custom agenda view
+ ;; org-agenda-todo-ignore-with-date nil
+ ;; org-agenda-todo-ignore-deadlines nil
+ ;; org-agenda-todo-ignore-scheduled 'future
+ ;; org-agenda-todo-list-sublevels nil
  org-agenda-skip-deadline-if-done t
  org-agenda-skip-scheduled-if-done t
  org-agenda-skip-scheduled-if-deadline-is-shown 'not-today
