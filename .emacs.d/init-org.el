@@ -48,17 +48,17 @@
  org-adapt-indentation nil
 
  org-tag-alist '((:startgroup)
-                 ("@Tucson"       . ?T)
-                 ("@Sheffield"    . ?S)
-                 ("@LaAldea"      . ?H)
+                 ("@Tucson"       . ?t)
+                 ("@Sheffield"    . ?s)
+                 ("@LaAldea"      . ?h)
                  (:endgroup)
-                 ("@iPad"         . ?I)
+                 ("@iPad"         . ?i)
                  ;; (:startgroup)
-                 ;; ("@Emacs"        . ?E) ; SSH Emacs only
-                 ;; ("@workstation"  . ?M) ; on my fully set-up personal (m)achine
+                 ;; ("@Emacs"        . ?e) ; SSH Emacs only
+                 ;; ("@workstation"  . ?m) ; on my fully set-up personal (m)achine
                  ;; (:endgroup)
-                 ("UA"            . ?W) ; academic work
-                 ("Debian"        . ?D))
+                 ("UA"            . ?w) ; academic work
+                 ("Debian"        . ?d))
 
  org-agenda-include-all-todo nil
  org-agenda-files "~/doc/emacs-org-agenda-files"
@@ -86,7 +86,7 @@
  org-use-fast-todo-selection t
  org-treat-S-cursor-todo-selection-as-state-change nil
  org-treat-insert-todo-heading-as-state-change t
- org-fast-tag-selection-include-todo t
+ org-fast-tag-selection-include-todo nil
  org-show-entry-below (quote ((default)))
  org-log-into-drawer t
  ;; org-log-state-notes-insert-after-drawers t
