@@ -306,6 +306,9 @@ hooks listed in `lisp-major-mode-hooks'."
 ;; doesn't seem to be early enough
 (setq org-list-allow-alphabetical nil)
 
+;; docstring says this has to be set before org.el is loaded
+(setq org-enforce-todo-checkbox-dependencies t)
+
 (use-package org
   ;; init-org.el uses `f-glob'
   :if (spw--optional-pkg-available-p "f")

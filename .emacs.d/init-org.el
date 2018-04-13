@@ -40,11 +40,112 @@
 ;;;; ---- preferences ----
 
 (setq
- org-alphabetical-lists t
+ ;; use virtual indentation.  I chose this a long time ago and I'm not
+ ;; sure whether that was wise, but turning it off is probably even
+ ;; less wise
  org-startup-indented t
  org-indent-indentation-per-level 2
  org-adapt-indentation nil
 
+ ;; view
+ org-startup-folded t
+ org-hide-emphasis-markers nil
+ org-cycle-separator-lines 0
+ org-show-following-heading t
+ org-show-siblings t
+ org-show-hierarchy-above t
+
+ ;; links
+ org-return-follows-link nil
+
+ ;; agenda
+ org-agenda-files "~/doc/emacs-org-agenda-files"
+ org-agenda-sticky t
+ ;; org-agenda-dim-blocked-tasks nil
+ org-deadline-warning-days 60
+ ;; we just use a completely custom agenda view
+ ;; org-agenda-todo-ignore-with-date nil
+ ;; org-agenda-todo-ignore-deadlines nil
+ ;; org-agenda-todo-ignore-scheduled 'future
+ ;; org-agenda-todo-list-sublevels nil
+ org-agenda-skip-deadline-if-done t
+ org-agenda-skip-scheduled-if-done t
+ org-agenda-skip-scheduled-if-deadline-is-shown 'not-today
+ ;; org-agenda-skip-additional-timestamps-same-entry nil
+ org-agenda-skip-timestamp-if-done t
+ org-agenda-start-on-weekday nil
+ org-agenda-persistent-filter t
+
+ ;; org-goto preferences
+ org-goto-auto-isearch t
+ org-goto-interface 'outline
+
+ ;; archiving
+ org-archive-mark-done nil
+ org-archive-save-context-info '(time file olpath)
+ org-archive-location "~/doc/org/archive/archive.org::* From %s"
+
+ ;; inline tasks
+ ;; prefix arg can be used to override this setting
+ org-inlinetask-default-state "TODO"
+
+ ;; we don't actually use Org's built-in stuck project support,
+ ;; instead generating our own review agenda from scratch which
+ ;; includes the right tasks.  See the view assigned to the '#' key
+ org-stuck-projects '("TODO" '("NEXT") nil "")
+
+ ;; manipulating headlines
+ org-use-fast-todo-selection t
+ org-treat-S-cursor-todo-selection-as-state-change nil
+ org-treat-insert-todo-heading-as-state-change t
+ org-fast-tag-selection-include-todo nil
+ org-enforce-todo-dependencies t
+ org-insert-heading-respect-content nil
+
+ ;; manipulating subtrees
+ org-yank-adjusted-subtrees t
+ org-yank-folded-subtrees nil
+
+ ;; logging and notes
+ org-log-into-drawer "LOGBOOK"
+ org-log-states-order-reversed nil
+ org-reverse-note-order nil
+ org-log-done t
+ org-log-redeadline nil
+ org-log-reschedule nil
+ org-log-refile nil
+
+ ;; bindings
+ org-special-ctrl-a/e t
+ org-special-ctrl-k t
+
+ ;; dates
+ org-read-date-prefer-future t
+
+ ;; lists
+ org-list-demote-modify-bullet
+ '(("-" . "+")
+   ("+" . "*")
+   ("*" . "-")
+   ("1." . "-")
+   ("1)" . "-"))
+ org-list-use-circular-motion t
+
+ ;; searching
+ org-tags-match-list-sublevels 'indented
+
+
+
+
+
+
+
+
+ org-agenda-skip-deadline-prewarning-if-scheduled 3
+ org-agenda-window-setup 'other-window
+ org-agenda-entry-text-maxlines 3
+
+ ;; my tags and todo keywords
  org-tag-alist
  '((:startgroup)
    ("@Tucson"       . ?t)
@@ -58,103 +159,12 @@
    ;; (:endgroup)
    ("UA"            . ?w) ; academic work
    ("Debian"        . ?d))
-
- org-agenda-include-all-todo nil
- org-agenda-files "~/doc/emacs-org-agenda-files"
- org-agenda-diary-file "~/.labbook.gpg"
- org-agenda-insert-diary-strategy 'date-tree
- org-agenda-sticky t
- org-goto-auto-isearch t
- org-goto-interface 'outline
- org-archive-mark-done nil
- org-archive-save-context-info '(time file olpath)
- org-archive-location "~/doc/org/archive/archive.org::* From %s"
- org-cycle-global-at-bob t
- org-startup-folded t
-
- org-inlinetask-default-state "TODO"
-
- org-agenda-dim-blocked-tasks nil
-
- ;; we don't actually use Org's built-in stuck project support,
- ;; instead generating our own review agenda from scratch which
- ;; includes the right tasks.  See the view assigned to the '#' key
- org-stuck-projects '("TODO" '("NEXT") nil "")
-
- org-hide-emphasis-markers nil
- org-use-fast-todo-selection t
- org-treat-S-cursor-todo-selection-as-state-change nil
- org-treat-insert-todo-heading-as-state-change t
- org-fast-tag-selection-include-todo nil
- org-show-entry-below '((default))
- org-log-into-drawer t
- ;; org-log-state-notes-insert-after-drawers t
- org-log-states-order-reversed nil
- org-log-done t
- ;; org-log-redeadline 'note
- ;; org-log-reschedule 'time
- org-log-redeadline nil
- org-log-reschedule nil
- ;; org-log-refile 'time
- org-log-refile nil
- org-enforce-todo-dependencies t
- org-enforce-todo-checkbox-dependencies t
- org-cycle-separator-lines 2
- ;; org-blank-before-new-entry (quote ((heading)
- ;;                                    (plain-list-item)))
- org-insert-heading-respect-content nil
- org-reverse-note-order nil
- org-show-following-heading t
- org-show-siblings t
- org-show-hierarchy-above t
- org-special-ctrl-a/e t
- org-special-ctrl-k t
- org-yank-adjusted-subtrees t
- org-yank-folded-subtrees nil
- org-id-method (quote uuidgen)
- org-deadline-warning-days 60
- org-return-follows-link nil
- org-display-internal-link-with-indirect-buffer t
- org-remove-highlights-with-change nil
- org-M-RET-may-split-line '((default . nil))
- org-table-export-default-format "orgtbl-to-csv"
- ;; org-link-frame-setup '((gnus . gnus-other-frame)
- ;;                        (vm . vm-visit-folder-other-frame)
- ;;                        (file . find-file-other-window))
-
- org-remove-highlights-with-change nil
- org-read-date-prefer-future t
- org-list-demote-modify-bullet
- '(("-" . "+")
-   ("+" . "*")
-   ("*" . "-")
-   ("1." . "-")
-   ("1)" . "-"))
- org-list-use-circular-motion t
- org-M-RET-may-split-line '((default . t))
- ;; we just use a completely custom agenda view
- ;; org-agenda-todo-ignore-with-date nil
- ;; org-agenda-todo-ignore-deadlines nil
- ;; org-agenda-todo-ignore-scheduled 'future
- ;; org-agenda-todo-list-sublevels nil
- org-agenda-skip-deadline-if-done t
- org-agenda-skip-scheduled-if-done t
- org-agenda-skip-scheduled-if-deadline-is-shown 'not-today
- org-agenda-skip-additional-timestamps-same-entry nil
- org-agenda-skip-timestamp-if-done t
- org-agenda-start-on-weekday nil
- org-tags-match-list-sublevels t
- org-agenda-persistent-filter t
- org-agenda-skip-deadline-prewarning-if-scheduled 3
- org-agenda-window-setup 'other-window
- org-agenda-entry-text-maxlines 3
-
  org-todo-keywords
  '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
    (sequence "WAITING(w@)" "SOMEDAY(s)" "|" "CANCELLED(c)"))
-
- org-todo-keyword-faces '(("SOMEDAY" . (:foreground "#94BFF3" :weight bold)) ; zenburn-blue+1
-                          ("NEXT" . (:foreground "#F0DFAF" :weight bold))) ; zenburn-yellow
+ org-todo-keyword-faces
+ '(("SOMEDAY" . (:foreground "#94BFF3" :weight bold)) ; zenburn-blue+1
+   ("NEXT" . (:foreground "#F0DFAF" :weight bold))) ; zenburn-yellow
 
  ;; weekends in a different colour
  org-agenda-date-weekend t
