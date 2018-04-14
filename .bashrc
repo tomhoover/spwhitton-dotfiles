@@ -129,5 +129,5 @@ install-as-auto () {
     else
         apt-get --no-install-recommends install "$@"
         apt-mark auto "$@"
-        fi
+    fi
 }
