@@ -176,10 +176,6 @@
 
  ;; capture
  org-default-notes-file (concat org-directory "/refile.org")
- org-capture-templates-contexts
- '(("t" "m" ((in-mode . "notmuch-show-mode")))
-   ("t" ((not-in-mode . "notmuch-show-mode")))
-   ("m" ((in-mode . "notmuch-show-mode"))))
 
  ;; general export
  org-export-headline-levels 3
@@ -544,8 +540,16 @@ different occasions."
 ;;; capture templates
 
 (setq
+ org-capture-templates-contexts
+ '(("t" "m" ((in-mode . "notmuch-show-mode")))
+   ("t" ((not-in-mode . "notmuch-show-mode")))
+   ("T" ((in-mode . "notmuch-show-mode")))
+   ("m" ((in-mode . "notmuch-show-mode"))))
  org-capture-templates
  '(("t" "Task to be refiled" entry (file "~/doc/org/refile.org")
+    "* TODO %^{Title}
+%?")
+   ("T" "Task to be refiled" entry (file "~/doc/org/refile.org")
     "* TODO %^{Title}
 %?")
    ("n" "Information to be refiled" entry (file "~/doc/org/refile.org")
