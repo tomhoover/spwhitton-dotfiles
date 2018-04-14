@@ -1033,28 +1033,11 @@ Ignore SOMEDAYs as might have those in old notes but not important to include th
 ;;              (y-or-n-p "Also load Fall 2015 weekday schedule?"))
 ;;     (find-file-other-window "~/doc/org/fall_2015_weekday_schedule.org")))
 
-(define-key org-mode-map (kbd "C-c C-SPC") 'org-mark-subtree)
 (define-key org-mode-map (kbd "<f11>") 'org-toggle-link-display)
 ;; (define-key org-mode-map (kbd "C-c )") 'reftex-citation)
 
 (bind-key "C-c [" 'spw--org-agenda-file-to-front org-mode-map)
 (bind-key "C-c ]" 'spw--org-remove-file org-mode-map)
-
-;;; urxvt bindings.  shift left and right seem to work
-
-(define-key org-mode-map (kbd "M-[ 1 ; 3 d") 'org-metaleft)
-(define-key org-mode-map (kbd "M-[ 1 ; 3 C") 'org-metaright)
-(define-key org-mode-map (kbd "M-[ 1 ; 3 A") 'org-metaup)
-(define-key org-mode-map (kbd "M-[ 1 ; 3 B") 'org-metadown)
-(define-key org-mode-map (kbd "<select>") 'org-shiftup)
-(define-key org-mode-map (kbd "M-[ 1 ; 2 A") 'org-shiftup)
-(define-key org-mode-map (kbd "M-[ 1 ; 2 b") 'org-shiftdown)
-(define-key org-mode-map (kbd "M-[ 1 ; 2 C") 'org-shiftright)
-(define-key org-mode-map (kbd "M-[ 1 ; 2 D") 'org-shiftleft)
-
-;;; rebind <space> in agenda mode so that have access to evil's leader
-
-(bind-key (kbd "M-SPC") 'org-agenda-cycle-show org-agenda-mode-map)
 
 ;;; hide low-priority tasks
 (bind-key (kbd "&") 'spw--org-agenda-priority-filter org-agenda-mode-map)
@@ -1063,11 +1046,7 @@ Ignore SOMEDAYs as might have those in old notes but not important to include th
 
 (define-key org-read-date-minibuffer-local-map (kbd "ESC") 'abort-recursive-edit)
 
-;;; export essays via Pandoc not ox.el
-
-(bind-key "C-c M-e" 'spw--pandoc-paper-compile org-mode-map)
-
-;;; this binding seems to have dropped out of upstream?
+;;; this binding seems to have dropped out of upstream, so define it again
 
 (bind-key (kbd "C-c C-SPC") 'org-mark-subtree org-mode-map)
 
