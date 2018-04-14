@@ -1439,6 +1439,10 @@ Used in my `message-mode' yasnippets."
 
 ;;;; ---- personal settings ----
 
+;;; no tabs by default
+
+(setq-default indent-tabs-mode nil)
+
 ;;; key bindings
 
 ;; I don't often want to quit
@@ -1845,12 +1849,7 @@ mutt's review view after exiting EDITOR."
 
 ;;; cc-mode
 
-;; note that this style doesn't include a setting for
-;; indent-tabs-mode, relying on the fact that Emacs defaults
-;; indent-tabs-mode to t.  Since the kernel style guide mandates tabs,
-;; this seems wrong.  If I ever do
-;;     (setq-default indent-tabs-mode t)
-;; then I should also do
-;;     (c-add-style "linux-tabs" '("linux" (indent-tabs-mode . t)))
-;;     (setq c-default-style "linux-tabs")
-(setq c-default-style "linux")
+;; the built-in 'linux' style doesn't use tabs, but the kernel style
+;; guide mandates them, so make a slightly modified style
+(c-add-style "linux-tabs" '("linux" (indent-tabs-mode . t)))
+(setq c-default-style "linux-tabs")
