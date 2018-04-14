@@ -546,27 +546,27 @@ different occasions."
    ("T" ((in-mode . "notmuch-show-mode")))
    ("m" ((in-mode . "notmuch-show-mode"))))
  org-capture-templates
- '(("t" "Task to be refiled" entry (file "~/doc/org/refile.org")
+ '(("t" "Task to be refiled" entry (file org-default-notes-file)
     "* TODO %^{Title}
 %?")
-   ("T" "Task to be refiled" entry (file "~/doc/org/refile.org")
+   ("T" "Task to be refiled" entry (file org-default-notes-file)
     "* TODO %^{Title}
 %?")
-   ("n" "Information to be refiled" entry (file "~/doc/org/refile.org")
+   ("n" "Information to be refiled" entry (file org-default-notes-file)
     "* %^{Title}
 %?")
-   ("m" "Task from mail to be refiled" entry (file "~/doc/org/refile.org")
+   ("m" "Task from mail to be refiled" entry (file org-default-notes-file)
     ;; lisp is to filter square brackets out of the subject as these
     ;; mean that the Org-mode link does not properly form
     "* TODO [[notmuch:id:%:message-id][%^{Title|\"%(replace-regexp-in-string \"\\\\\\[\\\\\\|\\\\\\]\" \"\" \"%:subject\")\" from %:fromname}]]
 %?")
-   ("a" "Appointment" entry (file+datetree "~/doc/org/diary.org")
-    "* %^{Time} %^{Title & location}
-%^t" :immediate-finish t)
-   ("A" "Appointment (untimed)" entry (file+datetree "~/doc/org/diary.org")
-    "* %^{Title & location}
-%^t" :immediate-finish t)
-   ("s" "Task for the future to be refiled" entry (file "~/doc/org/refile.org")
+   ;; ("a" "Appointment" entry (file+datetree "~/doc/org/diary.org")
+   ;;     "* %^{Time} %^{Title & location}
+   ;; %^t" :immediate-finish t)
+   ;;    ("A" "Appointment (untimed)" entry (file+datetree "~/doc/org/diary.org")
+   ;;     "* %^{Title & location}
+   ;; %^t" :immediate-finish t)
+   ("s" "Task for the future to be refiled" entry (file org-default-notes-file)
     "* SOMEDAY %^{Title}
 %?")
    ("d" "Diary entry" entry (file+datetree "~/.labbook.gpg")
@@ -574,7 +574,7 @@ different occasions."
 %U
 
 %?")
-   ("u" "URI on clipboard" entry (file "~/doc/org/refile.org")
+   ("u" "URI on clipboard" entry (file org-default-notes-file)
     "* SOMEDAY [[%^{URI|%x}][%^{Title}]]" :immediate-finish t)))
 
 ;;; function and advice for my weekly review process (see the
