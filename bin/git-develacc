@@ -73,6 +73,15 @@ git -C "$inside" fetch --prune --tags "$outside" \
     '+refs/heads/*:refs/remotes/outside/*'
 git -C "$inside" update-ref -d 'refs/remotes/develacc/*'
 
+# prune old remotes
+git -C "$inside" remote | while read remote; do
+    if ! [ "$remote" = "origin" ] && ! [ "$remote" = "outside" ]; then
+	if ! git remote | grep --quiet "$remote"; then
+	    git -C "$inside" remote rm "$remote"
+	fi
+    fi
+done
+
 # update develacc-tracking refs outside develacc
 if ! [ "$(git remote | grep develacc)" ]; then
     git remote add -f develacc "$inside"
