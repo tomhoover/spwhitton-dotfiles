@@ -298,12 +298,13 @@
 (setq org-agenda-auto-exclude-function 'spw--org-auto-exclude-function)
 
 ;;; agenda skipping functions
+;;; Many of these are adapted from Bernt Hansen's http://doc.norang.ca/org-mode.html
 
-(defun spw/org-get-todo-keyword ()
+(defun spw--org-get-todo-keyword ()
   (let ((todo-state (save-match-data (ignore-errors (org-get-todo-state)))))
     (spw--strip-text-properties todo-state)))
 
-(defun bh/is-project-p ()
+(defun bh--is-project-p ()
   "Any task with a todo keyword subtask"
   (save-restriction
     (widen)
@@ -319,7 +320,7 @@
             (setq has-subtask t))))
       (and is-a-task has-subtask))))
 
-(defun bh/is-subproject-p ()
+(defun bh--is-subproject-p ()
   "Any task which is a subtask of another project"
   (let ((is-subproject)
         (is-a-task (member (nth 2 (org-heading-components)) org-todo-keywords-1)))
@@ -329,7 +330,7 @@
           (setq is-subproject t))))
     (and is-a-task is-subproject)))
 
-(defun bh/is-task-p ()
+(defun bh--is-task-p ()
   "Any task with a todo keyword and no subtask"
   (save-restriction
     (widen)
@@ -345,10 +346,10 @@
             (setq has-subtask t))))
       (and is-a-task (not has-subtask)))))
 
-(defun spw/skip-subprojects ()
+(defun spw--skip-subprojects ()
   "Skip trees that are subprojects"
   (let ((next-headline (save-excursion (outline-next-heading))))
-    (if (bh/is-subproject-p)
+    (if (bh--is-subproject-p)
         next-headline
       nil)))
 
@@ -383,22 +384,22 @@ different occasions."
             ;; iris is a laptop, but usually it's not in Sheffield
             (and (or (string= (system-name) "iris") (string= (system-name) "hephaestus"))
                  (member "@Sheffield" (org-get-tags)))
-            (bh/is-project-p)
-            (and (bh/is-subproject-p)
+            (bh--is-project-p)
+            (and (bh--is-subproject-p)
                  (or
-                  (not (string= (spw/org-get-todo-keyword) "NEXT"))
+                  (not (string= (spw--org-get-todo-keyword) "NEXT"))
                   (save-excursion
                     (org-up-heading-safe)
                     (or
-                     (spw/org-is-scheduled-p)
-                     (string= (spw/org-get-todo-keyword) "SOMEDAY")
-                     (string= (spw/org-get-todo-keyword) "WAITING")))))
-            (and (bh/is-task-p)
-                 (spw/org-has-deadline-p)))
+                     (spw--org-is-scheduled-p)
+                     (string= (spw--org-get-todo-keyword) "SOMEDAY")
+                     (string= (spw--org-get-todo-keyword) "WAITING")))))
+            (and (bh--is-task-p)
+                 (spw--org-has-deadline-p)))
         next-headline
       nil)))
 
-(defun spw/org-forward-heading ()
+(defun spw--org-forward-heading ()
   (beginning-of-line)
   (let ((start (point)))
     (org-forward-heading-same-level 1 t)
@@ -409,7 +410,7 @@ different occasions."
         (outline-next-heading)
       (point))))
 
-(defun spw/org-is-scheduled-p ()
+(defun spw--org-is-scheduled-p ()
   "A task that is scheduled"
   (let ((is-dated)
         (is-a-task (member (nth 2 (org-heading-components)) org-todo-keywords-1))
@@ -433,7 +434,7 @@ different occasions."
           (setq is-dated t)))
     (and is-a-task is-dated)))
 
-(defun spw/org-has-deadline-p ()
+(defun spw--org-has-deadline-p ()
   "A task that has a deadline"
   (let ((is-dated)
         (is-a-task (member (nth 2 (org-heading-components)) org-todo-keywords-1))
@@ -448,7 +449,7 @@ different occasions."
           (setq is-dated t)))
     (and is-a-task is-dated)))
 
-(defun spw/org-is-scheduled-or-deadlined-p ()
+(defun spw--org-is-scheduled-or-deadlined-p ()
   "A task that is scheduled or deadlined"
   (let ((is-dated)
         (is-a-task (member (nth 2 (org-heading-components)) org-todo-keywords-1))
@@ -463,29 +464,29 @@ different occasions."
           (setq is-dated t)))
     (and is-a-task is-dated)))
 
-(defun spw/has-scheduled-or-deadlined-subproject-p ()
+(defun spw--has-scheduled-or-deadlined-subproject-p ()
   "A task that has a scheduled or deadlined subproject"
   (let (has-scheduled-or-deadlined-subproject)
     (save-excursion
       (save-restriction
         (org-narrow-to-subtree)
         (while (ignore-errors (outline-next-heading))
-          (if (spw/org-is-scheduled-or-deadlined-p)
+          (if (spw--org-is-scheduled-or-deadlined-p)
               (setq has-scheduled-or-deadlined-subproject t)))))
     has-scheduled-or-deadlined-subproject))
 
-(defun spw/has-next-action-p ()
+(defun spw--has-next-action-p ()
   "A task that has a NEXT subproject"
   (let (has-next-subproject)
     (save-excursion
       (save-restriction
         (org-narrow-to-subtree)
         (while (ignore-errors (outline-next-heading))
-          (if (string= (spw/org-get-todo-keyword) "NEXT")
+          (if (string= (spw--org-get-todo-keyword) "NEXT")
               (setq has-next-subproject t)))))
     has-next-subproject))
 
-(defun spw/has-incomplete-subproject-or-task-p ()
+(defun spw--has-incomplete-subproject-or-task-p ()
   "A task that has an incomplete subproject or task."
   (let (has-incomplete-subproject)
     (save-excursion
@@ -493,34 +494,34 @@ different occasions."
         (org-narrow-to-subtree)
         (while (ignore-errors (outline-next-heading))
           (unless
-              (or (string= (spw/org-get-todo-keyword) "DONE")
-                  (string= (spw/org-get-todo-keyword) "CANCELLED"))
+              (or (string= (spw--org-get-todo-keyword) "DONE")
+                  (string= (spw--org-get-todo-keyword) "CANCELLED"))
             (setq has-incomplete-subproject t)))))
     has-incomplete-subproject))
 
-(defun spw/skip-projects-with-scheduled-or-deadlined-subprojects ()
+(defun spw--skip-projects-with-scheduled-or-deadlined-subprojects ()
   "Skip projects that have subtasks, where at least one of those
   is scheduled or deadlined"
   (let ((next-headline (save-excursion (outline-next-heading))))
-    (if (spw/has-scheduled-or-deadlined-subproject-p)
+    (if (spw--has-scheduled-or-deadlined-subproject-p)
         next-headline
       nil)))
 
-(defun spw/skip-subprojects-and-projects-with-scheduled-or-deadlined-subprojects ()
+(defun spw--skip-subprojects-and-projects-with-scheduled-or-deadlined-subprojects ()
   "Skip subprojects projects that have subtasks, where at least
   one of those is scheduled or deadlined.  Currently fails to
   exclude subprojects that are the very last headline in a
   buffer"
   (let ((next-headline (save-excursion (outline-next-heading))))
-    (if (or (bh/is-subproject-p) (spw/has-scheduled-or-deadlined-subproject-p))
+    (if (or (bh--is-subproject-p) (spw--has-scheduled-or-deadlined-subproject-p))
         next-headline
       nil)))
 
 (defun spw--skip-non-stuck-projects ()
   (let ((next-headline (save-excursion (outline-next-heading))))
-    (if (or (bh/is-task-p)
-            (spw/has-scheduled-or-deadlined-subproject-p)
-            (spw/has-next-action-p))
+    (if (or (bh--is-task-p)
+            (spw--has-scheduled-or-deadlined-subproject-p)
+            (spw--has-next-action-p))
         ;; THEN: skip, and handle special case of the final entry in a
         ;; buffer which cannot be a stuck project and so should always
         ;; be skipped, but which won't be since `next-headline' will
@@ -532,8 +533,8 @@ different occasions."
 (defun spw--skip-incomplete-projects-and-all-subprojects ()
   "Skip all subprojects and projects with subprojects not yet completed."
   (let ((next-headline (save-excursion (outline-next-heading))))
-    (if (or (bh/is-subproject-p)
-            (spw/has-incomplete-subproject-or-task-p))
+    (if (or (bh--is-subproject-p)
+            (spw--has-incomplete-subproject-or-task-p))
         next-headline
       nil)))
 
@@ -572,7 +573,7 @@ different occasions."
 ;;; function and advice for my weekly review process (see the
 ;;; docstrings immediately below)
 
-(defun spw/find-non-agenda-todos ()
+(defun spw--find-non-agenda-todos ()
   "Find Org files that aren't in `org-agenda-files` that probably
   should be
 
@@ -600,7 +601,7 @@ Ignore SOMEDAYs as might have those in old notes but not important to include th
   review"
   (when (equal (buffer-name) "*Org Agenda(#)*")
     (delete-other-windows)
-    (call-interactively 'spw/find-non-agenda-todos)))
+    (call-interactively 'spw--find-non-agenda-todos)))
 (advice-add 'org-agenda :after #'org-agenda--run-find-non-agenda-todos)
 
 ;;;; ---- export and referencing ----
@@ -726,7 +727,7 @@ Ignore SOMEDAYs as might have those in old notes but not important to include th
                :base-extension "org"
                :publishing-function org-latex-publish-to-pdf
                :publishing-directory "~/tmp"
-               :completion-function spw/cleanup-org-pdfs))
+               :completion-function spw--cleanup-org-pdfs))
 
 ;;; web-accessible and WebDAV-accessible notes
 
@@ -812,12 +813,12 @@ Ignore SOMEDAYs as might have those in old notes but not important to include th
    :publishing-directory "/var/www/spw/org"
    :publishing-function org-publish-attachment))
 
-(defun spw/cleanup-org-pdfs ()
+(defun spw--cleanup-org-pdfs ()
   (interactive)
   (dolist (file (f-glob "~/doc/org/*.pdf"))
     (delete-file file)))
 
-(defun spw/end-of-refile ()
+(defun spw--end-of-refile ()
   (interactive)
   (if (get-buffer "refile.org")
       (progn
@@ -1001,7 +1002,7 @@ Ignore SOMEDAYs as might have those in old notes but not important to include th
 ;; (face-override-variable-pitch 'org-table)
 ;; ;;(face-override-variable-pitch 'org-block-background)
 
-(defun spw/org-agenda-priority-filter (arg)
+(defun spw--org-agenda-priority-filter (arg)
   (interactive "P")
   (if arg
       (push "\[#A\]\\|Appt" org-agenda-regexp-filter)
@@ -1030,7 +1031,7 @@ Ignore SOMEDAYs as might have those in old notes but not important to include th
     ;; make space work from the agenda to cycle the actual tree in the split
     (define-key org-agenda-mode-map " " 'org-agenda-cycle-show)))
 
-;; (defadvice org-agenda (after spw/open-weekday-schedule)
+;; (defadvice org-agenda (after spw--open-weekday-schedule)
 ;;   (when (and window-system
 ;;              (not (get-buffer-window "fall_2015_weekday_schedule.org" 0))
 ;;              (y-or-n-p "Also load Fall 2015 weekday schedule?"))
@@ -1040,8 +1041,8 @@ Ignore SOMEDAYs as might have those in old notes but not important to include th
 (define-key org-mode-map (kbd "<f11>") 'org-toggle-link-display)
 ;; (define-key org-mode-map (kbd "C-c )") 'reftex-citation)
 
-(bind-key "C-c [" 'spw/org-agenda-file-to-front org-mode-map)
-(bind-key "C-c ]" 'spw/org-remove-file org-mode-map)
+(bind-key "C-c [" 'spw--org-agenda-file-to-front org-mode-map)
+(bind-key "C-c ]" 'spw--org-remove-file org-mode-map)
 
 ;;; urxvt bindings.  shift left and right seem to work
 
@@ -1060,7 +1061,7 @@ Ignore SOMEDAYs as might have those in old notes but not important to include th
 (bind-key (kbd "M-SPC") 'org-agenda-cycle-show org-agenda-mode-map)
 
 ;;; hide low-priority tasks
-(bind-key (kbd "&") 'spw/org-agenda-priority-filter org-agenda-mode-map)
+(bind-key (kbd "&") 'spw--org-agenda-priority-filter org-agenda-mode-map)
 
 ;;; escape to get out of date entry
 
@@ -1068,7 +1069,7 @@ Ignore SOMEDAYs as might have those in old notes but not important to include th
 
 ;;; export essays via Pandoc not ox.el
 
-(bind-key "C-c M-e" 'spw/pandoc-paper-compile org-mode-map)
+(bind-key "C-c M-e" 'spw--pandoc-paper-compile org-mode-map)
 
 ;;; this binding seems to have dropped out of upstream?
 
