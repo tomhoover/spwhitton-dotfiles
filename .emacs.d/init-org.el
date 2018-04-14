@@ -547,19 +547,15 @@ different occasions."
    ("m" ((in-mode . "notmuch-show-mode"))))
  org-capture-templates
  '(("t" "Task to be refiled" entry (file org-default-notes-file)
-    "* TODO %^{Title}
-%?")
+    "* TODO %^{Title}\n%?")
    ("T" "Task to be refiled" entry (file org-default-notes-file)
-    "* TODO %^{Title}
-%?")
+    "* TODO %^{Title}\n%?")
    ("n" "Information to be refiled" entry (file org-default-notes-file)
-    "* %^{Title}
-%?")
+    "* %^{Title}\n%?")
    ("m" "Task from mail to be refiled" entry (file org-default-notes-file)
     ;; lisp is to filter square brackets out of the subject as these
     ;; mean that the Org-mode link does not properly form
-    "* TODO [[notmuch:id:%:message-id][%^{Title|\"%(replace-regexp-in-string \"\\\\\\[\\\\\\|\\\\\\]\" \"\" \"%:subject\")\" from %:fromname}]]
-%?")
+    "* TODO [[notmuch:id:%:message-id][%^{Title|\"%(replace-regexp-in-string \"\\\\\\[\\\\\\|\\\\\\]\" \"\" \"%:subject\")\" from %:fromname}]]\n%?")
    ;; ("a" "Appointment" entry (file+datetree "~/doc/org/diary.org")
    ;;     "* %^{Time} %^{Title & location}
    ;; %^t" :immediate-finish t)
@@ -567,13 +563,9 @@ different occasions."
    ;;     "* %^{Title & location}
    ;; %^t" :immediate-finish t)
    ("s" "Task for the future to be refiled" entry (file org-default-notes-file)
-    "* SOMEDAY %^{Title}
-%?")
+    "* SOMEDAY %^{Title}\n%?")
    ("d" "Diary entry" entry (file+datetree "~/.labbook.gpg")
-    "* %^{Title}
-%U
-
-%?")
+    "* %^{Title}\n%U\n\n%?")
    ("u" "URI on clipboard" entry (file org-default-notes-file)
     "* SOMEDAY [[%^{URI|%x}][%^{Title}]]" :immediate-finish t)))
 
