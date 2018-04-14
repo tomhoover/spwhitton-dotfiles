@@ -201,7 +201,6 @@
  org-entities-user '(("space" "\\ " nil " " " " " " " "))
 
  org-export-with-toc nil         ; default to no table of contents
- org-footnote-section "Notes"
 
  org-capture-templates-contexts
  '(("t" "m" ((in-mode . "notmuch-show-mode")))
