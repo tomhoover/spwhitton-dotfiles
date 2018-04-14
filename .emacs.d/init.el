@@ -1394,12 +1394,6 @@ Originally from <http://blog.gleitzman.com/post/35416335505/hunting-for-unicode-
                 "-e"  "/bin/bash"))
 (bind-key "C-c g g" 'spw--open-term-here)
 
-;; used in init-org.el
-(defun spw--strip-text-properties (txt)
-  "From http://stackoverflow.com/questions/8372722/print-only-text-discarding-text-properties"
-  (set-text-properties 0 (length txt) nil txt)
-  txt)
-
 ;;; rebasing dotfiles
 
 (defun spw--dotfiles-rebase ()

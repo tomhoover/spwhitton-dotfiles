@@ -300,10 +300,6 @@
 ;;; agenda skipping functions
 ;;; Many of these are adapted from Bernt Hansen's http://doc.norang.ca/org-mode.html
 
-(defun spw--org-get-todo-keyword ()
-  (let ((todo-state (save-match-data (ignore-errors (org-get-todo-state)))))
-    (spw--strip-text-properties todo-state)))
-
 (defun bh--is-project-p ()
   "Any task with a todo keyword subtask"
   (save-restriction
@@ -387,13 +383,13 @@ different occasions."
             (bh--is-project-p)
             (and (bh--is-subproject-p)
                  (or
-                  (not (string= (spw--org-get-todo-keyword) "NEXT"))
+                  (not (string= (nth 2 (org-heading-components)) "NEXT"))
                   (save-excursion
                     (org-up-heading-safe)
                     (or
                      (spw--org-is-scheduled-p)
-                     (string= (spw--org-get-todo-keyword) "SOMEDAY")
-                     (string= (spw--org-get-todo-keyword) "WAITING")))))
+                     (string= (nth 2 (org-heading-components)) "SOMEDAY")
+                     (string= (nth 2 (org-heading-components)) "WAITING")))))
             (and (bh--is-task-p)
                  (spw--org-has-deadline-p)))
         next-headline
@@ -482,7 +478,7 @@ different occasions."
       (save-restriction
         (org-narrow-to-subtree)
         (while (ignore-errors (outline-next-heading))
-          (if (string= (spw--org-get-todo-keyword) "NEXT")
+          (if (string= (nth 2 (org-heading-components)) "NEXT")
               (setq has-next-subproject t)))))
     has-next-subproject))
 
@@ -494,8 +490,8 @@ different occasions."
         (org-narrow-to-subtree)
         (while (ignore-errors (outline-next-heading))
           (unless
-              (or (string= (spw--org-get-todo-keyword) "DONE")
-                  (string= (spw--org-get-todo-keyword) "CANCELLED"))
+              (or (string= (nth 2 (org-heading-components)) "DONE")
+                  (string= (nth 2 (org-heading-components)) "CANCELLED"))
             (setq has-incomplete-subproject t)))))
     has-incomplete-subproject))
 
