@@ -544,6 +544,8 @@ different occasions."
         next-headline
       nil)))
 
+;;; capture templates
+
 (setq
  org-capture-templates
  '(("t" "Task to be refiled" entry (file "~/doc/org/refile.org")
@@ -553,7 +555,7 @@ different occasions."
     "* %^{Title}
 %?")
    ("m" "Task from mail to be refiled" entry (file "~/doc/org/refile.org")
-    "* TODO [[notmuch:id:%:message-id][%^{Title|\"%:subject\" from %:fromname}]]
+    "* TODO [[notmuch:id:%:message-id][%^{Title|\"%(replace-regexp-in-string \"\\\\\\[\\\\\\|\\\\\\]\" \"\" \"%:subject\")\" from %:fromname}]]
 %?")
    ("a" "Appointment" entry (file+datetree "~/doc/org/diary.org")
     "* %^{Time} %^{Title & location}
