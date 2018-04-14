@@ -49,12 +49,13 @@ git remote | while read remote; do
     if ! [ "$remote" = "develacc" ]; then
         # this is to disable `git remote update` and therefore my `mr update`
         git -C "$inside" config --local --bool "remote.$remote.skipdefaultupdate" true
-        # we set a url on the origin remote so that `mr register` works
-        if [ "$remote" = "origin" ]; then
-            git -C "$inside" set-url origin "$(git remote get-url origin)"
-        else
-            git -C "$inside" config --local --unset "remote.$remote.url" || true
-        fi
+
+        # we need a url on the origin remote so that `mr register`
+        # works.  And then we might as well set an url on all the
+        # remotes (except 'outside') for a nicer display in magit.
+        # Note that `get-url` expands insteadOf; might want to use
+        # `git config` to avoid that
+        git -C "$inside" remote set-url "$remote" "$(git remote get-url $remote)"
 
         git -C "$inside" config --local --unset "remote.$remote.mirror" || true
         git -C "$inside" config --local "remote.$remote.fetch" "+refs/heads/*:refs/remotes/$remote/*"
@@ -63,7 +64,7 @@ done
 
 # ensure we have a remote for the outside repo
 git -C "$inside" config --local --bool "remote.outside.skipdefaultupdate" true
-git -C "$inside" config --local --unset "remote.outside.url" || true
+git -C "$inside" remote set-url outside "$outside" # purely cosmetic, in magit
 git -C "$inside" config --local "remote.outside.fetch" "+refs/heads/*:refs/remotes/outside/*"
 
 # update all remote-tracking refs inside develacc
