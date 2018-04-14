@@ -51,6 +51,12 @@ alias develacc='sudo machinectl shell spw@develacc \
 alias develaccr='sudo machinectl shell root@develacc \
       $(sudo enter-develacc /bin/sh -c "getent passwd root | cut -d: -f7")'
 
+# alias does not call `git develacc` because we want manual
+# verification of what is to be pushed (i.e. `git diff
+# master..develacc/develacc-iris` to check patch queue is sane)
+alias push-develacc-dotfiles-branch="git push \
+      -f origin develacc/develacc-$(hostname -s):develacc-$(hostname -s)"
+
 # --- more powerful aliases built with shell functions
 
 # run a package build and the full suite of checks that I can do
