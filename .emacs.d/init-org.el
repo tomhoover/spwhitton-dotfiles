@@ -63,6 +63,7 @@
  org-agenda-sticky t
  ;; org-agenda-dim-blocked-tasks nil
  org-deadline-warning-days 60
+ org-agenda-skip-deadline-prewarning-if-scheduled 3
  ;; we just use a completely custom agenda view
  ;; org-agenda-todo-ignore-with-date nil
  ;; org-agenda-todo-ignore-deadlines nil
@@ -75,6 +76,10 @@
  org-agenda-skip-timestamp-if-done t
  org-agenda-start-on-weekday nil
  org-agenda-persistent-filter t
+ org-agenda-window-setup 'reorganize-frame
+ org-agenda-restore-windows-after-quit t
+ org-agenda-entry-text-maxlines 3
+
 
  ;; org-goto preferences
  org-goto-auto-isearch t
@@ -101,6 +106,18 @@
  org-fast-tag-selection-include-todo nil
  org-enforce-todo-dependencies t
  org-insert-heading-respect-content nil
+
+ ;; refiling
+ org-refile-targets '((org-agenda-files :maxlevel . 5)
+		      (nil :maxlevel . 5))
+ org-refile-use-outline-path 'file
+ org-refile-allow-creating-parent-nodes 'confirm
+ ;; This has to be nil to work with helm;
+ ;; see http://lists.gnu.org/archive/html/emacs-orgmode/2014-06/msg00846.html
+ ;; org-outline-path-complete-in-steps nil
+
+ ;; completion
+ org-completion-use-ido t
 
  ;; manipulating subtrees
  org-yank-adjusted-subtrees t
@@ -134,17 +151,6 @@
  ;; searching
  org-tags-match-list-sublevels 'indented
 
-
-
-
-
-
-
-
- org-agenda-skip-deadline-prewarning-if-scheduled 3
- org-agenda-window-setup 'other-window
- org-agenda-entry-text-maxlines 3
-
  ;; my tags and todo keywords
  org-tag-alist
  '((:startgroup)
@@ -153,6 +159,8 @@
    ("@LaAldea"      . ?h)
    (:endgroup)
    ("@iPad"         . ?i)
+   ;; following are needed when at times when I'm regularly accessing
+   ;; my Org-mode agenda over SSH
    ;; (:startgroup)
    ;; ("@Emacs"        . ?e) ; SSH Emacs only
    ;; ("@workstation"  . ?m) ; on my fully set-up personal (m)achine
@@ -166,48 +174,31 @@
  '(("SOMEDAY" . (:foreground "#94BFF3" :weight bold)) ; zenburn-blue+1
    ("NEXT" . (:foreground "#F0DFAF" :weight bold))) ; zenburn-yellow
 
- ;; weekends in a different colour
- org-agenda-date-weekend t
+ ;; capture
  org-default-notes-file (concat org-directory "/refile.org")
- org-completion-use-ido t
-
- ;; Targets include this file and any file contributing to the agenda - up to 5 levels deep
- org-refile-targets (quote ((org-agenda-files :maxlevel . 5) (nil :maxlevel . 5)))
-
- ;; Targets start with the file name - allows creating level 1 tasks
- org-refile-use-outline-path 'file
-
- ;; This has to be nil to work with helm (http://lists.gnu.org/archive/html/emacs-orgmode/2014-06/msg00846.html)
- ;; org-outline-path-complete-in-steps nil
-
- ;; Allow refile to create parent tasks with confirmation
- org-refile-allow-creating-parent-nodes 'confirm
-
- org-export-with-LaTeX-fragments t
- org-latex-pdf-process '("texi2dvi --pdf --clean --batch %f" "rm %f" "rm -rf auto")
- org-export-date-timestamp-format "%e %B %Y"
- org-export-with-smart-quotes t
- org-export-htmlize-output-type 'css
-
- org-latex-default-class "wordlike"
-
- org-export-headline-levels 3   ; set to 2 for spwoutline
-
- org-odt-preferred-output-format "pdf"
-
- ;; org-export-latex-low-levels '("\\begin{lowitemize}\\setlength{\\parindent}{2em}" "\\end{lowitemize}" "\\item \\textbf{%s}\\indent %s")
-
- ;; used after things like e.g. to prevent a double space
- org-entities-user '(("space" "\\ " nil " " " " " " " "))
-
- org-export-with-toc nil         ; default to no table of contents
-
  org-capture-templates-contexts
  '(("t" "m" ((in-mode . "notmuch-show-mode")))
    ("t" ((not-in-mode . "notmuch-show-mode")))
    ("m" ((in-mode . "notmuch-show-mode"))))
 
- ;; I don't use these bookmarks and they cause git merge conflicts
+ ;; general export
+ org-export-headline-levels 3
+ org-export-with-toc nil
+ ;; org-export-with-smart-quotes t
+
+ ;; LaTeX export
+ org-latex-pdf-process
+ '("texi2dvi --pdf --clean --batch %f" "rm %f" "rm -rf auto")
+ org-latex-default-class "wordlike"
+
+ ;; HTML export
+ ;; org-export-htmlize-output-type 'css
+
+ ;; ODT export
+ org-odt-preferred-output-format "pdf"
+
+ ;; bookmarks
+ ;; don't generate bookmarks as causes git merge conflicts
  org-bookmark-names-plist nil)
 
 ;;;; ---- agenda and refile ----
