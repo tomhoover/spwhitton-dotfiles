@@ -213,16 +213,18 @@
                     (org-agenda-time-grid nil))))
     ((org-agenda-start-with-log-mode nil)
      ;; (org-agenda-tag-filter-preset '("-Sariul"))
-     (org-agenda-start-with-follow-mode nil))
-    ("/var/www/spw/org/agenda.html" "/tmp/dionysus/Agenda/Today's agenda.html"))
+     ;; (org-agenda-start-with-entry-text-mode t)
+     (org-agenda-start-with-follow-mode nil)))
    ("A" "Daily planning view"
     ((agenda "day" ((org-agenda-span 'day)
                     (org-agenda-time-grid nil)
-                    (org-agenda-overriding-header "Plan for today & upcoming deadlines")))
+                    (org-agenda-overriding-header
+                     "Plan for today & upcoming deadlines")))
      (todo "TODO|NEXT" ((org-agenda-todo-ignore-scheduled t)
                         (org-agenda-todo-ignore-deadlines 'far)
-                        (org-agenda-overriding-header "Unscheduled standalone tasks & project next actions")
-                        (org-agenda-skip-function 'spw/skip-non-actionable)))
+                        (org-agenda-overriding-header'
+                         "Unscheduled standalone tasks & project next actions")
+                        (org-agenda-skip-function 'spw--skip-non-actionable)))
      ;; commented out as not using Org as an appointments diary at present
      ;; (agenda "" ((org-agenda-span 3)
      ;;             (org-agenda-start-day "+1d")
@@ -232,23 +234,22 @@
      ;;             (org-agenda-show-all-dates nil)
      ;;             (org-agenda-overriding-header "Coming up")
      ;;             (org-agenda-files (quote ("~/doc/org/diary.org")))))
-     )
-    nil
-    ("/var/www/spw/org/full.html" "/tmp/dionysus/Agenda/Day-planning agenda.html"))
+     ))
    ("#" "Weekly review view"
     ((todo "WAITING" ((org-agenda-todo-ignore-scheduled t)
                       (org-agenda-todo-ignore-deadlines nil)
                       (org-agenda-todo-ignore-with-date nil)
-                      (org-agenda-overriding-header "Waiting on others & not scheduled to chase up")))
+                      (org-agenda-overriding-header
+                       "Waiting on others & not scheduled to chase up")))
      (todo "TODO|NEXT" ((org-agenda-todo-ignore-with-date t)
                         (org-agenda-overriding-header "Stuck projects")
-                        (org-agenda-skip-function 'spw/skip-non-stuck-projects)))
+                        (org-agenda-skip-function 'spw--skip-non-stuck-projects)))
      (tags "LEVEL=1+REFILE"
            ((org-agenda-todo-ignore-with-date nil)
             (org-agenda-todo-ignore-deadlines nil)
             (org-agenda-todo-ignore-scheduled nil)
-            (org-agenda-overriding-header "Items to add context and priority, and refile")
-            (org-agenda-start-with-entry-text-mode t)))
+            (org-agenda-overriding-header
+             "Items to add context tag and priority, and refile")))
 
      ;; This view shows *only top-level* TODOs (i.e. projects) that
      ;; are complete (and that, for safety, contain no incomplete
@@ -263,7 +264,7 @@
             (org-agenda-todo-ignore-with-date nil)
             (org-agenda-tag-filter-preset '("-APPT"))
             (org-agenda-skip-function
-             'spw/skip-incomplete-projects-and-all-subprojects)))))
+             'spw--skip-incomplete-projects-and-all-subprojects)))))
 
    ("d" "Six-month diary" agenda ""
     ((org-agenda-span 180)
@@ -273,36 +274,32 @@
      (org-agenda-entry-types '(:timestamp :sexp))
      (org-agenda-show-all-dates nil)
      (org-agenda-overriding-header "Sean's diary for the next six months")
-     (org-agenda-files (quote ("~/doc/org/diary.org"))))
-    ("/var/www/spw/org/diary.html" "/tmp/dionysus/Agenda/Six month diary.html"))))
+     (org-agenda-files '("~/doc/org/diary.org"))))))
 
 ;;; sensible automatic tag filtering
 
-(defun org-my-auto-exclude-function (tag)
+(defun spw--org-auto-exclude-function (tag)
   (and
    (cond
     ;; tags passed to org-agenda-auto-exclude-function always
-    ;; lower case per version Org 6.34 changelog
-    ((string= tag "@cclubrd")
-     (not (string= (system-name) "artemis")))
-    ((string= tag "@tucson")
-     (not (string= (system-name) "artemis")))
+    ;; lower case per Org version 6.34 changelog
+    ((string= tag "@laaldea")
+     (not (string= (system-name) "hephaestus")))
     ((string= tag "@sheffield")
      (not (string= (system-name) "zephyr")))
     ((string= tag "@tucson")
      (not (or (string= (system-name) "iris")
               (string= (system-name) "hephaestus"))))
-    ((string= tag "@campus")
-     (string= (system-name) "athena"))
+    ;; ((string= tag "@campus")
+    ;;  (string= (system-name) "athena"))
+    ;; ((string= tag "@workstation")
+    ;;  (not (or (string= (system-name) "iris")
+    ;;           (string= (system-name) "zephyr")
+    ;;           (string= (system-name) "hephaestus"))))
     ((string= tag "ua")
-     (= (calendar-day-of-week (calendar-current-date)) 6))
-    ((string= tag "@workstation")
-     (not (or (string= (system-name) "iris")
-              (string= (system-name) "zephyr")
-              (string= (system-name) "hephaestus")))))
+     (= (calendar-day-of-week (calendar-current-date)) 6)))
    (concat "-" tag)))
-
-(setq org-agenda-auto-exclude-function 'org-my-auto-exclude-function)
+(setq org-agenda-auto-exclude-function 'spw--org-auto-exclude-function)
 
 ;;; agenda skipping functions
 
@@ -359,7 +356,7 @@
         next-headline
       nil)))
 
-(defun spw/skip-non-actionable ()
+(defun spw--skip-non-actionable ()
   "Skip:
 - anything tagged @Sheffield when I'm in Tucson
 - anything tagged @Tucson when I'm in Sheffield
@@ -523,7 +520,7 @@ different occasions."
         next-headline
       nil)))
 
-(defun spw/skip-non-stuck-projects ()
+(defun spw--skip-non-stuck-projects ()
   (let ((next-headline (save-excursion (outline-next-heading))))
     (if (or (bh/is-task-p)
             (spw/has-scheduled-or-deadlined-subproject-p)
@@ -536,7 +533,7 @@ different occasions."
       ;; ELSE: don't skip
       nil)))
 
-(defun spw/skip-incomplete-projects-and-all-subprojects ()
+(defun spw--skip-incomplete-projects-and-all-subprojects ()
   "Skip all subprojects and projects with subprojects not yet completed."
   (let ((next-headline (save-excursion (outline-next-heading))))
     (if (or (bh/is-subproject-p)
