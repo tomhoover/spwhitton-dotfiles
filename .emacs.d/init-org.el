@@ -552,6 +552,8 @@ different occasions."
     "* %^{Title}
 %?")
    ("m" "Task from mail to be refiled" entry (file "~/doc/org/refile.org")
+    ;; lisp is to filter square brackets out of the subject as these
+    ;; mean that the Org-mode link does not properly form
     "* TODO [[notmuch:id:%:message-id][%^{Title|\"%(replace-regexp-in-string \"\\\\\\[\\\\\\|\\\\\\]\" \"\" \"%:subject\")\" from %:fromname}]]
 %?")
    ("a" "Appointment" entry (file+datetree "~/doc/org/diary.org")
