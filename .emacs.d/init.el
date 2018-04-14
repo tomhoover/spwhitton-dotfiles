@@ -1849,7 +1849,9 @@ mutt's review view after exiting EDITOR."
 
 ;;; cc-mode
 
-;; the built-in 'linux' style doesn't use tabs, but the kernel style
-;; guide mandates them, so make a slightly modified style
+;; the built-in 'linux' style doesn't explicitly include tabs, so with
+;; indent-tabs-mode set to nil, cc-mode will not use tabs.  But the
+;; kernel style guide mandates tabs, so make a slightly modified style
+;; TODO fix in the 'linux' style in upstream Emacs
 (c-add-style "linux-tabs" '("linux" (indent-tabs-mode . t)))
 (setq c-default-style "linux-tabs")
