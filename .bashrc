@@ -38,6 +38,8 @@ alias grep="grep --colour=auto"
 alias g="git"
 alias ga="git annex"
 alias mg="$EDITOR"
+alias vi="$EDITOR"
+alias e="$EDITOR"
 alias mrs="mr -m status"
 alias d="emacsclient -c -n -e '(dired \".\")'"
 
