@@ -443,7 +443,7 @@ skip = ! mine
 #fixups = git-utime
 
 # before pulling, automatically commit in the same way that my cron job does
-pre_update = (! win32) && doccheckin
+pre_update = win32 || doccheckin
 # ... and let me do it manually
 autoci = doccheckin || true
 
