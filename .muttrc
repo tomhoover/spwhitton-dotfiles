@@ -122,7 +122,7 @@ unignore From: Date: x-oxford-username: Message-Id: To: Cc: Reply-To: Subject:
 
 # --- mailboxes
 
-mailboxes +inbox +sent +debian +debian/.bulk +haskell +spam +feeds
+mailboxes +inbox +sent +lists +haskell +spam +feeds
 
 # --- message part viewing
 
