@@ -96,13 +96,13 @@ lib =
 
 # --- run a command on athena in a sane environment
 
-lib =
-    athena_cmd () {
-        # here we rely on the fact that ssh already passes argument
-        # through `/bin/sh -c' (note use of single-quotes in this
-        # function)
-        ssh athena 'cd $HOME/'"$1"' && . $HOME/.shenv && '"$2"
-    }
+# lib =
+#     athena_cmd () {
+#         # here we rely on the fact that ssh already passes argument
+#         # through `/bin/sh -c' (note use of single-quotes in this
+#         # function)
+#         ssh athena 'cd $HOME/'"$1"' && . $HOME/.shenv && '"$2"
+#     }
 
 # --- standard procedures
 
@@ -126,8 +126,7 @@ lib =
                 local/lib \
                 local/pub \
                 local/auth
-            # known_hosts needs to exist or zsh complains
-            touch local/big/.duplicity-ignore src/.mrconfig .ssh/known_hosts
+            touch src/.mrconfig
             chmod 700 local/auth
             # [ -L "src/build-area" ] || ln -s -T /tmp/debuild src/build-area
         )
@@ -140,18 +139,17 @@ stowable = true
 # `git pull-safe` will often fail because host-specific branch needs
 # to be force-pushed.  So just try updating master
 update = git remote update && git merge-ff master
-
-rebase =
-    # usual rebasing pattern.  Per dotfiles repo policy (excluding
-    # win32 case), the branch being rebased will always be rebaseable
-    # on master, since it is only checked out and committed to on this
-    # host
-    branch="$(git rev-parse --abbrev-ref HEAD)"
-    hostname="$(hostname -s)"
-    if [ "$branch" = "win32" -o "$branch" = "$hostname" -o "$branch" = "develacc-$hostname" ]; then
-        git rebase master
-    fi
-
+# use `git dotfiles-rebase` instead
+# rebase =
+#     # usual rebasing pattern.  Per dotfiles repo policy (excluding
+#     # win32 case), the branch being rebased will always be rebaseable
+#     # on master, since it is only checked out and committed to on this
+#     # host
+#     branch="$(git rev-parse --abbrev-ref HEAD)"
+#     hostname="$(hostname -s)"
+#     if [ "$branch" = "win32" -o "$branch" = "$hostname" -o "$branch" = "develacc-$hostname" ]; then
+#         git rebase master
+#     fi
 fixups =
     # Use a rebasing workflow since I'm the only person who ever
     # commits to this repo
@@ -163,14 +161,14 @@ fixups =
     else
         # Manually symlink ~/.mrconfig so that we can always use mr
         # even if dotfiles are unstowed.  Called 'home-mrconfig' to
-        # avoid any chainloading
+        # avoid mr loading the file when pwd is within ~/src/dotfiles/
         ln -sf $HOME/src/dotfiles/home-mrconfig $HOME/.mrconfig
         #
         # Ensure that ~/src/dotfiles/home-mrconfig not stowed
         ln -sf $HOME/src/dotfiles/.stow-global-ignore $HOME
         #
         homedir_mkdirs
-        chmod -Rf 600 $HOME/.msmtprc $HOME/local/auth/* || true
+        chmod -Rf 600 $HOME/local/auth/* || true
         #
         $HOME/src/dotfiles/bin/loadcron || true
         $HOME/src/dotfiles/bin/loadsshkeys || true
@@ -196,14 +194,18 @@ stowable = true
 skip = (! gcrypt) || (! workstation)
 
 fixups =
-        chmod 600 .passwddb.pet .s3ql/authinfo2 .gnupg/*.kbx .gnupg/private-keys-v1.d/*.key
+        chmod 600 .passwddb.pet \
+              .s3ql/authinfo2 \
+              .gnupg/*.kbx \
+              .gnupg/private-keys-v1.d/*.key
         git config remote.origin.gcrypt-publish-participants true
         git config remote.origin.gcrypt-participants 0x0F56D0553B6D411B
-        git config gcrypt.publish-participants true
-        git config gcrypt.participants 0x0F56D0553B6D411B
+        # git config gcrypt.publish-participants true
+        # git config gcrypt.participants 0x0F56D0553B6D411B
 autoci =
         git add .passwddb.pet .labbook.gpg .gnupg/pubring.kbx
-        git commit -a -m "auto passwddb, pubring and labbook commit on $(hostname -s)" || true
+        git commit -a -m \
+            "auto passwddb, pubring and labbook commit on $(hostname -s)" || true
 pre_update = mr autoci
 
 # since dotfiles repo also stows into ~/.gnupg, and athpriv repo stows
@@ -216,7 +218,7 @@ checkout = git clone athenap:athpriv athpriv
 stowable = true
 skip = ! mine
 
-# since priv repo also stows into ~/.gnupg, make the dir first
+# since priv repo also stows into ~/.duply, make the dir first
 pre_stow = homedir_mkdirs
 
 # --- hosts configuration
@@ -259,12 +261,12 @@ checkout = git clone athena:dgit
 push = git push-all --no-tags
 skip = lazy
 
-[$HOME/src/ublock-origin]
-checkout = git clone 'https://anonscm.debian.org/git/pkg-mozext/ublock-origin.git' 'ublock-origin'
-# beta, rc and alpha tags get deleted by upstream so there will very
-# often be unpushed tags
-push = git push-all --no-tags
-skip = lazy
+# [$HOME/src/ublock-origin]
+# checkout = git clone 'https://anonscm.debian.org/git/pkg-mozext/ublock-origin.git' 'ublock-origin'
+# # beta, rc and alpha tags get deleted by upstream so there will very
+# # often be unpushed tags
+# push = git push-all --no-tags
+# skip = lazy
 
 # --- radicale collections
 
@@ -272,10 +274,12 @@ skip = lazy
 checkout = git clone athenap:radicale radicale
 skip = ! on spwhitton@athena
 
-# --- primary git annex
+# could use /usr/share/mr/git-annex helper to simplify the following
+# configuration of annexes (overriding its update definition to avoid
+# --content) but probably not flexible enough for all that's going on
+# in the below
 
-# TODO: consider using /usr/share/mr/git-annex helper to simplify this
-# configuration (override its update definition to avoid --content)
+# --- primary git annex
 
 [$HOME/lib/annex]
 checkout = git clone gcrypt::rsync://athena:/srv/gcrypt/annex.git annex
@@ -286,6 +290,7 @@ post_checkout =
 skip = ! workstation
 
 update = git annex sync --no-content origin
+sync = git annex sync --no-content origin
 push =
     git annex sync --no-content origin
     git annex sync --content athena
@@ -294,12 +299,11 @@ fixups =
     git config push.default matching
     git config remote.origin.gcrypt-publish-participants true
     git config remote.origin.gcrypt-participants 0x0F56D0553B6D411B
-    git config gcrypt.publish-participants true
-    git config gcrypt.participants 0x0F56D0553B6D411B
+    # git config gcrypt.publish-participants true
+    # git config gcrypt.participants 0x0F56D0553B6D411B
     git config annex.startupscan false
     git config annex.autocommit true # needed for `git annex sync`
     git config remote.origin.annex-ignore true
-sync = git annex sync --no-content origin
 
 # --- personal website big files annex
 
@@ -315,10 +319,10 @@ post_checkout =
     if [ "$(hostname -s)" = "athena" ]; then
         git annex direct
     fi
-    if workstation; then
-        git remote add bkupsd /media/${USER}/bkupsd/git/athena/wikiannex.git
-        git remote add m3 /media/${USER}/m3/git/athena/wikiannex.git
-    fi
+    # if workstation; then
+    #     git remote add bkupsd /media/${USER}/bkupsd/git/athena/wikiannex.git
+    #     git remote add m3 /media/${USER}/m3/git/athena/wikiannex.git
+    # fi
 update = git annex sync --no-content         # no pull in direct mode
 push = git annex sync --content
 skip = ! mine
@@ -349,25 +353,25 @@ skip = ! workstation
 
 # --- git annex for podcasts
 
-[$HOME/lib/podcasts]
-checkout = git clone athenap:podcasts
-post_checkout =
-    cd podcasts
-    git annex init
-status = git annex status
-update = git annex --no-content sync
-push = git annex --no-content sync
+# [$HOME/lib/podcasts]
+# checkout = git clone athenap:podcasts
+# post_checkout =
+#     cd podcasts
+#     git annex init
+# status = git annex status
+# update = git annex --no-content sync
+# push = git annex --no-content sync
 
-# origin remote is just for keeping a backup copy of metadata.  athena
-# remote, in $HOME on athena, contains a copy of content.  At present,
-# origin remote only updated by sysmaint script (run weekly)
-fixups =
-    git config push.default matching
-    git config annex.startupscan false
-    git config annex.autocommit true # needed for ga sync
-    git config remote.origin.annex-ignore true
+# # origin remote is just for keeping a backup copy of metadata.  athena
+# # remote, in $HOME on athena, contains a copy of content.  At present,
+# # origin remote only updated by sysmaint script (run weekly)
+# fixups =
+#     git config push.default matching
+#     git config annex.startupscan false
+#     git config annex.autocommit true # needed for ga sync
+#     git config remote.origin.annex-ignore true
 
-skip = ! workstation
+# skip = ! workstation
 
 # --- git annex for use with rtorrent
 
