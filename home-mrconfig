@@ -414,12 +414,20 @@ pre_update = mr autoci
 
 # --- source code repositories registered to their own mr config file
 
-[$HOME/src]
+# dummy repo for chainloading
+[src]
 chain = true
-
-# Always skip, since this is a dummy repository entry in order to
-# chainload.
-skip = ! [ "$MR_ACTION" = "stowable" ]
+checkout = :
+update = :
+status = :
+clean = :
+commit = :
+record = :
+fetch = :
+push = :
+diff = :
+log = :
+grep = :
 
 # --- my personal documents.  Override my global update command back
 # --- to the myrepos default so that git automatically pulls and
