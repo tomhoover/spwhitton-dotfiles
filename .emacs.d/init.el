@@ -370,8 +370,7 @@ hooks listed in `lisp-major-mode-hooks'."
    magit-remote-arguments nil
 
    magit-completing-read-function 'magit-ido-completing-read
-   magit-push-always-verify nil
-   magit-revert-buffers 'silent)
+   magit-push-always-verify nil)
 
   (use-package magit-annex
     :if (spw--optional-pkg-available-p "magit-annex")))
