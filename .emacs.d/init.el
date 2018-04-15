@@ -465,19 +465,11 @@ hooks listed in `lisp-major-mode-hooks'."
 (use-package ebib
   :if (spw--optional-pkg-available-p "ebib")
   :bind ("C-c g e" . ebib)
-  :init (setq ebib-preload-bib-files '("~/doc/spw.bib")
-              ebib-additional-fields
-              '(crossref
-                url
-                annote
-                abstract
-                keywords
-                file
-                timestamp
-                translator
-                booktitle)
-              ebib-index-display-fields '(title)
-              ebib-save-xrefs-first t))
+  :init
+  (setq ebib-preload-bib-files '("~/doc/spw.bib")
+        ebib-index-display-fields '(title)
+        ebib-save-xrefs-first t)
+  (delete "translator" ebib-hidden-fields))
 
 ;;; dired enhancements
 
