@@ -5,16 +5,13 @@ written is GPL v3 or any later versions published by the FSF.
 The master branch should work on most hosts, and host-specific
 configurations for host `host.domain' live in the branch `host'.  All
 such host branches have master as their parent and are rebased onto
-master: the only exception is some branches based on `win32' for
-specific Windows hosts.
+master.
 
 This restriction is to make usage less complex, even if it results in
 some patches being duplicated between multiple host branches (that
 aren't suitable for master).  My dotfiles are too important for the
-repository to require time-consuming, complex rebase operations.  In
-particular, the restriction allows for the `mr update' and `mr rebase'
-commands to be simple scripts that almost always do exactly what's
-needed.
+repository to require time-consuming, complex rebase operations.  I
+use ~/bin/git-dotfiles-rebase to do the rebasing.
 
 ===========================
 Minimal system requirements
@@ -34,8 +31,8 @@ Minimal setup
 
 1. Get the repo
 
-   $ git clone https://github.com/spwhitton/dotfiles.git $HOME/src/dotfiles
+   % git clone https://github.com/spwhitton/dotfiles.git $HOME/src/dotfiles
    
 2. Run bootstrap script:
 
-   $ $HOME/src/dotfiles/bin/bstraph.sh
+   % $HOME/src/dotfiles/bin/bstraph.sh
