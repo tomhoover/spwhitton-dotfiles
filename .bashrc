@@ -42,6 +42,7 @@ alias vi="$EDITOR"
 alias e="$EDITOR"
 alias mrs="mr -m status"
 alias d="emacsclient -c -n -e '(dired \".\")'"
+alias ta="tmux attach-session"
 
 alias sid-build-deps='mk-build-deps -ir -s sudo -t \
       "apt-get -o Debug::pkgProblemResolver=yes -t sid --no-install-recommends"'
