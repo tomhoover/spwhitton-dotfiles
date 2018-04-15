@@ -297,8 +297,8 @@
    (concat "-" tag)))
 (setq org-agenda-auto-exclude-function 'spw--org-auto-exclude-function)
 
-;;; agenda skipping functions
-;;; Many of these are adapted from Bernt Hansen's http://doc.norang.ca/org-mode.html
+;;; agenda skipping functions.  Many of these are adapted from Bernt
+;;; Hansen's http://doc.norang.ca/org-mode.html
 
 (defun bh--is-project-p ()
   "Any task with a todo keyword subtask"
@@ -306,7 +306,8 @@
     (widen)
     (let ((has-subtask)
           (subtree-end (save-excursion (org-end-of-subtree t)))
-          (is-a-task (member (nth 2 (org-heading-components)) org-todo-keywords-1)))
+          (is-a-task (member (nth 2 (org-heading-components))
+                             org-todo-keywords-1)))
       (save-excursion
         (forward-line 1)
         (while (and (not has-subtask)
@@ -332,7 +333,8 @@
     (widen)
     (let ((has-subtask)
           (subtree-end (save-excursion (org-end-of-subtree t)))
-          (is-a-task (member (nth 2 (org-heading-components)) org-todo-keywords-1)))
+          (is-a-task (member (nth 2 (org-heading-components))
+                             org-todo-keywords-1)))
       (save-excursion
         (forward-line 1)
         (while (and (not has-subtask)
@@ -345,16 +347,14 @@
 (defun spw--skip-subprojects ()
   "Skip trees that are subprojects"
   (let ((next-headline (save-excursion (outline-next-heading))))
-    (if (bh--is-subproject-p)
-        next-headline
-      nil)))
+    (if (bh--is-subproject-p) next-headline nil)))
 
 (defun spw--skip-non-actionable ()
   "Skip:
 - anything tagged @Sheffield when I'm in Tucson
 - anything tagged @Tucson when I'm in Sheffield
 - standalone tasks with deadlines
-- projects
+- projects (i.e. has subtasks)
 - subtasks of projects that are not NEXT actions
 - subtasks of SOMEDAY projects
 - subtasks of WAITING projects
@@ -362,7 +362,7 @@
 
 In the last case, the idea is that if I've scheduled the project
 then I intend to tackle all the NEXT actions on that date (or at
-least the next chunk of them).  I've broken the project down into
+least the next chunk of them); I've broken the project down into
 NEXT actions but not for the purpose of handling them on
 different occasions."
   ;; TODO probably better if it skipped only scheduled, not deadlined
@@ -500,8 +500,7 @@ different occasions."
   is scheduled or deadlined"
   (let ((next-headline (save-excursion (outline-next-heading))))
     (if (spw--has-scheduled-or-deadlined-subproject-p)
-        next-headline
-      nil)))
+        next-headline nil)))
 
 (defun spw--skip-subprojects-and-projects-with-scheduled-or-deadlined-subprojects ()
   "Skip subprojects projects that have subtasks, where at least
@@ -510,8 +509,7 @@ different occasions."
   buffer"
   (let ((next-headline (save-excursion (outline-next-heading))))
     (if (or (bh--is-subproject-p) (spw--has-scheduled-or-deadlined-subproject-p))
-        next-headline
-      nil)))
+        next-headline nil)))
 
 (defun spw--skip-non-stuck-projects ()
   (let ((next-headline (save-excursion (outline-next-heading))))
@@ -531,8 +529,7 @@ different occasions."
   (let ((next-headline (save-excursion (outline-next-heading))))
     (if (or (bh--is-subproject-p)
             (spw--has-incomplete-subproject-or-task-p))
-        next-headline
-      nil)))
+        next-headline nil)))
 
 ;;; capture templates
 
@@ -713,7 +710,7 @@ Ignore SOMEDAYs as might have those in old notes but not important to include th
                ("\\subsection{%s}" . "\\subsection*{%s}")
                ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
 
-;;;; ---- functions ----
+;;;; ---- adding and removing agenda files ----
 
 ;;; the default C-c [ and C-c ] expand the directory ~/doc/org in the
 ;;; org-agenda-files variable using the local path,
@@ -734,6 +731,7 @@ Ignore SOMEDAYs as might have those in old notes but not important to include th
               (insert path)
               (save-buffer)
               (message "added")))))))
+(bind-key "C-c [" 'spw--org-agenda-file-to-front org-mode-map)
 
 (defun spw--org-remove-file ()
   (interactive)
@@ -746,67 +744,34 @@ Ignore SOMEDAYs as might have those in old notes but not important to include th
               (beginning-of-line)
               (kill-line 1)
               (save-buffer)
-              (message "remove")))))))
+              (message "removed")))))))
+(bind-key "C-c ]" 'spw--org-remove-file org-mode-map)
 
-;; ;; defeat variable-pitch-mode for tables and source blocks, per
-;; ;; http://stackoverflow.com/a/16819449
-
-;; (face-override-variable-pitch 'org-code)
-;; (face-override-variable-pitch 'org-block)
-;; (face-override-variable-pitch 'org-table)
-;; ;;(face-override-variable-pitch 'org-block-background)
+;;;; ---- hooks and keys ----
 
 (defun spw--org-agenda-priority-filter (arg)
+  "Hide low-priority items.  If ARG, hide slightly fewer."
   (interactive "P")
   (if arg
       (push "\[#A\]\\|Appt" org-agenda-regexp-filter)
     (push "\[#[AB]\]\\|Appt" org-agenda-regexp-filter))
   (org-agenda-filter-apply org-agenda-regexp-filter 'regexp))
-
-;;;; ---- hooks and keys ----
-
-(run-at-time "00:59" 3600 'org-save-all-org-buffers)
-
-(add-hook
- 'org-mode-hook
- '(lambda ()
-    ;; (when window-system
-    ;;   (org-display-inline-images))
-    (turn-on-auto-fill)
-    ;; (org-mode-reftex-setup)
-    ;; (smartparens-mode)
-    ))
-
-(add-hook
- 'org-agenda-mode-hook
- '(lambda ()
-    ;; always hilight the current agenda line
-    (hl-line-mode 1)
-    ;; make space work from the agenda to cycle the actual tree in the split
-    (define-key org-agenda-mode-map " " 'org-agenda-cycle-show)))
-
-;; (defadvice org-agenda (after spw--open-weekday-schedule)
-;;   (when (and window-system
-;;              (not (get-buffer-window "fall_2015_weekday_schedule.org" 0))
-;;              (y-or-n-p "Also load Fall 2015 weekday schedule?"))
-;;     (find-file-other-window "~/doc/org/fall_2015_weekday_schedule.org")))
-
-(define-key org-mode-map (kbd "<f11>") 'org-toggle-link-display)
-;; (define-key org-mode-map (kbd "C-c )") 'reftex-citation)
-
-(bind-key "C-c [" 'spw--org-agenda-file-to-front org-mode-map)
-(bind-key "C-c ]" 'spw--org-remove-file org-mode-map)
-
-;;; hide low-priority tasks
 (bind-key (kbd "&") 'spw--org-agenda-priority-filter org-agenda-mode-map)
 
-;;; escape to get out of date entry
+;; save all Org buffers once an hour
+(run-at-time "00:59" 3600 'org-save-all-org-buffers)
 
-(define-key org-read-date-minibuffer-local-map (kbd "ESC") 'abort-recursive-edit)
+;; auto-fill-mode
+(add-hook 'org-mode-hook 'turn-on-auto-fill)
 
-;;; this binding seems to have dropped out of upstream, so define it again
+;; hl-line-mode in agenda buffers
+(add-hook 'org-agenda-mode-hook 'hl-line-mode)
 
+;; space to cycle remote visibility in agenda
+(add-hook
+ 'org-agenda-mode-hook
+ (lambda ()
+   (define-key org-agenda-mode-map " " 'org-agenda-cycle-show)))
+
+;; this binding seems to have dropped out of upstream, so define it again
 (bind-key (kbd "C-c C-SPC") 'org-mark-subtree org-mode-map)
-
-(provide 'init-org)
-;;; init-org.el ends here
