@@ -166,6 +166,10 @@ fixups =
         #
         # Ensure that ~/src/dotfiles/home-mrconfig not stowed
         ln -sf $HOME/src/dotfiles/.stow-global-ignore $HOME
+        # Ensure that ~/src/.mrconfig is trusted else `mr stowable`
+        # will always return false and so `mr stow` will never do
+        # anything, which can be an awkward situation to recover from
+        ln -sf $HOME/src/dotfiles/.mrtrust $HOME
         #
         homedir_mkdirs
         chmod -Rf 600 $HOME/local/auth/* || true

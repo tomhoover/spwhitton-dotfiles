@@ -3,6 +3,7 @@ home-mrconfig
 README
 archive
 \.stow-global-ignore
+\.mrtrust
 
 \.git
 \.gitignore
