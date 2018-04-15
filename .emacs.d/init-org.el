@@ -436,15 +436,14 @@ different occasions."
 (defun spw--org-is-scheduled-p ()
   "A task that is scheduled"
   (let ((is-dated)
-        (is-a-task (member (nth 2 (org-heading-components)) org-todo-keywords-1))
-        (regexp (org-re-timestamp 'scheduled)))
+        (is-a-task
+         (member (nth 2 (org-heading-components)) org-todo-keywords-1)))
     (save-excursion
       ;; Ignore errors if we fail to expand a subtree because we're
       ;; before the first heading
       (ignore-errors (outline-show-subtree))
       (forward-line)
       (org-beginning-of-line)
-
       ;; if a task is scheduled and deadlined, and the DEADLINE: comes
       ;; before the SCHEDULED:, the regexp won't match (if the
       ;; DEADLINE: comes second, it will match).  So skip over
@@ -452,24 +451,23 @@ different occasions."
       (when (looking-at (org-re-timestamp 'deadline))
         (forward-sexp 3)
         (forward-char))
-
-      (if (looking-at regexp)
-          (setq is-dated t)))
+      (when (looking-at (org-re-timestamp 'scheduled))
+        (setq is-dated t)))
     (and is-a-task is-dated)))
 
 (defun spw--org-has-deadline-p ()
   "A task that has a deadline"
   (let ((is-dated)
-        (is-a-task (member (nth 2 (org-heading-components)) org-todo-keywords-1))
-        (regexp (org-re-timestamp 'deadline)))
+        (is-a-task
+         (member (nth 2 (org-heading-components)) org-todo-keywords-1)))
     (save-excursion
       ;; Ignore errors if we fail to expand a subtree because we're
       ;; before the first heading
       (ignore-errors (outline-show-subtree))
       (forward-line)
       (org-beginning-of-line)
-      (if (looking-at regexp)
-          (setq is-dated t)))
+      (when (looking-at (org-re-timestamp 'deadline))
+        (setq is-dated t)))
     (and is-a-task is-dated)))
 
 (defun spw--org-is-scheduled-or-deadlined-p ()
@@ -483,8 +481,8 @@ different occasions."
       (ignore-errors (outline-show-subtree))
       (forward-line)
       (org-beginning-of-line)
-      (if (looking-at regexp)
-          (setq is-dated t)))
+      (when (looking-at regexp)
+        (setq is-dated t)))
     (and is-a-task is-dated)))
 
 (defun spw--has-scheduled-or-deadlined-subproject-p ()
@@ -494,8 +492,8 @@ different occasions."
       (save-restriction
         (org-narrow-to-subtree)
         (while (ignore-errors (outline-next-heading))
-          (if (spw--org-is-scheduled-or-deadlined-p)
-              (setq has-scheduled-or-deadlined-subproject t)))))
+          (when (spw--org-is-scheduled-or-deadlined-p)
+            (setq has-scheduled-or-deadlined-subproject t)))))
     has-scheduled-or-deadlined-subproject))
 
 (defun spw--has-next-action-p ()
@@ -505,8 +503,8 @@ different occasions."
       (save-restriction
         (org-narrow-to-subtree)
         (while (ignore-errors (outline-next-heading))
-          (if (string= (nth 2 (org-heading-components)) "NEXT")
-              (setq has-next-subproject t)))))
+          (when (string= (nth 2 (org-heading-components)) "NEXT")
+            (setq has-next-subproject t)))))
     has-next-subproject))
 
 (defun spw--has-incomplete-subproject-or-task-p ()
@@ -516,11 +514,10 @@ different occasions."
       (save-restriction
         (org-narrow-to-subtree)
         (while (ignore-errors (outline-next-heading))
-          (unless
-              (or (string= (nth 2 (org-heading-components)) "DONE")
-                  (string= (nth 2 (org-heading-components)) "CANCELLED"))
-            (setq has-incomplete-subproject t)))))
-    has-incomplete-subproject))
+          (unless (member (nth 2 (org-heading-components))
+                          (list "DONE" "CANCELLED")))
+          (setq has-incomplete-subproject t)))))
+  has-incomplete-subproject))
 
 ;;;; ---- capture templates ----
 
