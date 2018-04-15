@@ -347,7 +347,13 @@
 (defmacro spw--skip-when (&rest condition)
   "Skip trees where CONDITION is false when evaluated when point is on the headline of the tree."
   `(let ((next-headline (save-excursion (outline-next-heading))))
-     (if ,@condition next-headline nil)))
+     (if ,@condition
+         (or next-headline
+             ;; if there is no next headline, skip by going to the end
+             ;; of the buffer.  An alternative would be `(save-excursion
+             ;; (forward-line 1) (point))'
+             (point-max))
+       nil)))
 
 (defun spw--skip-subprojects ()
   "Skip trees that are subprojects"
@@ -360,9 +366,7 @@
 
 (defun spw--skip-subprojects-and-projects-with-scheduled-or-deadlined-subprojects ()
   "Skip subprojects projects that have subtasks, where at least
-  one of those is scheduled or deadlined.  Currently fails to
-  exclude subprojects that are the very last headline in a
-  buffer"
+  one of those is scheduled or deadlined."
   (spw--skip-when
    (or (bh--is-subproject-p)
        (spw--has-scheduled-or-deadlined-subproject-p))))
@@ -374,17 +378,10 @@
        (spw--has-incomplete-subproject-or-task-p))))
 
 (defun spw--skip-non-stuck-projects ()
-  (let ((next-headline (save-excursion (outline-next-heading))))
-    (if (or (bh--is-task-p)
-            (spw--has-scheduled-or-deadlined-subproject-p)
-            (spw--has-next-action-p))
-        ;; THEN: skip, and handle special case of the final entry in a
-        ;; buffer which cannot be a stuck project and so should always
-        ;; be skipped, but which won't be since `next-headline' will
-        ;; be nil
-        (if next-headline next-headline (point-max))
-      ;; ELSE: don't skip
-      nil)))
+  (spw--skip-when
+   (or (bh--is-task-p)
+       (spw--has-scheduled-or-deadlined-subproject-p)
+       (spw--has-next-action-p))))
 
 (defun spw--skip-non-actionable ()
   "Skip:
@@ -404,33 +401,24 @@ NEXT actions but not for the purpose of handling them on
 different occasions."
   ;; TODO probably better if it skipped only scheduled, not deadlined
   ;; projects: merely deadlined ones actionable
-  (let ((next-headline
-         ;; Catch the end of the buffer to ensure we never return nil,
-         ;; since if the code below returns next-headline we need to
-         ;; go forward
-         (let ((try (save-excursion (outline-next-heading))))
-           (if try
-               try
-             (save-excursion (forward-line 1) (point))))))
-    (if (or (and (string= (system-name) "zephyr")
-                 (member "@Tucson" (org-get-tags)))
-            ;; iris is a laptop, but usually it's not in Sheffield
-            (and (or (string= (system-name) "iris") (string= (system-name) "hephaestus"))
-                 (member "@Sheffield" (org-get-tags)))
-            (bh--is-project-p)
-            (and (bh--is-subproject-p)
-                 (or
-                  (not (string= (nth 2 (org-heading-components)) "NEXT"))
-                  (save-excursion
-                    (org-up-heading-safe)
-                    (or
-                     (spw--org-is-scheduled-p)
-                     (string= (nth 2 (org-heading-components)) "SOMEDAY")
-                     (string= (nth 2 (org-heading-components)) "WAITING")))))
-            (and (bh--is-task-p)
-                 (spw--org-has-deadline-p)))
-        next-headline
-      nil)))
+  (spw--skip-when
+   (or (and (string= (system-name) "zephyr")
+            (member "@Tucson" (org-get-tags)))
+       ;; iris is a laptop, but usually it's not in Sheffield
+       (and (or (string= (system-name) "iris") (string= (system-name) "hephaestus"))
+            (member "@Sheffield" (org-get-tags)))
+       (bh--is-project-p)
+       (and (bh--is-subproject-p)
+            (or
+             (not (string= (nth 2 (org-heading-components)) "NEXT"))
+             (save-excursion
+               (org-up-heading-safe)
+               (or
+                (spw--org-is-scheduled-p)
+                (string= (nth 2 (org-heading-components)) "SOMEDAY")
+                (string= (nth 2 (org-heading-components)) "WAITING")))))
+       (and (bh--is-task-p)
+            (spw--org-has-deadline-p)))))
 
 (defun spw--org-forward-heading ()
   (beginning-of-line)
