@@ -597,105 +597,20 @@ Ignore SOMEDAYs as might have those in old notes but not important to include th
     (call-interactively 'spw--find-non-agenda-todos)))
 (advice-add 'org-agenda :after #'org-agenda--run-find-non-agenda-todos)
 
-;;;; ---- export and referencing ----
+;;;; ---- export ----
 
 (unless (boundp 'org-export-latex-classes)
   (setq org-latex-classes nil))
 
-(add-to-list 'org-latex-classes
-             ;; we drop the default packages then re-add almost all of them--amssymb doesn't play nice with our font package
-             '("spwoutline"
-               "\\documentclass{spwoutline}
-\[NO-DEFAULT-PACKAGES\]
-\\usepackage[utf8]{inputenc}
-\\usepackage[T1]{fontenc}
-\\usepackage{fixltx2e}
-\\usepackage{graphicx}
-\\usepackage{longtable}
-\\usepackage{float}
-\\usepackage{wrapfig}
-\\usepackage{soul}
-\\usepackage{textcomp}
-\\usepackage{marvosym}
-\\usepackage{wasysym}
-\\usepackage{latexsym}
-\\usepackage{hyperref}
-"
-               ("\\section{%s}" . "\\section*{%s}")
-               ("\\subsection{%s}" . "\\subsection*{%s}")
-               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
-
-(add-to-list 'org-latex-classes
-             '("spwessay"
-               "\\documentclass{spwessay}
-\[NO-DEFAULT-PACKAGES\]
-\\usepackage[utf8]{inputenc}
-\\usepackage[T1]{fontenc}
-\\usepackage{fixltx2e}
-\\usepackage{graphicx}
-\\usepackage{longtable}
-\\usepackage{float}
-\\usepackage{wrapfig}
-\\usepackage{soul}
-\\usepackage{textcomp}
-\\usepackage{marvosym}
-\\usepackage{wasysym}
-\\usepackage{latexsym}
-\\usepackage{hyperref}
-                    \\renewcommand{\\tableofcontents}{}
-                    [EXTRA]"
-               ("
-\\section{%s}" . "
-\\section*{%s}")))
-
-(add-to-list 'org-latex-classes
-             '("spwpaper"
-               "\\documentclass{spwpaper}
-\[NO-DEFAULT-PACKAGES\]
-\\usepackage[utf8]{inputenc}
-\\usepackage[T1]{fontenc}
-\\usepackage{fixltx2e}
-\\usepackage{graphicx}
-\\usepackage{longtable}
-\\usepackage{float}
-\\usepackage{wrapfig}
-\\usepackage{soul}
-\\usepackage{textcomp}
-\\usepackage{marvosym}
-\\usepackage{wasysym}
-\\usepackage{latexsym}
-\\usepackage[pdftex]{hyperref}
-\\hypersetup{colorlinks,citecolor=black,filecolor=black,linkcolor=black,urlcolor=black}
-                    \\renewcommand{\\tableofcontents}{}
-                    [EXTRA]"
-               ("
-\\section{%s}" . "
-\\section*{%s}")))
-
-(add-to-list 'org-latex-classes
-             '("spwdoc"
-               "\\documentclass{spwdoc}
-                    [EXTRA]"
-               ("\\section{%s}" . "\\section*{%s}")
-               ("\\subsection{%s}" . "\\subsection*{%s}")
-               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
-
-(add-to-list 'org-latex-classes
-             '("spwdnd"
-               "\\documentclass{spwdnd}
-                    [EXTRA]"
-               ("\\section{%s}" . "\\section*{%s}")
-               ("\\subsection{%s}" . "\\subsection*{%s}")
-               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
-
-(add-to-list 'org-latex-classes
-             '("wordlike"
-               "\\documentclass[12pt,a4paper]{article}
-                  \\usepackage{wordlike}
+(add-to-list
+ 'org-latex-classes
+ '("wordlike"
+   "\\documentclass[12pt]{article}
+\\usepackage{wordlike}
 \\usepackage{parskip}
 \\usepackage{fancyhdr}
-\\pagestyle{fancy}
 
+\\pagestyle{fancy}
 \\fancyhead{}
 \\fancyhead[R]{\\textsf{\\thepage}}
 \\fancyfoot{}
@@ -705,10 +620,11 @@ Ignore SOMEDAYs as might have those in old notes but not important to include th
 \\fancyhf{} % remove everything
 \\renewcommand{\\headrulewidth}{0pt} % remove lines as well
 \\renewcommand{\\footrulewidth}{0pt}}
-                    [EXTRA]"
-               ("\\section{%s}" . "\\section*{%s}")
-               ("\\subsection{%s}" . "\\subsection*{%s}")
-               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
+
+[EXTRA]"
+   ("\\section{%s}" . "\\section*{%s}")
+   ("\\subsection{%s}" . "\\subsection*{%s}")
+   ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
 
 ;;;; ---- adding and removing agenda files ----
 
