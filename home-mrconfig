@@ -381,19 +381,9 @@ skip = ! workstation
 
 [$HOME/lib/rt]
 checkout = git clone gcrypt::rsync://athena:/srv/gcrypt/rt.git rt
-post_checkout = cd rt && git annex init
-status = git annex status --fast
-update = git annex sync --no-content origin
-push = git annex sync --no-content origin
-autoci = (git annex add . && git commit -m "auto commit on $(hostname -s)") || true
-fixups =
-    git config push.default matching
-    git config gcrypt.publish-participants true
-    git config remote.origin.gcrypt-publish-participants true
-    git config remote.origin.gcrypt-participants 0x0F56D0553B6D411B
-    git config annex.startupscan false
-    git config annex.autocommit true # needed for `git annex sync`
-    git config remote.origin.annex-ignore true
+post_checkout =
+    cd rt
+    git annex init
     if [ -d "$(hostname -s)" ]; then
         mkdir -p $HOME/local/rt
         cd $HOME/local/rt
@@ -406,8 +396,20 @@ fixups =
             ln -s $HOME/lib/rt/$(hostname -s) watch
         fi
     fi
+status = git annex status --fast
+update = git annex sync --no-content origin
+push = git annex sync --no-content origin
+autoci = (git annex add . && git commit -m "auto commit on $(hostname -s)") || true
+fixups =
+    git config push.default matching
+    # git config gcrypt.publish-participants true
+    git config remote.origin.gcrypt-publish-participants true
+    git config remote.origin.gcrypt-participants 0x0F56D0553B6D411B
+    git config annex.startupscan false
+    git config annex.autocommit true # needed for `git annex sync`
+    git config remote.origin.annex-ignore true
 
-skip = (! workstation)
+skip = ! workstation
 pre_update = mr autoci
 
 # --- source code repositories registered to their own mr config file
