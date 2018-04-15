@@ -572,20 +572,23 @@ different occasions."
 Ignore SOMEDAYs as might have those in old notes but not important to include them"
   (interactive)
   (let ((default-directory org-directory)
-        (args-together))
-    (setq args-together "")
+        (args-together ""))
     (with-temp-buffer
       (insert-file-contents org-agenda-files)
       (dolist (elt (split-string (buffer-string) "\n" t) args-together)
         (if (not (f-directory? elt))
             (setq args-together (concat args-together " -not -name '" (file-name-nondirectory elt) "'")))))
-    (grep-find (concat "find " org-directory
-                       " -regextype posix-egrep -type f"
-                       args-together
-                       " -not -regex '" (expand-file-name org-directory) "/archive/.*'"
-                       " -not -regex '" (expand-file-name org-directory) "/philos/.*'"
-                       " -not -name reading.org"
-                       " -not -name archive.org -not -regex '" (expand-file-name org-directory) "/[ABCDEFGHIJKLMNOPQRSTUVWXYZ].*' -exec egrep -nH -e \"\\* \(TODO\|WAITING\) \" {} +"))))
+    (grep-find
+     (concat
+      "find " org-directory
+      " -regextype posix-egrep -type f"
+      args-together
+      " -not -regex '" (expand-file-name org-directory) "/archive/.*'"
+      " -not -regex '" (expand-file-name org-directory) "/philos/.*'"
+      " -not -name reading.org"
+      " -not -name archive.org -not -regex '"
+      (expand-file-name org-directory)
+      "/[ABCDEFGHIJKLMNOPQRSTUVWXYZ].*' -exec egrep -nH -e \"\\* \(TODO\|NEXT\|WAITING\) \" {} +"))))
 
 (defun org-agenda--run-find-non-agenda-todos (&rest ignore)
   "Call grep to find Org files that aren't in `org-agenda-files'
