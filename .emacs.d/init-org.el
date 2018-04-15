@@ -598,9 +598,6 @@ Ignore SOMEDAYs as might have those in old notes but not important to include th
 
 ;;;; ---- export ----
 
-(unless (boundp 'org-export-latex-classes)
-  (setq org-latex-classes nil))
-
 (add-to-list
  'org-latex-classes
  '("wordlike"
