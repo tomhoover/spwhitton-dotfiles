@@ -458,7 +458,7 @@ skip = ! on spwhitton@sage
 
 [$HOME/html]
 clone = git clone https://git.spwhitton.name/sdfweb html
-skip = ! on faeroes             # TODO just check if host is *.sdf.org
+skip = ! [ "$(domainname)" = "SDF" ]
 
 # --- my offline e-mail (& machine's postfix queue)
 
