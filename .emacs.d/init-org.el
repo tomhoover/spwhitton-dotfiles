@@ -387,7 +387,6 @@
   "Skip:
 - anything tagged @Sheffield when I'm in Tucson
 - anything tagged @Tucson when I'm in Sheffield
-- standalone tasks with deadlines
 - projects (i.e. has subtasks)
 - subtasks of projects that are not NEXT actions
 - subtasks of SOMEDAY projects
@@ -399,26 +398,40 @@ then I intend to tackle all the NEXT actions on that date (or at
 least the next chunk of them); I've broken the project down into
 NEXT actions but not for the purpose of handling them on
 different occasions."
-  ;; TODO probably better if it skipped only scheduled, not deadlined
-  ;; projects: merely deadlined ones actionable
   (spw--skip-when
-   (or (and (string= (system-name) "zephyr")
-            (member "@Tucson" (org-get-tags)))
-       ;; iris is a laptop, but usually it's not in Sheffield
-       (and (or (string= (system-name) "iris") (string= (system-name) "hephaestus"))
-            (member "@Sheffield" (org-get-tags)))
-       (bh--is-project-p)
-       (and (bh--is-subproject-p)
-            (or
-             (not (string= (nth 2 (org-heading-components)) "NEXT"))
-             (save-excursion
-               (org-up-heading-safe)
-               (or
-                (spw--org-is-scheduled-p)
-                (string= (nth 2 (org-heading-components)) "SOMEDAY")
-                (string= (nth 2 (org-heading-components)) "WAITING")))))
-       (and (bh--is-task-p)
-            (spw--org-has-deadline-p)))))
+   (or
+    ;; #1
+    ;; iris is a laptop, but usually it's not in Sheffield
+    (and (or
+          (string= (system-name) "iris")
+          (string= (system-name) "hephaestus"))
+         (member "@Sheffield" (org-get-tags)))
+    ;; #2
+    (and (string= (system-name) "zephyr")
+         (member "@Tucson" (org-get-tags)))
+    ;; #3
+    (bh--is-project-p)
+
+    ;; we used to skip deadlined standalone tasks but actually those
+    ;; are actionable in general
+    ;; (and (bh--is-task-p)
+    ;;      (spw--org-has-deadline-p))
+
+    ;; #4--#7
+    (and (bh--is-subproject-p)
+         (or
+          ;; #4
+          (not (string= (nth 2 (org-heading-components)) "NEXT"))
+          (save-excursion
+            (and
+             (org-up-heading-safe)
+             (or
+              ;; # 5
+              (string= (nth 2 (org-heading-components)) "SOMEDAY")
+              ;; # 6
+              (string= (nth 2 (org-heading-components)) "WAITING")
+              ;; # 7
+              (spw--org-is-scheduled-p)))))))))
 
 (defun spw--org-forward-heading ()
   (beginning-of-line)
@@ -519,7 +532,6 @@ different occasions."
                   (string= (nth 2 (org-heading-components)) "CANCELLED"))
             (setq has-incomplete-subproject t)))))
     has-incomplete-subproject))
-
 
 ;;;; ---- capture templates ----
 
