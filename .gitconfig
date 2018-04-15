@@ -1,15 +1,16 @@
 # -*- mode: conf; -*-
 
+# ---- core settings ----
+
 [user]
 	name = Sean Whitton
 	email = spwhitton@spwhitton.name
-
 [alias]
-        # Convenient sync alias from
-        # http://stackoverflow.com/a/17722977.  Updates master while
-        # allowing only fast-forward merges and does not require
-        # checking out master; can remain on current branch
-        sync = "!git checkout --quiet HEAD; git fetch origin master:master; git checkout --quiet -"
+        # # Convenient sync alias from
+        # # http://stackoverflow.com/a/17722977.  Updates master while
+        # # allowing only fast-forward merges and does not require
+        # # checking out master; can remain on current branch
+        # sync = "!git checkout --quiet HEAD; git fetch origin master:master; git checkout --quiet -"
 
         # nice way to view history (most recent 30 commits).  ov
         # ('overview') collapses linear commits with addition of
@@ -18,16 +19,32 @@
         ov = log --graph --full-history -n 30 --decorate --oneline --branches --all --simplify-by-decoration
         co = checkout
 
-        # "git exec blah" runs blah from the root of the worktree since shell
-        # alias are always run from the root of the worktree
+        # # "git exec blah" runs blah from the root of the worktree since shell
+        # # alias are always run from the root of the worktree
 
-        # http://stackoverflow.com/questions/957928/is-there-a-way-to-get-the-git-root-directory-in-one-command#comment9747528_957978
-	exec = "!exec "
-
+        # # https://stackoverflow.com/questions/957928/is-there-a-way-to-get-the-git-root-directory-in-one-command#comment9747528_957978
+	# exec = "!exec "
 [core]
         # no pager thanks
 	pager = 
 	excludesfile = ~/.globgitignore
+[fetch]
+	fsckObjects = true
+[transfer]
+	fsckObjects = true
+[color]
+	# turn colour on in as many places as possible
+        ui = true
+        branch = auto
+        diff = auto
+        interactive = auto
+        status = auto
+[push]
+        default = current
+        # use `mr push` when want --follow-tags
+        followTags = false
+
+# ---- URIs ----
 
 [url "git@spwhitton.name:"]
      pushInsteadOf = https://git.spwhitton.name/
@@ -53,22 +70,16 @@
     insteadOf = git://github.com/
     insteadOf = github:
 
-# alt, that permits shallow checkouts and removes need for
-# pushInsteadOf: [url "git+ssh://git.debian.org/git/"]
 [url "https://anonscm.debian.org/git/"]
      insteadOf = alioth:
      insteadOf = git://anonscm.debian.org/
      insteadOf = git://git.debian.org/
-     # insteadOf = https://anonscm.debian.org/git/
-     # insteadOf = https://anonscm.debian.org/cgit/
      insteadOf = http://anonscm.debian.org/git/
      insteadOf = http://anonscm.debian.org/cgit/
 [url "spwhitton@git.debian.org:/git/"]
      pushInsteadOf = alioth:
      pushInsteadOf = git://anonscm.debian.org/
      pushInsteadOf = git://git.debian.org/
-     # pushInsteadOf = https://anonscm.debian.org/git/
-     # pushInsteadOf = https://anonscm.debian.org/cgit/
      pushInsteadOf = http://anonscm.debian.org/git/
      pushInsteadOf = http://anonscm.debian.org/cgit/
      pushInsteadOf = https://anonscm.debian.org/git/
@@ -80,26 +91,7 @@
      pushInsteadOf = salsa:
      pushInsteadOf = https://salsa.debian.org/
 
-# temporary redirects
-[url "git@spwhitton.name:dotfiles.git"]
-     insteadOf = https://github.com/spwhitton/dotfiles.git
-     pushInsteadOf = https://github.com/spwhitton/dotfiles.git
-# [url "git@spwhitton.name:propellor.git"]
-#      insteadOf = https://github.com/spwhitton/propellor.git
-
-# turn colour on in as many places as possible
-[color]
-        ui = true
-        branch = auto
-        diff = auto
-        interactive = auto
-        status = auto
-
-# push strategy
-[push]
-        default = current
-        # temporarily disabled to work around dgit bug
-        followTags = false
+# ---- git-send-email ----
 
 # how to use git-send-email:
 # <http://www.freedesktop.org/wiki/Software/PulseAudio/HowToUseGitSendEmail/>
@@ -113,13 +105,19 @@
         from = Sean Whitton <spwhitton@spwhitton.name>
         annotate = true
 
+# ---- merging ----
+
 [merge "dpkg-mergechangelogs"]
        name = debian/changelog merge driver
        driver = dpkg-mergechangelogs -m %O %A %B %A
 
+# ---- git-remote-gcrypt ----
+
 [gcrypt]
 	publish-participants = true
 	participants = 0x0F56D0553B6D411B
+
+# ---- git-archive ----
 
 # make git-archive(1) DTRT with -o foo.tar.{xz,gz}
 [tar "tar.xz"]
@@ -127,7 +125,8 @@
 [tar "tar.gz"]
 	command = gzip -c
 
-# dgit configuration
+# ---- dgit ----
+
 [dgit "default"]
         # just clean in the most aggressive way dgit knows how
         clean-mode = git-ff
@@ -141,9 +140,8 @@
         # ... except that ssh-upload is inconvenient until #691703 is resolved
         upload-host = ftp-master
         keyid = 0x0F56D0553B6D411B
-[fetch]
-	fsckObjects = true
-[transfer]
-	fsckObjects = true
+
+# ---- magit ----
+
 [magit]
 	hideCampaign = true
