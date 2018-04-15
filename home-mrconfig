@@ -29,7 +29,7 @@ include = cat ~/src/dotfiles/lib/mr/dgit
 
 # --- git-svn
 
-include = [ -e "/usr/share/mr/git-svn" ] && cat /usr/share/mr/git-svn
+# include = [ -e "/usr/share/mr/git-svn" ] && cat /usr/share/mr/git-svn
 
 # --- Sensible pulls
 
