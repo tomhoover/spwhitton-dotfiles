@@ -433,17 +433,6 @@ different occasions."
               ;; # 7
               (spw--org-is-scheduled-p)))))))))
 
-(defun spw--org-forward-heading ()
-  (beginning-of-line)
-  (let ((start (point)))
-    (org-forward-heading-same-level 1 t)
-    ;; Check if that failed to move us, which means we reached
-    ;; the end of the buffer and so have to move ourselves to
-    ;; avoid an infinite loop
-    (if (eq (point) start)
-        (outline-next-heading)
-      (point))))
-
 (defun spw--org-is-scheduled-p ()
   "A task that is scheduled"
   (let ((is-dated)
