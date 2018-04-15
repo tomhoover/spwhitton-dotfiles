@@ -7,7 +7,7 @@ vbell off
 autodetach on
 startup_message off
 defscrollback 5000
-escape ^z^z
+escape ^\\
 defnonblock 5
 nonblock 5
 altscreen on
