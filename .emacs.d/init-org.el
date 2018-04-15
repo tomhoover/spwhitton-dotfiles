@@ -344,10 +344,47 @@
             (setq has-subtask t))))
       (and is-a-task (not has-subtask)))))
 
+(defmacro spw--skip-when (&rest condition)
+  "Skip trees where CONDITION is false when evaluated when point is on the headline of the tree."
+  `(let ((next-headline (save-excursion (outline-next-heading))))
+     (if ,@condition next-headline nil)))
+
 (defun spw--skip-subprojects ()
   "Skip trees that are subprojects"
+  (spw--skip-when (bh--is-subproject-p)))
+
+(defun spw--skip-projects-with-scheduled-or-deadlined-subprojects ()
+  "Skip projects that have subtasks, where at least one of those
+  is scheduled or deadlined"
+  (spw--skip-when (spw--has-scheduled-or-deadlined-subproject-p)))
+
+(defun spw--skip-subprojects-and-projects-with-scheduled-or-deadlined-subprojects ()
+  "Skip subprojects projects that have subtasks, where at least
+  one of those is scheduled or deadlined.  Currently fails to
+  exclude subprojects that are the very last headline in a
+  buffer"
+  (spw--skip-when
+   (or (bh--is-subproject-p)
+       (spw--has-scheduled-or-deadlined-subproject-p))))
+
+(defun spw--skip-incomplete-projects-and-all-subprojects ()
+  "Skip all subprojects and projects with subprojects not yet completed."
+  (spw--skip-when
+   (or (bh--is-subproject-p)
+       (spw--has-incomplete-subproject-or-task-p))))
+
+(defun spw--skip-non-stuck-projects ()
   (let ((next-headline (save-excursion (outline-next-heading))))
-    (if (bh--is-subproject-p) next-headline nil)))
+    (if (or (bh--is-task-p)
+            (spw--has-scheduled-or-deadlined-subproject-p)
+            (spw--has-next-action-p))
+        ;; THEN: skip, and handle special case of the final entry in a
+        ;; buffer which cannot be a stuck project and so should always
+        ;; be skipped, but which won't be since `next-headline' will
+        ;; be nil
+        (if next-headline next-headline (point-max))
+      ;; ELSE: don't skip
+      nil)))
 
 (defun spw--skip-non-actionable ()
   "Skip:
@@ -495,41 +532,6 @@ different occasions."
             (setq has-incomplete-subproject t)))))
     has-incomplete-subproject))
 
-(defun spw--skip-projects-with-scheduled-or-deadlined-subprojects ()
-  "Skip projects that have subtasks, where at least one of those
-  is scheduled or deadlined"
-  (let ((next-headline (save-excursion (outline-next-heading))))
-    (if (spw--has-scheduled-or-deadlined-subproject-p)
-        next-headline nil)))
-
-(defun spw--skip-subprojects-and-projects-with-scheduled-or-deadlined-subprojects ()
-  "Skip subprojects projects that have subtasks, where at least
-  one of those is scheduled or deadlined.  Currently fails to
-  exclude subprojects that are the very last headline in a
-  buffer"
-  (let ((next-headline (save-excursion (outline-next-heading))))
-    (if (or (bh--is-subproject-p) (spw--has-scheduled-or-deadlined-subproject-p))
-        next-headline nil)))
-
-(defun spw--skip-non-stuck-projects ()
-  (let ((next-headline (save-excursion (outline-next-heading))))
-    (if (or (bh--is-task-p)
-            (spw--has-scheduled-or-deadlined-subproject-p)
-            (spw--has-next-action-p))
-        ;; THEN: skip, and handle special case of the final entry in a
-        ;; buffer which cannot be a stuck project and so should always
-        ;; be skipped, but which won't be since `next-headline' will
-        ;; be nil
-        (if next-headline next-headline (point-max))
-      ;; ELSE: don't skip
-      nil)))
-
-(defun spw--skip-incomplete-projects-and-all-subprojects ()
-  "Skip all subprojects and projects with subprojects not yet completed."
-  (let ((next-headline (save-excursion (outline-next-heading))))
-    (if (or (bh--is-subproject-p)
-            (spw--has-incomplete-subproject-or-task-p))
-        next-headline nil)))
 
 ;;;; ---- capture templates ----
 
