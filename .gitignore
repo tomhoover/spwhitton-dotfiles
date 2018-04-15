@@ -15,6 +15,7 @@
 /bin/spw.pyc
 .gnupg/secring.gpg
 .gnupg/pubring.gpg
+.gnupg/private-keys-v1.d/
 /.xmonad/xmonad-i386-linux
 /.xmonad/xmonad.errors
 /.xmonad/xmonad.hi
