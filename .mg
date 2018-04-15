@@ -2,7 +2,7 @@
 
 make-backup-files
 set-default-mode indent
-auto-execute mutt* auto-fill-mode
+# auto-execute mutt* auto-fill-mode
 
 ; following line doesn't work on Debian's mg
 ;set-default-mode notab
