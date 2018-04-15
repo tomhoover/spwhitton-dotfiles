@@ -1229,10 +1229,10 @@ actually calls `org-edit-src-code'."
     (goto-char (point-min))
     (while (search-forward-regexp "^[[:space:]\\)]*\)[[:space:]\\)]*$" nil "noerror")
       (save-excursion
-        (previous-line)
+        (forward-line -1)
         (beginning-of-line)
         (when (not (looking-at ".*;.*"))
-          (next-line)
+          (forward-line 1)
           (delete-indentation))))))
 
 (defun spw--cleanup ()
@@ -1241,7 +1241,7 @@ actually calls `org-edit-src-code'."
 Note that `ws-butler-mode' is also at work."
   (save-restriction
     (when (use-region-p)
-      (narrow-to-region))
+      (narrow-to-region (region-beginning) (region-end)))
     (case major-mode
       (haskell-mode
        (spw--compact-blank-lines)
@@ -1362,7 +1362,8 @@ Originally from <http://blog.gleitzman.com/post/35416335505/hunting-for-unicode-
       (loop for (key . value) in unicode-map
             do
             (goto-char (point-min))
-            (replace-regexp key value)))))
+            (while (re-search-forward key nil t)
+              (replace-match value))))))
 (bind-key "C-c g u" 'gleitzman--unicode-hunt)
 
 ;;; saving lines
