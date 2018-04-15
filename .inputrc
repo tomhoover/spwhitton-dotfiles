@@ -2,20 +2,20 @@ $include /etc/inputrc
 
 # --- bindings
 
-"\C-x\C-r": re-read-init-file
-"\C-x\C-a": universal-argument
+# "\C-x\C-r": re-read-init-file
+# "\C-x\C-a": universal-argument
 
 # --- settings
 
 set editing-mode emacs
 set keymap emacs
-set convert-meta off
-set output-meta on
-set input-meta on
-set meta-flag on
+# set convert-meta off
+# set output-meta on
+# set input-meta on
+# set meta-flag on
 set completion-ignore-case on
-set show-all-if-ambiguous on
-set show-all-if-unmodified on
+# set show-all-if-ambiguous on
+# set show-all-if-unmodified on
 set completion-query-items 120
 set page-completions off
 set print-completions-horizontally on
