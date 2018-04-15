@@ -1,4 +1,7 @@
-# from https://raphaelhertzog.com/2012/08/08/how-to-use-quilt-to-manage-patches-in-debian-packages/
+# all from:
+# https://raphaelhertzog.com/2012/08/08/how-to-use-quilt-to-manage-patches-in-debian-packages/
+
+# detect Debian quilt patches
 for where in ./ ../ ../../ ../../../ ../../../../ ../../../../../; do
     if [ -e ${where}debian/rules -a -d ${where}debian/patches ]; then
         export QUILT_PATCHES=debian/patches
@@ -6,6 +9,7 @@ for where in ./ ../ ../../ ../../../ ../../../../ ../../../../../; do
     fi
 done
 
+# generate nicer patches & use colour
 QUILT_PUSH_ARGS="--color=auto"
 QUILT_DIFF_ARGS="--no-timestamps --no-index -p ab --color=auto"
 QUILT_REFRESH_ARGS="--no-timestamps --no-index -p ab"
