@@ -252,10 +252,14 @@ skip = ! workstation
 checkout = git clone athena:wiki
 skip = ! mine
 
-# --- ~/src repos with special push commands
+# --- ~/src repos with special config
 
 [$HOME/src/dgit]
 checkout = git clone athena:dgit
+post_checkout =
+    cd propellor
+    git remote add -f ian git://git.chiark.greenend.org.uk/~ianmdlvl/dgit.git
+    dgit fetch sid
 # Ian's git server gives an error when my script tries to find the
 # tags there
 push = git push-all --no-tags
