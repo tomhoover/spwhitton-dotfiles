@@ -1,7 +1,7 @@
 #!/bin/sh
 
-# Environment variables for X and all text-mode shells: both bash and
-# zsh and scripts run by cron source this.  So POSIX only.
+# Environment variables for X and all text-mode shells: both bash,
+# Xsession and scripts run by cron source this.  So POSIX only.
 
 # We have calls to `which` which we expect to fail
 set +e
@@ -73,10 +73,10 @@ export PATH
 
 # ---- maybe add to $MANPATH
 
-if [ -d "$HOME/pkg/man" ]; then
-    MANPATH="$HOME/local/pkg/man:$MANPATH"
-    export MAHPATH
-fi
+# if [ -d "$HOME/pkg/man" ]; then
+#     MANPATH="$HOME/local/pkg/man:$MANPATH"
+#     export MAHPATH
+# fi
 
 # ---- package management by Nix: add to $PATH once more
 
@@ -118,10 +118,10 @@ GPG_KEY_ID=0F56D0553B6D411B
 export GPG_KEY_ID
 MAILDIR="$HOME/.fmail/"
 export MAILDIR
-LD_RUN_PATH="$HOME/local/lib/"
-export LD_RUN_PATH
-LD_LIBRARY_PATH="$HOME/local/lib/"
-export LD_LIBRARY_PATH
+# LD_RUN_PATH="$HOME/local/lib/"
+# export LD_RUN_PATH
+# LD_LIBRARY_PATH="$HOME/local/lib/"
+# export LD_LIBRARY_PATH
 BROWSER="firefox"
 export BROWSER
 TERMCMD="xfce4-terminal"
