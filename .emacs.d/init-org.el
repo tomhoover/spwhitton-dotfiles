@@ -197,7 +197,7 @@
  ;; don't generate bookmarks as causes git merge conflicts
  org-bookmark-names-plist nil)
 
-;;;; ---- agenda and refile ----
+;;;; ---- agenda ----
 
 (setq
  org-agenda-custom-commands
@@ -531,7 +531,7 @@ different occasions."
             (spw--has-incomplete-subproject-or-task-p))
         next-headline nil)))
 
-;;; capture templates
+;;;; ---- capture templates ----
 
 (setq
  org-capture-templates-contexts
@@ -563,8 +563,7 @@ different occasions."
    ("u" "URI on clipboard" entry (file org-default-notes-file)
     "* SOMEDAY [[%^{URI|%x}][%^{Title}]]" :immediate-finish t)))
 
-;;; function and advice for my weekly review process (see the
-;;; docstrings immediately below)
+;;;; ---- for weekly review process ----
 
 (defun spw--find-non-agenda-todos ()
   "Find Org files that aren't in `org-agenda-files` that probably
@@ -663,7 +662,7 @@ Ignore SOMEDAYs as might have those in old notes but not important to include th
               (message "removed")))))))
 (bind-key "C-c ]" 'spw--org-remove-file org-mode-map)
 
-;;;; ---- hooks and keys ----
+;;;; ---- hooks and bindings ----
 
 (defun spw--org-agenda-priority-filter (arg)
   "Hide low-priority items.  If ARG, hide slightly fewer."
