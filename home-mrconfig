@@ -463,15 +463,21 @@ skip = ! [ "$(domainname)" = "SDF" ]
 # --- my offline e-mail (& machine's postfix queue)
 
 [$HOME/.fmail]
+checkout =
+    mkdir ~/.fmail
+    movemail
 sync = movemail
 update = movemail
 push = movemail
-# TODO post_update, post_sync etc. to run `notmuch new`, while
-# preventing the latter from calling `movemail` again
-
-# Don't do anything if I don't use mbsync on this machine, or I
-# didn't run one of the sync or update commands.
-skip = ! [ -d "$HOME/.fmail/inbox" ] || ! ( [ "$MR_ACTION" = "stowable" ] || [ "$MR_ACTION" = "push" ] || [ "$MR_ACTION" = "sync" ] || [ "$MR_ACTION" = "update" ] )
+status = :
+clean = :
+commit = :
+record = :
+fetch = :
+diff = :
+log = :
+grep = :
+skip = lazy
 
 # this is slower than other repos for which sync is defined, so have
 # it go last
