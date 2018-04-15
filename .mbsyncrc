@@ -46,8 +46,10 @@ Channel          fmails
 Master           :fmimap:"Sent Items"
 Slave            :fmmaildir:sent
 
-# when I'm actively using listservs again, this kind of thing should
-# allow downloading all of them without the INBOX.Lists prefix:
+# if I find myself wanting to separate listservs into different
+# folders within Lists/ on the server side (unlikely because I am
+# using notmuch), something like this should allow downloading all of
+# them without the INBOX.Lists prefix:
 
 # Channel fmaill
 #   Master :fmimap:Lists/
