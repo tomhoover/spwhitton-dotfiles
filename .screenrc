@@ -36,13 +36,12 @@ term screen-256color
 # --- bindings
 
 # bounce back and forth between windows
-bind ^z other
+bind ^\\ other
 
 # toggle the status bar
 bind f eval "hardstatus alwaysignore"
 bind F eval "hardstatus alwayslastline"
 
 # bind an rtorrent helper macro
-# bindkey rather than bind makes C-z not required but then can't type capital R
 register s ^I^Xd.set_directory=~/local/rt/complete^M^S^N
 bind R process s
