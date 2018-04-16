@@ -485,7 +485,7 @@ log = :
 grep = :
 autoci = :
 isclean = :
-skip = lazy
+skip = ! [ -e "$HOME/.fmail/inbox" ]
 
 # this is slower than other repos for which sync is defined, so have
 # it go last
