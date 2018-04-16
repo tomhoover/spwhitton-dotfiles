@@ -432,6 +432,7 @@ push = :
 diff = :
 log = :
 grep = :
+isclean = :
 autoci = :
 
 # --- my personal documents.  Override my global update command back
@@ -483,6 +484,7 @@ diff = :
 log = :
 grep = :
 autoci = :
+isclean = :
 skip = lazy
 
 # this is slower than other repos for which sync is defined, so have
