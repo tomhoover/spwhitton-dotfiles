@@ -22,6 +22,9 @@ font pango:monospace 8
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
 
+# default workspace layout
+workspace_layout tabbed
+
 # start a terminal
 bindsym $mod+Return exec xfce4-terminal
 
@@ -68,15 +71,6 @@ bindsym $mod+Shift+Left move left
 bindsym $mod+Shift+Down move down
 bindsym $mod+Shift+Up move up
 bindsym $mod+Shift+Right move right
-
-# moving windows into containers and making the layout of those containers tabbed
-# note that will do something that is not sensible if the container is already tabbed
-bindsym $mod+Ctrl+Shift+i focus left , split h , layout tabbed , focus right , move left
-bindsym $mod+Ctrl+Shift+Left focus left , split h , layout tabbed , focus right , move left
-bindsym $mod+Ctrl+Shift+Down focus down , split v , layout tabbed , focus up , move down
-bindsym $mod+Ctrl+Shift+Up focus up , split v , layout tabbed , focus down , move up
-bindsym $mod+Ctrl+Shift+o focus right , split h , layout tabbed , focus left , move right
-bindsym $mod+Ctrl+Shift+Right focus right , split h , layout tabbed , focus left , move right
 
 # split in horizontal orientation
 bindsym $mod+h split h
