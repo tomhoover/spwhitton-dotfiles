@@ -205,14 +205,13 @@ bindsym XF86AudioRaiseVolume exec --no-startup-id pactl -- set-sink-volume 0 +5%
 bindsym XF86AudioLowerVolume exec --no-startup-id pactl -- set-sink-volume 0 -5%
 bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle
 
-# workspace 10, the only workspace with a defined function, is for
-# - things I always have open like my web browser
-# - long-running processes like a big package build (TODO actually I have been using workspace 9 for this)
-#
-# It uses the tabbed layout, but when I want to access programs I
-# always have open such as my web browser, I use shortcut keys that go
-# straight to that program.  To access other windows that I've dumped
-# there, I go to the tenth workspace as usual.
+# workspaces 1--8: general usage
+# workspace     9: builds & other long-running processes
+# workspace    10: web browser, IRC client, Evolution (for calendar & contacts)
+
+# there should be a hotkey to directly access anything on workspace
+# 10, so I don't have to switch to that workspace and navigate through
+# its tabbed layout
 
 assign [class="^Xfce4-terminal$" title="^irssi$"] 10
 assign [class="Firefox"] 10
