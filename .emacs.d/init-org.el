@@ -181,6 +181,7 @@
  org-export-headline-levels 3
  org-export-with-toc nil
  ;; org-export-with-smart-quotes t
+ org-export-date-timestamp-format "%e %B %Y"
 
  ;; LaTeX export
  org-latex-pdf-process
