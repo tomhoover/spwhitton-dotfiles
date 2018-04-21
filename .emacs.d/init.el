@@ -124,8 +124,14 @@
 ;;; misc display and interface settings
 
 ;; focus follow mouse
-(setq mouse-autoselect-window t
-      focus-follows-mouse t)
+(setq
+ ;; this is more trouble than it is worth because when the window
+ ;; layout changes the existing position of the mouse can cause a
+ ;; surprise focus change
+ mouse-autoselect-window nil
+
+ ;; tell Emacs what my window manager does
+ focus-follows-mouse t)
 
 ;; note that this works only for self-insert chars, not other
 ;; bindings, and it comes back after switching away from Emacs.  But
