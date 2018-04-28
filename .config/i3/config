@@ -167,7 +167,7 @@ bar {
 }
 
 # launchers
-set $mode_launch Launch application:  (f) file manager  (x) arandr  (m) ncmpcpp  (i) irssi
+set $mode_launch Launch application:  (f) file manager  (x) arandr  (m) ncmpcpp  (i) irssi  (g) greeter
 mode "$mode_launch" {
         # start a graphical file manager
         bindsym f exec nautilus , mode "default"
@@ -180,6 +180,9 @@ mode "$mode_launch" {
 
         # connect to athena's irssi
         bindsym i exec xfce4-terminal --title="irssi" -x /bin/sh -c "mosh athena /home/spwhitton/bin/ii" , mode "default"
+
+        # get a new VT from lightdm
+        bindsym g exec dm-tool switch-to-greeter , mode "default"
 
         bindsym Ctrl+g mode "default"
 }
