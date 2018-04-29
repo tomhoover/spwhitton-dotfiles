@@ -35,6 +35,11 @@ battery all {
         last_full_capacity = true
         hide_seconds = true
         integer_battery_capacity = true
+        # the life of a Li-ion battery is best preserved by cycling it
+        # from around 80% down to 25%, and back
+        # http://batteryuniversity.com/learn/article/how_to_prolong_lithium_based_batteries
+        low_threshold = 25
+        threshold_type = percentage
 }
 
 tztime local {
