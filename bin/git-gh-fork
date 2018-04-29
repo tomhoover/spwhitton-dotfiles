@@ -36,6 +36,8 @@ use Path::Class;
 use Sys::Hostname;
 use autodie; # die if problem reading or writing a file
 
+# TODO generalise to work for gitlab installations too (or: a separate script for those)
+
 my $xdg = File::XDG->new(name => 'net-github');
 my $term = Term::ReadLine->new('brand');
 
@@ -57,7 +59,7 @@ my $git = Git::Wrapper->new(".");
 my $config = Config::GitLike->new( confname => 'config' );
 $config->load_file('.git/config');
 
-# TODO check all remotes, not just origin
+# TODO check all remotes, not just origin (esp. 'upstream')
 # TODO resolve the URI, taking account of insteadOf and pushInsteadOf
 # in ~/.gitconfig, and then then match against the URIs github accepts
 my $origin_url = $config->get(key => "remote.origin.url");
