@@ -37,6 +37,7 @@ use Sys::Hostname;
 use autodie; # die if problem reading or writing a file
 
 # TODO generalise to work for gitlab installations too (or: a separate script for those)
+# probs: factor out `git clean-remote` which nukes all branches except one (oh: but setting that as the default branch is platform-specific)
 
 my $xdg = File::XDG->new(name => 'net-github');
 my $term = Term::ReadLine->new('brand');
