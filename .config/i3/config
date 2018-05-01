@@ -232,3 +232,6 @@ exec_always --no-startup-id ~/bin/i3-startup-always
 
 # do-it-once settings and startup script
 exec --no-startup-id ~/bin/i3-startup-once
+
+# free up a few additional pixels
+hide_edge_borders both
