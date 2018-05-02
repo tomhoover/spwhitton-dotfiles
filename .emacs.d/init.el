@@ -1608,6 +1608,8 @@ Used in my `message-mode' yasnippets."
 
 ;;; mail mode for mutt & notmuch
 
+(use-package sendmail :commands mail-add-attachment)
+
 (use-package message
   :mode ("/mutt-.*$" . message-mode)
   :init
@@ -1727,6 +1729,13 @@ mutt's review view after exiting EDITOR."
   ;; default C-c C-s binding is not much use, and I keep hitting it
   ;; accidently
   (bind-key "C-c C-s" 'message-goto-subject message-mode-map)
+
+  ;; this attachment function has sensible defaults so requires less
+  ;; typing than the default binding to C-c C-a.  From Michael
+  ;; Stapelberg's config
+  (define-key message-mode-map (kbd "C-c C-a") 'mail-add-attachment)
+  (define-key mml-mode-map [menu-bar Attachments Attach\ File...]
+    '("Attach File..." . mail-add-attachment))
 
   ;; miscellaneous preferences
 
