@@ -1758,7 +1758,10 @@ mutt's review view after exiting EDITOR."
   ;; disable openwith-mode when sending mail (i.e. attach the PDF,
   ;; rather than opening it in evince and aborting the send)
   (require 'mm-util)
-  (add-to-list 'mm-inhibit-file-name-handlers 'openwith-file-handler))
+  (add-to-list 'mm-inhibit-file-name-handlers 'openwith-file-handler)
+
+  ;; don't let sent messages hang around
+  (setq message-kill-buffer-on-exit t))
 
 ;;; C-c C-c to save-and-exit emacsclient (like <esc>ZZ in vim)
 
