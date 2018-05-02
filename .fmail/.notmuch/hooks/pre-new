@@ -17,7 +17,7 @@
 # Then we sync with my IMAP server.  Then in the post-new script we
 # add tags to new messages in particular folders
 
-movemail
+offline || movemail
 
 # ensure that notmuch is able to detect renames by my annexfmail script
 ionice -c 3 expand-annex-mboxes
