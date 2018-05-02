@@ -517,8 +517,8 @@ different occasions."
         (while (ignore-errors (outline-next-heading))
           (unless (member (nth 2 (org-heading-components))
                           (list "DONE" "CANCELLED")))
-          (setq has-incomplete-subproject t)))))
-  has-incomplete-subproject)
+          (setq has-incomplete-subproject t))))
+    has-incomplete-subproject))
 
 ;;;; ---- capture templates ----
 
