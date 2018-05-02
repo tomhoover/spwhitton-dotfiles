@@ -1713,6 +1713,14 @@ mutt's review view after exiting EDITOR."
   ;; I do not need a key to insert the Newsgroups: header
   (bind-key "C-c C-n" 'spw--normalise-message message-mode-map)
 
+  ;; a convenient macro for something I find myself often doing by hand
+  (defun spw--message-delete-and-normalise ()
+    (interactive)
+    (newline)
+    (message-kill-to-signature)
+    (spw--normalise-message))
+  (bind-key "<f9>" 'spw--message-delete-and-normalise message-mode-map)
+
   ;; bindings
 
   ;; C-c C-b should skip over mml's sign/encrypt lines (it is a bad
