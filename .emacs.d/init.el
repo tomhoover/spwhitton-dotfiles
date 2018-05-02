@@ -1721,6 +1721,10 @@ mutt's review view after exiting EDITOR."
     (spw--normalise-message))
   (bind-key "<f9>" 'spw--message-delete-and-normalise message-mode-map)
 
+  (defun spw--notmuch-decrypt-inline ()
+    (interactive)
+    (epa-decrypt-armor-in-region (point-min) (point-max)))
+
   ;; bindings
 
   ;; C-c C-b should skip over mml's sign/encrypt lines (it is a bad
