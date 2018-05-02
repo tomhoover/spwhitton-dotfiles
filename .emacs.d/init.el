@@ -1404,27 +1404,33 @@ Originally from <http://blog.gleitzman.com/post/35416335505/hunting-for-unicode-
 
 ;;; message-mode functions
 
+;; I had my own version of these two functions but Michael
+;; Stapelberg's were better, taking better advantage of built-in
+;; functions, so these are from his config
+
 (defun spw--recipient-first-name ()
   "Attempt to extract the first name of the recipient of a `message-mode' message.
 
 Used in my `message-mode' yasnippets."
-  (save-excursion
-    (message-goto-to)
-    (message-beginning-of-line)
-    ;; handle Microsoft Exchange
-    (when (looking-at "\"")
-      (forward-word 1)
-      (forward-char 2))
-    (let* ((beg (point))
-           (end (progn (forward-word 1) (point)))
-           (name (filter-buffer-substring beg end)))
-      (cond
-       ;; exceptions for people who have longer forms of their names
-       ;; in their From: headers
-       ((string= name "Nathaniel") "Nathan")
-       ((string= name "Thomas") "Tom")
-       ;; default
-       (t name)))))
+  (let ((to (message-fetch-field "To")))
+    (if to
+        (spw--extract-first-name (nth 0 (mail-extract-address-components to)))
+      "")))
+
+(defun spw--extract-first-name (full-name)
+  (if (stringp full-name)
+      (if (string-match "\\([^ ]+\\)" full-name)
+          (let ((first-name (match-string 0 full-name)))
+            (cond
+             ;; exceptions for people who have longer forms of their names
+             ;; in their From: headers
+             ((string= first-name "Nathaniel") "Nathan")
+             ((string= first-name "Thomas") "Tom")
+             ;; default
+             (t first-name)))
+        ;; no spaces: assume whole thing is an alias and use it
+        full-name)
+    ""))
 
 
 
