@@ -418,18 +418,16 @@ pre_update = mr autoci
 # --- git annex for athena's apt repository
 
 [$HOME/lib/athena-apt]
-checkout = git clone athenap:athena-apt athena-apt
+checkout = git clone athena:athena-apt athena-apt
 post_checkout =
     cd athena-apt
     git annex init --version=6
-skip = lazy
+    git remote add athena athenah:local/src/athena-apt
+skip = ! workstation
 
-update = git annex sync --no-content origin
-sync = git annex sync --no-content origin
-push =
-    git annex sync --no-content origin
-    git annex sync --content athena
-    git annex sync --no-content origin
+update = git annex sync --no-content
+sync = git annex sync --content
+push = git annex sync --content
 fixups =
     git config push.default matching
     git config annex.startupscan false
