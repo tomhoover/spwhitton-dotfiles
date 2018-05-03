@@ -72,7 +72,8 @@ foreach my $branch ( @branches ) {
               && "remotes/$pushDefault/$branch" ~~ @allBranches ) {
         # print "I: pushing $branch to $pushDefault (the remote.pushDefault)\n";
         push @{ $pushes{$pushDefault} }, $branch;
-    } elsif ( !defined $pushDefault && defined $tracking ) {
+    } elsif ( !defined $pushDefault && defined $tracking
+              && "remotes/$tracking/$branch" ~~ @allBranches ) {
         # print "I: pushing $branch to $tracking (probably to its tracking branch)\n";
         push @{ $pushes{$tracking} }, $branch;
     } else {
