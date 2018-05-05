@@ -58,6 +58,12 @@ alias develacc='sudo machinectl shell spw@develacc \
 alias develaccr='sudo machinectl shell root@develacc \
       $(sudo enter-develacc /bin/sh -c "getent passwd root | cut -d: -f7")'
 
+# dpkg-source unconditionally wants to chmod patches, so if we need to
+# run dpkg-source inside develacc, our setgid+setfacl setup will not
+# be sufficient.  In those cases, just run this shell alias to
+# normalise things
+alias force-develacc-perms="sudo chown -R spw:spw /home/spw"
+
 # alias does not call `git develacc` because we want manual
 # verification of what is to be pushed (i.e. `git diff
 # master..develacc/develacc-iris` to check patch queue is sane)
