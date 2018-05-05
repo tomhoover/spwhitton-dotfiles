@@ -46,7 +46,7 @@ fi
 
 # sync remotes from outside develacc into develacc
 git remote | while read remote; do
-    if ! [ "$remote" = "develacc" ]; then
+    if ! [ "$remote" = "develacc" ] && ! [ "$remote" = "dgit" ]; then
         # this is to disable `git remote update` and therefore my `mr update`
         git -C "$inside" config --local --bool "remote.$remote.skipdefaultupdate" true
 
