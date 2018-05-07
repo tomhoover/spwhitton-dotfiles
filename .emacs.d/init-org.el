@@ -15,6 +15,11 @@
 (require 'ox-ascii)
 (require 'ox-odt)
 
+;;; for Debian stretch
+
+(when (file-directory-p "/usr/share/org-mode/lisp")
+  (add-to-list 'load-path "/usr/share/org-mode/lisp"))
+
 ;;; checklist helper functions including automatic resetting
 
 (require 'org-checklist)
