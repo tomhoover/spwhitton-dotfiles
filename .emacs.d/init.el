@@ -951,27 +951,32 @@ Passes ARG to `projectile-switch-project-by-name'."
          ("C-c s" . notmuch-search))
   :init
   ;; these let bindings avoid the need to add saved searches to the
-  ;; database, so that our database remains recreteable from just my
-  ;; Maildirs
+  ;; database, so that our database remains recreateable from just my
+  ;; Maildirs & mboxes
   (let ((debian
          (concat
           "(to:lists.debian.org or to:lists.alioth.debian.org or to:bugs.debian.org"
           " or from:bugs.debian.org or from:ftp-master.debian.org or from:release.debian.org)"
           " and not to:-announce"))
-        (feeds "from:rss@spwhitton.name"))
+        (feeds "from:rss@spwhitton.name")
+        (ua "to:spwhitton@email.arizona.edu or from:email.arizona.edu"))
     (setq notmuch-saved-searches
           `((:name "weekday unread" :key "u" :search-type nil :sort-order oldest-first
                    :query ,(concat
                             "tag:unread and not (" debian ") and not (" feeds ")"))
+            (:name "weekend unread" :key "W" :search-type nil :sort-order oldest-first
+                   :query ,(concat "tag:unread and not (" ua ")"))
             (:name "personal unread" :key "p" :search-type nil :sort-order oldest-first
                    :query ,(concat
-                            "tag:unread and not to:spwhitton@email.arizona.edu and not from:email.arizona.edu and not ("
+                            "tag:unread and not ("
+                            ua
+                            ") and not ("
                             debian
                             ") and not ("
                             feeds
                             ")"))
             (:name "UA unread" :key "w" :search-type nil :sort-order oldest-first
-                   :query "tag:unread and (to:spwhitton@email.arizona.edu or from:email.arizona.edu)")
+                   :query ,(concat "tag:unread and (" ua ")"))
             (:name "Debian unread" :key "d" :search-type nil :sort-order oldest-first
                    :query ,(concat "tag:unread and (" debian ")"))
             (:name "feeds unread" :key "f" :search-type nil :sort-order oldest-first
