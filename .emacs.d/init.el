@@ -1001,9 +1001,9 @@ Passes ARG to `projectile-switch-project-by-name'."
 
   (setq notmuch-tagging-keys
         '(("u" ("+unread") "Mark as unread")
-          ("s" ("+spam") "Mark as spam")
-          ("m" ("+killed") "Kill thread") ; 'm' for 'mute'
-          ("d" ("+deleted") "Send to trash")))
+          ("s" ("-unread" "+spam") "Mark as spam")
+          ("m" ("-unread" "+killed") "Kill thread") ; 'm' for 'mute'
+          ("d" ("-unread" "+deleted") "Send to trash")))
 
   ;; default is t, but given that notmuch searches run to the
   ;; beginning of time, and we are likely to want recent mail, we want
@@ -1028,6 +1028,10 @@ Passes ARG to `projectile-switch-project-by-name'."
   (setq notmuch-archive-tags '("-unread"))
   (setq notmuch-maildir-use-notmuch-insert t
         notmuch-fcc-dirs "sent -unread")
+
+  ;; when 'unread' is being used as an inbox, want manual resolution
+  ;; of messages
+  (setq notmuch-show-mark-read-function (lambda (beg end)))
 
   (setq notmuch-mua-user-agent-function 'notmuch-mua-user-agent-full)
 
