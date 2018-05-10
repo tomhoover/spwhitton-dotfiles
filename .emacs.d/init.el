@@ -1010,6 +1010,9 @@ Passes ARG to `projectile-switch-project-by-name'."
           ("m" ("-unread" "+killed") "Kill thread") ; 'm' for 'mute'
           ("d" ("-unread" "+deleted") "Send to trash")))
 
+  ;; maybe?
+  ;;(setq notmuch-message-replied-tags '("-unread" "+replied"))
+
   ;; default is t, but given that notmuch searches run to the
   ;; beginning of time, and we are likely to want recent mail, we want
   ;; newer e-mails at the top
