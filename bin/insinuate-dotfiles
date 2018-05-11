@@ -12,27 +12,16 @@
 . $HOME/.shenv
 . $HOME/lib/tputfs.sh
 
-status "trying to clone dotfiles to $1 using https"
-ssh "$1" 'cd $HOME && git clone --depth 1 https://git.spwhitton.name/dotfiles src/dotfiles'
-
-# https:// can fail for older ca-certificates, so try git://
-if ! [ $? = 0 ]; then
-    status "trying to clone dotfiles to $1 using git transport"
-    ssh "$1" 'cd $HOME && git clone --depth 1 git://spwhitton.name/dotfiles' src/dotfiles
-    if ! [ $? = 0 ]; then
-        status "couldn't clone dotfiles on $1"
-        exit 1
-    fi
-
-    # since we used an insecure transport, verify
-    hash=$(ssh "$1" 'cd $HOME/src/dotfiles && git show-ref -s master | head -n1')
-    if ! ( cd "$HOME/src/dotfiles" && git branch --contains "$hash" | grep master); then
-        status "couldn't find remote HEAD in local master branch"
-        status "nuking corrupted clone on $1"
-        ssh "$1" 'rm -rf $HOME/src/dotfiles'
-        exit 1
-    fi
+status "trying to clone dotfiles to $1 using git daemon protocol"
+ssh "$1" 'wget -O- https://spwhitton.name/spwhitton.asc | gpg --import'
+ssh "$1" 'cd $HOME && git clone --depth 1 git://spwhitton.name/dotfiles src/dotfiles'
+ssh "$1" 'cd $HOME/src/dotfiles && git verify-commit --raw master 2>&1 | grep "VALIDSIG .* 8DC2487E51ABDD90B5C4753F0F56D0553B6D411B"'
+if [ $? = 0 ]; then
+    status "clone ok; running bootstrap script"
+    ssh "$1" 'cd $HOME && sh src/dotfiles/bin/bstraph.sh'
+else
+    status "couldn't verify PGP signature on dotfiles commit"
+    status "nuking corrupted clone on $1"
+    ssh "$1" 'rm -rf $HOME/src/dotfiles'
+    exit 1
 fi
-
-status "clone ok; running bootstrap script"
-ssh "$1" 'cd $HOME && sh src/dotfiles/bin/bstraph.sh'
