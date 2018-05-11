@@ -8,6 +8,12 @@ set -e
 # fingerprint to look for, updates branches specified by user and is
 # able to handle updating by both merge and rebase
 
+# Before running this script, will want to unset all upstreams:
+#    for head in $(git for-each-ref --format='%(refname)' refs/heads/); do
+#        branch=$(echo "$head" | cut -d/ -f3)
+#        git branch --unset-upstream "$branch" 2>/dev/null || true
+#    done
+
 git fetch origin
 if git verify-commit --raw origin/master 2>&1 \
         | grep "VALIDSIG .* 8DC2487E51ABDD90B5C4753F0F56D0553B6D411B"; then
