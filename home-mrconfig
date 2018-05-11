@@ -188,6 +188,8 @@ fixups =
         $HOME/src/dotfiles/bin/loadcron || true
         $HOME/src/dotfiles/bin/loadsshkeys || true
     fi
+    # eventually move this to post_checkout
+    cp ~/lib/hooks/dotfiles-pre-push ~/src/dotfiles/.git/hooks/pre-push
 
 # clean-ups so that initial stow will be successful
 pre_stow =

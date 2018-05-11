@@ -1,0 +1,26 @@
+#!/bin/sh
+
+remote="$1"
+url="$2"
+
+z40=0000000000000000000000000000000000000000
+
+while read local_ref local_sha remote_ref remote_sha; do
+    if [ "$local_sha" = $z40 ]; then
+        # Permit deletion of branches
+        :
+    else
+        if [ "$remote_ref" = "refs/heads/master" ]; then
+            if git verify-commit --raw "$local_sha" 2>&1 \
+                   | grep "VALIDSIG .* 8DC2487E51ABDD90B5C4753F0F56D0553B6D411B"
+            then
+                echo "Proposed new master has been signed by Sean"
+            else
+                echo >&2 "Proposed new master has not been PGP-signed by Sean"
+                exit 1
+            fi
+        fi
+    fi
+done
+
+exit 0
