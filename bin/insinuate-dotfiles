@@ -12,24 +12,24 @@
 
 status "trying to clone dotfiles to $1 using git daemon protocol"
 
-# post-buster
+# post-stretch
 # ssh "$1" 'wget -O- https://spwhitton.name/spwhitton.asc | gpg --import'
 
 ssh "$1" 'cd $HOME && git clone --depth 1 git://spwhitton.name/dotfiles src/dotfiles'
 
-# pre-buster
+# pre-end of support for jessie
 hash=$(ssh "$1" 'cd $HOME/src/dotfiles && git show-ref -s master | head -n1')
 ( cd "$HOME/src/dotfiles" && git branch --contains "$hash" | grep master)
-# post-buster
+# post-end of support for jessie
 # ssh "$1" 'cd $HOME/src/dotfiles && git verify-commit --raw master 2>&1 | grep "VALIDSIG .* 8DC2487E51ABDD90B5C4753F0F56D0553B6D411B"'
 
 if [ $? = 0 ]; then
     status "clone ok; running bootstrap script"
     ssh "$1" 'cd $HOME && sh src/dotfiles/bin/bstraph.sh'
 else
-    # pre-buster
+    # pre-end of support for jessie
     status "couldn't find remote HEAD in local master branch"
-    # post-buster
+    # post-end of support for jessie
     # status "couldn't verify PGP signature on dotfiles commit"
 
     status "nuking corrupted clone on $1"
