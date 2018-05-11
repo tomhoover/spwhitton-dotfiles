@@ -12,7 +12,7 @@
 
 status "trying to clone dotfiles to $1 using git daemon protocol"
 
-# post-end of support for jessie
+# post-end of support for jessie (git-verify-commit on jessie does not support --raw)
 # ssh "$1" 'wget -O- https://spwhitton.name/spwhitton.asc | gpg --import'
 
 ssh "$1" 'cd $HOME && git clone --depth 1 git://spwhitton.name/dotfiles src/dotfiles'

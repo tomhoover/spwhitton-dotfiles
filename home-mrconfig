@@ -171,6 +171,7 @@ fixups =
         git branch --unset-upstream "$branch" 2>/dev/null || true
     done
     git config push.default nothing
+    # this is just for M-x magit-status
     git config remote.pushDefault origin
     #
     if win32; then
@@ -194,7 +195,7 @@ fixups =
         $HOME/src/dotfiles/bin/loadcron || true
         $HOME/src/dotfiles/bin/loadsshkeys || true
     fi
-    # eventually move this to post_checkout
+    # eventually move the following line from fixups to post_checkout
     cp ~/src/dotfiles/lib/hooks/dotfiles-pre-push ~/src/dotfiles/.git/hooks/pre-push
 
 # clean-ups so that initial stow will be successful

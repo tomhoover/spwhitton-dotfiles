@@ -4,6 +4,10 @@ set -e
 
 . $HOME/.shenv
 
+# TODO generalise to a script that reads a git config value for the
+# fingerprint to look for, updates branches specified by user and is
+# able to handle updating by both merge and rebase
+
 git fetch origin
 if git verify-commit --raw origin/master 2>&1 \
         | grep "VALIDSIG .* 8DC2487E51ABDD90B5C4753F0F56D0553B6D411B"; then
