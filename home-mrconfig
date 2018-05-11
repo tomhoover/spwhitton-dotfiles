@@ -163,10 +163,8 @@ push = git push origin master
 #         git rebase master
 #     fi
 fixups =
-    # Use a rebasing workflow since I'm the only person who ever
-    # commits to this repo
-    git config branch.master.rebase true
-    git config branch.autosetuprebase always
+    # Use a rebase workflow as I'm the only committer
+    git config pull.rebase true
     # Pushing and pulling are always done explicitly
     for head in $(git for-each-ref --format='%(refname)' refs/heads/); do
         branch=$(echo "$head" | cut -d/ -f3)
