@@ -131,6 +131,17 @@ lib =
             # [ -L "src/build-area" ] || ln -s -T /tmp/debuild src/build-area
         )
     }
+    # specify files that should automatically be adopted because
+    # programs convert them from symlinks to regular files.  Arguments
+    # to this function should be paths relative to $HOME
+    always_adopt () {
+        for f in $@; do
+            if ! [ -L "$f" ]; then
+                mv "$STOW_TARGET/$f" "$MR_REPO/$f"
+            fi
+        done
+    }
+
 # --- primary dotfiles repository
 
 [$HOME/src/dotfiles]
@@ -222,7 +233,13 @@ stowable = true
 skip = ! mine
 
 # since priv repo also stows into ~/.duply, make the dir first
-pre_stow = homedir_mkdirs
+pre_stow =
+    homedir_mkdirs
+    always_adopt .config/rss2email.cfg
+
+# r2e always desymlinks this file
+pre_unstow = always_adopt .config/rss2email.cfg
+pre_restow = always_adopt .config/rss2email.cfg
 
 # --- hosts configuration
 
