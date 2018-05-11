@@ -45,6 +45,20 @@ export VISUAL
 
 # ---- set $PATH
 
+# backup embedded copies of mr and stow
+
+mrf=$(which mr)
+if ! [ -x "$mrf" ]; then
+    PATH="$HOME/src/dotfiles/lib/bins/mr:$PATH"
+fi
+unset mrf
+
+stowf=$(which stow)
+if ! [ -x "$stowf" ]; then
+    PATH="$HOME/src/dotfiles/lib/bins/stow:$PATH"
+fi
+unset stowf
+
 # this function prepends $addition to $PATH iff $addition isn't
 # already in $PATH and $addition is a directory
 maybe_add_to_path ()
@@ -67,8 +81,8 @@ addition="$HOME/local/bin";                       maybe_add_to_path
 addition="$HOME/.cabal/bin";                      maybe_add_to_path
 addition="$HOME/.local/bin";                      maybe_add_to_path
 addition="/meta/s/spw/local/src/git-annex.linux"; maybe_add_to_path
-
 unset addition
+
 export PATH
 
 # ---- maybe add to $MANPATH
