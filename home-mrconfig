@@ -207,6 +207,8 @@ fixups =
 pre_stow =
     homedir_mkdirs
     $HOME/src/dotfiles/bin/unskel
+    # these will often end up created, e.g. by insinuate-dotfiles script
+    rm -f $HOME/.gnupg/{gpg.conf,gpg-agent.conf,dirmngr.conf,.gpg-v21-migrated}
 
 # set up Emacs conf & libs
 post_stow = $HOME/src/dotfiles/bin/bytecompile-emacsd
