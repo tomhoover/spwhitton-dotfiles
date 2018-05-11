@@ -178,6 +178,7 @@ fixups =
         git branch --unset-upstream "$branch" 2>/dev/null || true
     done
     git config push.default nothing
+    git config remote.pushDefault origin
     #
     if win32; then
         ( cd ~/src/dotfiles/bin && cmd "/C win32setup.bat" )
