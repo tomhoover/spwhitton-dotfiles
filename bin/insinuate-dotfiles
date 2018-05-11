@@ -1,11 +1,9 @@
 #!/bin/sh
 
-# Try to get my dotfiles onto a host
+# Try to get my dotfiles onto a host, securely
 
 # Intended for machines on which I don't have root -- otherwise I'd
-# just use propellor.  The reason for using this script rather than
-# simply sshing in and running `git clone` is to avoid zsh's "first
-# run" screen on Debian hosts
+# just use propellor
 
 # Assumes ssh connection sharing
 
@@ -13,14 +11,27 @@
 . $HOME/lib/tputfs.sh
 
 status "trying to clone dotfiles to $1 using git daemon protocol"
-ssh "$1" 'wget -O- https://spwhitton.name/spwhitton.asc | gpg --import'
+
+# post-buster
+# ssh "$1" 'wget -O- https://spwhitton.name/spwhitton.asc | gpg --import'
+
 ssh "$1" 'cd $HOME && git clone --depth 1 git://spwhitton.name/dotfiles src/dotfiles'
-ssh "$1" 'cd $HOME/src/dotfiles && git verify-commit --raw master 2>&1 | grep "VALIDSIG .* 8DC2487E51ABDD90B5C4753F0F56D0553B6D411B"'
+
+# pre-buster
+hash=$(ssh "$1" 'cd $HOME/src/dotfiles && git show-ref -s master | head -n1')
+( cd "$HOME/src/dotfiles" && git branch --contains "$hash" | grep master)
+# post-buster
+# ssh "$1" 'cd $HOME/src/dotfiles && git verify-commit --raw master 2>&1 | grep "VALIDSIG .* 8DC2487E51ABDD90B5C4753F0F56D0553B6D411B"'
+
 if [ $? = 0 ]; then
     status "clone ok; running bootstrap script"
     ssh "$1" 'cd $HOME && sh src/dotfiles/bin/bstraph.sh'
 else
-    status "couldn't verify PGP signature on dotfiles commit"
+    # pre-buster
+    status "couldn't find remote HEAD in local master branch"
+    # post-buster
+    # status "couldn't verify PGP signature on dotfiles commit"
+
     status "nuking corrupted clone on $1"
     ssh "$1" 'rm -rf $HOME/src/dotfiles'
     exit 1
