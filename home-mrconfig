@@ -150,12 +150,7 @@ stowable = true
 # we have a script to update master, and all other branches should
 # only be checked out and committed to on a single host
 update = git dotfiles-update-master
-push =
-    if git rev-parse refs/heads/$hostname 2>/dev/null; then
-        git push origin master +"$hostname"
-    else
-        git push origin master
-    fi
+push = git push origin master
 # use `git dotfiles-rebase` instead
 # rebase =
 #     # usual rebasing pattern.  Per dotfiles repo policy (excluding
