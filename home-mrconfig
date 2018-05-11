@@ -147,9 +147,15 @@ lib =
 [$HOME/src/dotfiles]
 checkout = git clone https://git.spwhitton.name/dotfiles.git dotfiles
 stowable = true
-# `git pull-safe` will often fail because host-specific branch needs
-# to be force-pushed.  So just try updating master
-update = git remote update && git merge-ff master
+# we have a script to update master, and all other branches should
+# only be checked out and committed to on a single host
+update = git dotfiles-update-master
+push =
+    if git rev-parse refs/heads/$hostname 2>/dev/null; then
+        git push origin master +"$hostname"
+    else
+        git push origin master
+    fi
 # use `git dotfiles-rebase` instead
 # rebase =
 #     # usual rebasing pattern.  Per dotfiles repo policy (excluding
@@ -166,6 +172,12 @@ fixups =
     # commits to this repo
     git config branch.master.rebase true
     git config branch.autosetuprebase always
+    # Pushing and pulling are always done explicitly
+    for head in $(git for-each-ref --format='%(refname)' refs/heads/); do
+        branch=$(echo "$head" | cut -d/ -f3)
+        git branch --unset-upstream "$branch" 2>/dev/null || true
+    done
+    git config push.default nothing
     #
     if win32; then
         ( cd ~/src/dotfiles/bin && cmd "/C win32setup.bat" )
