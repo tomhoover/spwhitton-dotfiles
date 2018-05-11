@@ -14,6 +14,7 @@ status "trying to clone dotfiles to $1 using git daemon protocol"
 
 # post-buster
 # ssh "$1" 'wget -O- https://spwhitton.name/spwhitton.asc | gpg --import'
+# TODO this means that dotfiles won't stow because .gnupg/gpg.conf will exist
 
 ssh "$1" 'cd $HOME && git clone --depth 1 git://spwhitton.name/dotfiles src/dotfiles'
 
