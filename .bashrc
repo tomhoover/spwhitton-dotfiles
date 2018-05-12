@@ -52,6 +52,7 @@ alias bts-policy="bts user debian-policy@packages.debian.org \
 alias dak-rdeps="ssh mirror.ftp-master.debian.org dak rm -Rn"
 alias madison="ssh mirror.ftp-master.debian.org dak ls"
 alias b="bts --mbox show"
+alias afsid="apt-file --filter-suites unstable"
 
 alias develacc='sudo machinectl shell spw@develacc \
       $(sudo enter-develacc /bin/sh -c "getent passwd spw | cut -d: -f7")'
