@@ -964,7 +964,7 @@ Passes ARG to `projectile-switch-project-by-name'."
           `((:name "weekday unread" :key "u" :search-type nil :sort-order oldest-first
                    :query ,(concat
                             "tag:unread and not (" debian ") and not (" feeds ")"))
-            (:name "weekend unread" :key "W" :search-type nil :sort-order oldest-first
+            (:name "weekend unread" :key "w" :search-type nil :sort-order oldest-first
                    :query ,(concat "tag:unread and not (" ua ")"))
             (:name "personal unread" :key "p" :search-type nil :sort-order oldest-first
                    :query ,(concat
@@ -975,7 +975,7 @@ Passes ARG to `projectile-switch-project-by-name'."
                             ") and not ("
                             feeds
                             ")"))
-            (:name "UA unread" :key "w" :search-type nil :sort-order oldest-first
+            (:name "UA unread" :key "W" :search-type nil :sort-order oldest-first
                    :query ,(concat "tag:unread and (" ua ")"))
             (:name "Debian unread" :key "d" :search-type nil :sort-order oldest-first
                    :query ,(concat "tag:unread and (" debian ")"))
