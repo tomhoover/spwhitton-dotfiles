@@ -1010,9 +1010,6 @@ Passes ARG to `projectile-switch-project-by-name'."
           ("m" ("-unread" "+killed") "Kill thread") ; 'm' for 'mute'
           ("d" ("-unread" "+deleted") "Send to trash")))
 
-  ;; maybe?
-  ;;(setq notmuch-message-replied-tags '("-unread" "+replied"))
-
   ;; default is t, but given that notmuch searches run to the
   ;; beginning of time, and we are likely to want recent mail, we want
   ;; newer e-mails at the top
@@ -1040,6 +1037,8 @@ Passes ARG to `projectile-switch-project-by-name'."
   ;; when 'unread' is being used as an inbox, want manual resolution
   ;; of messages
   (setq notmuch-show-mark-read-function (lambda (beg end)))
+  ;; but always resolve when I write a reply
+  (setq notmuch-message-replied-tags '("-unread" "+replied"))
 
   (setq notmuch-mua-user-agent-function 'notmuch-mua-user-agent-full)
 
