@@ -8,3 +8,4 @@ cd $HOME/src/dotfiles
 git checkout $(hostname)
 git rebase master
 git push origin master +$(hostname)
+# TODO make empty PGP-signed commit if that push fails due to pre-push hook
