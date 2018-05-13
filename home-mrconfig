@@ -360,7 +360,7 @@ post_checkout =
     # fi
 update = git annex sync --no-content         # no pull in direct mode
 push = git annex sync --content
-skip = ! mine
+skip = lazy
 
 # --- git annex for university stuff
 
@@ -384,7 +384,7 @@ fixups =
     git config annex.autocommit true # needed for ga sync
     git config remote.origin.annex-ignore true
 
-skip = ! workstation
+skip = lazy
 
 # --- git annex for podcasts
 
@@ -440,7 +440,7 @@ fixups =
     git config annex.autocommit true # needed for `git annex sync`
     git config remote.origin.annex-ignore true
 
-skip = ! workstation
+skip = lazy
 pre_update = mr autoci
 
 # --- git annex for athena's apt repository
@@ -451,7 +451,7 @@ post_checkout =
     cd athena-apt
     git annex init --version=6
     git remote add athena athenah:local/src/athena-apt
-skip = ! workstation
+skip = lazy
 
 update = git annex sync --no-content
 sync = git annex sync --content
