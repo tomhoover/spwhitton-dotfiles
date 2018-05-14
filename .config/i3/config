@@ -170,7 +170,7 @@ bar {
 set $mode_launch Launch application:  (f) file manager  (x) arandr  (m) ncmpcpp  (i) irssi  (g) greeter
 mode "$mode_launch" {
         # start a graphical file manager
-        bindsym f exec nautilus , mode "default"
+        bindsym f exec thunar , mode "default"
 
         # launch xrandr graphical config
         bindsym x exec arandr , mode "default"
