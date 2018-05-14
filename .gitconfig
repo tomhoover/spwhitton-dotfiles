@@ -54,7 +54,7 @@
      pushInsteadOf = athenap:
      insteadOf = athenap:
 [url "https://git.spwhitton.name/"]
-     insteadOf = git://spwhitton.name/
+     #insteadOf = git://spwhitton.name/
      insteadOf = athena:
 [url "spwhitton@athena.silentflame.com:"]
      insteadOf = athenah:
