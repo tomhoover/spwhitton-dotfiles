@@ -48,6 +48,7 @@
 
 [url "git@spwhitton.name:"]
      pushInsteadOf = https://git.spwhitton.name/
+     pushInsteadOf = git://spwhitton.name/
      pushInsteadOf = athena:
 # private repositories must clone by SSH
 [url "git@spwhitton.name:priv/"]
