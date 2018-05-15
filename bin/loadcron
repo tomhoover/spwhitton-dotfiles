@@ -21,6 +21,11 @@ if [ ! -z "`crontab -l`" ] && ! crontab -l | grep -q "$WARNING"; then
     fi
 fi
 
+if [ -z "$(crontab -l 2>/dev/null)" ] && [ "$1" != "-f" ]; then
+    echo >&2 "$(basename $0): spwhitton has no crontab; not loading without -f"
+    exit 1
+fi
+
 tab=$HOME/.config/cron/$(whoami)_$(hostname -f)
 if [ -e "$tab" ]; then
     (
