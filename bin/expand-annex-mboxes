@@ -45,12 +45,8 @@ for mbox in $SOURCE/*.gz; do
     # error if notmuch tries to edit.  We have to use find(1), which
     # is significantly slower than a wildcard, because otherwise we
     # can hit "Argument list too long" for some of my mboxes
-    find $TARGET/$name -type f \
-         -exec rename 's/,([^S,]*)$/,$1S/' {} \;
-    find $TARGET/$name -type f \
-         -exec rename 's/,([^,]*)F([^,]*)$/,$1$2/' {} \;
-    find $TARGET/$name -type f \
-         -exec chmod 400 {} \;
+    find $TARGET/$name -type f -exec chmod 400 {} \; -exec rename \
+         -E 's/,([^S,]*)$/,$1S/' -e 's/,([^,]*)F([^,]*)$/,$1$2/' {} \;
     find $TARGET/$name -type d \
          -exec chmod 500 {} \;
 
