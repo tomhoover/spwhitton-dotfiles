@@ -370,6 +370,7 @@ post_checkout =
     cd dionysus
     git annex init
     git annex direct
+    on athena || git remote add athena athenah:lib/dionysus
 status = git annex status
 update = git annex sync --no-content
 push = git annex sync --content
