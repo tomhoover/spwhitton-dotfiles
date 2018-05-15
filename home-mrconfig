@@ -137,7 +137,8 @@ lib =
     always_adopt () {
         for f in $@; do
             if ! [ -L "$f" ]; then
-                mv "$STOW_TARGET/$f" "$MR_REPO/$f"
+                # ignore errors as this is just a convenience thing
+                mv "$STOW_TARGET/$f" "$MR_REPO/$f" || true
             fi
         done
     }
