@@ -1156,6 +1156,24 @@ Passes ARG to `projectile-switch-project-by-name'."
   :init
   (add-hook 'cider-repl-mode-hook 'paredit-mode))
 
+;;; find lines violating 80 cols rule
+
+;; package is no longer maintained because author suggests using
+;; `whitespace-mode'; however, customising whitespace-mode to display
+;; only long lines, and not all the stuff it usually displays, means
+;; it can't be toggled on and off to quickly show other whitespace,
+;; which can be useful
+
+;; note that highlight-80+ has the advantage over the likes of
+;; fill-column-indicator of not using overlays, which easily conflict
+;; with other packages
+
+(use-package highlight-80+
+  :diminish highlight-80+-mode
+  :commands highlight-80+-mode
+  :init (dolist (hook '(prog-mode-hook message-mode-hook))
+          (add-hook hook 'highlight-80+-mode)))
+
 
 
 ;;;; ---- functions and bindings ----
