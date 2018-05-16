@@ -145,3 +145,10 @@ install-as-auto () {
         apt-mark auto "$@"
     fi
 }
+
+# when mosh isn't installed on the server, but tmux is, use this to
+# get a fairly persistent set of remote shell sessions.  Idea from
+# https://coderwall.com/p/aohfrg/smux-ssh-with-auto-reconnect-tmux-a-mosh-replacement
+smux () {
+    autossh -M 0 -t "$@" "tmux attach-session"
+}
