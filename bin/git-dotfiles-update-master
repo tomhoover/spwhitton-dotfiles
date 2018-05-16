@@ -8,6 +8,9 @@ set -e
 # fingerprint to look for, updates branches specified by user and is
 # able to handle updating by both merge and rebase
 
+# And instead of parsing the --raw output, use the technique in
+# propellor's verifyOriginBranch function -- more robust
+
 # Before running this script, will want to unset all upstreams:
 #    for head in $(git for-each-ref --format='%(refname)' refs/heads/); do
 #        branch=$(echo "$head" | cut -d/ -f3)

@@ -7,6 +7,8 @@
 
 # Assumes ssh connection sharing
 
+# TODO use technique in verifyOriginBranch from propellor
+
 . $HOME/.shenv
 . $HOME/lib/tputfs.sh
 
