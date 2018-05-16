@@ -1887,3 +1887,5 @@ mutt's review view after exiting EDITOR."
 ;; TODO fix in the 'linux' style in upstream Emacs
 (c-add-style "linux-tabs" '("linux" (indent-tabs-mode . t)))
 (setq c-default-style "linux-tabs")
+
+(bind-key "RET" 'c-context-line-break c-mode-base-map)
