@@ -1905,3 +1905,8 @@ mutt's review view after exiting EDITOR."
 ;; TODO fix in the 'linux' style in upstream Emacs
 (c-add-style "linux-tabs" '("linux" (indent-tabs-mode . t)))
 (setq c-default-style "linux-tabs")
+
+;; following setting also part of Linux kernel style, but it's from
+;; newcomment.el, not cc-mode, so must be set in addition to
+;; `c-default-style'
+(setq comment-style 'extra-line)
