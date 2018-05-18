@@ -1910,3 +1910,7 @@ mutt's review view after exiting EDITOR."
 ;; newcomment.el, not cc-mode, so must be set in addition to
 ;; `c-default-style'
 (setq comment-style 'extra-line)
+
+(use-package cc-mode
+  :config
+  (bind-key "RET" 'c-context-line-break c-mode-base-map))
