@@ -1916,3 +1916,13 @@ mutt's review view after exiting EDITOR."
   (add-hook 'c-mode-hook 'spw--turn-on-comment-filling)
   :config
   (bind-key "RET" 'c-context-line-break c-mode-base-map))
+
+;;; gdb
+
+;; We enable gdb's 'advanced mode' manually using M-x
+;; gdb-many-windows, but even when we stick to beginner mode, always
+;; display the source so we can set breakpoints
+(setq gdb-show-main t)
+
+;; TODO
+;; (gdb-speedbar-auto-raise)
