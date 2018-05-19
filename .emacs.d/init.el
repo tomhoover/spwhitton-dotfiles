@@ -1916,7 +1916,11 @@ mutt's review view after exiting EDITOR."
   :init
   (add-hook 'c-mode-hook 'spw--turn-on-comment-filling)
   :config
-  (bind-key "RET" 'c-context-line-break c-mode-base-map))
+  ;; this function interacts badly with electric-indent-mode outside
+  ;; of comments (and c-mode activates electric-indent-local-mode by
+  ;; default), so for now rely on M-j and M-q within comments
+  ;; (bind-key "RET" 'c-context-line-break c-mode-base-map)
+  )
 
 ;;; gdb
 
