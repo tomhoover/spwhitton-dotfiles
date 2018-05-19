@@ -1912,5 +1912,7 @@ mutt's review view after exiting EDITOR."
 (setq comment-style 'extra-line)
 
 (use-package cc-mode
+  :init
+  (add-hook 'c-mode-hook 'spw--turn-on-comment-filling)
   :config
   (bind-key "RET" 'c-context-line-break c-mode-base-map))
