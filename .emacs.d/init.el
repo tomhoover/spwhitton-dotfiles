@@ -1478,7 +1478,8 @@ Used in my `message-mode' yasnippets."
 ;; `reindent-then-newline-and-indent' tends to get things wrong more
 ;; often than it gets things right with my typing habits.  I hit <TAB>
 ;; a lot.
-(bind-key "RET" 'newline-and-indent)
+;; try disabling this for a while and see if anything unexpected happens
+;; (bind-key "RET" 'newline-and-indent)
 
 ;; fixup-whitespace seems to make just-one-space redundant
 (bind-key "M-SPC" 'fixup-whitespace)
