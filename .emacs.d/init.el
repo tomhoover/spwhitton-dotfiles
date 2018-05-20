@@ -1957,7 +1957,8 @@ mutt's review view after exiting EDITOR."
   ;; of comments (and c-mode activates electric-indent-local-mode by
   ;; default), so for now rely on M-j and M-q within comments
   ;; (bind-key "RET" 'c-context-line-break c-mode-base-map)
-  )
+
+  (bind-key "<f9>" 'recompile c-mode-base-map))
 
 ;;; gdb
 
