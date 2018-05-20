@@ -1803,12 +1803,18 @@ mutt's review view after exiting EDITOR."
   ;; accidently
   (bind-key "C-c C-s" 'message-goto-subject message-mode-map)
 
-  ;; this attachment function has sensible defaults so requires less
-  ;; typing than the default binding to C-c C-a.  From Michael
-  ;; Stapelberg's config
-  (define-key message-mode-map (kbd "C-c C-a") 'mail-add-attachment)
+  ;; mail-add-attachment has sensible defaults so requires less typing
+  ;; than the default binding of C-c C-a.  From Michael Stapelberg's
+  ;; config.  Also, put all attachments at the end of the message for
+  ;; clarity
+  (defun spw--mail-add-attachment ()
+    (interactive)
+    (save-excursion
+      (end-of-buffer)
+      (call-interactively 'mail-add-attachment)))
+  (define-key message-mode-map (kbd "C-c C-a") 'spw--mail-add-attachment)
   (define-key mml-mode-map [menu-bar Attachments Attach\ File...]
-    '("Attach File..." . mail-add-attachment))
+    '("Attach File..." . spw--mail-add-attachment))
 
   ;; miscellaneous preferences
 
