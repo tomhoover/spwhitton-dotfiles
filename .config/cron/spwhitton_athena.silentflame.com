@@ -2,7 +2,7 @@ PATH=$HOME/local/bin:$HOME/.local/bin:$HOME/bin:/usr/local/bin:/usr/bin:/bin:/us
 MAILTO=spwhitton@spwhitton.name
 
 */15 * * * * chronic doccheckin
-@hourly chronic mbsync fastmail
+@hourly chronic nice ionice -c 3 notmuch new
 
 # download RSS feeds at 1pm MST
 0 20 * * * r2e run
