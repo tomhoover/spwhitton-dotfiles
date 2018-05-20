@@ -5,9 +5,17 @@
 set -e
 
 cd $HOME/src/dotfiles
-git checkout $(hostname)
-git rebase master
-if ! git push origin master +$(hostname); then
-    git dotfiles-dummy-master-commit
-    git push origin master +$(hostname)
+hostname="$(hostname)"          # use '-s' ?
+if git rev-parse refs/heads/$hostname >/dev/null 2>&1; then
+    git checkout $hostname
+    git rebase master
+    if ! git push origin master +$hostname; then
+        git dotfiles-dummy-master-commit
+        git push origin master +$hostname
+    fi
+else
+    if ! git push origin master; then
+        git dotfiles-dummy-master-commit
+        git push origin master
+    fi
 fi
