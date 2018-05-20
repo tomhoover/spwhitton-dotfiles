@@ -1924,9 +1924,8 @@ mutt's review view after exiting EDITOR."
 
 ;;; gdb
 
-;; We enable gdb's 'advanced mode' manually using M-x
-;; gdb-many-windows, but even when we stick to beginner mode, always
-;; display the source so we can set breakpoints
+;; this is for when gdb-many-windows is turned off: still show the
+;; source of the program's main(), please
 (setq gdb-show-main t)
 
 ;; TODO
