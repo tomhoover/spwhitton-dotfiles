@@ -1961,3 +1961,4 @@ mutt's review view after exiting EDITOR."
 
 ;; TODO
 ;; (gdb-speedbar-auto-raise)
+;; (gud-tooltip-mode)
