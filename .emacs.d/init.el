@@ -1429,7 +1429,7 @@ Originally from <http://blog.gleitzman.com/post/35416335505/hunting-for-unicode-
         (buffer (get-buffer-create "*dotfiles rebase*")))
     (display-buffer "*dotfiles rebase*")
     (async-shell-command "git-dotfiles-rebase" "*dotfiles rebase*")))
-(bind-key "C-c g d" 'spw--dotfiles-rebase)
+(bind-key "C-c g D" 'spw--dotfiles-rebase)
 
 ;;; message-mode functions
 
@@ -1460,6 +1460,37 @@ Used in my `message-mode' yasnippets."
         ;; no spaces: assume whole thing is an alias and use it
         full-name)
     ""))
+
+;;; gdb startup/teardown functions
+
+;; not sure this will work for languages other than C; could be
+;; modified to work for Perl and Python too
+
+(defconst spw--gdb-register 819263
+  "Register for window config before and after a gdb session.")
+(defvar spw--gdb-mouse-autoselect-window nil
+  "Value of mouse-autoselect-window before gdb session.")
+
+(defun spw--start-gdb ()
+  (interactive)
+  (window-configuration-to-register spw--gdb-register)
+  (call-interactively 'gdb)
+  (setq spw--gdb-mouse-autoselect-window mouse-autoselect-window)
+  (setq mouse-autoselect-window t))
+
+(defun spw--quit-gdb ()
+  (interactive)
+  (gud-basic-call "quit")
+  (setq mouse-autoselect-window spw--gdb-mouse-autoselect-window)
+  (jump-to-register spw--gdb-register))
+
+;; supports only a single debugging session per Emacs instance
+(defun spw--toggle-gdb ()
+  (interactive)
+  (if (get-buffer-process gud-comint-buffer)
+      (spw--quit-gdb)
+    (spw--start-gdb)))
+(bind-key "C-c g d" 'spw--toggle-gdb)
 
 
 
