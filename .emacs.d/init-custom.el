@@ -18,7 +18,9 @@
  '(org-footnote-section "Notes")
  '(safe-local-variable-values
    (quote
-    ((eval spw--set-pandoc-compile-command "pdf" "html")
+    ((bug-reference-bug-regexp . "#\\(?2:[[:digit:]]+\\)")
+     (checkdoc-package-keywords-flag)
+     (eval spw--set-pandoc-compile-command "pdf" "html")
      (eval spw--set-pandoc-compile-command)
      (spwd20-party
       ("Zahrat" . 0)
