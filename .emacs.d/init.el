@@ -1487,7 +1487,8 @@ Used in my `message-mode' yasnippets."
 ;; supports only a single debugging session per Emacs instance
 (defun spw--toggle-gdb ()
   (interactive)
-  (if (get-buffer-process gud-comint-buffer)
+  (if (and (boundp 'gud-comint-buffer)
+           (get-buffer-process gud-comint-buffer))
       (spw--quit-gdb)
     (spw--start-gdb)))
 (bind-key "C-c g d" 'spw--toggle-gdb)
