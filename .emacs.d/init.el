@@ -1485,13 +1485,15 @@ Used in my `message-mode' yasnippets."
   (jump-to-register spw--gdb-register))
 
 ;; supports only a single debugging session per Emacs instance
-(defun spw--toggle-gdb ()
-  (interactive)
+(defun spw--toggle-or-restore-gdb (arg)
+  (interactive "P")
   (if (and (boundp 'gud-comint-buffer)
            (get-buffer-process gud-comint-buffer))
-      (spw--quit-gdb)
+      (if arg
+          (spw--quit-gdb)
+        (gdb-restore-windows))
     (spw--start-gdb)))
-(bind-key "C-c g d" 'spw--toggle-gdb)
+(bind-key "C-c g d" 'spw--toggle-or-restore-gdb)
 
 
 
