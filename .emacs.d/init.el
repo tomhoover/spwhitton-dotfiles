@@ -1484,7 +1484,12 @@ Used in my `message-mode' yasnippets."
   (setq mouse-autoselect-window spw--gdb-mouse-autoselect-window)
   (jump-to-register spw--gdb-register))
 
-;; supports only a single debugging session per Emacs instance
+;; Supports only a single debugging session per Emacs instance.  Also,
+;; assumes that if gdb is running, its windows should be restored --
+;; doesn't support leaving gdb running but hiding all its buffers.
+;; The idea is to have a separate frame for serious work on the source
+;; code, from which M-x recompile is called.  Alternatively, can use
+;; C-x 1 from source buffer to hide gdb's windows
 (defun spw--toggle-or-restore-gdb (arg)
   (interactive "P")
   (if (and (boundp 'gud-comint-buffer)
