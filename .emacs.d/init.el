@@ -296,6 +296,7 @@ hooks listed in `lisp-major-mode-hooks'."
   (spw--paredit-unsteal paredit-mode-map))
 
 (use-package paredit-everywhere
+  :disabled t
   :if (spw--optional-pkg-available-p "paredit-everywhere")
   :commands paredit-everywhere-mode
   :init
