@@ -123,15 +123,22 @@
 
 ;;; misc display and interface settings
 
-;; focus follow mouse
 (setq
- ;; this is more trouble than it is worth because when the window
- ;; layout changes the existing position of the mouse can cause a
- ;; surprise focus change
- mouse-autoselect-window nil
+ ;; focus follow mouse
+ mouse-autoselect-window t
 
  ;; tell Emacs what my window manager does
  focus-follows-mouse t)
+
+;; disable mouse-autoselect-window during display-buffer, to avoid
+;; surprise focus changes -- code that calls display-buffer does not
+;; expect mouse-autoselect-window to be on.  E.g. M-x magit-status can
+;; leave focus in the wrong window without this
+(defun display-buffer--disable-mouse-autoselect-window (orig-fun &rest args)
+  (let ((mouse-autoselect-window nil))
+    (apply orig-fun args)))
+(advice-add 'display-buffer
+            :around #'display-buffer--disable-mouse-autoselect-window)
 
 ;; note that this works only for self-insert chars, not other
 ;; bindings, and it comes back after switching away from Emacs.  But
