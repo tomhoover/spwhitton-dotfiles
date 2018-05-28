@@ -233,7 +233,12 @@ exec_always --no-startup-id ~/bin/i3-startup-always
 # do-it-once settings and startup script
 exec --no-startup-id ~/bin/i3-startup-once
 
-# free up a few additional pixels
+# This frees up a few additional pixels but has the disadvantage that
+# there is no visual indication whether a container is in vertical or
+# horizontal split mode.  This is okay for my usage: every container
+# starts out in tabbed mode, and then if I want to turn it into a
+# split, I should open a new window and then use Mod4+e to toggle into
+# the desired split, vertical or horizontal
 hide_edge_borders both
 
 # windows that should always float
