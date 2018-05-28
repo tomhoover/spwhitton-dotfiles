@@ -710,8 +710,24 @@ Passes ARG to `projectile-switch-project-by-name'."
   :config
 
   (setq
-   ;; Make avy overlays look more like ace-jump
-   avy-style       'at-full
+   ;; Make avy overlays look more like ace-jump, except for
+   ;; avy-goto-line, because we want to end up at the end of the line
+   avy-styles-alist '(
+                      ;; this means all chars displayed (at-full
+                      ;; sometimes doesn't do that) and takes us to
+                      ;; beginning of line (post means taken to end of
+                      ;; line which is possibly more useful, but post
+                      ;; has disadvantage of not display jump keys in
+                      ;; a single column)
+                      (avy-goto-line      . pre)
+                      ;; I always used to use at-full but that can
+                      ;; cause sequences to overlap, leading me to
+                      ;; think that the keys of one sequence belong to
+                      ;; another, and taking me to the wrong place.
+                      ;; So try out post for a while
+                      (avy-goto-char      . post)
+                      (avy-goto-subword-1 . post)
+                      (avy-goto-word-1    . post))
    ;; Make avy work over all visible frames
    avy-all-windows 'all-frames
    ;; Increase the keys available such that less likely to need to
