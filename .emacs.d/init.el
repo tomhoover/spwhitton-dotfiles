@@ -706,7 +706,8 @@ Passes ARG to `projectile-switch-project-by-name'."
          ;; if one types M-g g followed by numbers, avy-goto-line will
          ;; switch to Emacs default M-g g behaviour.  So this
          ;; rebinding of a standard key is purely additive
-         ("M-g g" . avy-goto-line))
+         ("M-g g" . avy-goto-line)
+         ("M-g M-g" . avy-goto-line))
   :config
 
   (setq
