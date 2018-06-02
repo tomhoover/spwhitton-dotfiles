@@ -1443,7 +1443,7 @@ Originally from <http://blog.gleitzman.com/post/35416335505/hunting-for-unicode-
         (buffer (get-buffer-create "*dotfiles rebase*")))
     (display-buffer "*dotfiles rebase*")
     (async-shell-command "git-dotfiles-rebase" "*dotfiles rebase*")))
-(bind-key "C-c g D" 'spw--dotfiles-rebase)
+(bind-key "C-c g d" 'spw--dotfiles-rebase)
 
 ;;; message-mode functions
 
@@ -1512,7 +1512,7 @@ Used in my `message-mode' yasnippets."
           (spw--quit-gdb)
         (gdb-restore-windows))
     (spw--start-gdb)))
-(bind-key "C-c g d" 'spw--toggle-or-restore-gdb)
+(bind-key "C-c d" 'spw--toggle-or-restore-gdb)
 
 
 
