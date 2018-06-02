@@ -1505,12 +1505,20 @@ Used in my `message-mode' yasnippets."
 ;; code, from which M-x recompile is called.  Alternatively, can use
 ;; C-x 1 from source buffer to hide gdb's windows
 (defun spw--toggle-or-restore-gdb (arg)
-  (interactive "P")
+  (interactive "p")
   (if (and (boundp 'gud-comint-buffer)
            (get-buffer-process gud-comint-buffer))
-      (if arg
-          (spw--quit-gdb)
-        (gdb-restore-windows))
+      (case arg
+        ;; quit
+        (4
+         (spw--quit-gdb))
+        ;; restart -- when can't manage to set any breakpoints
+        (16
+         (spw--quit-gdb)
+         (spw--start-gdb))
+        ;; restore windows
+        (t
+         (gdb-restore-windows)))
     (spw--start-gdb)))
 (bind-key "C-c d" 'spw--toggle-or-restore-gdb)
 
