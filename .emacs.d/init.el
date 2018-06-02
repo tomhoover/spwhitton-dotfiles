@@ -1993,7 +1993,12 @@ mutt's review view after exiting EDITOR."
   (bind-key "<f9>" (lambda ()
                      (interactive)
                      (delete-other-windows)
-                     (recompile)) c-mode-base-map))
+                     (recompile)) c-mode-base-map)
+
+  ;; Use the mode-specific paren binding.  For one thing, default M-(
+  ;; binding will insert spaces before the paren which the Linux C
+  ;; style does not call for
+  (bind-key "M-(" 'c-electric-paren c-mode-base-map))
 
 ;;; gdb
 
