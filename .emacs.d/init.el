@@ -1988,7 +1988,10 @@ mutt's review view after exiting EDITOR."
   ;; default), so for now rely on M-j and M-q within comments
   ;; (bind-key "RET" 'c-context-line-break c-mode-base-map)
 
-  (bind-key "<f9>" 'recompile c-mode-base-map))
+  (bind-key "<f9>" (lambda ()
+                     (interactive)
+                     (delete-other-windows)
+                     (recompile)) c-mode-base-map))
 
 ;;; gdb
 
