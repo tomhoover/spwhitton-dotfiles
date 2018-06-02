@@ -1518,7 +1518,9 @@ Used in my `message-mode' yasnippets."
          (spw--start-gdb))
         ;; restore windows
         (t
-         (gdb-restore-windows)))
+         (gdb-restore-windows)
+         ;; ensure (gdb) prompt at bottom of its window
+         (recenter (window-body-height))))
     (spw--start-gdb)))
 (bind-key "C-c d" 'spw--toggle-or-restore-gdb)
 
