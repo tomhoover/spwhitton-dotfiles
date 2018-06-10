@@ -105,6 +105,28 @@ sbuild-preupload() {
     lintian
 }
 
+# release process for almost all of the Debian packages I maintain
+debrel () {
+    (
+        set -e
+
+        if ! (git diff-index --quiet --cached HEAD && \
+                  git diff-files --quiet && \
+                  test -z "$(git status --porcelain)" \
+             ) >/dev/null 2>&1; then
+            echo >&2 "must commit first"
+            exit 1
+        fi
+        if [ "$(dpkg-parsechangelog -SDistribution)" = "UNRELEASED" ]; then
+            debchange --release # pauses for user confirmation
+            git commit --include debian/changelog \
+                -m"finalise changelog for $(dpkg-parsechangelog -SVersion) upload"
+        fi
+        dgit push-source "$@"
+        git push --follow-tags
+    )
+}
+
 # copy files into /home/spw/tmp for use in develacc container.  cp(1)
 # does not respect ACLs, so we need to set a temporary umask before
 # copying, and --no-preserve=mode to ensure that group-unreadable
