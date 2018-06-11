@@ -244,3 +244,4 @@ hide_edge_borders both
 # windows that should always float
 for_window [title="^vokoscreen"] floating enable
 for_window [title="vokoscreen webcam"] border pixel 1
+for_window [title="^Ediff"] floating enable
