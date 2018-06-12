@@ -142,6 +142,16 @@ lib =
             fi
         done
     }
+    # export plain text Org agenda
+    export_org_agenda () {
+        if on athena; then
+            emacs --batch -l ~/.emacs.d/init.el -eval '(org-batch-agenda "A")' 2>/dev/null \
+                >~/local/priv/agenda.txt
+        else
+            emacs --batch -l ~/.emacs.d/init.el -eval '(org-batch-agenda "A")' 2>/dev/null \
+                | ssh athena "cat >/home/spwhitton/local/priv/agenda.txt"
+        fi
+    }
 
 # --- primary dotfiles repository
 
@@ -506,6 +516,9 @@ autoci = doccheckin || true
 
 # quick syncs
 sync = doccheckin && git pull && git push
+
+post_sync = export_org_agenda
+post_push = export_org_agenda
 
 # --- static websites on web host boxes
 
