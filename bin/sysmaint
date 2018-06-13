@@ -242,60 +242,50 @@ if ( defined $loc ) {
 
     # Debian packages I'm responsible for, and a few other Debian repos
 
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/wiki.git", "alioth", "pkg-emacsen");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/dh-elpa.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/dh-make-elpa.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/yasnippet.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/ebib.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/emacs-async.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/emacs-buttercup.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/emacs-highlight-indentation.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/emacs-noflet.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/epl.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/f-el.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/flx.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/flycheck.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/helm.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/let-alist.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/paredit-el.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/parsebib.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/perspective-el.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/pkg-info-el.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/popup-el.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/projectile.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/persp-projectile.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/helm-projectile.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/rainbow-delimiters.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/seq-el.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/s-el.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/dash-el.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/dash-functional-el.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/shut-up.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/smex.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/ws-butler.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/zenburn-emacs.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/aggressive-indent-mode.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/ert-async-el.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/git-annex-el.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/debpaste-el.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/magit-annex.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/xml-rpc-el.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/wc-mode.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/deft.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/key-chord-el.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/paredit-everywhere.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/visual-regexp-el.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/pointback.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/emacs-openwith.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/emacs-world-time-mode.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/helm-dash.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/redtick.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/message-templ.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/esxml.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/emacs-db.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/emacs-kv.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/nov-el.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/emacs-helm-ag.git", "alioth");
+    backup_repo("https://salsa.debian.org/emacsen-team/dh-elpa", "alioth");
+    backup_repo("https://salsa.debian.org/emacsen-team/yasnippet", "alioth");
+    backup_repo("https://salsa.debian.org/emacsen-team/emacs-async", "alioth");
+    backup_repo("https://salsa.debian.org/emacsen-team/emacs-highlight-indentation", "alioth");
+    backup_repo("https://salsa.debian.org/emacsen-team/emacs-noflet", "alioth");
+    backup_repo("https://salsa.debian.org/emacsen-team/f-el", "alioth");
+    backup_repo("https://salsa.debian.org/emacsen-team/flx", "alioth");
+    backup_repo("https://salsa.debian.org/emacsen-team/flycheck", "alioth");
+    backup_repo("https://salsa.debian.org/emacsen-team/let-alist", "alioth");
+    backup_repo("https://salsa.debian.org/emacsen-team/paredit-el", "alioth");
+    backup_repo("https://salsa.debian.org/emacsen-team/parsebib", "alioth");
+    backup_repo("https://salsa.debian.org/emacsen-team/perspective-el", "alioth");
+    backup_repo("https://salsa.debian.org/emacsen-team/pkg-info-el", "alioth");
+    backup_repo("https://salsa.debian.org/emacsen-team/popup-el", "alioth");
+    backup_repo("https://salsa.debian.org/emacsen-team/projectile", "alioth");
+    backup_repo("https://salsa.debian.org/emacsen-team/persp-projectile", "alioth");
+    backup_repo("https://salsa.debian.org/emacsen-team/helm-projectile", "alioth");
+    backup_repo("https://salsa.debian.org/emacsen-team/rainbow-delimiters", "alioth");
+    backup_repo("https://salsa.debian.org/emacsen-team/seq-el", "alioth");
+    backup_repo("https://salsa.debian.org/emacsen-team/s-el", "alioth");
+    backup_repo("https://salsa.debian.org/emacsen-team/dash-functional-el", "alioth");
+    backup_repo("https://salsa.debian.org/emacsen-team/shut-up", "alioth");
+    backup_repo("https://salsa.debian.org/emacsen-team/smex", "alioth");
+    backup_repo("https://salsa.debian.org/emacsen-team/ws-butler", "alioth");
+    backup_repo("https://salsa.debian.org/emacsen-team/zenburn-emacs", "alioth");
+    backup_repo("https://salsa.debian.org/emacsen-team/aggressive-indent-mode", "alioth");
+    backup_repo("https://salsa.debian.org/emacsen-team/ert-async-el", "alioth");
+    backup_repo("https://salsa.debian.org/emacsen-team/git-annex-el", "alioth");
+    backup_repo("https://salsa.debian.org/emacsen-team/debpaste-el", "alioth");
+    backup_repo("https://salsa.debian.org/emacsen-team/magit-annex", "alioth");
+    backup_repo("https://salsa.debian.org/emacsen-team/xml-rpc-el", "alioth");
+    backup_repo("https://salsa.debian.org/emacsen-team/wc-mode", "alioth");
+    backup_repo("https://salsa.debian.org/emacsen-team/key-chord-el", "alioth");
+    backup_repo("https://salsa.debian.org/emacsen-team/paredit-everywhere", "alioth");
+    backup_repo("https://salsa.debian.org/emacsen-team/visual-regexp-el", "alioth");
+    backup_repo("https://salsa.debian.org/emacsen-team/pointback", "alioth");
+    backup_repo("https://salsa.debian.org/emacsen-team/emacs-openwith", "alioth");
+    backup_repo("https://salsa.debian.org/emacsen-team/emacs-world-time-mode", "alioth");
+    backup_repo("https://salsa.debian.org/emacsen-team/helm-dash", "alioth");
+    backup_repo("https://salsa.debian.org/emacsen-team/message-templ", "alioth");
+    backup_repo("https://salsa.debian.org/emacsen-team/esxml", "alioth");
+    backup_repo("https://salsa.debian.org/emacsen-team/emacs-db", "alioth");
+    backup_repo("https://salsa.debian.org/emacsen-team/emacs-kv", "alioth");
+    backup_repo("https://salsa.debian.org/emacsen-team/emacs-helm-ag", "alioth");
     backup_repo("https://salsa.debian.org/emacsen-team/queue-el", "salsa");
     backup_repo("https://salsa.debian.org/emacsen-team/spinner-el", "salsa");
     backup_repo("https://salsa.debian.org/emacsen-team/cider", "salsa");
@@ -312,17 +302,6 @@ if ( defined $loc ) {
     backup_repo("https://salsa.debian.org/emacsen-team/wiki", "salsa", "pkg-emacsen");
 
     backup_repo("https://salsa.debian.org/haskell-team/git-annex", "salsa");
-
-    backup_repo("https://anonscm.debian.org/git/pkg-mozext/classic-theme-restorer.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-mozext/keysnail.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-mozext/ublock-origin.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-mozext/y-u-no-validate.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-mozext/self-destructing-cookies.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/collab-maint/mairix.git", "alioth");
-
-    backup_repo("https://anonscm.debian.org/git/python-modules/packages/pytest-helpers-namespace.git", "alioth");
-
-    backup_repo("https://anonscm.debian.org/git/dbnpolicy/policy.git", "alioth");
 }
 
 # TODO luksClose if necessary & umount
