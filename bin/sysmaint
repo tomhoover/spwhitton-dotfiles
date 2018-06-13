@@ -92,7 +92,6 @@ switch ("$ENV{USER}\@$host") {
     case /^spw@.*\.silentflame\.com$/    { $can_push = 0; last } # develacc
     case /\.silentflame\.com$/           { $can_sudo = 1; next }
     case /hephaestus\.silentflame\.com$/ { $check_for_extdrive = 1; next }
-    case /zephyr\.silentflame\.com$/     { $check_for_extdrive = 1; next }
 }
 
 # ---- prep
