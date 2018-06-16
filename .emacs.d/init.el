@@ -275,8 +275,6 @@ hooks listed in `lisp-major-mode-hooks'."
   `(dolist (hook lisp-major-mode-hooks)
     (add-hook hook ,minor-mode)))
 
-(spw--activate-in-lisp-modes 'eldoc-mode)
-
 (defmacro spw--paredit-unsteal (map)
   "Reclaim core Emacs bindings from Paredit-like keymap MAP."
   `(progn
