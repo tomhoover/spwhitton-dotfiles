@@ -463,6 +463,7 @@ post_checkout =
     cd athena-apt
     git annex init --version=6
     git remote add athena athenah:local/src/athena-apt
+    git annex get .
 skip = lazy
 
 update = git annex sync --no-content
