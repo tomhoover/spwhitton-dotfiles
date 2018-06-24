@@ -1757,7 +1757,6 @@ Used in my `message-mode' yasnippets."
 The state after this function has been called is meant to be like
 mutt's review view after exiting EDITOR."
     (interactive)
-    (setq spw--message-normalised t)
     ;; sign messages by default, though avoid clobbering a
     ;; 'signencrypt' tag added when replying to an encrypted message
     (if (mml-secure-is-encrypted-p)
@@ -1800,7 +1799,8 @@ mutt's review view after exiting EDITOR."
         (save-restriction
           (narrow-to-region body (point))
           (message-fill-yanked-message))
-        (message "Hit undo if the quoted message was too aggressively wrapped"))))
+        (message "Hit undo if the quoted message was too aggressively wrapped")))
+    (setq spw--message-normalised t))
   ;; I do not need a key to insert the Newsgroups: header
   (bind-key "C-c C-n" 'spw--normalise-message message-mode-map)
 
