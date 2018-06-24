@@ -1725,10 +1725,16 @@ Used in my `message-mode' yasnippets."
             ("Debian"
              ("From" . "Sean Whitton <spwhitton@debian.org>"))))
     (setq message-templ-config-alist
-          '(("^\\(To\\|Cc\\|Bcc\\):.*@.*\\(\.edu\\|\.ac\.uk\\)"
+          '(("^\\(To\\|Cc\\|Bcc\\):.*@.*debian\.org"
              (lambda ()
-               (message-templ-apply "UA")
-               (mml-unsecure-message))))))
+               ;; avoid clobbering a 'signencrypt' tag added when
+               ;; replying to an encrypted message
+               (if (mml-secure-is-encrypted-p)
+                   (mml-secure-message-sign-encrypt)
+                 (mml-secure-message-sign-pgpmime))))
+            ("^\\(To\\|Cc\\|Bcc\\):.*@.*\\(\.edu\\|\.ac\.uk\\)"
+             (lambda ()
+               (message-templ-apply "UA"))))))
 
   (add-hook 'message-mode-hook 'footnote-mode)
   (add-hook 'message-mode-hook 'message-goto-body)
@@ -1757,13 +1763,7 @@ Used in my `message-mode' yasnippets."
 The state after this function has been called is meant to be like
 mutt's review view after exiting EDITOR."
     (interactive)
-    ;; sign messages by default, though avoid clobbering a
-    ;; 'signencrypt' tag added when replying to an encrypted message
-    (if (mml-secure-is-encrypted-p)
-        (mml-secure-message-sign-encrypt)
-      (mml-secure-message-sign-pgpmime))
-    ;; set up From address, etc.; this also undoes the PGP signature
-    ;; tag where necessary
+    ;; set up From address, pgp signing, etc.
     (message-templ-config-exec)
     (spw--compact-blank-lines)
     (save-excursion
