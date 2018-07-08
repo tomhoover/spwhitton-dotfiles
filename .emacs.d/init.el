@@ -1854,8 +1854,8 @@ mutt's review view after exiting EDITOR."
   ;; try to strip signatures when citing
   (setq notmuch-mua-cite-function 'message-cite-original-without-signature)
 
-  ;; with defaults, this gets us "On X, Y wrote:" lines
-  (setq message-citation-line-function 'message-insert-formatted-citation-line)
+  (setq message-citation-line-function 'message-insert-formatted-citation-line
+        message-citation-line-format "On %a %d %b %Y at %I:%M%p %Z, %N wrote:\n")
 
   ;; default dir for saving attachments
   (setq mm-default-directory "~/tmp/")
