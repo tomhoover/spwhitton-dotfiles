@@ -110,12 +110,17 @@ sbuild-preupload() {
 debrel () {
     (
         set -e
+        local branch="$(git symbolic-ref HEAD | sed 's|refs/heads/||')"
 
         if ! (git diff-index --quiet --cached HEAD && \
                   git diff-files --quiet && \
                   test -z "$(git status --porcelain)" \
              ) >/dev/null 2>&1; then
             echo >&2 "must commit first"
+            exit 1
+        fi
+        if [[ $branch =~ ^wip/ ]]; then
+            echo >&2 "you don't want to upload a wip/ branch"
             exit 1
         fi
         if [ "$(dpkg-parsechangelog -SDistribution)" = "UNRELEASED" ]; then
