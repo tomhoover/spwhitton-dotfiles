@@ -1778,6 +1778,7 @@ mutt's review view after exiting EDITOR."
       (spw--message-goto-body--skip-mml-secure)
       ;; also skip over Debian BTS control lines, which shouldn't be
       ;; wrapped
+      ;; TODO other pseudoheaders too
       (when (looking-at "^[cC]ontrol: .+$")
         (while (looking-at "^[cC]ontrol: .+$")
           (forward-line 1))
