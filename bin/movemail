@@ -43,3 +43,6 @@ else
     fi
     mbsync fastmail
 fi
+
+# to confirm queue was flushed before I close laptop lid
+mailq
