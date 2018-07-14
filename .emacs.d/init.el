@@ -959,6 +959,12 @@ Passes ARG to `projectile-switch-project-by-name'."
 
 ;;; notmuch
 
+;; TODO integrate contrib code to extract a patch series.  Might want
+;; to extend it to distinguish between version 1 of the series and v2,
+;; v2, etc., however most projects that use git-send-email want new
+;; revisions of the patch series to be new threads (--in-reply-to
+;; mainly to send a patch in reply to a bug report)
+
 (use-package notmuch
   :if (spw--optional-pkg-available-p "notmuch")
   :bind (("C-c m" . notmuch-jump-search)
