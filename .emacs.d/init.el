@@ -2,9 +2,13 @@
 
 ;;;; ---- security ----
 
-;; don't accept invalid SSL certs
+;; don't accept invalid SSL certs or small primes
 (eval-after-load 'gnutls
-  '(setq gnutls-verify-error t))
+  '(setq gnutls-verify-error t
+         gnutls-min-prime-bits 1024))
+;; or other bad stuff
+(eval-after-load 'nsm
+  (setq network-security-level 'paranoid))
 
 ;;;; ---- package management ----
 
