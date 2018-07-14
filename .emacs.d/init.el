@@ -753,14 +753,12 @@ Passes ARG to `projectile-switch-project-by-name'."
   :config
   (ace-link-setup-default))
 
-;;; make dired copy and move asynchronously
+;;; asynchronous copies and moves in dired -- but don't turn on for
+;;; all dired buffers
 
 (use-package dired-async
   :if (spw--optional-pkg-available-p "async")
-  :commands dired-async-mode
-  :defer 5
-  :config
-  (dired-async-mode 1))
+  :commands dired-async-mode)
 
 ;;; smart C-a binding means we can bind M-m to something more useful
 
