@@ -1765,12 +1765,12 @@ Used in my `message-mode' yasnippets."
   (advice-add 'notmuch-mua-send-and-exit :around
               #'notmuch-mua-send-and-exit--check-normalised)
 
-  (defun spw--normalise-message ()
+  (defun spw--normalise-message (arg)
     "Autoformat a message before sending.
 
 The state after this function has been called is meant to be like
 mutt's review view after exiting EDITOR."
-    (interactive)
+    (interactive "P")
     ;; set up From address, pgp signing, etc.
     (message-templ-config-exec)
     (spw--compact-blank-lines)
@@ -1805,10 +1805,11 @@ mutt's review view after exiting EDITOR."
         (unless (bolp)
           (insert "\n"))
         (undo-boundary)
-        (save-restriction
-          (narrow-to-region body (point))
-          (message-fill-yanked-message))
-        (message "Hit undo if the quoted message was too aggressively wrapped")))
+        (when arg
+          (save-restriction
+            (narrow-to-region body (point))
+            (message-fill-yanked-message))
+          (message "Hit undo if the quoted message was too aggressively wrapped"))))
     (setq spw--message-normalised t))
   ;; I do not need a key to insert the Newsgroups: header
   (bind-key "C-c C-n" 'spw--normalise-message message-mode-map)
