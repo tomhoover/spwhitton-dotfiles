@@ -1739,11 +1739,13 @@ Used in my `message-mode' yasnippets."
     (setq message-templ-config-alist
           '(("^\\(To\\|Cc\\|Bcc\\):.*@.*debian\.org"
              (lambda ()
-               ;; avoid clobbering a 'signencrypt' tag added when
-               ;; replying to an encrypted message
-               (if (mml-secure-is-encrypted-p)
-                   (mml-secure-message-sign-encrypt)
-                 (mml-secure-message-sign-pgpmime))))
+               ;; no PGP signing on athena
+               (unless (string= (system-name) "athena")
+                 ;; avoid clobbering a 'signencrypt' tag added when
+                 ;; replying to an encrypted message
+                 (if (mml-secure-is-encrypted-p)
+                     (mml-secure-message-sign-encrypt)
+                   (mml-secure-message-sign-pgpmime)))))
             ("^\\(To\\|Cc\\|Bcc\\):.*@.*\\(\.edu\\|\.ac\.uk\\)"
              (lambda ()
                (message-templ-apply "UA"))))))
