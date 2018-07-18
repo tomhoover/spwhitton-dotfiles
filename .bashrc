@@ -182,3 +182,40 @@ install-as-auto () {
 smux () {
     autossh -M 0 -t "$@" "tmux attach-session"
 }
+
+# run the autopkgtest for the version of the package in experimental,
+# which is not otherwise triggered.  Note that results will appear
+# under unstable, e.g. at
+# https://ci.debian.net/packages/m/magit-annex/unstable/amd64/
+# Create ~/local/auth/debci first by visiting
+# https://ci.debian.net/api/v1/getkey with an SSO cert installer
+# Based on Ian Jackson's stuff in dgit-junk.git
+debci-trigger-experimental () {
+    (
+        local source="$1"
+
+        cd ~/tmp
+        if [ "$source" == "" ]; then
+            echo >&2 "need source package name"
+            exit 1
+        fi
+        cat >debci-trigger-experimental.json <<EOF
+[
+   {
+      "package" : "$source",
+      "trigger" : "spwhitton_experimental",
+      "pin-packages" : [
+         [
+            "src:$source",
+            "experimental"
+         ]
+      ]
+   }
+]
+EOF
+        curl --header "Auth-Key: $(cat ~/local/auth/debci)" \
+             --form tests=@debci-trigger-experimental.json \
+             https://ci.debian.net/api/v1/test/unstable/amd64
+        rm -f debci-trigger-experimental
+    )
+}
