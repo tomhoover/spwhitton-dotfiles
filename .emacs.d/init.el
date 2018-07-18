@@ -389,7 +389,14 @@ hooks listed in `lisp-major-mode-hooks'."
    magit-push-always-verify nil)
 
   (use-package magit-annex
-    :if (spw--optional-pkg-available-p "magit-annex")))
+    :if (spw--optional-pkg-available-p "magit-annex")
+    :config
+    (use-package git-annex
+      :if (spw--optional-pkg-available-p "git-annex")
+      :config
+      (when (fboundp #'magit-annex-file-action-popup)
+        (define-key git-annex-dired-map "f"
+          #'magit-annex-file-action-popup)))))
 
 ;;; colour those parentheses
 
@@ -506,9 +513,6 @@ hooks listed in `lisp-major-mode-hooks'."
     (setq-default dired-omit-mode t)
     (setq dired-omit-files "^\\...+$")
     (setq dired-isearch-filenames t)))
-
-(use-package git-annex
-  :if (spw--optional-pkg-available-p "git-annex"))
 
 ;;; close old buffers once per day
 
