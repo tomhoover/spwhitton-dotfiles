@@ -1815,11 +1815,11 @@ mutt's review view after exiting EDITOR."
   (bind-key "C-c C-n" 'spw--normalise-message message-mode-map)
 
   ;; a convenient macro for something I find myself often doing by hand
-  (defun spw--message-delete-and-normalise ()
+  (defun spw--message-delete-and-normalise (arg)
     (interactive)
     (newline)
     (message-kill-to-signature)
-    (spw--normalise-message))
+    (spw--normalise-message arg))
   (bind-key "<f9>" 'spw--message-delete-and-normalise message-mode-map)
 
   (defun spw--notmuch-decrypt-inline ()
