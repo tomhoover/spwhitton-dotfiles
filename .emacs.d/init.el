@@ -1822,7 +1822,7 @@ mutt's review view after exiting EDITOR."
 
   ;; a convenient macro for something I find myself often doing by hand
   (defun spw--message-delete-and-normalise (arg)
-    (interactive)
+    (interactive "P")
     (newline)
     (message-kill-to-signature)
     (spw--normalise-message arg))
