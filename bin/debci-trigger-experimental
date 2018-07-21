@@ -35,4 +35,4 @@ curl --header "Auth-Key: $(cat ~/local/auth/debci)" \
      --form tests=@debci-trigger-experimental.json \
      https://ci.debian.net/api/v1/test/unstable/amd64
 
-rm -f debci-trigger-experimental
+rm -f debci-trigger-experimental.json
