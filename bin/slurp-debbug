@@ -1,0 +1,42 @@
+#!/bin/sh
+
+# slurp messages from a Debian bug into your notmuch database
+
+# Doesn't work yet because mb2md thinks that bts mbox files contain
+# only a single message.
+
+set -e
+
+DEST="$HOME/tmp/testing_maildir"
+
+# for development:
+mkdir -p $DEST/new $DEST/cur $DEST/tmp
+
+bug="$1"
+
+if [ "$1" = "" ]; then
+   echo >&2 "need a bug number"
+   exit 1
+fi
+
+bts --mbox show "$bug"
+
+temp="$(mktemp -d)"
+
+mb2md -s "${XDG_CACHE_HOME:-$HOME/.cache}"/devscripts/bts/"$bug".mbox \
+      -d "$temp"
+
+for f in $temp/*/*; do
+    echo "D: considering $f"
+    message_id="$(grep -E -i -m 1 -e '^Message-ID:' $f | cut -d\  -f2 | sed -e 's/<//' -e 's/>//')"
+    echo "D: looking for message with ID $message_id"
+    match="$(notmuch search --limit=1 id:$message_id | wc -l)"
+    echo "D: notmuch emitted $match lines"
+    if [ "$match" = "0" ]; then
+        mdmv "$f" "$DEST"
+    fi
+done
+
+rm -rf "$temp"
+
+#notmuch new
