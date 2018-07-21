@@ -2,15 +2,9 @@
 
 # slurp messages from a Debian bug into your notmuch database
 
-# Doesn't work yet because mb2md thinks that bts mbox files contain
-# only a single message.
-
 set -e
 
-DEST="$HOME/tmp/testing_maildir"
-
-# for development:
-mkdir -p $DEST/new $DEST/cur $DEST/tmp
+DEST="$HOME/.fmail/inbox"
 
 bug="$1"
 
@@ -19,12 +13,16 @@ if [ "$1" = "" ]; then
    exit 1
 fi
 
+# see https://bugs.debian.org/904182
 bts --mbox show "$bug"
 
 temp="$(mktemp -d)"
+mkdir $temp/new $temp/cur $temp/tmp
 
-mb2md -s "${XDG_CACHE_HOME:-$HOME/.cache}"/devscripts/bts/"$bug".mbox \
-      -d "$temp"
+# original mb2md thinks Debian BTS mboxes contain just a single
+# message
+mb2md-dkg "${XDG_CACHE_HOME:-$HOME/.cache}"/devscripts/bts/"$bug".mbox \
+          "$temp"
 
 for f in $temp/*/*; do
     echo "D: considering $f"
@@ -39,4 +37,4 @@ done
 
 rm -rf "$temp"
 
-#notmuch new
+notmuch new
