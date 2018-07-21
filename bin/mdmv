@@ -5,6 +5,7 @@ from __future__ import print_function
 import os
 import sys
 import time
+import shutil
 import socket
 
 def eprint(*args, **kwargs):
@@ -54,6 +55,6 @@ for msg in sys.argv[1:-1]:
         eprint(us + ": somehow, dest " + msg_dest + " already exists")
         sys.exit(1)
     else:
-        os.rename(msg, msg_dest)
+        shutil.move(msg, msg_dest)
 
     counter = counter + 1
