@@ -13,8 +13,7 @@ if [ "$1" = "" ]; then
    exit 1
 fi
 
-# see https://bugs.debian.org/904182
-bts --mbox show "$bug"
+bts --mbox --mailreader 'true %s' show "$bug"
 
 temp="$(mktemp -d)"
 mkdir $temp/new $temp/cur $temp/tmp
