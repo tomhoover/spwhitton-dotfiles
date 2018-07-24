@@ -24,6 +24,10 @@
 
         # # https://stackoverflow.com/questions/957928/is-there-a-way-to-get-the-git-root-directory-in-one-command#comment9747528_957978
 	# exec = "!exec "
+
+        # by David Bremner:
+        nmam = "!f() { notmuch show --format=raw $1 | git am -; }; f"
+
 [core]
         # no pager thanks
 	pager = 
