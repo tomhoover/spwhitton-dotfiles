@@ -1066,11 +1066,6 @@ Passes ARG to `projectile-switch-project-by-name'."
 
   (setq notmuch-mua-user-agent-function 'notmuch-mua-user-agent-full)
 
-  (defun spw--slurp-debbug (bug)
-    (interactive "sBug number: ")
-    (call-process-shell-command (concat "slurp-debbug " bug))
-    (notmuch-search (concat "Bug#" bug)))
-
   ;; TODO upstream?
   (defun message-newline-and-reformat--delete-superfluous-newlines (&rest ignore)
     "Have `message-newline-and-reformat' get rid of some more superflous blank quoted lines."
