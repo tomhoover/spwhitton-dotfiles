@@ -1039,6 +1039,14 @@ Passes ARG to `projectile-switch-project-by-name'."
   ;; newer e-mails at the top
   (setq notmuch-search-oldest-first nil)
 
+  ;; pretty inline diffs
+  (add-hook 'notmuch-show-insert-text/plain-hook 'notmuch-wash-convert-inline-patch-to-part)
+
+  ;; don't collapse citations please
+  ;; TODO this has the unpleasant side effect that cited text is no
+  ;; longer fontlocked
+  ;;(remove-hook 'notmuch-show-insert-text/plain-hook 'notmuch-wash-excerpt-citations)
+
   ;; this ensures that hitting C-x m right after Emacs starts yields a
   ;; message with the correct From: address and User-Agent header, etc.
   (defun compose-mail--load-notmuch (&rest ignore)
