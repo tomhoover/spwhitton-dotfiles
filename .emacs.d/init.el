@@ -388,6 +388,20 @@ hooks listed in `lisp-major-mode-hooks'."
    magit-completing-read-function 'magit-ido-completing-read
    magit-push-always-verify nil)
 
+  ;; drop "Unpulled from pushremote" which doesn't make sense with how
+  ;; I use push remotes
+  (remove-hook 'magit-status-sections-hook
+               'magit-insert-unpulled-from-pushremote)
+
+  ;; replace unpushed-to-upstream-or-recent with unpushed-to-upstream
+  ;; (undoing recent change to show "Recent commits" after pushing
+  ;; everything)
+  ;; from: https://github.com/magit/magit/issues/3230
+  (magit-add-section-hook 'magit-status-sections-hook
+                          'magit-insert-unpushed-to-upstream
+                          'magit-insert-unpushed-to-upstream-or-recent
+                          'replace)
+
   (use-package magit-annex
     :if (spw--optional-pkg-available-p "magit-annex")
     :config
