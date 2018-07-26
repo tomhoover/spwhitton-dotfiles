@@ -1053,17 +1053,15 @@ Passes ARG to `projectile-switch-project-by-name'."
   ;; newer e-mails at the top
   (setq notmuch-search-oldest-first nil)
 
-  ;; ;; pretty inline diffs
-  ;; ;; TODO this has the unpleasant side effect that cited text is no
-  ;; ;; longer fontlocked
-  ;; (add-hook 'notmuch-show-insert-text/plain-hook
-  ;;           'notmuch-wash-convert-inline-patch-to-part t)
-
-  ;; ;; don't collapse citations please
-  ;; ;; TODO this(?) has the unpleasant side effect that cited text is no
-  ;; ;; longer fontlocked
-  ;; (remove-hook 'notmuch-show-insert-text/plain-hook
-  ;;              'notmuch-wash-excerpt-citations)
+  ;; don't collapse cited text
+  ;; We ought to be able to just remove
+  ;; `notmuch-wash-excerpt-citations' from
+  ;; `notmuch-show-insert-text/plain-hook', but that function is also
+  ;; responsible for colouring cited text (this is an upstream bug:
+  ;; that function does the colouring for performance reasons but the
+  ;; right answer is to use fontlocking, not overlays, for the colouring)
+  (setq notmuch-wash-citation-lines-prefix 10000
+        notmuch-wash-citation-lines-suffix 10000)
 
   ;; this ensures that hitting C-x m right after Emacs starts yields a
   ;; message with the correct From: address and User-Agent header, etc.
