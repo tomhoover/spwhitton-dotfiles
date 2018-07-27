@@ -532,7 +532,8 @@ different occasions."
  '(("t" "m" ((in-mode . "notmuch-show-mode")))
    ("t" ((not-in-mode . "notmuch-show-mode")))
    ("T" ((in-mode . "notmuch-show-mode")))
-   ("m" ((in-mode . "notmuch-show-mode"))))
+   ("m" ((in-mode . "notmuch-show-mode")))
+   ("f" ((in-mode . "notmuch-show-mode"))))
  org-capture-templates
  '(("t" "Task to be refiled" entry (file org-default-notes-file)
     "* TODO %^{Title}\n%?")
@@ -544,6 +545,19 @@ different occasions."
     ;; lisp is to filter square brackets out of the subject as these
     ;; mean that the Org-mode link does not properly form
     "* TODO [[notmuch:id:%:message-id][%^{Title|\"%(replace-regexp-in-string \"\\\\\\[\\\\\\|\\\\\\]\" \"\" \"%:subject\")\" from %:fromname}]]\n%?")
+
+   ;; This will show a thread with only flagged messages expanded.
+   ;;
+   ;; The purpose of this is for cases where there are multiple actionable
+   ;; messages in a single thread, such that I want to view them all in a
+   ;; single buffer.  I flag those, and create a link to the thread using
+   ;; this snippet.  Creating Org links to individual messages would not
+   ;; achieve this.  And having an 'inbox' tag which represents actionable
+   ;; but read messages would add overhead as I'd have to get used to
+   ;; removing that tag from messages, and sort out syncing the tag.  The
+   ;; case comes up too rarely for it to be worth doing that.
+   ("f" "All flagged messages in current thread" entry (file org-default-notes-file)
+    "* TODO [[notmuch:thread:{id:%:message-id} and tag:flagged][%^{Title|Flagged messages in thread \"%(replace-regexp-in-string \"\\\\\\[\\\\\\|\\\\\\]\" \"\" \"%:subject\")\"}]]\n%?")
    ;; ("a" "Appointment" entry (file+datetree "~/doc/org/diary.org")
    ;;     "* %^{Time} %^{Title & location}
    ;; %^t" :immediate-finish t)
