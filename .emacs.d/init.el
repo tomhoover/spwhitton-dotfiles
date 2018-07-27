@@ -1040,7 +1040,8 @@ Passes ARG to `projectile-switch-project-by-name'."
         '(("u" ("+unread") "Mark as unread")
           ("s" ("-unread" "+spam") "Mark as spam")
           ("m" ("-unread" "+killed") "Kill thread") ; 'm' for 'mute'
-          ("d" ("-unread" "+deleted") "Send to trash")))
+          ("d" ("-unread" "+deleted") "Send to trash")
+          ("f" ("+flagged") "Flag message")))
 
   ;; default is t, but given that notmuch searches run to the
   ;; beginning of time, and we are likely to want recent mail, we want
