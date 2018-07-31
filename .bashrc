@@ -74,6 +74,9 @@ alias force-develacc-perms="sudo chown -R spw:spw /home/spw"
 alias push-develacc-dotfiles-branch="git push \
       -f origin develacc/develacc-$(hostname -s):develacc-$(hostname -s)"
 
+# this due to Clint Adams
+alias get-my-signers="gpg --keyserver pool.sks-keyservers.net --recv-keys $(gpg --list-sigs --with-colons 0F56D0553B6D411B | awk -F: '/\[User ID not found\]/ {print $5}' | sort -u)"
+
 # --- more powerful aliases built with shell functions
 
 # run a package build and the full suite of checks that I can do
