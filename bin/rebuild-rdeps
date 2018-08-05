@@ -2,6 +2,8 @@
 
 us="$(basename $0)"
 
+# TODO apparently ratt (rebuild all the things) does this
+
 # first arg is root of dep tree.  other args passed on to sbuild
 # (e.g. --extra-package="$HOME/src/dh-elpa_1.0_all.deb" --add-depends="dh-elpa (>= 1.0)")
 root="$1"
