@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# by Ian Jackson 2018, licensed MIT
+
+set -e
+gitdir=`git-rev-parse --git-dir`
+read <"$gitdir"/rebase-merge/stopped-sha stopped
+diff -u "$@" <(git show --oneline -p $stopped) <(git diff HEAD) \
+  | tail +3 \
+  | less +/'^[-+][-+]'
