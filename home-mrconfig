@@ -82,7 +82,7 @@ lib =
         return 1
     }
     workstation() {
-        on swhitton@zephyr spwhitton@hephaestus
+        on swhitton@zephyr spwhitton@hephaestus spwhitton@iris
     }
     mine() {
         workstation || on spwhitton@athena
