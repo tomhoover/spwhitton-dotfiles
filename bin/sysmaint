@@ -302,6 +302,9 @@ if ( defined $loc ) {
     backup_repo("https://salsa.debian.org/emacsen-team/wiki", "salsa", "pkg-emacsen");
 
     backup_repo("https://salsa.debian.org/haskell-team/git-annex", "salsa");
+
+    backup_repo("https://salsa.debian.org/python-team/modules/pikepdf");
+    backup_repo("https://salsa.debian.org/python-team/modules/pytest-helpers-namespace");
 }
 
 # TODO luksClose if necessary & umount
