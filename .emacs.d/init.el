@@ -1360,7 +1360,7 @@ Author unknown."
           (set-window-buffer (next-window) next-win-buffer)
           (select-window first-win)
           (if this-win-2nd (other-window 1))))))
-(bind-key "s" 'spw--toggle-window-split ctl-x-4-map)
+(bind-key "t" 'spw--toggle-window-split ctl-x-4-map)
 
 ;; there are many variations on this online
 (defun spw--rotate-windows (arg)
@@ -1385,7 +1385,7 @@ By Robert Bost, based on work by Steve Yegge, Colin Doering and others."
                  (p2 (window-point w2)))
             (set-window-buffer-start-and-point w1 b2 s2 p2)
             (set-window-buffer-start-and-point w2 b1 s1 p1)))))))
-(bind-key "t" 'spw--rotate-windows ctl-x-4-map)
+(bind-key "s" 'spw--rotate-windows ctl-x-4-map)
 
 (defun magnars--move-beginning-of-line-dwim (arg)
   "Move point back to indentation or beginning of line.
