@@ -14,7 +14,7 @@ if [[ $gstatus =~ 'You have unmerged paths.' ]]; then
 fi
 
 # this command should never fail and stop mr
-git add org/{philos/,/}*.org papers/*.{org,md,bib} daily/*.md pres/*.md playlists/*.m3u emacs-abbrevs emacs-bookmarks mutt-aliases mutt-groups || true
+git add org/{philos/,/}*.org papers/*.{org,md,bib} dissert/*.{org,md,bib} daily/*.md pres/*.md playlists/*.m3u emacs-abbrevs emacs-bookmarks mutt-aliases mutt-groups || true
 
 # this command should never fail and stop mr
 git commit -a -m "auto commit on $(hostname -s)" || true
