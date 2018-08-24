@@ -405,6 +405,8 @@ hooks listed in `lisp-major-mode-hooks'."
   (use-package magit-annex
     :if (spw--optional-pkg-available-p "magit-annex")
     :config
+
+    ;; TODO the following is not getting activated at Emacs startup
     (use-package git-annex
       :if (spw--optional-pkg-available-p "git-annex")
       :config
