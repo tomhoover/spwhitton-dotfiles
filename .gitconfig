@@ -144,7 +144,7 @@
         #upload-host = ssh-upload
         # ... except that ssh-upload is inconvenient until #691703 is resolved
         upload-host = ftp-master
-        keyid = 0x0F56D0553B6D411B
+        keyid = 8DC2487E51ABDD90B5C4753F0F56D0553B6D411B
 
 # ---- magit ----
 
