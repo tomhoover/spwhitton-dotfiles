@@ -77,7 +77,9 @@ foreach my $branch ( @branches ) {
         # print "I: pushing $branch to $tracking (probably to its tracking branch)\n";
         push @{ $pushes{$tracking} }, $branch;
     } else {
-        die "E: couldn't find anywhere to push $branch";
+        print "E: couldn't find anywhere to push $branch\n";
+        print "I: maybe you want to \`git branchmove\` it to a remote\n";
+        exit 1;
     }
 }
 
