@@ -1555,6 +1555,15 @@ Used in my `message-mode' yasnippets."
     (spw--start-gdb)))
 (bind-key "C-c d" 'spw--toggle-or-restore-gdb)
 
+(defun spw--ido-bookmark-jump (bname)
+  "Switch to bookmark interactively using `ido'.
+
+By an anonymous EmacsWiki contributor."
+  (interactive
+   (list (ido-completing-read "Jump to bookmark: " (bookmark-all-names) nil t)))
+  (bookmark-jump bname))
+(bind-key "C-x r b" 'spw--ido-bookmark-jump)
+
 
 
 ;;;; ---- personal settings ----
