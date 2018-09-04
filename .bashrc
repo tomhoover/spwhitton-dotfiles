@@ -46,6 +46,7 @@ alias ta="tmux attach-session"
 alias rax="screen -URaAx"
 alias lid-hold="systemd-inhibit --what=sleep --who=Sean --why=manual --mode=block cat"
 alias new-login-shell="exec su -l $USER" # get new UNIX group without relog
+alias whitenoise="cvlc --quiet --loop ~/lib/annex/doc/sounds/R*.ogg"
 
 alias sid-build-deps='mk-build-deps -ir -s sudo -t \
       "apt-get -o Debug::pkgProblemResolver=yes -t sid --no-install-recommends"'
