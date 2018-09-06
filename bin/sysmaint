@@ -303,10 +303,10 @@ if ( defined $loc ) {
 
     backup_repo("https://salsa.debian.org/haskell-team/git-annex", "salsa");
 
-    backup_repo("https://salsa.debian.org/python-team/modules/pikepdf");
-    backup_repo("https://salsa.debian.org/python-team/modules/pytest-helpers-namespace");
+    backup_repo("https://salsa.debian.org/python-team/modules/pikepdf", "salsa");
+    backup_repo("https://salsa.debian.org/python-team/modules/pytest-helpers-namespace", "salsa");
 
-    backup_repo("https://salsa.debian.org/dbnpolicy/policy");
+    backup_repo("https://salsa.debian.org/dbnpolicy/policy", "salsa");
 }
 
 # TODO luksClose if necessary & umount
