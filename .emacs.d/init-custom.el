@@ -21,29 +21,17 @@
  '(org-footnote-section "Notes")
  '(safe-local-variable-values
    (quote
-    ((bug-reference-bug-regexp . "#\\(?2:[[:digit:]]+\\)")
+    ((spwd20-party
+      ("Zahrat" . 0)
+      ("Anca" . 1)
+      ("Anduin" . 1)
+      ("Vito" . 2)
+      ("Spectre" . 4))
+     (bug-reference-bug-regexp . "#\\(?2:[[:digit:]]+\\)")
      (checkdoc-package-keywords-flag)
      (eval spw--set-pandoc-compile-command "pdf" "html")
      (eval spw--set-pandoc-compile-command)
-     (spwd20-party
-      ("Zahrat" . 0)
-      ("Anca" . 1)
-      ("Anduin" . 1)
-      ("Vito" . 2))
-     (spwd20-party
-      ("Zahrat" . 0)
-      ("Anca" . 1)
-      ("Anduin" . 1)
-      ("Donna" . 0))
      (variable-pitch-mode . t)
-     (spwd20-party
-      ("Zahrat" . 0)
-      ("Anca" . 1)
-      ("Anduin" . 1)
-      ("Dona" . 0))
-     (spwd20-party
-      ("Zahrat" . 4)
-      ("Anon" . 2))
      (bug-reference-bug-regexp . "#\\(?2:[0-9]+\\)")
      (wc-word-goal . 750)
      (wc-modeline-format . "%w/%gw")
