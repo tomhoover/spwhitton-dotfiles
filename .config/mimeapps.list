@@ -2,3 +2,8 @@
 application/pdf=evince.desktop
 image/png=eog.desktop
 image/jpeg=eog.desktop
+
+[Added Associations]
+video/mp4=mpv.desktop;
+application/vnd.openxmlformats-officedocument.wordprocessingml.document=libreoffice-writer.desktop;
+audio/mpeg=mpv.desktop;
