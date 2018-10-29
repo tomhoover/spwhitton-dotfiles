@@ -16,6 +16,8 @@
 #         -background black -gravity center -extent 1366x768 \
 #         ~/local/wallpaper.png
 #
+# or add a cronjob for i3-rotate-wallpaper.
+#
 # If this machine's monitor setup changes, we just use a solid colour
 # (otherwise we have to keep restarting i3lock).
 
