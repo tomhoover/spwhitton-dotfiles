@@ -6,7 +6,7 @@
 set -e
 
 # space-separated dirs where wallpaper can be found
-dirs="$HOME/lib/annex/doc/img/wallpaper"
+dirs="$HOME/lib/annex/doc/img/wallpaper/pro"
 
 if ! [ -e "$HOME/local/wallpaper.png" ] \
         || ( [ -n "$(find $HOME/local/wallpaper.png -newermt '1 day ago')" ] \
