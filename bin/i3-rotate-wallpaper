@@ -1,23 +1,15 @@
 #!/bin/sh
 
-# put this in a cronjob.  it will only do something if it's been at
-# least a day since the wallpaper was changed
+. $HOME/.shenv
 
 set -e
 
 # space-separated dirs where wallpaper can be found
 dirs="$HOME/lib/annex/doc/img/wallpaper/pro"
 
-if ! [ -e "$HOME/local/wallpaper.png" ] \
-        || ( [ -n "$(find $HOME/local/wallpaper.png -newermt '1 day ago')" ] \
-             && ! [ "$1" = "-f" ] ); then
-    exit 0
-fi
-
-dims="$(xdpyinfo | grep dimensions: | awk '{print $2}')"
-
 # https://stackoverflow.com/a/16758439
 img="$(find $dirs -name '*' -exec file -L {} \; | grep -o -P '^.+: \w+ image' | shuf -n 1 | cut -d: -f1)"
+dims="$(xdpyinfo | grep dimensions: | awk '{print $2}')"
 
 # this will just size up images with the correct aspect ratio.  For
 # images with the wrong aspect ratio, it'll crop them.  I find that's

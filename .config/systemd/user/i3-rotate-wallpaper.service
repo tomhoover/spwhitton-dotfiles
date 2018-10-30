@@ -1,0 +1,6 @@
+[Unit]
+Description=Rotate i3 wallpaper
+
+[Service]
+Type=oneshot
+ExecStart=%h/bin/i3-rotate-wallpaper

@@ -12,4 +12,3 @@ MAILTO=spwhitton@spwhitton.name
 
 */15 * * * * chronic doccheckin
 */30 * * * * chronic nice ionice -c 3 notmuch new
-0 */2 * * * i3-rotate-wallpaper

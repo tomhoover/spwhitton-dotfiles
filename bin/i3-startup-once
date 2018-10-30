@@ -10,6 +10,12 @@
 
 in-develacc || i3-startup-i3lock
 
+# ---- wallpaper rotation
+
+if [ -e "$HOME/local/wallpaper.png" ]; then
+    systemctl --user start i3-rotate-wallpaper.timer
+fi
+
 # ---- GTK
 
 gnome-settings-daemon &
