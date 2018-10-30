@@ -1,0 +1,15 @@
+{
+    "__comment": "always check checksums to avoid totally broken uploads",
+    "+hooks": [
+        "checksums"
+    ],
+
+    "__comment": "require explicit selection of ftp-master",
+    "default_host_main": "debomatic-amd64",
+
+    "__comment": "verbose build logs can be useful",
+    "full_upload_log": true,
+
+    "__comment": "avoid any problems with dgit (#827879)",
+    "run_lintian": false
+}

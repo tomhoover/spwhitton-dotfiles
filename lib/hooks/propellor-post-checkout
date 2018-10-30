@@ -11,6 +11,9 @@ my $branch = `git name-rev --name-only $head`;
 chomp $branch;
 
 if ( $flag && "$branch" ne "debian" ) {
+    # We create a cabal sandbox so that Emacs' haskell-mode ignores
+    # stack.yaml.  We don't need to use stack because Propellor's deps
+    # are always installed as system packages
     unless ( -d ".cabal-sandbox" ) {
         system "cabal sandbox init";
     }

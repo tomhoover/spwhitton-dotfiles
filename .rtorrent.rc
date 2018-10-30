@@ -40,7 +40,7 @@ port_range = 49167-49167
 use_udp_trackers = yes
 encryption = allow_incoming,try_outgoing,enable_retry
 dht = disable
-# dht_port = 6881
+# dht_port = 49167
 peer_exchange = no
 # fix any cert problems
 network.http.ssl_verify_peer.set = 0

@@ -1,0 +1,23 @@
+#!/bin/sh
+
+. $HOME/.shenv
+
+# The primary purpose of my pre-new and post-new scripts is to
+# maintain the 'draft', 'spam', 'deleted' and 'unread' tags such that
+# the only data in the notmuch database that cannot be reproduced from
+# the Maildir is which threads have been killed, which is not
+# important information.  Then there is no need to sync the notmuch
+# database between machines.  Syncing the maildir with mbsync(1) is
+# sufficient.
+
+# Note that another aspect of this setup is not using an 'inbox' tag.
+
+# In this script (actually within movemail), we move mail according to
+# tags that may have been added since the last 'notmuch new' run.
+# Then we sync with my IMAP server.  Then in the post-new script we
+# add tags to new messages in particular folders
+
+offline || movemail
+
+# ensure that notmuch is able to detect renames by my annexfmail script
+ionice -c 3 expand-annex-mboxes

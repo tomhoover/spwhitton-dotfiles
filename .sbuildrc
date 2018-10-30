@@ -2,12 +2,13 @@
 
 $pgp_options = ['-us', '-uc'];
 
-# `dht make-all` doesn't like this
-#$build_source = 1;
+# sbuild is not for building source packages
+$build_source = 0;
+# ... but arch:all please!
 $build_arch_all = 1;
 $distribution = 'unstable';
 
-$run_lintian = 1;
+$run_lintian = 0;
 $lintian_opts = [
     '--allow-root',
     '--color=never',            # make the .build file more readable
@@ -15,17 +16,18 @@ $lintian_opts = [
     '--display-info'
     ];
 
-# don't run by default: see build-for-upload function in .zshrc
+# don't run by default: see sbuild-preupload function in ~/.bashrc
 $run_piuparts = 0;
 $piuparts_opts = [
+    '--no-eatmydata',
     '--schroot',
-    '%r-%a-piuparts',
+    '%r-%a-sbuild',
     '--fail-if-inadequate',
     # '--fail-on-broken-symlinks', # too many false positives
     '--log-level=info',
     ];
 
-# don't run by default: see build-for-upload function in .zshrc
+# don't run by default: see sbuild-preupload function in ~/.bashrc
 $run_autopkgtest = 0;
 $autopkgtest_root_args = "";
 $autopkgtest_opts = ["--", "schroot", "%r-%a-sbuild"];

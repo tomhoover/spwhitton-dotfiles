@@ -1,0 +1,16 @@
+#!/bin/sh
+
+set -e
+
+. $HOME/.shenv
+
+uuid=$(date +%s)
+
+ssh spw@tty.sdf.org mv /var/mail/spw /sdf/arpa/ns/s/spw/tmp/mbox.$uuid
+scp spw@tty.sdf.org:tmp/mbox.$uuid $HOME/tmp/mbox.$uuid
+mb2md -s $HOME/tmp/mbox.$uuid -d $HOME/.fmail/inbox
+echo "I: after confirming the insert succeeded, rm ~/tmp/mbox.$uuid, and on SDF"
+
+# TODO ask user to confirm number of messages inserted (mb2md prints
+# this number) and then if they answer yes, delete the local and
+# remote copies

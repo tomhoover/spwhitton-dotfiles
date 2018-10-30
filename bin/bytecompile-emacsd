@@ -13,7 +13,8 @@ set -e
 
 if which emacs >/dev/null 2>&1; then
     if which chronic >/dev/null 2>&1; then
-        chronic emacs --batch --eval "(batch-byte-compile t)" \
+        chronic emacs -L $HOME/.emacs.d/lisp \
+                --batch --eval "(batch-byte-compile t)" \
                 $HOME/.emacs.d/*.el $HOME/.emacs.d/*/*.el
 
         # a byte-compiled init file is inconvenient because it gets

@@ -1,0 +1,33 @@
+#!/bin/sh
+
+set -e
+
+. $HOME/.shenv
+
+# TODO generalise to a script that reads a git config value for the
+# fingerprint to look for, updates branches specified by user and is
+# able to handle updating by both merge and rebase
+
+# And instead of parsing the --raw output, use the technique in
+# propellor's verifyOriginBranch function -- more robust
+
+# Before running this script, will want to unset all upstreams:
+#    for head in $(git for-each-ref --format='%(refname)' refs/heads/); do
+#        branch=$(echo "$head" | cut -d/ -f3)
+#        git branch --unset-upstream "$branch" 2>/dev/null || true
+#    done
+
+git fetch origin
+if git verify-commit --raw origin/master 2>&1 \
+        | grep "VALIDSIG .* 8DC2487E51ABDD90B5C4753F0F56D0553B6D411B"; then
+    # try to fast-forward first; if that fails, do a rebase
+    if ! git merge-ff master origin/master; then
+        branch=$(git rev-parse --abbrev-ref HEAD)
+        [ "$branch" = "master" ] || git checkout master
+        git rebase origin/master
+        [ "$branch" = "master" ] || git checkout "$branch"
+    fi
+else
+    echo >&2 "uh oh, dotfiles remote head is not PGP-signed by Sean"
+    exit 1
+fi

@@ -1,9 +1,6 @@
 fail-on-warnings=yes
-
-# from mapreri on #debian-mentors
-#info=yes
-display-info=yes
-display-experimental=yes
-pedantic=yes
+display-info=no
+display-experimental=no
+pedantic=no
 show-overrides=no
 color=always

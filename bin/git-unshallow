@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# assumes remote named origin
+
+git fetch --unshallow
+git remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
+git fetch origin

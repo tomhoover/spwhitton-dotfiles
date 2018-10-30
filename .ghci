@@ -4,5 +4,5 @@
 -- set the prompt
 :set prompt "ghci> "
 
--- after install haskell-docs, can now type :doc function to get docs on a function
-:def doc \input -> return (":!haskell-docs " ++ input)
+-- -- after install haskell-docs, can now type :doc function to get docs on a function
+-- :def doc \input -> return (":!haskell-docs " ++ input)

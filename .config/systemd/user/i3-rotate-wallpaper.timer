@@ -1,0 +1,6 @@
+[Unit]
+Description=Run i3-rotate-wallpaper daily
+
+[Timer]
+OnActiveSec=1 day
+OnUnitActiveSec=1 day

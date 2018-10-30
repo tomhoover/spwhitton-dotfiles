@@ -15,13 +15,13 @@ $CONFIG{'email'} = 'spwhitton@spwhitton.name';
 #   $CONFIG{'keyid'} = [ qw{FEDCBA9876543210} ];
 #  or, if you have more than one key:
 #   $CONFIG{'keyid'} = [ qw{0123456789ABCDEF 89ABCDEF76543210} ];
-$CONFIG{'keyid'} = [ qw{0F56D0553B6D411B} ];
+$CONFIG{'keyid'} = [ qw{8DC2487E51ABDD90B5C4753F0F56D0553B6D411B} ];
 
 # Select this/these keys to sign with
-#$CONFIG{'local-user'} = [ qw{0F56D0553B6D411B} ];
+#$CONFIG{'local-user'} = [ qw{8DC2487E51ABDD90B5C4753F0F56D0553B6D411B} ];
 
 # Additionally encrypt messages for these keyids
-$CONFIG{'also-encrypt-to'} = [ qw{0F56D0553B6D411B} ];
+$CONFIG{'also-encrypt-to'} = [ qw{8DC2487E51ABDD90B5C4753F0F56D0553B6D411B} ];
 
 # Mail template to use for the encrypted part
 $CONFIG{'mail-template'} = << 'EOM';
@@ -54,3 +54,9 @@ Regards,
 EOM
 
 $CONFIG{'mail'} = 'yes';
+
+# setting this means that we can't selectively sign UIDs -- to do
+# that, either avoid sending out the unwanted mail messagse (and
+# delete caff's public keyring containing the unwanted sigs) or turn
+# this off when need to selectively sign UIDs
+$CONFIG{'gpg-sign-args'} = "save";

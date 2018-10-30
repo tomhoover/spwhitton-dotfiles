@@ -1,0 +1,4 @@
+#!/bin/sh
+
+firejail --profile=~/.config/firejail/hexographer.profile \
+         java -jar -Xmx2000M ~/lib/annex/big/software/hexographer.jar

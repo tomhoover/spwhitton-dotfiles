@@ -1,8 +1,0 @@
-#!/bin/bash
-
-output=$(mairix --threads $@)
-#echo $output
-
-if ! [ "$output" = "Matched 0 messages" ]; then
-    mutt -Rf ~/local/mairixresults
-fi

@@ -6,6 +6,9 @@ if [ "$(hostname -f)" = "athena.silentflame.com" ]; then
     # start irssi under dtach if it's not running
     if ! pgrep -u $LOGNAME irssi >/dev/null; then
         rm -f $HOME/local/irssi.dtach.socket
+        # if I change timezone, patch the following line on 'athena'
+        # branch of dotfiles repo; e.g. `TZ=Asia/Taipei`.  Then in
+        # running session, do e.g. /script exec $ENV{'TZ'}='Asia/Taipei';
         TERM=xterm TZ=MST dtach -n $HOME/local/irssi.dtach.socket irssi 2>&1 >/tmp/three
     fi
     
@@ -17,6 +20,11 @@ if [ "$(hostname -f)" = "athena.silentflame.com" ]; then
         dtach -a $HOME/local/irssi.dtach.socket
     fi
 else
-    # on a workstation, get connected to ma
-    mosh athena /home/swhitton/bin/ii
+    # on a workstation, get connected to athena
+    if [[ $- == *i* ]]; then
+        mosh athena /home/spwhitton/bin/ii
+    else
+        xfce4-terminal --title="irssi" -x /bin/sh \
+              -c "mosh athena /home/spwhitton/bin/ii"
+    fi
 fi

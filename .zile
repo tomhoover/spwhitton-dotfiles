@@ -1,13 +1,13 @@
 ;;;; ---- preferences ----
 
-(setq indent-tabs-mode nil)
+;; (setq indent-tabs-mode nil)
 ;; (setq transient-mark-mode nil)
 (setq make-backup-files nil)
-(setq tab-width 4)
+;; (setq tab-width 4)
 
 ;;;; ---- bindings ----
 
-(global-set-key "\C-h" 'backward-delete-char)
+;; (global-set-key "\C-h" 'backward-delete-char)
 (global-set-key "\C-w" 'backward-kill-word)
 (global-set-key "\C-x\RET" 'execute-extended-command)
 (global-set-key "\C-x\C-m" 'execute-extended-command)

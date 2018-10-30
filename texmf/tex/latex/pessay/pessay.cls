@@ -99,12 +99,14 @@
 \RequirePackage[sc,sf,bf,compact,medium]{titlesec}
 \RequirePackage{textcomp}
 \RequirePackage[norule,splitrule,stable,multiple]{footmisc}
+\RequirePackage{fnpct}
 %% \RequirePackage[utf8]{inputenc}
 %% \RequirePackage{ellipsis}
 %% \RequirePackage{stmaryrd}
 \RequirePackage{ifthen}
 %% \RequirePackage[all]{nowidow}
 \RequirePackage{fancyhdr}
+\RequirePackage{relsize}       % for \smaller in quotation font size
 \initialdouble                  % defined above; loads setspace package
 
 %% ---- Useful enumerations
@@ -166,4 +168,12 @@
 
 %% ---- Style inline quotations
 
-\expandafter\def\expandafter\quote\expandafter{\quote\onehalfspacing\small}
+\expandafter\def\expandafter\quote\expandafter{\quote\onehalfspacing\smaller[0.5]}
+
+%% ---- Lists
+
+%% Try to bring item separation in line with line spacing
+
+\let\tempone\enumerate
+\let\temptwo\endenumerate
+\renewenvironment{enumerate}{\tempone\addtolength{\itemsep}{0.5\baselineskip}}{\temptwo}

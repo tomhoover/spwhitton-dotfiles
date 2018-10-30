@@ -1,0 +1,22 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+use lib "$ENV{HOME}/lib/perl5";
+
+use ScriptStatus;
+use Term::UI;
+
+my $term = Term::ReadLine->new('brand');
+
+@ARGV or die "tell me which repo to back up";
+my $repo = shift @ARGV;
+chdir "/home/spw/src/$repo" or die "repo does not exist";
+system "cat .git/config | grep \"url =\"";
+system "cat .git/config | grep \"insteadOf\"";
+system "cat .git/config | grep \"pushInsteadOf\"";
+exit unless $term->ask_yn(
+                              prompt => "Intend to push to these URIs?",
+                              default => 'n',
+                             );
+system "git push-all --no-verify";

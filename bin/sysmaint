@@ -1,10 +1,31 @@
 #!/usr/bin/perl
 
-# Cold (offline) backups & other elements in a weekly maintenance routine
-
-# The idea is that if this script dies it can be safely be re-run from the beginning
-
-# Note that each backup drive needs a unique filesystem label!
+# This is meant to walk me through maintenance tasks that
+# can't/shouldn't happen unattended by means of Propellor and/or cron
+# jobs installed by Propellor.
+#
+# That includes, at least:
+#
+# - apt upgrades of bare metal hosts (other than automatic security
+#   upgrades)
+#
+# - checking in and backing up homedirs, which I need to do on all
+#   machines, not just those for which I am root
+#
+# - cleaning up temporary files
+#
+# - backups to devices usually kept offline
+#
+# Assumptions we make:
+#
+# - Each offline backup drive I use has a unique filesystem label.
+#   This means that exactly one drive will ever be mounted to
+#   /media/$USER/$foo on a given machine.
+#
+# Other notes:
+#
+# - If this script dies, it should be possible to just run it again
+#   from the beginning.
 
 use strict;
 use warnings;
@@ -13,6 +34,7 @@ no warnings "experimental::smartmatch";
 
 use Dpkg::Version;
 use Term::UI;
+use File::Which;
 use ShellSequence;
 use ScriptStatus;
 use File::Grep "fgrep";
@@ -21,42 +43,75 @@ use File::chdir;
 use Capture::Tiny qw/capture_merged capture/;
 use List::MoreUtils "apply";
 use File::Spec::Functions "rel2abs";
-use Sys::Hostname;
+use Switch;
+
+# ---- globals
 
 my $seq = ShellSequence->new();
 my $term = Term::ReadLine->new('brand');
-my $host = hostname;
+my $host = `hostname -f`;
 
 # ---- config
 
-our @src_exceptions = qw/hscripts/;
+# where are our git repos?  a host defined in ~/.ssh/config
+our $git_host = "athena";
+
+# on the $git_host, where are our repositories?
 our $git = "/srv/git/repositories";
 
-# since I am now using exclusively gcrypt's rsync mode, I do not need
-# to detect whether a repo is a gcrypt repo before attempting to back
-# it up.  Note that git-remote-gcrypt has a --check option for doing
-# this, though
+# on the $git_host, where are our git-remote-gcrypt repos?
+# (we have them in a separate dir because we use exclusively gcrypt's
+# rsync mode.  otherwise, if mixed in with regular git repos, gcrypt
+# has a --check option)
 our $gcrypt = "/srv/gcrypt";
 
 # annexes that should be inited on the backup drive, and synced with
 # the corresponding annex in $HOME.  This list is manually maintained
-# because I do not want to run `git annex init` en masse
+# because I do not want this script to run `git annex init` in lots of
+# repos, creating bogus UUIDs
 my @annexes = qw/annex.git wikiannex.git dionysus.git/;
+
+# hosts configuration
+#
+# This config is meant to set the contents of three variables, the
+# default values and meanings of which are:
+#
+# - $can_sudo = 0;            whether we can become root using sudo(1) on this host
+# - $can_push = 1;            whether we can push any of our git repos in $HOME to
+#                             their origin remotes (if can push some, set to '1'
+#                             and use .mrconfig to avoid trying to push the others)
+# - $check_for_extdrive = 0;  whether we should expect to have an
+#                             external drive plugged in and referenced on the
+#                             command line
+
+our $can_sudo = 0;
+our $can_push = 1;
+our $check_for_extdrive = 0;
+switch ("$ENV{USER}\@$host") {
+    case /^root@/                        { $can_sudo = 1; $can_push = 0; last }
+    case /^spw@.*\.silentflame\.com$/    { $can_push = 0; last } # develacc
+    case /\.silentflame\.com$/           { $can_sudo = 1; next }
+    case /hephaestus\.silentflame\.com$/ { $check_for_extdrive = 1; next }
+}
 
 # ---- prep
 
 chdir $ENV{HOME};
-system "mount lib/athena 2>/dev/null" || 1;
 my ($loc, $drive_name, $short_drive_name);
 
-if (@ARGV) {
-    $loc = rel2abs(shift @ARGV);
-    die "$loc is not a directory" unless ( -d $loc );
-    my @mountpoints = split /^/, `mount | cut -d' ' -f3`;
-    @mountpoints = apply { $_ =~ s/^\s+|\s+$//g } @mountpoints;
+my @ARGV_positional = grep { $_ !~ m/^--/ } @ARGV;
+my @ARGV_options = grep { $_ =~ m/^--/ } @ARGV;
+
+if (@ARGV_positional) {
+    $loc = rel2abs(shift @ARGV_positional);
     $drive_name = $loc;
     $short_drive_name = basename $drive_name;
-    die "$loc is not a removable drive" unless ( $drive_name ~~ @mountpoints );
+
+    my @mountpoints = split /^/, `mount | cut -d' ' -f3`;
+    @mountpoints = apply { $_ =~ s/^\s+|\s+$//g } @mountpoints;
+
+    die "$loc is not a directory" unless ( -d $loc );
+    die "$drive_name is not a removable drive" unless ( $drive_name ~~ @mountpoints );
 
     if ( ! -d "$loc/gitbk" ) {
         status "it looks like you haven't backed up to this media before";
@@ -68,7 +123,7 @@ if (@ARGV) {
             exit 1;
         }
     }
-} else {
+} elsif ($check_for_extdrive) {
     status "you didn't specify a drive to perform a coldbkup to as a command";
     status "line argument to this script";
     exit unless $term->ask_yn(
@@ -77,12 +132,14 @@ if (@ARGV) {
                              );
 }
 
+User:
+
+goto System if ("--skip-user" ~~ @ARGV_options
+                || "--only-system" ~~ @ARGV_options);
+
 # ---- pre-backup cleanup tasks
 
 $seq->add_should_zero("ls tmp");
-$seq->add_should_zero("ssh athena ls tmp");
-$seq->add_should_zero("ssh athena ls local/files/tmp");
-$seq->add_should_zero("ls lib/athena/tmp");
 $seq->add_should_succeed("src-register-all");
 $seq->run();
 
@@ -115,6 +172,20 @@ while (42) {
     }
 }
 
+$seq->add_should_succeed("ls local/big");
+$seq->add_should_succeed("ls local/pub");
+$seq->run();
+$term->get_reply(
+                 prompt => "Consider cleaning up/annexing files in these two dirs.",
+                 default => 'okay',
+                );
+$seq->add_should_succeed("ls");
+$seq->run();
+$term->get_reply(
+                 prompt => "Clean up any loose files, e.g. from sbuild runs.",
+                 default => 'done',
+                );
+
 # ---- standard backup procedure
 
 # run a restow to catch if we need to run `mr adopt`
@@ -123,7 +194,7 @@ $seq->add_should_succeed("mr -ms autoci");
 # `mr -ms isclean` checks for stuff to be checked in ...
 $seq->add_should_succeed("mr -ms isclean");
 $seq->add_should_succeed("mr -s up");
-$seq->add_should_succeed("mr -s push");
+$can_push and $seq->add_should_succeed("mr -s push");
 # ... then `mr -ms status` finds unpushed branches & stashes
 $seq->add_should_zero("mr -ms status");
 
@@ -135,12 +206,14 @@ $seq->run();
 if ( defined $loc ) {
 
     # ---- github-backup
-    {
-        mkdir "$loc/gitbk/github" unless ( -d "$loc/gitbk/github" );
-        local $CWD = "$loc/gitbk/github";
-        $seq->add_should_succeed("github-backup spwhitton");
-        $seq->run();
-    }
+    # handed over to a cronjob on athena
+    # {
+    #     mkdir "$loc/gitbk/github" unless ( -d "$loc/gitbk/github" );
+    #     local $CWD = "$loc/gitbk/github";
+    #     # TODO should login to github API to work around rate limiting
+    #     $seq->add_should_succeed("github-backup spwhitton");
+    #     $seq->run();
+    # }
 
     # ---- athena repos
     my $athena_git_repos = capture {
@@ -162,101 +235,115 @@ if ( defined $loc ) {
 
     foreach my $repo ( @athena_gcrypt_repos ) {
         $repo =~ s/\n//g;
-        backup_repo("gcrypt::rsync://athena:/srv/git/$repo", "athena_gcrypt");
+        backup_repo("gcrypt::rsync://athena:/srv/gcrypt/$repo", "athena_gcrypt");
     }
 
     # ---- misc. repos
 
     # Debian packages I'm responsible for, and a few other Debian repos
 
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/wiki.git", "alioth", "pkg-emacsen");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/dh-elpa.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/dh-make-elpa.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/yasnippet.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/ebib.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/emacs-async.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/emacs-buttercup.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/emacs-highlight-indentation.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/emacs-noflet.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/epl.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/f-el.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/flx.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/flycheck.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/helm.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/let-alist.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/paredit-el.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/parsebib.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/perspective-el.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/pkg-info-el.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/popup-el.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/projectile.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/persp-projectile.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/helm-projectile.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/rainbow-delimiters.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/seq-el.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/s-el.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/shut-up.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/smex.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/ws-butler.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/zenburn-emacs.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/aggressive-indent-mode.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/ert-async-el.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/git-annex-el.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/debpaste-el.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/magit-annex.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/xml-rpc-el.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/wc-mode.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/deft.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/key-chord-el.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/paredit-everywhere.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/visual-regexp-el.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/pointback.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/emacs-openwith.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-emacsen/pkg/emacs-world-time-mode.git", "alioth");
+    backup_repo("https://salsa.debian.org/emacsen-team/dh-elpa", "salsa");
+    backup_repo("https://salsa.debian.org/emacsen-team/yasnippet", "salsa");
+    backup_repo("https://salsa.debian.org/emacsen-team/emacs-async", "salsa");
+    backup_repo("https://salsa.debian.org/emacsen-team/emacs-highlight-indentation", "salsa");
+    backup_repo("https://salsa.debian.org/emacsen-team/emacs-noflet", "salsa");
+    backup_repo("https://salsa.debian.org/emacsen-team/f-el", "salsa");
+    backup_repo("https://salsa.debian.org/emacsen-team/flx", "salsa");
+    backup_repo("https://salsa.debian.org/emacsen-team/flycheck", "salsa");
+    backup_repo("https://salsa.debian.org/emacsen-team/let-alist", "salsa");
+    backup_repo("https://salsa.debian.org/emacsen-team/paredit-el", "salsa");
+    backup_repo("https://salsa.debian.org/emacsen-team/parsebib", "salsa");
+    backup_repo("https://salsa.debian.org/emacsen-team/perspective-el", "salsa");
+    backup_repo("https://salsa.debian.org/emacsen-team/pkg-info-el", "salsa");
+    backup_repo("https://salsa.debian.org/emacsen-team/popup-el", "salsa");
+    backup_repo("https://salsa.debian.org/emacsen-team/projectile", "salsa");
+    backup_repo("https://salsa.debian.org/emacsen-team/persp-projectile", "salsa");
+    backup_repo("https://salsa.debian.org/emacsen-team/helm-projectile", "salsa");
+    backup_repo("https://salsa.debian.org/emacsen-team/rainbow-delimiters", "salsa");
+    backup_repo("https://salsa.debian.org/emacsen-team/seq-el", "salsa");
+    backup_repo("https://salsa.debian.org/emacsen-team/s-el", "salsa");
+    backup_repo("https://salsa.debian.org/emacsen-team/dash-functional-el", "salsa");
+    backup_repo("https://salsa.debian.org/emacsen-team/shut-up", "salsa");
+    backup_repo("https://salsa.debian.org/emacsen-team/smex", "salsa");
+    backup_repo("https://salsa.debian.org/emacsen-team/ws-butler", "salsa");
+    backup_repo("https://salsa.debian.org/emacsen-team/zenburn-emacs", "salsa");
+    backup_repo("https://salsa.debian.org/emacsen-team/aggressive-indent-mode", "salsa");
+    backup_repo("https://salsa.debian.org/emacsen-team/ert-async-el", "salsa");
+    backup_repo("https://salsa.debian.org/emacsen-team/git-annex-el", "salsa");
+    backup_repo("https://salsa.debian.org/emacsen-team/debpaste-el", "salsa");
+    backup_repo("https://salsa.debian.org/emacsen-team/magit-annex", "salsa");
+    backup_repo("https://salsa.debian.org/emacsen-team/xml-rpc-el", "salsa");
+    backup_repo("https://salsa.debian.org/emacsen-team/wc-mode", "salsa");
+    backup_repo("https://salsa.debian.org/emacsen-team/key-chord-el", "salsa");
+    backup_repo("https://salsa.debian.org/emacsen-team/paredit-everywhere", "salsa");
+    backup_repo("https://salsa.debian.org/emacsen-team/visual-regexp-el", "salsa");
+    backup_repo("https://salsa.debian.org/emacsen-team/pointback", "salsa");
+    backup_repo("https://salsa.debian.org/emacsen-team/emacs-openwith", "salsa");
+    backup_repo("https://salsa.debian.org/emacsen-team/emacs-world-time-mode", "salsa");
+    backup_repo("https://salsa.debian.org/emacsen-team/helm-dash", "salsa");
+    backup_repo("https://salsa.debian.org/emacsen-team/message-templ", "salsa");
+    backup_repo("https://salsa.debian.org/emacsen-team/esxml", "salsa");
+    backup_repo("https://salsa.debian.org/emacsen-team/emacs-db", "salsa");
+    backup_repo("https://salsa.debian.org/emacsen-team/emacs-kv", "salsa");
+    backup_repo("https://salsa.debian.org/emacsen-team/emacs-helm-ag", "salsa");
+    backup_repo("https://salsa.debian.org/emacsen-team/queue-el", "salsa");
+    backup_repo("https://salsa.debian.org/emacsen-team/spinner-el", "salsa");
+    backup_repo("https://salsa.debian.org/emacsen-team/cider", "salsa");
+    backup_repo("https://salsa.debian.org/emacsen-team/helm", "salsa");
+    backup_repo("https://salsa.debian.org/emacsen-team/epl", "salsa");
+    backup_repo("https://salsa.debian.org/emacsen-team/deft", "salsa");
+    backup_repo("https://salsa.debian.org/emacsen-team/ebib", "salsa");
+    backup_repo("https://salsa.debian.org/emacsen-team/dh-make-elpa", "salsa");
+    backup_repo("https://salsa.debian.org/emacsen-team/nov-el", "salsa");
+    backup_repo("https://salsa.debian.org/emacsen-team/yasnippet-snippets", "salsa");
+    backup_repo("https://salsa.debian.org/emacsen-team/emacs-buttercup", "salsa");
+    backup_repo("https://salsa.debian.org/emacsen-team/dash-el", "salsa");
+    backup_repo("https://salsa.debian.org/emacsen-team/redtick", "salsa");
+    backup_repo("https://salsa.debian.org/emacsen-team/wiki", "salsa", "pkg-emacsen");
+    backup_repo("https://salsa.debian.org/emacsen-team/sesman", "salsa", "pkg-emacsen");
 
-    backup_repo("https://anonscm.debian.org/git/pkg-mozext/classic-theme-restorer.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-mozext/keysnail.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-mozext/ublock-origin.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-mozext/y-u-no-validate.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/pkg-mozext/self-destructing-cookies.git", "alioth");
-    backup_repo("https://anonscm.debian.org/git/collab-maint/mairix.git", "alioth");
+    backup_repo("https://salsa.debian.org/haskell-team/git-annex", "salsa");
 
+    backup_repo("https://salsa.debian.org/python-team/modules/pikepdf", "salsa");
+    backup_repo("https://salsa.debian.org/python-team/modules/pytest-helpers-namespace", "salsa");
+
+    backup_repo("https://salsa.debian.org/dbnpolicy/policy", "salsa");
 }
 
 # TODO luksClose if necessary & umount
 # system "sudo umount $loc";
-
-# ---- remote system maintenance
-
-# TODO put a flag file on athena so this only happens once per week
-# or, better, just rework this so I ssh to athena and run sysmaint
-# there
-
-status "info: you can unmount & eject $loc";
-exit unless $term->ask_yn(
-                          prompt =>
-                          "Backups complete.  Perform remote & local system maintainance?"
-                         );
-
-status "checking athena's storage";
-system "ssh athena df -h";
-my $disc_space_okay = $term->ask_yn(
-                                    prompt => "Does athena have enough free disc space?",
-                                    default => 'y',
-                                   );
-die "deal with athena's low free disc space" unless $disc_space_okay;
-
-status "checking athena's uptime";
-system "ssh athena uptime";
-my $athena_rebooted = $term->ask_yn(
-                                    prompt => "Was athena rebooted?",
-                                    default => 'n',
-                                   );
-die "perform athena reboot procedure" if $athena_rebooted;
-
-$seq->add_should_succeed("ssh -t athena 'sudo apt-get update && sudo apt-get upgrade && sudo apt-get autoremove && sudo apt-get autoclean'");
+status "info: you can unmount & eject $loc" if ( defined $loc );
 
 # ---- local system maintenance
+
+System:
+
+exit unless $can_sudo;
+exit if ("--skip-system" ~~ @ARGV_options);
+exit if ("--only-user" ~~ @ARGV_options);
+
+unless ("--only-system" ~~ @ARGV_options) {
+    exit unless $term->ask_yn(
+                          prompt =>
+                          "Backups complete.  Perform local system maintainance?"
+                         );
+}
+
+$seq->add_should_succeed("df -h");
+$seq->run();
+$term->get_reply(
+                 prompt => "Confirm that host has enough disc space, or clean up some files.",
+                 default => 'done',
+                );
+
+if ($host eq "athena") {
+    $seq->add_should_succeed("uptime");
+    $seq->run();
+    $term->get_reply(
+                     prompt => "If athena was rebooted, perform athena reboot procedure.",
+                     default => 'done',
+                    );
+}
 
 # clean packages installed by mk-build-deps(1)
 $seq->add_should_succeed("sudo aptitude remove '~n-build-deps\$'");
@@ -265,11 +352,31 @@ $seq->add_should_succeed("sudo apt-get update");
 $seq->add_should_succeed("sudo apt-get upgrade");
 $seq->add_should_succeed("sudo apt-get dist-upgrade");
 $seq->add_should_succeed("sudo apt-get -y autoremove");
+$seq->add_should_succeed("sudo apt-get autoclean");
 
-$seq->add_should_zero("mailq | grep -v 'Mail queue is empty'");
-$seq->add_should_zero("ssh athena mailq | grep -v 'Mail queue is empty'");
-
+which 'mailq' and $seq->add_should_zero("mailq | grep -v 'Mail queue is empty'");
 $seq->run();
+
+$seq->add_should_succeed("dpkg -l | awk '/^rc/ { print \$2 }'");
+$seq->run();
+$term->get_reply(
+                 prompt => "If packages shown, consider `apt-get purge \$(dpkg -l | awk '/^rc/ { print \$2 }')`",
+                 default => 'okay',
+                );
+
+$seq->add_should_succeed("aptitude search ?obsolete || true");
+$seq->run();
+$term->get_reply(
+                 prompt => "If packages shown, consider removing no longer available from the mirrors: `aptitude purge ?obsolete`",
+                 default => 'okay',
+                );
+
+$seq->add_should_succeed("dpkg-query -W '-f=\${Package}\\n\${Conffiles}\\n' | awk '/^[^ ]/{pkg=\$1}/ obsolete\$/{print pkg,\$0}'");
+$seq->run();
+$term->get_reply(
+                 prompt => "If output, consider deleting these obsolete conffiles and then reinstalling packages providing them.",
+                 default => 'okay',
+                );
 
 # ---- subroutines
 
@@ -309,7 +416,6 @@ sub find_dirty_src {
                  || (-l $f && $f =~ /orig\.tar/)
                  # also permit gbp orig tarballs
                  || ($f =~ /orig\.gbp\.tar/)
-                 || $short ~~ @src_exceptions
                  || -d "$f/.git" || -d "$f/.hg" # handled by src-register-all
                ) {
             print "$f\n";
@@ -333,7 +439,7 @@ sub backup_repo {
         } else {
             ( undef, $short ) = split /:([^:]+)$/, $long;
         }
-        $short =~ s/\/srv\/git\///;
+        $short =~ s/\/srv\/(git|gcrypt)\///;
     }
 
     $short = "$short.git" unless $short =~ /\.git$/;

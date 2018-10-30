@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# TODO use `sudo machinectl shell spw@develacc $shell` instead because
+# it sets up the environment better afaict
+# shell=$(sudo enter-develacc "getent passwd spw | cut -d: -f5")
+# (^ enter-devleacc probably still best for non-interactive usage)
+
+# perhaps just a shell alias
+
+sudo $HOME/bin/develacc-inner

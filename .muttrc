@@ -12,7 +12,7 @@ set folder=~/.fmail/
 set spoolfile = +inbox
 set record = +sent
 set postponed = +drafts
-set certificate_file = ~/.mutt/certificates
+# set certificate_file = ~/.mutt/certificates
 set move = no
 set delete = ask-yes
 #unset edit_hdrs
@@ -20,7 +20,7 @@ set edit_hdrs
 set include
 set reply_to
 set abort_nosubject = no
-alternates '(spwhitton@spwhitton.name)|(spwhitton@email.arizona.edu)'
+# alternates '(spwhitton@spwhitton.name)|(spwhitton@email.arizona.edu)'
 set hdr_format="%4C %Z %{%m/%d} %-15.15F (%4c) %s"
 unset help
 set mail_check=20
@@ -30,21 +30,22 @@ unset arrow_cursor
 set fast_reply
 set pager_context = 1
 set reply_to = ask-yes
-set recall = ask-yes
-#set pager_stop
+set pager_stop
 set tmpdir="~/local/mutt"
 set resolve = yes
 set noconfirmappend
 set abort_unmodified = no
 set mark_old = no                  # better with mbsync
 set editor = "emacsclient -t -a \"mg -n -f auto-fill-mode +8\""
-#set editor="switch-to-emacsclient"
 set tilde
 set smart_wrap
 set wrap=80
 unset markers
 set wait_key=no
-set print_command="muttprint"
+
+# use 'R' to recall, rather than asking to recall when we compose --
+# this makes it less inconvenient to have multiple drafts queued
+set recall = no
 
 # --- CatMail hooks
 
@@ -98,7 +99,8 @@ set pgp_replysignencrypted = yes
 set pgp_replyencrypt = yes
 set pgp_timeout = 120
 set fcc_clear = no
-set pgp_encrypt_self = yes
+# apparently unknown variable
+#set pgp_encrypt_self = yes
 set pgp_use_gpg_agent = yes
 #set pgp_strict_enc
 
@@ -114,13 +116,13 @@ set pgp_encrypt_sign_command="/usr/lib/mutt/pgpewrap gpg --use-agent --batch --q
 
 # --- message headers
 
-hdr_order From: Date: User-Agent: X-Mailer: x-oxford-username: Message-Id: To: Cc: Reply-To: Subject:
+hdr_order From: Date: x-oxford-username: Message-Id: To: Cc: Reply-To: Subject:
 ignore *
-unignore From: Date: User-Agent: X-Mailer: x-oxford-username: Message-Id: To: Cc: Reply-To: Subject:
+unignore From: Date: x-oxford-username: Message-Id: To: Cc: Reply-To: Subject:
 
 # --- mailboxes
 
-mailboxes +inbox +sent +debian +debian/.bulk +haskell +spam +feeds
+mailboxes +inbox +sent +lists +haskell +spam +feeds
 
 # --- message part viewing
 
@@ -137,51 +139,50 @@ source ~/doc/mutt-groups           # keep shortcut groups in a separate
 # --- key bindings
 
 # filtering function keys, some from Jonathan
-macro index <F10> "l((~N|~O)!~D)<return><home>" "blah"
-macro index <F9> "lall\n<end>" "blahblah"
-macro index,pager <F5> "c=inbox<return>" "switch to inbox"
-macro index,pager <F6> "c=sent<return>" "switch to sent"
-# macro index,pager <F7> "c=archive<return>" "switch to archive"
+# macro index <F10> "l((~N|~O)!~D)<return><home>" "limit to mail to be processed"
+# macro index <F9> "lall\n<end>" "limit to all mail"
+# macro index,pager <F5> "c=inbox<return>" "switch to inbox"
+# macro index,pager <F6> "c=sent<return>" "switch to sent"
 bind index,pager <F7> next-unread-mailbox
 
 # on startup, don't show new messages: distractions
 # works when I type mutt into a terminal, but not if I use xmonad launcher shortcut...
-folder-hook inbox push "<limit>!~N!~O!~D<enter><last-entry>"
+# folder-hook inbox push "<limit>!~N!~O!~D<enter><last-entry>"
 
 # quickly save attachments, woo
 macro attach S "<save-entry><kill-line>~/tmp/<enter>y<enter>"
 
-# extract URLS--config from http://www.memoryhole.net/~kyle/extract_url/
-# the command to use these is Ctrl-J which picks the right one
-macro index,pager ,b "<enter-command> set my_pdsave=\$pipe_decode<enter>\
-<enter-command> unset pipe_decode<enter>\
-<pipe-message>extract_url.pl<enter>\
-<enter-command> set pipe_decode=\$my_pdsave<enter>" "get URLs"
+# # extract URLS--config from http://www.memoryhole.net/~kyle/extract_url/
+# # the command to use these is Ctrl-J which picks the right one
+# macro index,pager ,b "<enter-command> set my_pdsave=\$pipe_decode<enter>\
+# <enter-command> unset pipe_decode<enter>\
+# <pipe-message>extract_url.pl<enter>\
+# <enter-command> set pipe_decode=\$my_pdsave<enter>" "get URLs"
 
-macro index,pager ,B "<enter-command> set my_pdsave=\$pipe_decode<enter>\
-<enter-command> set pipe_decode<enter>\
-<pipe-message>extract_url.pl<enter>\
-<enter-command> set pipe_decode=\$my_pdsave<enter>" "decrypt message, then get URLs"
+# macro index,pager ,B "<enter-command> set my_pdsave=\$pipe_decode<enter>\
+# <enter-command> set pipe_decode<enter>\
+# <pipe-message>extract_url.pl<enter>\
+# <enter-command> set pipe_decode=\$my_pdsave<enter>" "decrypt message, then get URLs"
 
-message-hook .  'macro index,pager \cj ,b "URL viewer"'
-message-hook ~G 'macro index,pager \cj ,B "URL viewer"'
+# message-hook .  'macro index,pager \cj ,b "URL viewer"'
+# message-hook ~G 'macro index,pager \cj ,B "URL viewer"'
 
-# quickly make a TODO item and flag so it doesn't get archived
-# macro index \co "!k|~/bin/capture-mail\nj"
-# macro pager \co "q!k|~/bin/capture-mail\nj"
-macro index \co "|~/bin/capture-mail\nj"
-macro pager \co "q|~/bin/capture-mail\nj"
+# # quickly make a TODO item and flag so it doesn't get archived
+# # macro index \co "!k|~/bin/capture-mail\nj"
+# # macro pager \co "q!k|~/bin/capture-mail\nj"
+# macro index \co "|~/bin/capture-mail\nj"
+# macro pager \co "q|~/bin/capture-mail\nj"
 
 # open RSS links in browser (fails because for some reason mutt can't bind <f{1--4}>
 # macro index,pager <F4> "<pipe-message>grep '\^http' | sed 's/\^/-new-tab /' | xargs firefox<enter>" "open all URLs at beginning of lines in message in browser tabs"
 
-# open rss2email source link in browser
-# macro pager <f12> "<pipe-message>grep \"\^URL: http\" | xargs firefox -new-tab<enter>" "open rss2email source link"
-macro pager ,j "<pipe-message>egrep 'X-RSS-URL:' | cut -d' ' -f2- | xargs firefox -new-tab<enter>" "open rss2email source link"
-folder-hook feeds 'macro pager \cj ,j "URL viewer"'
+# # open rss2email source link in browser
+# # macro pager <f12> "<pipe-message>grep \"\^URL: http\" | xargs firefox -new-tab<enter>" "open rss2email source link"
+# macro pager ,j "<pipe-message>egrep 'X-RSS-URL:' | cut -d' ' -f2- | xargs firefox -new-tab<enter>" "open rss2email source link"
+# folder-hook feeds 'macro pager \cj ,j "URL viewer"'
 
-# train spam filter
-macro index,pager <f11> "<enter-command>unset resolve<enter><clear-flag>N<enter-command>set resolve<enter><save-message>+spam<enter>" "mark as spam"
+# # train spam filter
+# macro index,pager ,s "<enter-command>unset resolve<enter><clear-flag>N<enter-command>set resolve<enter><save-message>+spam<enter>" "mark as spam"
 
 # easier scrolling
 bind pager ] previous-page
@@ -196,18 +197,19 @@ bind index ! flag-message
 bind pager ! flag-message
 bind pager t display-toggle-weed
 
-# printing
-bind index,pager \cP print-message
+# # printing
+# bind index,pager \cP print-message
 
 # safety, since mbsync trash functionality doesn't work with FastMail
 bind generic,index,pager d noop
 bind generic,index,pager D noop
+bind generic,index,pager \cd noop
 
-# ... but let me delete notes made on tablet computer
-folder-hook . bind generic,index,pager d noop
-folder-hook "notes" bind index,pager d delete-message
-# ... and delete mistaken spam trains
-folder-hook "spam" bind index,pager d delete-message
+# # ... but let me delete notes made on tablet computer
+# folder-hook . bind generic,index,pager d noop
+# folder-hook "notes" bind index,pager d delete-message
+# # ... and delete mistaken spam trains
+# folder-hook "spam" bind index,pager d delete-message
 
 # --- colours
 
@@ -217,6 +219,10 @@ color index brightwhite black "~N|~O"
 
 # --- mailing lists
 
-lists [0-9]+.*@bugs.debian.org
-subscribe debian-backports@lists.debian.org
-subscribe debian-mentors@lists.debian.org
+# lists [0-9]+.*@bugs.debian.org
+# subscribe debian-backports@lists.debian.org
+# subscribe debian-devel@lists.debian.org
+
+# --- mbsync
+
+# macro generic,index,pager G "<sync-mailbox><shell-escape>mbsync fastmail<enter><sync-mailbox>"

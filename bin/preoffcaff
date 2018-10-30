@@ -1,0 +1,17 @@
+#!/bin/sh
+
+set -e
+
+while read -r line; do
+    gpg --trust-model always --no-default-keyring \
+        --primary-keyring ~/tmp/offcaff.kbx \
+        --recv-key $line
+done
+
+gpg --trust-model always --no-default-keyring \
+    --primary-keyring ~/tmp/offcaff.kbx \
+    --output ~/tmp/offcaff.gpg \
+    --export
+
+rm ~/tmp/offcaff.kbx ~/tmp/offcaff.kbx~
+echo "file for sneakernet: ~/tmp/offcaff.gpg"

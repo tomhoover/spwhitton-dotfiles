@@ -1,0 +1,11 @@
+#!/bin/sh
+
+if [ "$(git config --local --bool core.bare)" = "true" ]; then
+    mkdir .git
+    mv * .git
+    git config --local --bool core.bare false
+    git reset --hard
+else
+    echo >&2 "fatal: repository is not bare"
+    exit 1
+fi

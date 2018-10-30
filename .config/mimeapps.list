@@ -1,0 +1,21 @@
+[Default Applications]
+application/pdf=evince.desktop
+image/png=eog.desktop
+image/jpeg=eog.desktop
+
+[Added Associations]
+image/jpeg=eog.desktop;
+image/png=eog.desktop;
+video/mp4=mpv.desktop;
+application/vnd.openxmlformats-officedocument.wordprocessingml.document=libreoffice-writer.desktop;
+audio/mpeg=mpv.desktop;
+video/x-flv=mpv.desktop;vlc.desktop;
+image/bmp=gimp.desktop;
+image/x-tga=eog.desktop;
+application/pdf=evince.desktop;
+image/jpeg=eog.desktop;
+video/x-ms-wmv=mpv.desktop;
+video/mpeg=mpv.desktop;
+video/x-msvideo=mpv.desktop;vlc.desktop;
+video/quicktime=mpv.desktop;
+video/webm=mpv.desktop;

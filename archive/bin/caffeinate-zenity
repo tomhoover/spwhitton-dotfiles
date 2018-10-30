@@ -1,0 +1,3 @@
+#!/bin/sh
+
+WINDOWID= caffeinate zenity --info --text="Press okay to resume screensaver and/or autosuspend"

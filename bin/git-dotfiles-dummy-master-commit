@@ -1,0 +1,15 @@
+#!/bin/sh
+
+set -e
+
+. $HOME/.shenv
+
+cd $HOME/src/dotfiles
+if ! git is-clean; then
+    echo >&2 "$0: cannot make dummy commit; dotfiles working tree not clean"
+    exit 1
+fi
+branch=$(git rev-parse --abbrev-ref HEAD)
+[ "$branch" = "master" ] || git checkout master
+git commit --allow-empty -S -m"empty PGP-signed commit"
+[ "$branch" = "master" ] || git checkout "$branch"

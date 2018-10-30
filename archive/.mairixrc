@@ -1,0 +1,10 @@
+base=$HOME
+maildir=.fmail/*
+mbox=lib/annex/doc/mail/*
+mformat=maildir
+mfolder=local/mairixresults
+database=~/local/mairixdb
+omit=spam*
+omit=*Junk Mail*
+omit=*Trash*
+follow_mbox_symlinks

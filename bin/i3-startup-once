@@ -1,0 +1,47 @@
+#!/bin/sh
+
+. $HOME/.shenv
+
+# ---- screen locking
+
+# spw means logged into develacc session, which does not have access
+# to the logind session, so cannot start a screen locker.  Instead,
+# /usr/local/bin/develacc-xsession starts the locker
+
+in-develacc || i3-startup-i3lock
+
+# ---- wallpaper rotation
+
+if [ -e "$HOME/local/wallpaper.png" ]; then
+    systemctl --user start i3-rotate-wallpaper.timer
+fi
+
+# ---- GTK
+
+gnome-settings-daemon &
+
+# ---- brightness keys
+
+xfce4-power-manager &
+
+# ---- input methods
+
+if ! in-develacc; then
+   # work around Debian bug #812826
+   pkill -u $USER ibus-daemon
+   IBUS_ENABLE_SYNC_MODE=0 ibus-daemon --xim --daemonize
+fi
+
+# ---- startup applications
+
+redshift-gtk &                  # co-ords from config file
+caffeine-indicator &
+
+if ! in-develacc; then
+    nm-applet &
+    pgrep -u "$USER" mpd || mpd &
+    evolution &
+fi
+
+emacs --daemon &
+firefox &

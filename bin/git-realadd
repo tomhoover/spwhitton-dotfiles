@@ -1,0 +1,5 @@
+#!/bin/sh
+
+# see https://git-annex.branchable.com/forum/__34__git_add__34___vs___34__git_annex_add__34___in_v6/
+
+git -c 'annex.largefiles=exclude=*' add "$@"

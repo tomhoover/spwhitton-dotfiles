@@ -1,0 +1,26 @@
+*************** ${1:Creature name}
+/${2:Medium} ${3:humanoid (any race)}, ${4:any alignment}/
+- Armor Class :: ${5:13}${6: (leather armour)}
+- Hit Points :: ${7:4} (${8:1d8})
+- Speed :: ${9:30} ft.
+
+| STR  | DEX  | CON  | INT  | WIS  | CHA  |
+| ${10:10} | ${12:10} | ${14:10} | ${16:10} | ${18:10} | ${20:10} |
+| (${11:+0}) | (${13:+0}) | (${15:+0}) | (${17:+0}) | (${19:+0}) | (${21:+0}) |
+
+- Saving Throws :: $0
+- Skills ::
+- Damage Vulnerabilities ::
+- Damage Resistances ::
+- Damage Immunities ::
+- Condition Immunities ::
+- Senses ::
+- Langauges ::
+- Challenge ::
+
+- Actions
+  + ::
+
+- Reactions
+  + ::
+*************** END

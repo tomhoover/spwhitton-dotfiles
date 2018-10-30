@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# find dirty working directories/staging areas/stashes
+
+# This is to find stuff that needs to be checked in, not stuff that
+# needs to be pushed (`mr status` does a good job of the latter by
+# also calling `git --no-pager log --branches --not --remotes
+# --simplify-by-decoration --decorate --oneline`)
+
+set -e
+
+# we need to do something different in a direct mode annex
+direct="$(git config --get annex.direct || true)"
+if [ "$direct" = "true" ]; then
+    output="$(git annex status)"
+    test -z "$output" || ( echo $output && exit 1 )
+else
+    (
+        # 1st command: check index against HEAD
+        # 2nd command: check working tree against index
+        # 3rd command: check for untracked files
+        # 4th command: check for stashes
+        git diff-index --quiet --cached HEAD \
+            && git diff-files --quiet \
+            && test -z "$(git status --porcelain)" \
+            && test -z "$(git stash list)"
+    ) || ( git status --porcelain && git stash list && exit 1 )
+fi

@@ -1,0 +1,23 @@
+#!/bin/sh
+
+# add to my personal apt repo; assumes .changes has right distribution
+
+set -e
+
+changes="$(readlink -f $1)"
+dist="$(grep ^Distribution: $changes | cut -d \  -f2)"
+
+if ! [ -d "$HOME/lib/athena-apt" ]; then
+    echo >&2 "athena-apt annex not checked out"
+    exit 1
+fi
+if ! [ -f "$changes" ]; then
+    echo >&2 "changes file specified does not exist"
+    exit 1
+fi
+
+changestool "$changes" includeallsources || true
+(
+    cd "$HOME/lib/athena-apt"
+    reprepro include "$dist" "$changes"
+)

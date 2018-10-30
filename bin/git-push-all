@@ -64,19 +64,22 @@ foreach my $branch ( @branches ) {
     my $tracking = $config->get( key => "branch.$branch.remote" );
 
     if ( defined $pushRemote ) {
-        print "I: pushing $branch to $pushRemote (its pushRemote)\n";
+        # print "I: pushing $branch to $pushRemote (its pushRemote)\n";
         push @{ $pushes{$pushRemote} }, $branch;
     # don't push unless it already exists on the remote: this script
     # avoids creating branches
     } elsif ( defined $pushDefault
               && "remotes/$pushDefault/$branch" ~~ @allBranches ) {
-        print "I: pushing $branch to $pushDefault (the remote.pushDefault)\n";
+        # print "I: pushing $branch to $pushDefault (the remote.pushDefault)\n";
         push @{ $pushes{$pushDefault} }, $branch;
-    } elsif ( !defined $pushDefault && defined $tracking ) {
-        print "I: pushing $branch to $tracking (probably to its tracking branch)\n";
+    } elsif ( !defined $pushDefault && defined $tracking
+              && "remotes/$tracking/$branch" ~~ @allBranches ) {
+        # print "I: pushing $branch to $tracking (probably to its tracking branch)\n";
         push @{ $pushes{$tracking} }, $branch;
     } else {
-        die "E: couldn't find anywhere to push $branch";
+        print "E: couldn't find anywhere to push $branch\n";
+        print "I: maybe you want to \`git branchmove\` it to a remote\n";
+        exit 1;
     }
 }
 
@@ -85,7 +88,11 @@ foreach my $remote ( keys %pushes ) {
     # pushRemote of master branch, if that exists?)
     # I almost certainly want all tags on that remote (e.g. an alioth repo)
     my @branches = @{ $pushes{$remote} };
-    system "git push --follow-tags $remote @branches";
+    if ( "--no-verify" ~~ @ARGV ) {
+        system "git push --follow-tags --no-verify $remote @branches";
+    } else {
+        system "git push --follow-tags $remote @branches";
+    }
     exit 1 if ( $? != 0 );
 }
 
@@ -100,24 +107,26 @@ foreach my $remote ( keys %pushes ) {
 # TODO definitely split out because should be run as a safety catch by
 # src-unregistered
 
-my @tags = grep { !(m|archive/debian/\S+|) } $git->tag;
-my @remotes = $git->remote;
-my @pushed_tags;
+unless ( "--no-tags" ~~ @ARGV ) {
+    my @tags = grep { !(m|archive/debian/\S+|) } $git->tag;
+    my @remotes = $git->remote;
+    my @pushed_tags;
 
-foreach my $remote ( @remotes ) {
-    unless ( $remote eq "dgit" ) {
-        my @this_remote_tags = apply { s|\^\{\}$||; s|[a-f0-9]+\trefs/tags/|| }
-          $git->ls_remote( { tags => 1 }, $remote );
-        push @pushed_tags, @this_remote_tags;
+    foreach my $remote ( @remotes ) {
+        unless ( $remote eq "dgit" ) {
+            my @this_remote_tags = apply { s|\^\{\}$||; s|[a-f0-9]+\trefs/tags/|| }
+              $git->ls_remote( { tags => 1 }, $remote );
+            push @pushed_tags, @this_remote_tags;
+        }
     }
-}
 
-@pushed_tags = uniq @pushed_tags;
-my @unpushed_tags = array_minus ( @tags, @pushed_tags );
+    @pushed_tags = uniq @pushed_tags;
+    my @unpushed_tags = array_minus ( @tags, @pushed_tags );
 
-if ( scalar @unpushed_tags > 0 ) {
-    print "E: the following tags have not been pushed to any remote:\n";
-    print join(", ", @unpushed_tags);
-    print "\n";
-    exit 1;
+    if ( scalar @unpushed_tags > 0 ) {
+        print "E: the following tags have not been pushed to any remote:\n";
+        print join(", ", @unpushed_tags);
+        print "\n";
+        exit 1;
+    }
 }

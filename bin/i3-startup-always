@@ -1,0 +1,48 @@
+#!/bin/sh
+
+# idempotent X settings
+
+. $HOME/.shenv
+
+# ---- don't let other local users spawn windows on my main X session
+
+in-develacc || xhost -local:
+
+# ---- no bell please
+
+xset b off
+
+# ---- keyboard settings
+
+xset r rate 380 25
+setxkbmap -option ctrl:nocaps
+xmodmap ~/.xmodmaprc
+
+# enable numlock if using USB keyboard, with an exception
+if ! lsusb | grep -q "SiGma Micro Keyboard TRACER Gamma Ivory"; then
+    . /etc/X11/Xsession.d/55numlockx
+fi
+
+# disable caps lock if I accidently hit it before running this script
+if xset -q | grep "Caps Lock: *on" >/dev/null; then
+    xdotool key Caps_Lock
+fi
+
+# ---- monitor settings
+
+# if this machine is always plugged into the same monitor, may
+# `convert ~/lib/annex/doc/img/wallpaper/foo -resize 1366x768\!
+# ~/local/wallpaper.png` or add a cronjob to call i3-rotate-wallpaper.
+# Otherwise, stick to a solid colour, because doing otherwise requires
+# resizing the image file, setting the root window and restarting
+# i3lock every time an external monitor is plugged or unplugged
+#
+# For images that look bad stretched, to get black borders: convert foo.jpg -resize 1920x1080 -background black -gravity center -extent 1920x1080 ~/local/wallpaper.png
+
+
+xset dpms 600
+if [ -e "$HOME/local/wallpaper.png" ]; then
+    feh --bg-scale $HOME/local/wallpaper.png
+else
+    xsetroot -solid \#3f3f3f
+fi

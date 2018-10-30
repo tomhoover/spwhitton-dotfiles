@@ -1,6 +1,6 @@
-text/html; firefox %s; test=test -n "$DISPLAY"; nametemplate=%s.html
-text/html; w3m -I %{charset} -T text/html; copiousoutput;
-application/pdf; mutt_bgrun evince '%s'; test=test -n "$DISPLAY"; nametemplate=%s.pdf
-image/jpeg; feh %s
-image/png; feh %s
-application/vnd.openxmlformats-officedocument.wordprocessingml.document; mutt_bgrun soffice %s; test=sh -c 'test $DISPLAY'
+# text/html; firefox %s; test=test -n "$DISPLAY"; nametemplate=%s.html
+# text/html; w3m -I %{charset} -T text/html; copiousoutput;
+# application/pdf; mutt_bgrun evince '%s'; test=test -n "$DISPLAY"; nametemplate=%s.pdf
+# image/jpeg; eog %s
+# image/png; eog %s
+# application/vnd.openxmlformats-officedocument.wordprocessingml.document; mutt_bgrun soffice %s; test=sh -c 'test $DISPLAY'
